@@ -1,0 +1,12 @@
+
+.red,
+[data-color="red"],
+[data-red] {
+  color: red;
+}
+
+.blue,
+[data-color="blue"],
+[data-blue] {
+  color: blue;
+}
