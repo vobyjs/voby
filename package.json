@@ -1,12 +1,16 @@
 {
   "name": "voby",
   "description": "A wannabe high-performance framework for writing web apps.",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "clean": "rimraf dist",
+    "compile": "tsc --skipLibCheck",
+    "compile:watch": "tsc --skipLibCheck --watch",
     "bench": "rm -rf node_modules/.vite && vite --config vite.ts benchmark --force",
-    "play": "rm -rf node_modules/.vite && vite --config vite.ts playground --force"
+    "play": "rm -rf node_modules/.vite && vite --config vite.ts playground --force",
+    "prepublishOnly": "npm run clean && npm run compile && npm run test"
   },
   "bugs": {
     "url": "https://github.com/fabiospampinato/voby/issues"
