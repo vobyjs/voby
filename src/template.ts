@@ -13,7 +13,7 @@ const SYMBOL_PROPERTY_ACCESSOR = Symbol ();
 
 //TODO: Implement predictive pre-rendering, where a bunch of clones are made during idle times before they are needed depending on how many clones are estimated to be needed in the future
 
-const template = <P = {}> ( fn: (( props: P ) => () => Child) ): (( props: P ) => () => HTMLElement) => {
+const template = <P = {}> ( fn: (( props: P ) => Child) ): (( props: P ) => () => HTMLElement) => {
 
   const checkValidProperty = ( property: unknown ): property is string => {
 
@@ -53,11 +53,21 @@ const template = <P = {}> ( fn: (( props: P ) => () => Child) ): (( props: P ) =
 
     const actionsWithNodes: TemplateActionWithNodes[] = [];
     const accessor = makeAccessor ( actionsWithNodes );
-    const template = fn ( accessor )();
+    const component = fn ( accessor );
 
-    if ( !( template instanceof HTMLElement ) ) throw new Error ( 'Invalid template, it must return an HTMLElement' );
+    if ( isFunction ( component ) ) {
 
-    return { actionsWithNodes, template };
+      const template = component ();
+
+      if ( template instanceof HTMLElement ) {
+
+        return { actionsWithNodes, template };
+
+      }
+
+    }
+
+    throw new Error ( 'Invalid template, it must return a function that returns an HTMLElement' );
 
   };
 

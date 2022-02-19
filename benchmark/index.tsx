@@ -47,7 +47,7 @@ const Model = (() => {
 
   /* STATE */
 
-  let data$ = $( [] );
+  let data$ = $<IDatum[]>( [] );
   let selected$: IDatum | null = null;
 
   /* API */
