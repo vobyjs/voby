@@ -10,7 +10,7 @@ import {Child} from '~/types';
 
 //TODO: Implement this properly, without relying on JSDOM or stuff like that
 
-const renderToString = ( child: Child, timeout: number = 1000 ): Promise<string> => {
+const renderToString = ( child: Child, timeout: number = 1 ): Promise<string> => {
 
   return new Promise ( resolve => {
 

@@ -4,7 +4,7 @@
 import {$} from '~/observable';
 import template from '~/template';
 import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isPropertyNonDimensional, isString, isText, isUndefined, keys} from '~/utils';
-import {Child, ChildPrepared, FunctionResolver, ObservableResolver} from '~/types';
+import {Child, ChildMounted, ChildPrepared, FunctionResolver, ObservableResolver} from '~/types';
 
 /* HELPERS */
 
@@ -104,7 +104,7 @@ const prepareChild = ( child: Child ): ChildPrepared => {
 
 };
 
-const removeChildren = ( parent: HTMLElement, children: Node[] | Node[][] ): void => {
+const removeChildren = ( parent: HTMLElement, children: ChildMounted ): void => {
 
   for ( let i = 0, l = children.length; i < l; i++ ) {
 
@@ -117,6 +117,28 @@ const removeChildren = ( parent: HTMLElement, children: Node[] | Node[][] ): voi
     } else if ( isNode ( child ) ) {
 
       parent.removeChild ( child );
+
+    }
+
+  }
+
+};
+
+const getChildrenNextSibling = ( children: ChildMounted ): Node | null | undefined => {
+
+  for ( let i = children.length - 1; i >= 0; i-- ) {
+
+    const child = children[i];
+
+    if ( isArray ( child ) ) {
+
+      const nextSibling = getChildrenNextSibling ( child );
+
+      if ( !isUndefined ( nextSibling ) ) return nextSibling;
+
+    } else {
+
+      return child.nextSibling || null;
 
     }
 
@@ -214,7 +236,7 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
 };
 
-const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[] ): Node[] => {
+const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: ChildMounted, childrenPrevSibling: Node | null = null ): ChildMounted => {
 
   //TODO: Optimize this massively, after it works reliably, currently it may not quite work and it certainly has **terrible** performance
   //URL: https://github.com/adamhaile/surplus/blob/2aca5a36ceb6a7cbb4d609cd04ee631714602f91/src/runtime/content.ts
@@ -234,9 +256,8 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
 
   } else { // Regular child
 
-    const childrenNext = castArray ( ( isArray ( child ) ? prepareChildren ( child ) : prepareChild ( child ) ) ?? new Text () );
-
-    const afterNode = childrenPrev[childrenPrev.length - 1]?.nextSibling || null;
+    const childrenNext = castArray ( ( isArray ( child ) ? prepareChildren ( child ) : prepareChild ( child ) ) ?? new Comment () );
+    const childrenNextSibling = getChildrenNextSibling ( childrenPrev ) || childrenPrevSibling;
 
     removeChildren ( parent, childrenPrev );
 
@@ -246,11 +267,11 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
 
       if ( isFunction ( childNext ) ) {
 
-        let childrenPrev: Node[] = [];
+        let childrenPrev: ChildMounted = [];
 
         $.effect ( () => {
 
-          childrenNext[i] = childrenPrev = setChildStatic ( parent, resolveObservableOrFunction ( childNext ), childrenPrev );
+          childrenNext[i] = childrenPrev = setChildStatic ( parent, resolveObservableOrFunction ( childNext ), childrenPrev, childrenNextSibling );
 
         });
 
@@ -258,29 +279,29 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
 
         const textNode = new Text ( childNext );
 
-        parent.insertBefore ( textNode, afterNode );
+        parent.insertBefore ( textNode, childrenNextSibling );
 
         childrenNext[i] = textNode;
 
       } else if ( isNode ( childNext ) ) {
 
-        parent.insertBefore ( childNext, afterNode );
+        parent.insertBefore ( childNext, childrenNextSibling );
 
       }
 
     }
 
-    return childrenNext as Node[]; //TSC
+    return childrenNext as ChildMounted; //TSC
 
   }
 
 };
 
-const setChild = ( parent: HTMLElement, child: Child, childrenPrev: Node[] = [] ): Node[] => {
+const setChild = ( parent: HTMLElement, child: Child, childrenPrev: ChildMounted = [], childrenPrevSibling: Node | null = null ): ChildMounted => {
 
   setAbstract ( child, child => {
 
-    childrenPrev = setChildStatic ( parent, child, childrenPrev );
+    childrenPrev = setChildStatic ( parent, child, childrenPrev, childrenPrevSibling );
 
   });
 
