@@ -2,7 +2,6 @@
 //TODO: Implement Switch (maybe)
 //TODO: Implement Ternary
 //TODO: Implement jsx entrypoints for TS
-//TODO: Capture events
 //TODO: Use "key" properly
 //TODO: Implement context
 //TODO: Support SVG

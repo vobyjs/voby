@@ -11,7 +11,7 @@ const SYMBOL_PROPERTY_ACCESSOR = Symbol ();
 
 /* MAIN */
 
-//TODO: Implement predictive pre-rendering, where a bunch of clones are made during idle times before they are needed
+//TODO: Implement predictive pre-rendering, where a bunch of clones are made during idle times before they are needed depending on how many clones are estimated to be needed in the future
 
 const template = <P = {}> ( fn: (( props: P ) => () => HTMLElement) ): (( props: P ) => () => HTMLElement) => {
 
