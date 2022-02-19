@@ -29,7 +29,7 @@ setup ( h, prefix );
 
 const styled = <P = {}> ( component: Component ) => {
 
-  return goober<Component, P> ( component );
+  return goober<Component, P> ( component as any ); //TSC
 
 };
 

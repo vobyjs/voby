@@ -4,7 +4,7 @@
 import {$} from '~/observable';
 import template from '~/template';
 import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isPropertyNonDimensional, isString, isText, isUndefined, keys} from '~/utils';
-import {Child, ChildPrepared, FunctionResolver, Observable, ObservableResolver} from '~/types';
+import {Child, ChildPrepared, FunctionResolver, ObservableResolver} from '~/types';
 
 /* HELPERS */
 
