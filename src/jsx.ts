@@ -49,6 +49,8 @@ type DOMCSSProperties = {
 
 //URL: https://github.com/preactjs/preact/blob/ebd87f3005d9558bfd3c5f38e0496a5d19553441/src/jsx.d.ts
 
+//FIXME: link children props with return type
+
 declare namespace JSX {
 
   type Element = Child;

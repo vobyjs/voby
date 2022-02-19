@@ -8,14 +8,6 @@ import {Child, ChildPrepared, FunctionResolver, ObservableResolver} from '~/type
 
 /* HELPERS */
 
-const resolveFunction = <T> ( value: FunctionResolver<T> ): T => {
-
-  if ( !isFunction ( value ) || isObservable ( value ) ) return value as T; //TSC
-
-  return resolveFunction ( value () );
-
-};
-
 const resolveObservable = <T> ( value: ObservableResolver<T> ): T => {
 
   if ( !isObservable ( value ) ) return value;
@@ -240,10 +232,6 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
 
     return [placeholder];
 
-  } else if ( isFunction ( child ) && !isObservable ( child ) ) { // Function child //FIXME: Removing this function leads to problem, it sounds like there's a problem somewhere
-
-    return setChildStatic ( parent, resolveFunction ( child ), childrenPrev );
-
   } else { // Regular child
 
     const childrenNext = castArray ( ( isArray ( child ) ? prepareChildren ( child ) : prepareChild ( child ) ) ?? new Text () );
@@ -256,7 +244,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
 
       const childNext = childrenNext[i];
 
-      if ( isObservable ( childNext ) ) {
+      if ( isFunction ( childNext ) ) {
 
         let childrenPrev: Node[] = [];
 
@@ -265,10 +253,6 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
           childrenNext[i] = childrenPrev = setChildStatic ( parent, resolveObservableOrFunction ( childNext ), childrenPrev );
 
         });
-
-      } else if ( isFunction ( childNext ) ) {
-
-        childrenNext[i] = setChild ( parent, resolveFunction ( childNext ), [] );
 
       } else if ( isString ( childNext ) ) {
 

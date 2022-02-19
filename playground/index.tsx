@@ -4,7 +4,7 @@
 
 /* IMPORT */
 
-import {Component, ErrorBoundary, For, Fragment, If, Portal, Ternary} from '../src';
+import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from '../src';
 import {useCleanup, useComputed, useDisposed, useEffect, useError, usePromise} from '../src';
 import {$, $$, createElement, render, renderToString, styled, template} from '../src';
 
@@ -834,6 +834,53 @@ const TestTernaryObservable = (): JSX.Element => {
   );
 };
 
+const TestSwitchStatic = (): JSX.Element => {
+  return (
+    <>
+      <h3>Switch - Static</h3>
+      <Switch when={2}>
+        <Switch.Case when={0}>
+          <p>0</p>
+        </Switch.Case>
+        <Switch.Case when={1}>
+          <p>1</p>
+        </Switch.Case>
+        <Switch.Case when={2}>
+          <p>2</p>
+        </Switch.Case>
+        <Switch.Default>
+          <p>default</p>
+        </Switch.Default>
+      </Switch>
+    </>
+  );
+};
+
+const TestSwitchObservable = (): JSX.Element => {
+  const o = $( 0 );
+  const toggle = () => o.update ( prev => ( prev + 1 ) % 4 );
+  setInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Switch - Observable</h3>
+      <Switch when={o}>
+        <Switch.Case when={0}>
+          <p>0</p>
+        </Switch.Case>
+        <Switch.Case when={1}>
+          <p>1</p>
+        </Switch.Case>
+        <Switch.Case when={2}>
+          <p>2</p>
+        </Switch.Case>
+        <Switch.Default>
+          <p>default</p>
+        </Switch.Default>
+      </Switch>
+    </>
+  );
+};
+
 class TestComponentStatic extends Component<{}> {
   render (): JSX.Element {
     return (
@@ -1092,6 +1139,8 @@ const Test = (): JSX.Element => {
       <TestIfRemoval />
       <TestTernaryStatic />
       <TestTernaryObservable />
+      <TestSwitchStatic />
+      <TestSwitchObservable />
       <TestComponentStatic />
       <TestComponentObservable />
       <TestFragmentStatic />

@@ -1,5 +1,4 @@
 
-//TODO: Implement Switch (maybe)
 //TODO: Implement jsx entrypoints for TS
 //TODO: Use "key" properly
 //TODO: Implement context
@@ -8,7 +7,7 @@
 /* IMPORT */
 
 import './jsx';
-import {Component, ErrorBoundary, For, Fragment, If, Portal, Ternary} from './components';
+import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from './components';
 import {useCleanup, useComputed, useDisposed, useEffect, useError, usePromise} from './hooks';
 import createElement from './create_element';
 import {$, $$} from './observable';
@@ -19,6 +18,6 @@ import template from './template';
 
 /* EXPORT */
 
-export {Component, ErrorBoundary, For, Fragment, If, Portal, Ternary};
+export {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary};
 export {useCleanup, useComputed, useDisposed, useEffect, useError, usePromise};
 export {$, $$, createElement, render, renderToString, styled, template};
