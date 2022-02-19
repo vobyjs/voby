@@ -2,13 +2,15 @@
 /* IMPORT */
 
 import {$, $$} from '~/observable';
-import {Observable, ViewComponent} from '~/types';
+import {Observable, ObservableReadonlyWithoutInitial, Child} from '~/types';
 
 /* MAIN */
 
-const For = <T> ({ values, children }: { values: Observable<Observable<T>[]>, children: (( value: T ) => ViewComponent) }): Observable<Observable<ViewComponent>[]> => {
+//TODO: Write this better, and more generally
 
-  const cache = new WeakMap<T, ViewComponent> ();
+const For = <T extends object> ({ values, children }: { values: Observable<Observable<T>[]>, children: [(( value: Observable<T> ) => Child)] }): ObservableReadonlyWithoutInitial<ObservableReadonlyWithoutInitial<Child>[]> => {
+
+  const cache = new WeakMap<T, Child> ();
 
   return $.computed ( () => {
 
@@ -21,7 +23,7 @@ const For = <T> ({ values, children }: { values: Observable<Observable<T>[]>, ch
 
         if ( cached ) return cached;
 
-        const result = children[0]( value )();
+        const result = children[0]( value );
 
         cache.set ( key, result );
 

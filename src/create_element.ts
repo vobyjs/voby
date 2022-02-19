@@ -1,45 +1,55 @@
 
 /* IMPORT */
 
-import {normalizeChildren, setProps} from '~/setters';
-import {isComponent, isElement, isFunction, isString} from '~/utils';
-import {ViewComponent, ViewElement, ViewChild, ViewProps, ViewType} from '~/types';
+import {setProps, setRef} from '~/setters';
+import {isComponentClass, isFunction, isNode, isString} from '~/utils';
+import {Child, Component, Props} from '~/types';
 
 /* MAIN */
 
-const createElement = ( type: HTMLElement | ViewComponent | ViewType, props: ViewProps | null, ...children: ViewChild[] ): (() => ViewElement) => {
+const createElement = ( component: Component, props: Props | null, ...children: Child[] ): (() => Child) => {
 
-  return (): ViewElement => { // It's important to wrap components, so that they can be executed in the right order, from parent to child, rather than from child to parent in some cases
+  return (): Child => { // It's important to wrap components, so that they can be executed in the right order, from parent to child, rather than from child to parent in some cases
 
     const { children: _, key, ref, ...rest } = props || {};
 
-    children = normalizeChildren ( children );
-    props = { ...rest, children };
+    if ( isFunction ( component ) ) {
 
-    if ( isElement ( type ) ) {
+      if ( isComponentClass ( component ) ) {
 
-      return type;
+        const props = { ...rest, children };
+        const instance = new component ( props );
+        const child = instance.render ();
 
-    } else if ( isComponent ( type ) ) {
+        setRef ( instance, ref );
 
-      const instance = new type ();
-      const element = instance.render ( props );
+        return child;
 
-      return element;
+      } else {
 
-    } else if ( isFunction ( type ) ) {
+        const props = { ...rest, children, ref };
+        const child = component ( props );
 
-      const element = type ( props );
+        return child;
 
-      return element;
+      }
 
-    } else if ( isString ( type ) ) {
+    } else if ( isString ( component ) ) {
 
-      const element = document.createElement ( type );
+      const props = { ...rest, children, ref };
+      const child = document.createElement ( component );
 
-      setProps ( element, props );
+      setProps ( child, props );
 
-      return element;
+      return child;
+
+    } else if ( isNode ( component ) ) {
+
+      return component;
+
+    } else {
+
+      throw new Error ( 'Invalid component' );
 
     }
 

@@ -1,15 +1,28 @@
 
 /* IMPORT */
 
-import {ViewElement} from '~/types';
+import {Child} from '~/types';
 
 /* MAIN */
 
-abstract class Component<P = {}> {
+abstract class Component<P = {}, S = {}> {
+
+  /* VARIABLES */
+
+  props: P;
+  state: S;
+
+  /* CONSTRUCTOR */
+
+  constructor ( props: P ) {
+
+    this.props = props;
+
+  }
 
   /* API */
 
-  abstract render ( props: P ): ViewElement;
+  abstract render (): Child;
 
 }
 

@@ -5,7 +5,7 @@
 /* IMPORT */
 
 import {For} from '../src';
-import {$, $$, createElement, render, template} from '../src';
+import {$, $$, createElement, render, styled, template} from '../src';
 import type {Observable} from '../src/types';
 
 /* MAIN */

@@ -1,9 +1,9 @@
 
 /* IMPORT */
 
-import {replaceChild, setProp} from '~/setters';
+import {setChildReplacement, setProp} from '~/setters';
 import {indexOf, isAlphanumeric, isFunction, isString} from '~/utils';
-import {ViewTemplateActionWithElements, ViewTemplateActionWithPaths, ViewTemplateActionPath} from '~/types';
+import {TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths} from '~/types';
 
 /* HELPERS */
 
@@ -11,19 +11,19 @@ const SYMBOL_PROPERTY_ACCESSOR = Symbol ();
 
 /* MAIN */
 
-//TODO: Implement predictive pre-rendering
+//TODO: Implement predictive pre-rendering, where a bunch of clones are made during idle times before they are needed
 
-const template = <P = {}> ( fn: (( props: P ) => HTMLElement) ): (( props: P ) => HTMLElement) => {
+const template = <P = {}> ( fn: (( props: P ) => () => HTMLElement) ): (( props: P ) => () => HTMLElement) => {
 
   const checkValidProperty = ( property: unknown ): property is string => {
 
     if ( isString ( property ) && isAlphanumeric ( property ) ) return true;
 
-    throw new Error ( `Only alphanumeric properties can be used when using templates, received: "${property}"` );
+    throw new Error ( `Invalid property, only alphanumeric properties are allowed inside templates, received: "${property}"` );
 
   };
 
-  const makeAccessor = ( actionsWithElements: ViewTemplateActionWithElements[] ): any => {
+  const makeAccessor = ( actionsWithNodes: TemplateActionWithNodes[] ): any => {
 
     return new Proxy ( {}, {
 
@@ -31,11 +31,11 @@ const template = <P = {}> ( fn: (( props: P ) => HTMLElement) ): (( props: P ) =
 
         checkValidProperty ( key );
 
-        const accessor = ( element: HTMLElement, prop: string, targetElement?: HTMLElement ): void => {
+        const accessor = ( node: Node, prop: string, targetNode?: Node ): void => {
 
           checkValidProperty ( prop );
 
-          actionsWithElements.push ([ element, prop, key, targetElement ]);
+          actionsWithNodes.push ([ node, prop, key, targetNode ]);
 
         };
 
@@ -49,28 +49,28 @@ const template = <P = {}> ( fn: (( props: P ) => HTMLElement) ): (( props: P ) =
 
   };
 
-  const makeActionsWithElementsAndTemplate = (): { actionsWithElements: ViewTemplateActionWithElements[], template: HTMLElement } => {
+  const makeActionsWithNodesAndTemplate = (): { actionsWithNodes: TemplateActionWithNodes[], template: HTMLElement } => {
 
-    const actionsWithElements: ViewTemplateActionWithElements[] = [];
-    const accessor = makeAccessor ( actionsWithElements );
+    const actionsWithNodes: TemplateActionWithNodes[] = [];
+    const accessor = makeAccessor ( actionsWithNodes );
     const template = fn ( accessor )();
 
-    return { actionsWithElements, template };
+    return { actionsWithNodes, template };
 
   };
 
-  const makeActionsWithPaths = ( actionsWithElements: ViewTemplateActionWithElements[] ): ViewTemplateActionWithPaths[] => {
+  const makeActionsWithPaths = ( actionsWithNodes: TemplateActionWithNodes[] ): TemplateActionWithPaths[] => {
 
-    const actionsWithPaths: ViewTemplateActionWithPaths[] = [];
+    const actionsWithPaths: TemplateActionWithPaths[] = [];
 
-    for ( let i = 0, l = actionsWithElements.length; i < l; i++ ) {
+    for ( let i = 0, l = actionsWithNodes.length; i < l; i++ ) {
 
-      const [element, prop, key, targetElement] = actionsWithElements[i];
+      const [node, prop, key, targetNode] = actionsWithNodes[i];
 
-      const elementPath = makeElementPath ( element );
-      const targetElementPath = targetElement ? makeElementPath ( targetElement ) : undefined;
+      const nodePath = makeNodePath ( node );
+      const targetNodePath = targetNode ? makeNodePath ( targetNode ) : undefined;
 
-      actionsWithPaths.push ([ elementPath, prop, key, targetElementPath ]);
+      actionsWithPaths.push ([ nodePath, prop, key, targetNodePath ]);
 
     }
 
@@ -78,19 +78,19 @@ const template = <P = {}> ( fn: (( props: P ) => HTMLElement) ): (( props: P ) =
 
   };
 
-  const makeElementPath = (() => {
+  const makeNodePath = (() => {
 
-    let prevElement: HTMLElement | null = null;
-    let prevPath: ViewTemplateActionPath;
+    let prevNode: Node | null = null;
+    let prevPath: TemplateActionPath;
 
-    return ( element: HTMLElement ): ViewTemplateActionPath => {
+    return ( node: Node ): TemplateActionPath => {
 
-      if ( element === prevElement ) return prevPath; // Cache hit
+      if ( node === prevNode ) return prevPath; // Cache hit
 
-      const path: ViewTemplateActionPath = [];
+      const path: TemplateActionPath = [];
 
-      let child = element;
-      let parent = child.parentElement;
+      let child = node;
+      let parent = child.parentNode;
 
       while ( parent ) {
 
@@ -99,11 +99,11 @@ const template = <P = {}> ( fn: (( props: P ) => HTMLElement) ): (( props: P ) =
         path.push ( index );
 
         child = parent;
-        parent = parent.parentElement;
+        parent = parent.parentNode;
 
       }
 
-      prevElement = element;
+      prevNode = node;
       prevPath = path;
 
       return path;
@@ -112,31 +112,31 @@ const template = <P = {}> ( fn: (( props: P ) => HTMLElement) ): (( props: P ) =
 
   })();
 
-  const makeReviverActions = ( actionsWithPaths: ViewTemplateActionWithPaths[] ): string[] => {
+  const makeReviverActions = ( actionsWithPaths: TemplateActionWithPaths[] ): string[] => {
 
     const actions: string[] = [];
 
     for ( let i = 0, l = actionsWithPaths.length; i < l; i++ ) {
 
-      const [elementPath, prop, key, targetElementPath] = actionsWithPaths[i];
+      const [nodePath, prop, key, targetNodePath] = actionsWithPaths[i];
 
-      if ( targetElementPath ) {
+      if ( targetNodePath ) {
 
-        if ( targetElementPath.length ) {
+        if ( targetNodePath.length ) {
 
-          actions.push ( `this.replaceChild ( props["${key}"], root.${targetElementPath.map ( index => ( index === 0 ) ? 'firstChild' : `childNodes[${index}]` ).reverse ().join ( '.' )} );` );
+          actions.push ( `this.setChildReplacement ( props["${key}"], root.${targetNodePath.map ( index => ( index === 0 ) ? 'firstChild' : `childNodes[${index}]` ).reverse ().join ( '.' )} );` );
 
         } else {
 
-          actions.push ( `this.replaceChild ( props["${key}"], root );` );
+          actions.push ( `this.setChildReplacement ( props["${key}"], root );` );
 
         }
 
       } else {
 
-        if ( elementPath.length ) {
+        if ( nodePath.length ) {
 
-          actions.push ( `this.setProp ( root.${elementPath.map ( index => ( index === 0 ) ? 'firstChild' : `childNodes[${index}]` ).reverse ().join ( '.' )}, "${prop}", props["${key}"] );` );
+          actions.push ( `this.setProp ( root.${nodePath.map ( index => ( index === 0 ) ? 'firstChild' : `childNodes[${index}]` ).reverse ().join ( '.' )}, "${prop}", props["${key}"] );` );
 
         } else {
 
@@ -152,39 +152,26 @@ const template = <P = {}> ( fn: (( props: P ) => HTMLElement) ): (( props: P ) =
 
   };
 
-  const makeReviver = ( actionsWithPaths: ViewTemplateActionWithPaths[] ): (( root: HTMLElement, props: P ) => HTMLElement) => {
+  const makeReviver = ( actionsWithPaths: TemplateActionWithPaths[] ): (( root: HTMLElement, props: P ) => HTMLElement) => {
 
     const actions = makeReviverActions ( actionsWithPaths );
     const fn = new Function ( 'root', 'props', `${actions.join ( '' )}return root;` );
-    const apis = { replaceChild, setProp };
+    const apis = { setChildReplacement, setProp };
 
     return fn.bind ( apis );
 
   };
 
-  // const makeClone = (() => {
-  //   const stash: HTMLElement[] = [];
-  //   return (template) => {
-  //     if ( !stash.length ) {
-  //       for ( let i = 0, l = 100000; i < l; i++ ) {
-  //         stash.push ( template.cloneNode ( true ) );
-  //       }
-  //     }
-  //     return stash.pop ();
-  //   }
-  // })();
+  const makeComponent = (): (( props: P ) => () => HTMLElement) => {
 
-  const makeComponent = (): (( props: P ) => HTMLElement) => {
-
-    const {actionsWithElements, template} = makeActionsWithElementsAndTemplate ();
-    const actionsWithPaths = makeActionsWithPaths ( actionsWithElements );
+    const {actionsWithNodes, template} = makeActionsWithNodesAndTemplate ();
+    const actionsWithPaths = makeActionsWithPaths ( actionsWithNodes );
     const reviver = makeReviver ( actionsWithPaths );
 
-    return ( props: P ): HTMLElement => {
+    return ( props: P ): () => HTMLElement => {
 
-      return () => {
+      return (): HTMLElement => {
 
-        // const root = makeClone ( template );
         const root = template.cloneNode ( true ) as HTMLElement; //TSC
 
         return reviver ( root, props );
@@ -201,7 +188,7 @@ const template = <P = {}> ( fn: (( props: P ) => HTMLElement) ): (( props: P ) =
 
 /* UTILITIES */
 
-template.isProxy = ( x: unknown ) => isFunction ( x ) && x.hasOwnProperty ( SYMBOL_PROPERTY_ACCESSOR );
+template.isProxy = ( value: unknown ): value is TemplateActionProxy => isFunction ( value ) && value.hasOwnProperty ( SYMBOL_PROPERTY_ACCESSOR );
 
 /* EXPORT */
 

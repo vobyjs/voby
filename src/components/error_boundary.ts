@@ -6,11 +6,11 @@ import {$} from '~/observable';
 import useComputed from '~/hooks/use_computed';
 import useError from '~/hooks/use_error';
 import {castError} from '~/utils';
-import {ViewElement} from '~/types';
+import {Child} from '~/types';
 
 /* MAIN */
 
-const ErrorBoundary = ({ fallback, children }: { fallback: ViewElement | HTMLElement, children: ViewElement }): ViewElement => {
+const ErrorBoundary = ({ fallback, children }: { fallback: (( props: { error: Error, reset: () => void } ) => Child), children: Child[] }): Child => {
 
   const exception = $();
   const hasException = $(false);
@@ -26,14 +26,14 @@ const ErrorBoundary = ({ fallback, children }: { fallback: ViewElement | HTMLEle
 
     } else {
 
-      useError ( err => {
+      useError ( e => {
 
-        exception ( err );
+        exception ( e );
         hasException ( true );
 
       });
 
-      return children[0]()();
+      return children[0](); //FIXME: This looks super buggy, what is there are multiple or no children? Whay if they are not functions? It should probably resolve all children, but returning an array here breaks things, bad sign
 
     }
 

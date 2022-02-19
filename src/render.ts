@@ -2,31 +2,30 @@
 /* IMPORT */
 
 import {$} from '~/observable';
-import {normalizeChildren, setChildren} from '~/setters';
-import {castArray} from '~/utils';
-import {Disposer, ViewElement} from '~/types';
+import {setChild} from '~/setters';
+import {Child, Disposer} from '~/types';
 
 /* MAIN */
 
-const render = ( element: (() => ViewElement), parent: HTMLElement ): Disposer => {
+const render = ( child: Child, parent: HTMLElement ): Disposer => {
 
-  let dispose: Disposer;
+  let disposeRoot: Disposer;
 
-  $.root ( disposeRoot => {
+  parent.textContent = '';
 
-    dispose = disposeRoot;
+  $.root ( dispose => {
 
-    const children = normalizeChildren ( castArray ( element () ) );
+    disposeRoot = dispose;
 
-    setChildren ( parent, children );
+    setChild ( parent, child );
 
   });
 
   return (): void => {
 
-    dispose ();
+    disposeRoot ();
 
-    parent.textContent = ''; //TODO: Preserve pre-existing nodes instead
+    parent.textContent = '';
 
   };
 

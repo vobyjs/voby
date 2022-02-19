@@ -1,61 +1,60 @@
 
 /* MAIN */
 
-/// <reference lib="dom" />
-// export namespace JSXInternal {}
+type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child) | ({ (): Child, get (): Child, sample (): Child });
 
-type Constructor<T> = { new (): T };
+type ChildPrepared = null | string | Node | Array<ChildPrepared> | (() => Child) | ({ (): Child, get (): Child, sample (): Child });
+
+type ComponentClass<P = {}, S = {}> = ConstructorWith<import ( '~/components/component' ).default<P, S>, [P]>;
+
+type ComponentFunction<P = {}> = ( props: P ) => Child;
+
+type ComponentIntrinsicElement = keyof JSX.IntrinsicElements;
+
+type ComponentNode = Node;
+
+type Component<P = {}> = ComponentClass<P> | ComponentFunction<P> | ComponentIntrinsicElement | ComponentNode;
+
+type Constructor<T = unknown> = { new (): T };
+
+type ConstructorWith<T = unknown, Arguments extends unknown[] = []> = { new ( ...args: Arguments ): T };
 
 type Disposer = () => void;
 
-type FunctionMaybe<T> = T | (() => T);
+type FunctionResolver<T = unknown> = T | (() => FunctionResolver<T>);
 
 type Observable<T = unknown> = import ( 'oby/dist/types' ).ObservableCallable<T>;
 
+type ObservableWithoutInitial<T = unknown> = import ( 'oby/dist/types' ).ObservableCallableWithoutInitial<T>;
+
+type ObservableReadonly<T = unknown> = import ( 'oby/dist/types' ).ReadonlyObservableCallable<T>;
+
+type ObservableReadonlyWithoutInitial<T = unknown> = import ( 'oby/dist/types' ).ReadonlyObservableCallableWithoutInitial<T>;
+
+type ObservableAccessor<T = unknown> = ({ (): T, get (): T, sample (): T });
+
 type ObservableMaybe<T = unknown> = T | Observable<T>;
 
-type PromiseMaybe<T>  = T | Promise<T>;
+type ObservableResolver<T = unknown> = T | ({ (): ObservableResolver<T>, get (): ObservableResolver<T>, sample (): ObservableResolver<T> });
 
-type ViewClassComponent<P = {}> = import ( './components/component' ).default<P>;
+type PromiseStateLoading = { loading: true, error?: never, value?: never };
 
-type ViewFunctionComponent<P = {}> = ( props: P ) => ViewElement;
+type PromiseStateError = { loading: false, error: Error, value?: never };
 
-type ViewComponent<P = {}> = ViewClassComponent<P> | ViewFunctionComponent<P>;
+type PromiseStateSuccess<T> = { loading: false, error?: never, value: T };
 
-type ViewProps = Record<string, any>;
+type PromiseState<T> = PromiseStateLoading | PromiseStateError | PromiseStateSuccess<T>;
 
-type ViewElement = ObservableMaybe<null | undefined | string | Node | (null | undefined | string | Node)[]>;
+type Props = Record<string, any>;
 
-type ViewChild = FunctionMaybe<ViewElement>;
+type TemplateActionPath = number[];
 
-type ViewPromiseStateLoading = {
-  loading: true,
-  error?: never,
-  value?: never
-};
+type TemplateActionProxy = ( target: Node, prop: string, targetNode?: Node ) => void;
 
-type ViewPromiseStateError = {
-  loading: false,
-  error: Error,
-  value?: never
-};
+type TemplateActionWithNodes = [Node, string, string, Node?];
 
-type ViewPromiseStateSuccess<T> = {
-  loading: false,
-  error?: never,
-  value: T
-};
-
-type ViewPromiseState<T> = ViewPromiseStateLoading | ViewPromiseStateError | ViewPromiseStateSuccess<T>;
-
-type ViewTemplateActionWithElements = [HTMLElement, string, string, HTMLElement?];
-
-type ViewTemplateActionWithPaths = [ViewTemplateActionPath, string, string, ViewTemplateActionPath?];
-
-type ViewTemplateActionPath = number[];
-
-type ViewType = 'a' | 'abbr' | 'address' | 'area' | 'article' | 'aside' | 'audio' | 'b' | 'base' | 'bdi' | 'bdo' | 'big' | 'blockquote' | 'body' | 'br' | 'button' | 'canvas' | 'caption' | 'cite' | 'code' | 'col' | 'colgroup' | 'data' | 'datalist' | 'dd' | 'del' | 'details' | 'dfn' | 'dialog' | 'div' | 'dl' | 'dt' | 'em' | 'embed' | 'fieldset' | 'figcaption' | 'figure' | 'footer' | 'form' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'head' | 'header' | 'hgroup' | 'hr' | 'html' | 'i' | 'iframe' | 'img' | 'input' | 'ins' | 'kbd' | 'keygen' | 'label' | 'legend' | 'li' | 'link' | 'main' | 'map' | 'mark' | 'marquee' | 'menu' | 'menuitem' | 'meta' | 'meter' | 'nav' | 'noscript' | 'object' | 'ol' | 'optgroup' | 'option' | 'output' | 'p' | 'param' | 'picture' | 'pre' | 'progress' | 'q' | 'rp' | 'rt' | 'ruby' | 's' | 'samp' | 'script' | 'section' | 'select' | 'slot' | 'small' | 'source' | 'span' | 'strong' | 'style' | 'sub' | 'summary' | 'sup' | 'table' | 'tbody' | 'td' | 'textarea' | 'tfoot' | 'th' | 'thead' | 'time' | 'title' | 'tr' | 'track' | 'u' | 'ul' | 'var' | 'video' | 'wbr';
+type TemplateActionWithPaths = [TemplateActionPath, string, string, TemplateActionPath?];
 
 /* EXPORT */
 
-export {Constructor, Disposer, FunctionMaybe, Observable, ObservableMaybe, PromiseMaybe, ViewComponent, ViewProps, ViewElement, ViewChild, ViewPromiseStateLoading, ViewPromiseStateError, ViewPromiseStateSuccess, ViewPromiseState, ViewTemplateActionWithElements, ViewTemplateActionWithPaths, ViewTemplateActionPath, ViewType};
+export type {Child, ChildPrepared, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, Disposer, FunctionResolver, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAccessor, ObservableMaybe, ObservableResolver, PromiseStateLoading, PromiseStateError, PromiseStateSuccess, PromiseState, Props, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};

@@ -3,26 +3,24 @@
 
 import useCleanup from '~/hooks/use_cleanup';
 import render from '~/render';
-import {ViewElement} from '~/types';
+import {Child} from '~/types';
 
 /* MAIN */
 
-const Portal = ({ mount, children }: { mount?: Node, children: ViewElement }): null => {
+const Portal = ({ mount, children }: { mount?: Node, children: Child[] }): void => {
 
-  const anchor = mount || document.body;
-  const container = document.createElement ( 'div' );
+  const parent = mount || document.body;
+  const wrapper = document.createElement ( 'div' );
 
-  anchor.insertBefore ( container, null );
+  parent.insertBefore ( wrapper, null );
 
-  render ( children[0], container );
+  render ( children, wrapper );
 
   useCleanup ( () => {
 
-    anchor.removeChild ( container );
+    parent.removeChild ( wrapper );
 
   });
-
-  return null;
 
 };
 

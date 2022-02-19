@@ -6,7 +6,7 @@ import observable from 'oby';
 /* MAIN */
 
 const $ = observable;
-const $$ = observable.get;
+const $$ = observable.get; //TODO: Maybe resolve recursively
 
 /* EXPORT */
 

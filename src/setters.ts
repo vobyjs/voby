@@ -3,22 +3,36 @@
 
 import {$} from '~/observable';
 import template from '~/template';
-import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isPropertyNonDimensional, isString, isText} from '~/utils';
-import {Observable, ObservableMaybe, ViewElement, ViewChild} from '~/types';
+import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isPropertyNonDimensional, isString, isText, isUndefined, keys} from '~/utils';
+import {Child, ChildPrepared, FunctionResolver, Observable, ObservableResolver} from '~/types';
 
 /* HELPERS */
 
-const resolveObservable = <T> ( fn: Observable<T> ): T | undefined => {
+const resolveFunction = <T> ( value: FunctionResolver<T> ): T => {
 
-  const value = fn ();
+  if ( !isFunction ( value ) || isObservable ( value ) ) return value as T; //TSC
 
-  if ( !isObservable ( value ) ) return value;
-
-  return resolveObservable ( value );
+  return resolveFunction ( value () );
 
 };
 
-const normalizeChildren = ( children: ViewChild[] ): ViewChild[] => {
+const resolveObservable = <T> ( value: ObservableResolver<T> ): T => {
+
+  if ( !isObservable ( value ) ) return value;
+
+  return resolveObservable ( value () );
+
+};
+
+const resolveObservableOrFunction = <T> ( value: ObservableResolver<FunctionResolver<T>> ): T => {
+
+  if ( !isFunction ( value ) ) return value;
+
+  return resolveObservableOrFunction ( value () );
+
+};
+
+const normalizeChildren = ( children: Child[] ): Child[] => {
 
   // It flattes the array and removes nil and boolean values, quickly
 
@@ -54,7 +68,7 @@ const normalizeChildren = ( children: ViewChild[] ): ViewChild[] => {
 
 };
 
-const prepareChildren = ( children: ViewChild[] ): ViewElement => {
+const prepareChildren = ( children: Child[] ): ChildPrepared => {
 
   children = normalizeChildren ( children );
 
@@ -62,17 +76,19 @@ const prepareChildren = ( children: ViewChild[] ): ViewElement => {
 
   if ( children.length === 1 ) return prepareChild ( children[0] );
 
+  const childrenPrepared: ChildPrepared = new Array ( children.length );
+
   for ( let i = children.length - 1; i >= 0; i-- ) {
 
-    children[i] = prepareChild ( children[i] );
+    childrenPrepared[i] = prepareChild ( children[i] );
 
   }
 
-  return children;
+  return childrenPrepared;
 
 };
 
-const prepareChild = ( child: ViewChild ): ViewElement => {
+const prepareChild = ( child: Child ): ChildPrepared => {
 
   if ( isNil ( child ) ) return null;
 
@@ -80,9 +96,7 @@ const prepareChild = ( child: ViewChild ): ViewElement => {
 
   if ( isNode ( child ) ) return child;
 
-  if ( isObservable ( child ) ) return child;
-
-  if ( isFunction ( child ) ) return prepareChild ( child () );
+  if ( isFunction ( child ) ) return child;
 
   if ( isArray ( child ) ) {
 
@@ -98,7 +112,7 @@ const prepareChild = ( child: ViewChild ): ViewElement => {
 
 };
 
-const removeChildren = ( parent: HTMLElement, children: Node[] ): void => {
+const removeChildren = ( parent: HTMLElement, children: Node[] | Node[][] ): void => {
 
   for ( let i = 0, l = children.length; i < l; i++ ) {
 
@@ -120,7 +134,7 @@ const removeChildren = ( parent: HTMLElement, children: Node[] ): void => {
 
 /* MAIN */
 
-const setAbstract = <T> ( value: ObservableMaybe<T>, setter: (( value: T, valuePrev?: T ) => void) ): void => {
+const setAbstract = <T> ( value: ObservableResolver<T>, setter: (( value: T, valuePrev?: T ) => void) ): void => {
 
   if ( isObservable ( value ) ) {
 
@@ -178,7 +192,7 @@ const setAttributeStatic = ( attributes: NamedNodeMap, key: string, value: null 
 
 };
 
-const setAttribute = ( element: HTMLElement, key: string, value: ObservableMaybe<null | undefined | boolean | number | string> ): void => {
+const setAttribute = ( element: HTMLElement, key: string, value: ObservableResolver<null | undefined | boolean | number | string> ): void => {
 
   const {attributes} = element;
 
@@ -190,7 +204,7 @@ const setAttribute = ( element: HTMLElement, key: string, value: ObservableMaybe
 
 };
 
-const replaceChild = ( child: ViewChild, childPrev: Node ): void => {
+const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
   if ( isString ( child ) && isText ( childPrev ) ) {
 
@@ -198,7 +212,9 @@ const replaceChild = ( child: ViewChild, childPrev: Node ): void => {
 
   } else {
 
-    const parent = childPrev.parentElement!; //TSC
+    const parent = childPrev.parentElement;
+
+    if ( !parent ) throw new Error ( 'Invalid child replacement' );
 
     setChild ( parent, child, [childPrev] );
 
@@ -206,10 +222,9 @@ const replaceChild = ( child: ViewChild, childPrev: Node ): void => {
 
 };
 
-const setChildStatic = ( parent: HTMLElement, child: ViewChild, childrenPrev: Node[] ): Node[] => {
+const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[] ): Node[] => {
 
-  //TODO: Optimize this massively, after it works reliably, currently it may not quite work and it certainly has terrible performance
-  //TODO: This function should trigger onMount/onUnmount hooks somehow, and/or update refs
+  //TODO: Optimize this massively, after it works reliably, currently it may not quite work and it certainly has **terrible** performance
   //URL: https://github.com/adamhaile/surplus/blob/2aca5a36ceb6a7cbb4d609cd04ee631714602f91/src/runtime/content.ts
   //URL: https://github.com/adamhaile/surplus/blob/2aca5a36ceb6a7cbb4d609cd04ee631714602f91/src/runtime/insert.ts
   //URL: https://github.com/luwes/sinuous/blob/master/packages/sinuous/h/src/h.js
@@ -221,13 +236,13 @@ const setChildStatic = ( parent: HTMLElement, child: ViewChild, childrenPrev: No
 
     parent.insertBefore ( placeholder, null );
 
-    child ( parent, 'child', placeholder );
+    ( child as any )( parent, 'child', placeholder ); //TSC
 
     return [placeholder];
 
-  } else if ( isFunction ( child ) && !isObservable ( child ) ) { // Function child
+  } else if ( isFunction ( child ) && !isObservable ( child ) ) { // Function child //FIXME: Removing this function leads to problem, it sounds like there's a problem somewhere
 
-    return setChildStatic ( parent, child (), childrenPrev );
+    return setChildStatic ( parent, resolveFunction ( child ), childrenPrev );
 
   } else { // Regular child
 
@@ -247,13 +262,13 @@ const setChildStatic = ( parent: HTMLElement, child: ViewChild, childrenPrev: No
 
         $.effect ( () => {
 
-          childrenNext[i] = childrenPrev = setChildStatic ( parent, childNext (), childrenPrev );
+          childrenNext[i] = childrenPrev = setChildStatic ( parent, resolveObservableOrFunction ( childNext ), childrenPrev );
 
         });
 
       } else if ( isFunction ( childNext ) ) {
 
-        childrenNext[i] = setChild ( parent, childNext (), [] );
+        childrenNext[i] = setChild ( parent, resolveFunction ( childNext ), [] );
 
       } else if ( isString ( childNext ) ) {
 
@@ -271,13 +286,13 @@ const setChildStatic = ( parent: HTMLElement, child: ViewChild, childrenPrev: No
 
     }
 
-    return childrenNext;
+    return childrenNext as Node[]; //TSC
 
   }
 
 };
 
-const setChild = ( parent: HTMLElement, child: ViewChild, childrenPrev: Node[] = [] ): Node[] => {
+const setChild = ( parent: HTMLElement, child: Child, childrenPrev: Node[] = [] ): Node[] => {
 
   setAbstract ( child, child => {
 
@@ -289,7 +304,7 @@ const setChild = ( parent: HTMLElement, child: ViewChild, childrenPrev: Node[] =
 
 };
 
-const setChildren = ( parent: HTMLElement, children: ViewChild[] ): void => {
+const setChildren = ( parent: HTMLElement, children: Child[] ): void => {
 
   for ( let i = 0, l = children.length; i < l; i++ ) {
 
@@ -299,13 +314,13 @@ const setChildren = ( parent: HTMLElement, children: ViewChild[] ): void => {
 
 };
 
-const setClassStatic = ( classList: DOMTokenList, key: string, value: boolean ): void => {
+const setClassStatic = ( classList: DOMTokenList, key: string, value: null | undefined | boolean ): void => {
 
-  classList.toggle ( key, value );
+  classList.toggle ( key, !!value );
 
 };
 
-const setClass = ( classList: DOMTokenList, key: string, value: ObservableMaybe<boolean> ): void => {
+const setClass = ( classList: DOMTokenList, key: string, value: ObservableResolver<null | undefined | boolean> ): void => {
 
   setAbstract ( value, value => {
 
@@ -315,7 +330,7 @@ const setClass = ( classList: DOMTokenList, key: string, value: ObservableMaybe<
 
 };
 
-const setClassesStatic = ( element: HTMLElement, object: string | Record<string, ObservableMaybe<boolean>>, objectPrev?: string | Record<string, ObservableMaybe<boolean>> ): void => {
+const setClassesStatic = ( element: HTMLElement, object: string | Record<string, ObservableResolver<boolean>>, objectPrev?: string | Record<string, ObservableResolver<boolean>> ): void => {
 
   if ( isString ( object ) ) {
 
@@ -355,7 +370,7 @@ const setClassesStatic = ( element: HTMLElement, object: string | Record<string,
 
 };
 
-const setClasses = ( element: HTMLElement, object: ObservableMaybe<string | Record<string, ObservableMaybe<boolean>>> ): void => {
+const setClasses = ( element: HTMLElement, object: ObservableResolver<string | Record<string, ObservableResolver<boolean>>> ): void => {
 
   setAbstract ( object, ( object, objectPrev ) => {
 
@@ -367,7 +382,11 @@ const setClasses = ( element: HTMLElement, object: ObservableMaybe<string | Reco
 
 const setEventStatic = (() => {
 
-  const delegatedEvents = {
+  //TODO: Write this better
+  //TODO: Support capturing events
+  //TODO: Maybe support more events: [onmousemove, onmouseout, onmouseover, onpointerdown, onpointermove, onpointerout, onpointerover, onpointerup, ontouchend, ontouchmove, ontouchstart]
+
+  const delegatedEvents = <const> {
     onbeforeinput: '_onbeforeinput',
     onclick: '_onclick',
     ondblclick: '_ondblclick',
@@ -377,60 +396,55 @@ const setEventStatic = (() => {
     onkeydown: '_onkeydown',
     onkeyup: '_onkeyup',
     onmousedown: '_onmousedown',
-    // onmousemove: '_onmousemove',
-    // onmouseout: '_onmouseout',
-    // onmouseover: '_onmouseover',
-    onmouseup: '_onmouseup',
-    // onpointerdown: '_onpointerdown',
-    // onpointermove: '_onpointermove',
-    // onpointerout: '_onpointerout',
-    // onpointerover: '_onpointerover',
-    // onpointerup: '_onpointerup',
-    // ontouchend: '_ontouchend',
-    // ontouchmove: '_ontouchmove',
-    // ontouchstart: '_ontouchstart'
+    onmouseup: '_onmouseup'
   };
 
-  for ( const event in delegatedEvents ) {
+  for ( const event of keys ( delegatedEvents ) ) {
+
     const key = delegatedEvents[event];
-    document[event] = event => {
-      let node = event.composedPath ()[0];
-      while ( node ) {
-        const handler = node[key];
-        if ( handler && !node.disabled ) {
-          Object.defineProperty ( event, 'currentTarget', {
-            configurable: true,
-            get () {
-              return node || document;
-            }
-          });
-          handler ( event );
-          if ( event.cancelBubble ) break;
+
+    document[event] = ( event: Event ): void => {
+
+      let node = event.composedPath ()[0] as Node | null;
+
+      Object.defineProperty ( event, 'currentTarget', {
+        configurable: true,
+        get () {
+          return node || document;
         }
+      });
+
+      while ( node ) {
+
+        const handler = node[key];
+
+        if ( handler ) {
+
+          handler ( event );
+
+          if ( event.cancelBubble ) break;
+
+        }
+
         node = node.parentNode;
+
       }
+
     };
+
   }
 
   return ( element: HTMLElement, event: string, value: Function ): void => {
 
-    //TODO: Support capturing events
+    const key: string = delegatedEvents[event] || event;
 
-    if ( event in delegatedEvents ) {
-
-      element[delegatedEvents[event]] = value;
-
-    } else {
-
-      element[event] = value;
-
-    }
+    element[key] = value;
 
   };
 
 })();
 
-const setEvent = ( element: HTMLElement, event: string, value: ObservableMaybe<Function> ): void => {
+const setEvent = ( element: HTMLElement, event: string, value: ObservableResolver<Function> ): void => {
 
   setAbstract ( value, value => {
 
@@ -446,7 +460,7 @@ const setHTMLStatic = ( element: HTMLElement, value: null | undefined | number |
 
 };
 
-const setHTML = ( element: HTMLElement, value: ObservableMaybe<{ __html: ObservableMaybe<null | undefined | number | string> }> ): void => {
+const setHTML = ( element: HTMLElement, value: ObservableResolver<{ __html: ObservableResolver<null | undefined | number | string> }> ): void => {
 
   setAbstract ( value, value => {
 
@@ -460,7 +474,7 @@ const setHTML = ( element: HTMLElement, value: ObservableMaybe<{ __html: Observa
 
 };
 
-const setPropertyStatic = ( element: HTMLElement, key: string, value: null | undefined | boolean | number | string | Function ): void => {
+const setPropertyStatic = ( element: HTMLElement, key: string, value: null | undefined | boolean | number | string ): void => {
 
   value = ( key === 'className' ) ? ( value ?? '' ) : value;
 
@@ -468,7 +482,7 @@ const setPropertyStatic = ( element: HTMLElement, key: string, value: null | und
 
 };
 
-const setProperty = ( element: HTMLElement, key: string, value: ObservableMaybe<null | undefined | boolean | number | string | Function> ): void => {
+const setProperty = ( element: HTMLElement, key: string, value: ObservableResolver<null | undefined | boolean | number | string> ): void => {
 
   setAbstract ( value, value => {
 
@@ -478,13 +492,23 @@ const setProperty = ( element: HTMLElement, key: string, value: ObservableMaybe<
 
 };
 
+const setRef = <T> ( element: T, value?: (( value: T ) => unknown)): void => {
+
+  if ( isUndefined ( value ) ) return;
+
+  if ( !isFunction ( value ) ) throw new Error ( 'Invalid ref' );
+
+  queueMicrotask ( () => { // Scheduling a microtask to dramatically increase the probability that the element gets mounted in the meantime, which would be more convenient
+
+    value ( element );
+
+  });
+
+};
+
 const setStyleStatic = ( style: CSSStyleDeclaration, key: string, value: null | undefined | number | string ): void => {
 
-  if ( key === 'cssText' ) {
-
-    style.cssText = String ( value ?? '' );
-
-  } else if ( key.charCodeAt ( 0 ) === 45 ) { // -*
+  if ( key.charCodeAt ( 0 ) === 45 ) { // /^-/
 
     style.setProperty ( key, String ( value ) );
 
@@ -500,7 +524,7 @@ const setStyleStatic = ( style: CSSStyleDeclaration, key: string, value: null | 
 
 };
 
-const setStyle = ( style: CSSStyleDeclaration, key: string, value: ObservableMaybe<null | undefined | number | string> ): void => {
+const setStyle = ( style: CSSStyleDeclaration, key: string, value: ObservableResolver<null | undefined | number | string> ): void => {
 
   setAbstract ( value, value => {
 
@@ -510,7 +534,7 @@ const setStyle = ( style: CSSStyleDeclaration, key: string, value: ObservableMay
 
 };
 
-const setStylesStatic = ( style: CSSStyleDeclaration, object: string | Record<string, ObservableMaybe<null | undefined | number | string>>, objectPrev?: string | Record<string, ObservableMaybe<null | undefined | number | string>> ): void => {
+const setStylesStatic = ( style: CSSStyleDeclaration, object: string | Record<string, ObservableResolver<null | undefined | number | string>>, objectPrev?: string | Record<string, ObservableResolver<null | undefined | number | string>> ): void => {
 
   if ( isString ( object ) ) {
 
@@ -548,7 +572,7 @@ const setStylesStatic = ( style: CSSStyleDeclaration, object: string | Record<st
 
 };
 
-const setStyles = ( element: HTMLElement, object: ObservableMaybe<string | Record<string, ObservableMaybe<null | undefined | number | string>>> ): void => {
+const setStyles = ( element: HTMLElement, object: ObservableResolver<string | Record<string, ObservableResolver<null | undefined | number | string>>> ): void => {
 
   const {style} = element;
 
@@ -570,6 +594,10 @@ const setProp = ( element: HTMLElement, key: string, value: any ): void => {
 
     setChildren ( element, value );
 
+  } else if ( key === 'ref' ) {
+
+    setRef ( element, value );
+
   } else if ( key === 'style' ) {
 
     setStyles ( element, value );
@@ -580,7 +608,7 @@ const setProp = ( element: HTMLElement, key: string, value: any ): void => {
 
   } else if ( key === 'innerHTML' || key === 'outerHTML' || key === 'textContent' ) {
 
-    // Forbidden prop
+    // Forbidden props
 
   } else if ( key === 'dangerouslySetInnerHTML' ) {
 
@@ -614,5 +642,4 @@ const setProps = ( element: HTMLElement, object: Record<string, any> ): void => 
 
 /* EXPORT */
 
-export {normalizeChildren, prepareChildren, prepareChild};
-export {setAbstract, setAttributeStatic, setAttribute, replaceChild, setChildStatic, setChild, setChildren, setClassStatic, setClass, setClassesStatic, setClasses, setHTMLStatic, setHTML, setPropertyStatic, setProperty, setStyleStatic, setStyle, setStylesStatic, setStyles, setProp, setProps};
+export {setAbstract, setAttributeStatic, setAttribute, setChildReplacement, setChildStatic, setChild, setChildren, setClassStatic, setClass, setClassesStatic, setClasses, setEventStatic, setEvent, setHTMLStatic, setHTML, setPropertyStatic, setProperty, setRef, setStyleStatic, setStyle, setStylesStatic, setStyles, setProp, setProps};

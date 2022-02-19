@@ -3,13 +3,13 @@
 
 import Component from '~/components/component';
 import {$} from '~/observable';
-import {Constructor, Observable} from '~/types';
+import {ComponentClass, Observable, ObservableAccessor} from '~/types';
 
 /* MAIN */
 
-const castArray = <T> ( x: T | T[] ): T[] => {
+const castArray = <T> ( value: T | T[] ): T[] => {
 
-  return isArray ( x ) ? x : [x];
+  return isArray ( value ) ? value : [value];
 
 };
 
@@ -23,89 +23,123 @@ const castError = ( exception: unknown ): Error => {
 
 };
 
-const identity = <T> ( x: T ): T => {
+const identity = <T> ( value: T ): T => {
 
-  return x;
-
-};
-
-const indexOf = <T> ( arr: T[], value: T ): number => {
-
-  return Array.prototype.indexOf.call ( arr, value );
+  return value;
 
 };
 
-const isAlphanumeric = ( x: string ): boolean => {
+const indexOf = (() => {
 
-  return /^[a-z0-9]+$/i.test ( x );
+  const _indexOf = Array.prototype.indexOf;
 
-};
+  return <T> ( arr: ArrayLike<unknown>, value: T ): number => {
 
-const isArray = ( x: unknown ): x is unknown[] => {
+    return _indexOf.call ( arr, value );
 
-  return Array.isArray ( x );
+  };
 
-};
+})();
 
-const isBoolean = ( x: unknown ): x is boolean => {
+const isAlphanumeric = (() => {
 
-  return typeof x === 'boolean';
+  const alphanumericRe = /^[a-z0-9]+$/i;
 
-};
+  return ( value: string ): boolean => {
 
-const isComment = ( x: unknown ): x is Text => {
+    return alphanumericRe.test ( value );
 
-  return x !== null && typeof x === 'object' && x['nodeType'] === 8;
+  };
 
-};
+})();
 
-const isComponent = ( x: unknown ): x is Constructor<Component> => {
+const isArray = (() => {
 
-  return isFunction ( x ) && Component.isPrototypeOf ( x );
+  const _isArray = Array.isArray;
 
-};
+  return ( value: unknown ): value is unknown[] => {
 
-const isElement = ( x: unknown ): x is HTMLElement => {
+    return _isArray ( value );
 
-  return x instanceof HTMLElement;
+  };
 
-};
+})();
 
-const isError = ( x: unknown ): x is Error => {
+const isBoolean = ( value: unknown ): value is boolean => {
 
-  return x instanceof Error;
-
-};
-
-const isFunction = ( x: unknown ): x is (( ...args: unknown[] ) => unknown) => {
-
-  return typeof x === 'function';
+  return typeof value === 'boolean';
 
 };
 
-const isNil = ( x: unknown ): x is null | undefined => {
+const isComment = ( value: unknown ): value is Comment => {
 
-  return x === null || x === undefined;
-
-};
-
-const isNode = ( x: unknown ): x is Node => {
-
-  return x !== null && typeof x === 'object' && isNumber ( x['nodeType'] );
+  return value instanceof Comment;
 
 };
 
-const isNumber = ( x: unknown ): x is number => {
+const isComponentClass = ( value: Function ): value is ComponentClass => {
 
-  return typeof x === 'number';
+  return Component.isPrototypeOf ( value );
+
+};
+
+const isElement = ( value: unknown ): value is Element => {
+
+  return value instanceof Element;
 
 };
 
-const isObservable = <T> ( x: T | Observable<T> ): x is Observable<T> => {
+const isError = ( value: unknown ): value is Error => {
 
-  return $.is ( x );
+  return value instanceof Error;
 
 };
+
+const isFunction = ( value: unknown ): value is (( ...args: unknown[] ) => unknown) => {
+
+  return typeof value === 'function';
+
+};
+
+const isNil = ( value: unknown ): value is null | undefined => {
+
+  return value === null || value === undefined;
+
+};
+
+const isNode = ( value: unknown ): value is Node => {
+
+  return value instanceof Node;
+
+};
+
+const isNumber = ( value: unknown ): value is number => {
+
+  return typeof value === 'number';
+
+};
+
+const isObservable = <T> ( value: T | Observable<T> | ObservableAccessor<T> ): value is Observable<T> | ObservableAccessor<T> => {
+
+  return $.is ( value );
+
+};
+
+const isPlainObject = (() => {
+
+  const {getPrototypeOf, prototype} = Object;
+
+  return ( value: unknown ): value is Record<string, unknown> => {
+
+    if ( typeof value !== 'object' || value === null ) return false;
+
+    const proto = getPrototypeOf ( value );
+
+    return proto === null || proto === prototype;
+
+  };
+
+})();
 
 const isPropertyNonDimensional = (() => {
 
@@ -119,18 +153,38 @@ const isPropertyNonDimensional = (() => {
 
 })();
 
-const isString = ( x: unknown ): x is string => {
+const isString = ( value: unknown ): value is string => {
 
-  return typeof x === 'string';
+  return typeof value === 'string';
+
+};
+
+const isText = ( value: unknown ): value is Text => {
+
+  return value instanceof Text;
 
 };
 
-const isText = ( x: unknown ): x is Text => {
+const isUndefined = ( value: unknown ): value is undefined => {
 
-  return x !== null && typeof x === 'object' && x['nodeType'] === 3;
+  return value === undefined;
 
 };
+
+const keys = (() => {
+
+  const _keys = Object.keys;
+
+  /* MAIN */
+
+  return <T extends Record<any, any>> ( object: T ): (keyof T)[] => {
+
+    return _keys ( object );
+
+  };
+
+})();
 
 /* EXPORT */
 
-export {castArray, castError, identity, indexOf, isAlphanumeric, isArray, isBoolean, isComment, isComponent, isElement, isError, isFunction, isNil, isNode, isNumber, isObservable, isPropertyNonDimensional, isString, isText};
+export {castArray, castError, identity, indexOf, isAlphanumeric, isArray, isBoolean, isComment, isComponentClass, isElement, isError, isFunction, isNil, isNode, isNumber, isObservable, isPlainObject, isPropertyNonDimensional, isString, isText, isUndefined, keys};

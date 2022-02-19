@@ -1,11 +1,11 @@
 
 /* IMPORT */
 
-import {ViewElement, ViewProps} from '~/types';
+import {Child, Props} from '~/types';
 
 /* MAIN */
 
-const Fragment = ( props: ViewProps ): ViewElement => {
+const Fragment = ( props: Props ): Child => {
 
   return props.children;
 

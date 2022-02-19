@@ -11,7 +11,11 @@ const useDisposed = (): Observable<boolean> => {
 
   const disposed = $(false);
 
-  useCleanup ( () => disposed ( true ) );
+  useCleanup ( () => {
+
+    disposed ( true );
+
+  });
 
   return disposed;
 

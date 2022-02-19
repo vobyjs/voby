@@ -3,11 +3,11 @@
 
 import useComputed from '~/hooks/use_computed';
 import {isObservable} from '~/utils';
-import {ObservableMaybe, ViewElement} from '~/types';
+import {ObservableMaybe, Child} from '~/types';
 
 /* MAIN */
 
-const If = ({ when, children }: { when: ObservableMaybe<boolean>, children: ViewElement }): ViewElement => {
+const If = ({ when, children }: { when: ObservableMaybe<boolean>, children: Child[] }): Child => {
 
   if ( isObservable ( when ) ) {
 

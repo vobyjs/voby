@@ -5,13 +5,13 @@ import useDisposed from '~/hooks/use_disposed';
 import useEffect from '~/hooks/use_effect';
 import {$, $$} from '~/observable';
 import {castError} from '~/utils';
-import {Observable, ObservableMaybe, ViewPromiseState} from '~/types';
+import {Observable, PromiseState} from '~/types';
 
 /* MAIN */
 
-const usePromise = <T> ( promise: ObservableMaybe<Promise<T>> ): Observable<ViewPromiseState<T>> => {
+const usePromise = <T> ( promise: Observable<Promise<T>> ): Observable<PromiseState<T>> => {
 
-  const state: Observable<ViewPromiseState<T>> = $({ loading: true });
+  const state = $<PromiseState<T>>({ loading: true });
 
   useEffect ( () => {
 
