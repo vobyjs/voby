@@ -99,7 +99,6 @@ styled.link = styled ( 'link' );
 styled.main = styled ( 'main' );
 styled.map = styled ( 'map' );
 styled.mark = styled ( 'mark' );
-styled.marquee = styled ( 'marquee' );
 styled.menu = styled ( 'menu' );
 styled.menuitem = styled ( 'menuitem' );
 styled.meta = styled ( 'meta' );

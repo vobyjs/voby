@@ -795,7 +795,7 @@ const TestEventClickCaptureRemoval = (): JSX.Element => {
 };
 
 const TestABCD = () => {
-  const AB = (): JSX.ElementObservable => {
+  const AB = (): JSX.Element => {
     const a = <i>a</i>;
     const b = <u>b</u>;
     const component = $( a );
@@ -803,7 +803,7 @@ const TestABCD = () => {
     setInterval ( toggle, TEST_INTERVAL / 2 );
     return component;
   };
-  const CD = (): JSX.ElementObservable => {
+  const CD = (): JSX.Element => {
     const c = <b>c</b>;
     const d = <span>d</span>;
     const component = $( c );

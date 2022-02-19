@@ -23,16 +23,6 @@ type ObservableResolver<T = unknown> = T | ({
   sample (): ObservableResolver<T>
 });
 
-type ViewAttributes = {
-  children?: Child,
-  textContent?: ObservableResolver<string>,
-  innerHTML?: ObservableResolver<string>,
-  outerHTML?: ObservableResolver<string>,
-  dangerouslySetInnerHTML?: ObservableResolver<{
-    __html: ObservableResolver<string>
-  }>
-};
-
 type AllClassProperties = {
   [key: string]: ObservableResolver<null | undefined | boolean>
 };
@@ -45,9 +35,11 @@ type DOMCSSProperties = {
   [key in keyof Omit<CSSStyleDeclaration, 'item' | 'setProperty' | 'removeProperty' | 'getPropertyValue' | 'getPropertyPriority'>]?: ObservableResolver<string | number | null | undefined>
 };
 
-/* MAIN */
+type HTMLAttributeReferrerPolicy = '' | 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url';
 
-//URL: https://github.com/preactjs/preact/blob/ebd87f3005d9558bfd3c5f38e0496a5d19553441/src/jsx.d.ts
+interface HTMLWebViewElement extends HTMLElement {}
+
+/* MAIN */
 
 //FIXME: link children props with return type
 
@@ -61,225 +53,39 @@ declare namespace JSX {
 
   interface StyleProperties extends AllCSSProperties, DOMCSSProperties {}
 
-  type TargetedEvent<Element extends EventTarget = EventTarget, TypedEvent extends Event = Event> = Omit<TypedEvent, 'currentTarget'> & { readonly currentTarget?: Element };
-  type TargetedAnimationEvent<Element extends EventTarget> = TargetedEvent<Element, AnimationEvent>;
-  type TargetedClipboardEvent<Element extends EventTarget> = TargetedEvent<Element, ClipboardEvent>;
-  type TargetedCompositionEvent<Element extends EventTarget> = TargetedEvent<Element, CompositionEvent>;
-  type TargetedDragEvent<Element extends EventTarget> = TargetedEvent<Element, DragEvent>;
-  type TargetedFocusEvent<Element extends EventTarget> = TargetedEvent<Element, FocusEvent>;
-  type TargetedKeyboardEvent<Element extends EventTarget> = TargetedEvent<Element, KeyboardEvent>;
-  type TargetedMouseEvent<Element extends EventTarget> = TargetedEvent<Element, MouseEvent>;
-  type TargetedPointerEvent<Element extends EventTarget> = TargetedEvent<Element, PointerEvent>;
-  type TargetedTouchEvent<Element extends EventTarget> = TargetedEvent<Element, TouchEvent>;
-  type TargetedTransitionEvent<Element extends EventTarget> = TargetedEvent<Element, TransitionEvent>;
-  type TargetedUIEvent<Element extends EventTarget> = TargetedEvent<Element, UIEvent>;
-  type TargetedWheelEvent<Element extends EventTarget> = TargetedEvent<Element, WheelEvent>;
+  type TargetedEvent<T extends EventTarget = EventTarget, TypedEvent extends Event = Event> = Omit<TypedEvent, 'currentTarget'> & { readonly currentTarget: T };
+  type TargetedAnimationEvent<T extends EventTarget> = TargetedEvent<T, AnimationEvent>;
+  type TargetedClipboardEvent<T extends EventTarget> = TargetedEvent<T, ClipboardEvent>;
+  type TargetedCompositionEvent<T extends EventTarget> = TargetedEvent<T, CompositionEvent>;
+  type TargetedDragEvent<T extends EventTarget> = TargetedEvent<T, DragEvent>;
+  type TargetedFocusEvent<T extends EventTarget> = TargetedEvent<T, FocusEvent>;
+  type TargetedKeyboardEvent<T extends EventTarget> = TargetedEvent<T, KeyboardEvent>;
+  type TargetedMouseEvent<T extends EventTarget> = TargetedEvent<T, MouseEvent>;
+  type TargetedPointerEvent<T extends EventTarget> = TargetedEvent<T, PointerEvent>;
+  type TargetedTouchEvent<T extends EventTarget> = TargetedEvent<T, TouchEvent>;
+  type TargetedTransitionEvent<T extends EventTarget> = TargetedEvent<T, TransitionEvent>;
+  type TargetedUIEvent<T extends EventTarget> = TargetedEvent<T, UIEvent>;
+  type TargetedWheelEvent<T extends EventTarget> = TargetedEvent<T, WheelEvent>;
 
   type EventHandler<Event extends TargetedEvent> = { ( this: never, event: Event ): void };
-  type AnimationEventHandler<Element extends EventTarget> = EventHandler<TargetedAnimationEvent<Element>>;
-  type ClipboardEventHandler<Element extends EventTarget> = EventHandler<TargetedClipboardEvent<Element>>;
-  type CompositionEventHandler<Element extends EventTarget> = EventHandler<TargetedCompositionEvent<Element>>;
-  type DragEventHandler<Element extends EventTarget> = EventHandler<TargetedDragEvent<Element>>;
-  type FocusEventHandler<Element extends EventTarget> = EventHandler<TargetedFocusEvent<Element>>;
-  type GenericEventHandler<Element extends EventTarget> = EventHandler<TargetedEvent<Element>>;
-  type KeyboardEventHandler<Element extends EventTarget> = EventHandler<TargetedKeyboardEvent<Element>>;
-  type MouseEventHandler<Element extends EventTarget> = EventHandler<TargetedMouseEvent<Element>>;
-  type PointerEventHandler<Element extends EventTarget> = EventHandler<TargetedPointerEvent<Element>>;
-  type TouchEventHandler<Element extends EventTarget> = EventHandler<TargetedTouchEvent<Element>>;
-  type TransitionEventHandler<Element extends EventTarget> = EventHandler<TargetedTransitionEvent<Element>>;
-  type UIEventHandler<Element extends EventTarget> = EventHandler<TargetedUIEvent<Element>>;
-  type WheelEventHandler<Element extends EventTarget> = EventHandler<TargetedWheelEvent<Element>>;
+  type AnimationEventHandler<T extends EventTarget> = EventHandler<TargetedAnimationEvent<T>>;
+  type ClipboardEventHandler<T extends EventTarget> = EventHandler<TargetedClipboardEvent<T>>;
+  type CompositionEventHandler<T extends EventTarget> = EventHandler<TargetedCompositionEvent<T>>;
+  type DragEventHandler<T extends EventTarget> = EventHandler<TargetedDragEvent<T>>;
+  type FocusEventHandler<T extends EventTarget> = EventHandler<TargetedFocusEvent<T>>;
+  type GenericEventHandler<T extends EventTarget> = EventHandler<TargetedEvent<T>>;
+  type KeyboardEventHandler<T extends EventTarget> = EventHandler<TargetedKeyboardEvent<T>>;
+  type MouseEventHandler<T extends EventTarget> = EventHandler<TargetedMouseEvent<T>>;
+  type PointerEventHandler<T extends EventTarget> = EventHandler<TargetedPointerEvent<T>>;
+  type TouchEventHandler<T extends EventTarget> = EventHandler<TargetedTouchEvent<T>>;
+  type TransitionEventHandler<T extends EventTarget> = EventHandler<TargetedTransitionEvent<T>>;
+  type UIEventHandler<T extends EventTarget> = EventHandler<TargetedUIEvent<T>>;
+  type WheelEventHandler<T extends EventTarget> = EventHandler<TargetedWheelEvent<T>>;
+
+  type DetailedHTMLProps<Attributes extends HTMLAttributes<T>, T extends EventTarget> = ClassAttributes<T> & Attributes;
 
   interface ClassAttributes<T> {
     ref?: (( value: T ) => unknown)
-  }
-
-  interface DOMAttributes<Element extends EventTarget> extends ViewAttributes {
-    /* IMAGE EVENTS */
-    onLoad?: ObservableResolver<GenericEventHandler<Element>>,
-    onLoadCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onError?: ObservableResolver<GenericEventHandler<Element>>,
-    onErrorCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    /* CLIPBOARD EVENTS */
-    onCopy?: ObservableResolver<ClipboardEventHandler<Element>>,
-    onCopyCapture?: ObservableResolver<ClipboardEventHandler<Element>>,
-    onCut?: ObservableResolver<ClipboardEventHandler<Element>>,
-    onCutCapture?: ObservableResolver<ClipboardEventHandler<Element>>,
-    onPaste?: ObservableResolver<ClipboardEventHandler<Element>>,
-    onPasteCapture?: ObservableResolver<ClipboardEventHandler<Element>>,
-    /* COMPOSITION EVENTS */
-    onCompositionEnd?: ObservableResolver<CompositionEventHandler<Element>>,
-    onCompositionEndCapture?: ObservableResolver<CompositionEventHandler<Element>>,
-    onCompositionStart?: ObservableResolver<CompositionEventHandler<Element>>,
-    onCompositionStartCapture?: ObservableResolver<CompositionEventHandler<Element>>,
-    onCompositionUpdate?: ObservableResolver<CompositionEventHandler<Element>>,
-    onCompositionUpdateCapture?: ObservableResolver<CompositionEventHandler<Element>>,
-    /* DETAILS EVENTS */
-    onToggle?: ObservableResolver<GenericEventHandler<Element>>,
-    /* FOCUS EVENTS */
-    onFocus?: ObservableResolver<FocusEventHandler<Element>>,
-    onFocusCapture?: ObservableResolver<FocusEventHandler<Element>>,
-    onfocusin?: ObservableResolver<FocusEventHandler<Element>>,
-    onfocusinCapture?: ObservableResolver<FocusEventHandler<Element>>,
-    onfocusout?: ObservableResolver<FocusEventHandler<Element>>,
-    onfocusoutCapture?: ObservableResolver<FocusEventHandler<Element>>,
-    onBlur?: ObservableResolver<FocusEventHandler<Element>>,
-    onBlurCapture?: ObservableResolver<FocusEventHandler<Element>>,
-    /* FORM EVENTS */
-    onChange?: ObservableResolver<GenericEventHandler<Element>>,
-    onChangeCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onInput?: ObservableResolver<GenericEventHandler<Element>>,
-    onInputCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onBeforeInput?: ObservableResolver<GenericEventHandler<Element>>,
-    onBeforeInputCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onSearch?: ObservableResolver<GenericEventHandler<Element>>,
-    onSearchCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onSubmit?: ObservableResolver<GenericEventHandler<Element>>,
-    onSubmitCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onInvalid?: ObservableResolver<GenericEventHandler<Element>>,
-    onInvalidCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onReset?: ObservableResolver<GenericEventHandler<Element>>,
-    onResetCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onFormData?: ObservableResolver<GenericEventHandler<Element>>,
-    onFormDataCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    /* KEYBOARD EVENTS */
-    onKeyDown?: ObservableResolver<KeyboardEventHandler<Element>>,
-    onKeyDownCapture?: ObservableResolver<KeyboardEventHandler<Element>>,
-    onKeyPress?: ObservableResolver<KeyboardEventHandler<Element>>,
-    onKeyPressCapture?: ObservableResolver<KeyboardEventHandler<Element>>,
-    onKeyUp?: ObservableResolver<KeyboardEventHandler<Element>>,
-    onKeyUpCapture?: ObservableResolver<KeyboardEventHandler<Element>>,
-    /* MEDIA EVENTS */
-    onAbort?: ObservableResolver<GenericEventHandler<Element>>,
-    onAbortCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onCanPlay?: ObservableResolver<GenericEventHandler<Element>>,
-    onCanPlayCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onCanPlayThrough?: ObservableResolver<GenericEventHandler<Element>>,
-    onCanPlayThroughCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onDurationChange?: ObservableResolver<GenericEventHandler<Element>>,
-    onDurationChangeCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onEmptied?: ObservableResolver<GenericEventHandler<Element>>,
-    onEmptiedCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onEncrypted?: ObservableResolver<GenericEventHandler<Element>>,
-    onEncryptedCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onEnded?: ObservableResolver<GenericEventHandler<Element>>,
-    onEndedCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onLoadedData?: ObservableResolver<GenericEventHandler<Element>>,
-    onLoadedDataCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onLoadedMetadata?: ObservableResolver<GenericEventHandler<Element>>,
-    onLoadedMetadataCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onLoadStart?: ObservableResolver<GenericEventHandler<Element>>,
-    onLoadStartCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onPause?: ObservableResolver<GenericEventHandler<Element>>,
-    onPauseCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onPlay?: ObservableResolver<GenericEventHandler<Element>>,
-    onPlayCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onPlaying?: ObservableResolver<GenericEventHandler<Element>>,
-    onPlayingCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onProgress?: ObservableResolver<GenericEventHandler<Element>>,
-    onProgressCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onRateChange?: ObservableResolver<GenericEventHandler<Element>>,
-    onRateChangeCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onSeeked?: ObservableResolver<GenericEventHandler<Element>>,
-    onSeekedCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onSeeking?: ObservableResolver<GenericEventHandler<Element>>,
-    onSeekingCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onStalled?: ObservableResolver<GenericEventHandler<Element>>,
-    onStalledCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onSuspend?: ObservableResolver<GenericEventHandler<Element>>,
-    onSuspendCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onTimeUpdate?: ObservableResolver<GenericEventHandler<Element>>,
-    onTimeUpdateCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onVolumeChange?: ObservableResolver<GenericEventHandler<Element>>,
-    onVolumeChangeCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    onWaiting?: ObservableResolver<GenericEventHandler<Element>>,
-    onWaitingCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    /* MOUSE EVENTS */
-    onClick?: ObservableResolver<MouseEventHandler<Element>>,
-    onClickCapture?: ObservableResolver<MouseEventHandler<Element>>,
-    onContextMenu?: ObservableResolver<MouseEventHandler<Element>>,
-    onContextMenuCapture?: ObservableResolver<MouseEventHandler<Element>>,
-    onDblClick?: ObservableResolver<MouseEventHandler<Element>>,
-    onDblClickCapture?: ObservableResolver<MouseEventHandler<Element>>,
-    onDrag?: ObservableResolver<DragEventHandler<Element>>,
-    onDragCapture?: ObservableResolver<DragEventHandler<Element>>,
-    onDragEnd?: ObservableResolver<DragEventHandler<Element>>,
-    onDragEndCapture?: ObservableResolver<DragEventHandler<Element>>,
-    onDragEnter?: ObservableResolver<DragEventHandler<Element>>,
-    onDragEnterCapture?: ObservableResolver<DragEventHandler<Element>>,
-    onDragExit?: ObservableResolver<DragEventHandler<Element>>,
-    onDragExitCapture?: ObservableResolver<DragEventHandler<Element>>,
-    onDragLeave?: ObservableResolver<DragEventHandler<Element>>,
-    onDragLeaveCapture?: ObservableResolver<DragEventHandler<Element>>,
-    onDragOver?: ObservableResolver<DragEventHandler<Element>>,
-    onDragOverCapture?: ObservableResolver<DragEventHandler<Element>>,
-    onDragStart?: ObservableResolver<DragEventHandler<Element>>,
-    onDragStartCapture?: ObservableResolver<DragEventHandler<Element>>,
-    onDrop?: ObservableResolver<DragEventHandler<Element>>,
-    onDropCapture?: ObservableResolver<DragEventHandler<Element>>,
-    onMouseDown?: ObservableResolver<MouseEventHandler<Element>>,
-    onMouseDownCapture?: ObservableResolver<MouseEventHandler<Element>>,
-    onMouseEnter?: ObservableResolver<MouseEventHandler<Element>>,
-    onMouseEnterCapture?: ObservableResolver<MouseEventHandler<Element>>,
-    onMouseLeave?: ObservableResolver<MouseEventHandler<Element>>,
-    onMouseLeaveCapture?: ObservableResolver<MouseEventHandler<Element>>,
-    onMouseMove?: ObservableResolver<MouseEventHandler<Element>>,
-    onMouseMoveCapture?: ObservableResolver<MouseEventHandler<Element>>,
-    onMouseOut?: ObservableResolver<MouseEventHandler<Element>>,
-    onMouseOutCapture?: ObservableResolver<MouseEventHandler<Element>>,
-    onMouseOver?: ObservableResolver<MouseEventHandler<Element>>,
-    onMouseOverCapture?: ObservableResolver<MouseEventHandler<Element>>,
-    onMouseUp?: ObservableResolver<MouseEventHandler<Element>>,
-    onMouseUpCapture?: ObservableResolver<MouseEventHandler<Element>>,
-    /* SELECTION EVENTS */
-    onSelect?: ObservableResolver<GenericEventHandler<Element>>,
-    onSelectCapture?: ObservableResolver<GenericEventHandler<Element>>,
-    /* TOUCH EVENTS */
-    onTouchCancel?: ObservableResolver<TouchEventHandler<Element>>,
-    onTouchCancelCapture?: ObservableResolver<TouchEventHandler<Element>>,
-    onTouchEnd?: ObservableResolver<TouchEventHandler<Element>>,
-    onTouchEndCapture?: ObservableResolver<TouchEventHandler<Element>>,
-    onTouchMove?: ObservableResolver<TouchEventHandler<Element>>,
-    onTouchMoveCapture?: ObservableResolver<TouchEventHandler<Element>>,
-    onTouchStart?: ObservableResolver<TouchEventHandler<Element>>,
-    onTouchStartCapture?: ObservableResolver<TouchEventHandler<Element>>,
-    /* POINTER EVENTS */
-    onPointerOver?: ObservableResolver<PointerEventHandler<Element>>,
-    onPointerOverCapture?: ObservableResolver<PointerEventHandler<Element>>,
-    onPointerEnter?: ObservableResolver<PointerEventHandler<Element>>,
-    onPointerEnterCapture?: ObservableResolver<PointerEventHandler<Element>>,
-    onPointerDown?: ObservableResolver<PointerEventHandler<Element>>,
-    onPointerDownCapture?: ObservableResolver<PointerEventHandler<Element>>,
-    onPointerMove?: ObservableResolver<PointerEventHandler<Element>>,
-    onPointerMoveCapture?: ObservableResolver<PointerEventHandler<Element>>,
-    onPointerUp?: ObservableResolver<PointerEventHandler<Element>>,
-    onPointerUpCapture?: ObservableResolver<PointerEventHandler<Element>>,
-    onPointerCancel?: ObservableResolver<PointerEventHandler<Element>>,
-    onPointerCancelCapture?: ObservableResolver<PointerEventHandler<Element>>,
-    onPointerOut?: ObservableResolver<PointerEventHandler<Element>>,
-    onPointerOutCapture?: ObservableResolver<PointerEventHandler<Element>>,
-    onPointerLeave?: ObservableResolver<PointerEventHandler<Element>>,
-    onPointerLeaveCapture?: ObservableResolver<PointerEventHandler<Element>>,
-    onGotPointerCapture?: ObservableResolver<PointerEventHandler<Element>>,
-    onGotPointerCaptureCapture?: ObservableResolver<PointerEventHandler<Element>>,
-    onLostPointerCapture?: ObservableResolver<PointerEventHandler<Element>>,
-    onLostPointerCaptureCapture?: ObservableResolver<PointerEventHandler<Element>>,
-    /* UI EVENTS */
-    onScroll?: ObservableResolver<UIEventHandler<Element>>,
-    onScrollCapture?: ObservableResolver<UIEventHandler<Element>>,
-    /* WHEEL EVENTS */
-    onWheel?: ObservableResolver<WheelEventHandler<Element>>,
-    onWheelCapture?: ObservableResolver<WheelEventHandler<Element>>,
-    /* ANIMATION EVENTS */
-    onAnimationStart?: ObservableResolver<AnimationEventHandler<Element>>,
-    onAnimationStartCapture?: ObservableResolver<AnimationEventHandler<Element>>,
-    onAnimationEnd?: ObservableResolver<AnimationEventHandler<Element>>,
-    onAnimationEndCapture?: ObservableResolver<AnimationEventHandler<Element>>,
-    onAnimationIteration?: ObservableResolver<AnimationEventHandler<Element>>,
-    onAnimationIterationCapture?: ObservableResolver<AnimationEventHandler<Element>>,
-    /* TRANSITION EVENTS */
-    onTransitionEnd?: ObservableResolver<TransitionEventHandler<Element>>,
-    onTransitionEndCapture?: ObservableResolver<TransitionEventHandler<Element>>
   }
 
   interface ElementAttributesProperty {
@@ -290,294 +96,886 @@ declare namespace JSX {
     children: any
   }
 
-  interface HTMLAttributes<Element extends EventTarget = EventTarget> extends ClassAttributes<Element>, DOMAttributes<Element> {
-    /* STANDARD ATTRIBUTES */
-    accept?: ObservableResolver<string>,
-    acceptCharset?: ObservableResolver<string>,
+  interface IntrinsicAttributes {
+    key?: string
+  }
+
+  interface AriaAttributes {
+    'aria-activedescendant'?: ObservableResolver<string>,
+    'aria-atomic'?: ObservableResolver<boolean | 'true' | 'false'>,
+    'aria-autocomplete'?: ObservableResolver<'none' | 'inline' | 'list' | 'both'>,
+    'aria-busy'?: ObservableResolver<boolean | 'true' | 'false'>,
+    'aria-checked'?: ObservableResolver<boolean | 'false' | 'mixed' | 'true'>,
+    'aria-colcount'?: ObservableResolver<number>,
+    'aria-colindex'?: ObservableResolver<number>,
+    'aria-colspan'?: ObservableResolver<number>,
+    'aria-controls'?: ObservableResolver<string>,
+    'aria-current'?: ObservableResolver<boolean | 'false' | 'true' | 'page' | 'step' | 'location' | 'date' | 'time'>,
+    'aria-describedby'?: ObservableResolver<string>,
+    'aria-details'?: ObservableResolver<string>,
+    'aria-disabled'?: ObservableResolver<boolean | 'true' | 'false'>,
+    'aria-dropeffect'?: ObservableResolver<'none' | 'copy' | 'execute' | 'link' | 'move' | 'popup'>,
+    'aria-errormessage'?: ObservableResolver<string>,
+    'aria-expanded'?: ObservableResolver<boolean | 'true' | 'false'>,
+    'aria-flowto'?: ObservableResolver<string>,
+    'aria-grabbed'?: ObservableResolver<boolean | 'true' | 'false'>,
+    'aria-haspopup'?: ObservableResolver<boolean | 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog'>,
+    'aria-hidden'?: ObservableResolver<boolean | 'true' | 'false'>,
+    'aria-invalid'?: ObservableResolver<boolean | 'false' | 'true' | 'grammar' | 'spelling'>,
+    'aria-keyshortcuts'?: ObservableResolver<string>,
+    'aria-label'?: ObservableResolver<string>,
+    'aria-labelledby'?: ObservableResolver<string>,
+    'aria-level'?: ObservableResolver<number>,
+    'aria-live'?: ObservableResolver<'off' | 'assertive' | 'polite'>,
+    'aria-modal'?: ObservableResolver<boolean | 'true' | 'false'>,
+    'aria-multiline'?: ObservableResolver<boolean | 'true' | 'false'>,
+    'aria-multiselectable'?: ObservableResolver<boolean | 'true' | 'false'>,
+    'aria-orientation'?: ObservableResolver<'horizontal' | 'vertical'>,
+    'aria-owns'?: ObservableResolver<string>,
+    'aria-placeholder'?: ObservableResolver<string>,
+    'aria-posinset'?: ObservableResolver<number>,
+    'aria-pressed'?: ObservableResolver<boolean | 'false' | 'mixed' | 'true'>,
+    'aria-readonly'?: ObservableResolver<boolean | 'true' | 'false'>,
+    'aria-relevant'?: ObservableResolver<'additions' | 'additions removals' | 'additions text' | 'all' | 'removals' | 'removals additions' | 'removals text' | 'text' | 'text additions' | 'text removals'>,
+    'aria-required'?: ObservableResolver<boolean | 'true' | 'false'>,
+    'aria-roledescription'?: ObservableResolver<string>,
+    'aria-rowcount'?: ObservableResolver<number>,
+    'aria-rowindex'?: ObservableResolver<number>,
+    'aria-rowspan'?: ObservableResolver<number>,
+    'aria-selected'?: ObservableResolver<boolean | 'true' | 'false'>,
+    'aria-setsize'?: ObservableResolver<number>,
+    'aria-sort'?: ObservableResolver<'none' | 'ascending' | 'descending' | 'other'>,
+    'aria-valuemax'?: ObservableResolver<number>,
+    'aria-valuemin'?: ObservableResolver<number>,
+    'aria-valuenow'?: ObservableResolver<number>,
+    'aria-valuetext'?: ObservableResolver<string>
+  }
+
+  interface EventAttributes<T extends EventTarget> {
+    /* IMAGE EVENTS */
+    onLoad?: ObservableResolver<GenericEventHandler<T>>,
+    onLoadCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onError?: ObservableResolver<GenericEventHandler<T>>,
+    onErrorCapture?: ObservableResolver<GenericEventHandler<T>>,
+    /* CLIPBOARD EVENTS */
+    onCopy?: ObservableResolver<ClipboardEventHandler<T>>,
+    onCopyCapture?: ObservableResolver<ClipboardEventHandler<T>>,
+    onCut?: ObservableResolver<ClipboardEventHandler<T>>,
+    onCutCapture?: ObservableResolver<ClipboardEventHandler<T>>,
+    onPaste?: ObservableResolver<ClipboardEventHandler<T>>,
+    onPasteCapture?: ObservableResolver<ClipboardEventHandler<T>>,
+    /* COMPOSITION EVENTS */
+    onCompositionEnd?: ObservableResolver<CompositionEventHandler<T>>,
+    onCompositionEndCapture?: ObservableResolver<CompositionEventHandler<T>>,
+    onCompositionStart?: ObservableResolver<CompositionEventHandler<T>>,
+    onCompositionStartCapture?: ObservableResolver<CompositionEventHandler<T>>,
+    onCompositionUpdate?: ObservableResolver<CompositionEventHandler<T>>,
+    onCompositionUpdateCapture?: ObservableResolver<CompositionEventHandler<T>>,
+    /* DETAILS EVENTS */
+    onToggle?: ObservableResolver<GenericEventHandler<T>>,
+    /* FOCUS EVENTS */
+    onFocus?: ObservableResolver<FocusEventHandler<T>>,
+    onFocusCapture?: ObservableResolver<FocusEventHandler<T>>,
+    onfocusin?: ObservableResolver<FocusEventHandler<T>>,
+    onfocusinCapture?: ObservableResolver<FocusEventHandler<T>>,
+    onfocusout?: ObservableResolver<FocusEventHandler<T>>,
+    onfocusoutCapture?: ObservableResolver<FocusEventHandler<T>>,
+    onBlur?: ObservableResolver<FocusEventHandler<T>>,
+    onBlurCapture?: ObservableResolver<FocusEventHandler<T>>,
+    /* FORM EVENTS */
+    onChange?: ObservableResolver<GenericEventHandler<T>>,
+    onChangeCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onInput?: ObservableResolver<GenericEventHandler<T>>,
+    onInputCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onBeforeInput?: ObservableResolver<GenericEventHandler<T>>,
+    onBeforeInputCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onSearch?: ObservableResolver<GenericEventHandler<T>>,
+    onSearchCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onSubmit?: ObservableResolver<GenericEventHandler<T>>,
+    onSubmitCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onInvalid?: ObservableResolver<GenericEventHandler<T>>,
+    onInvalidCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onReset?: ObservableResolver<GenericEventHandler<T>>,
+    onResetCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onFormData?: ObservableResolver<GenericEventHandler<T>>,
+    onFormDataCapture?: ObservableResolver<GenericEventHandler<T>>,
+    /* KEYBOARD EVENTS */
+    onKeyDown?: ObservableResolver<KeyboardEventHandler<T>>,
+    onKeyDownCapture?: ObservableResolver<KeyboardEventHandler<T>>,
+    onKeyPress?: ObservableResolver<KeyboardEventHandler<T>>,
+    onKeyPressCapture?: ObservableResolver<KeyboardEventHandler<T>>,
+    onKeyUp?: ObservableResolver<KeyboardEventHandler<T>>,
+    onKeyUpCapture?: ObservableResolver<KeyboardEventHandler<T>>,
+    /* MEDIA EVENTS */
+    onAbort?: ObservableResolver<GenericEventHandler<T>>,
+    onAbortCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onCanPlay?: ObservableResolver<GenericEventHandler<T>>,
+    onCanPlayCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onCanPlayThrough?: ObservableResolver<GenericEventHandler<T>>,
+    onCanPlayThroughCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onDurationChange?: ObservableResolver<GenericEventHandler<T>>,
+    onDurationChangeCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onEmptied?: ObservableResolver<GenericEventHandler<T>>,
+    onEmptiedCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onEncrypted?: ObservableResolver<GenericEventHandler<T>>,
+    onEncryptedCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onEnded?: ObservableResolver<GenericEventHandler<T>>,
+    onEndedCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onLoadedData?: ObservableResolver<GenericEventHandler<T>>,
+    onLoadedDataCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onLoadedMetadata?: ObservableResolver<GenericEventHandler<T>>,
+    onLoadedMetadataCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onLoadStart?: ObservableResolver<GenericEventHandler<T>>,
+    onLoadStartCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onPause?: ObservableResolver<GenericEventHandler<T>>,
+    onPauseCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onPlay?: ObservableResolver<GenericEventHandler<T>>,
+    onPlayCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onPlaying?: ObservableResolver<GenericEventHandler<T>>,
+    onPlayingCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onProgress?: ObservableResolver<GenericEventHandler<T>>,
+    onProgressCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onRateChange?: ObservableResolver<GenericEventHandler<T>>,
+    onRateChangeCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onSeeked?: ObservableResolver<GenericEventHandler<T>>,
+    onSeekedCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onSeeking?: ObservableResolver<GenericEventHandler<T>>,
+    onSeekingCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onStalled?: ObservableResolver<GenericEventHandler<T>>,
+    onStalledCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onSuspend?: ObservableResolver<GenericEventHandler<T>>,
+    onSuspendCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onTimeUpdate?: ObservableResolver<GenericEventHandler<T>>,
+    onTimeUpdateCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onVolumeChange?: ObservableResolver<GenericEventHandler<T>>,
+    onVolumeChangeCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onWaiting?: ObservableResolver<GenericEventHandler<T>>,
+    onWaitingCapture?: ObservableResolver<GenericEventHandler<T>>,
+    /* MOUSE EVENTS */
+    onClick?: ObservableResolver<MouseEventHandler<T>>,
+    onClickCapture?: ObservableResolver<MouseEventHandler<T>>,
+    onContextMenu?: ObservableResolver<MouseEventHandler<T>>,
+    onContextMenuCapture?: ObservableResolver<MouseEventHandler<T>>,
+    onDblClick?: ObservableResolver<MouseEventHandler<T>>,
+    onDblClickCapture?: ObservableResolver<MouseEventHandler<T>>,
+    onDrag?: ObservableResolver<DragEventHandler<T>>,
+    onDragCapture?: ObservableResolver<DragEventHandler<T>>,
+    onDragEnd?: ObservableResolver<DragEventHandler<T>>,
+    onDragEndCapture?: ObservableResolver<DragEventHandler<T>>,
+    onDragEnter?: ObservableResolver<DragEventHandler<T>>,
+    onDragEnterCapture?: ObservableResolver<DragEventHandler<T>>,
+    onDragExit?: ObservableResolver<DragEventHandler<T>>,
+    onDragExitCapture?: ObservableResolver<DragEventHandler<T>>,
+    onDragLeave?: ObservableResolver<DragEventHandler<T>>,
+    onDragLeaveCapture?: ObservableResolver<DragEventHandler<T>>,
+    onDragOver?: ObservableResolver<DragEventHandler<T>>,
+    onDragOverCapture?: ObservableResolver<DragEventHandler<T>>,
+    onDragStart?: ObservableResolver<DragEventHandler<T>>,
+    onDragStartCapture?: ObservableResolver<DragEventHandler<T>>,
+    onDrop?: ObservableResolver<DragEventHandler<T>>,
+    onDropCapture?: ObservableResolver<DragEventHandler<T>>,
+    onMouseDown?: ObservableResolver<MouseEventHandler<T>>,
+    onMouseDownCapture?: ObservableResolver<MouseEventHandler<T>>,
+    onMouseEnter?: ObservableResolver<MouseEventHandler<T>>,
+    onMouseEnterCapture?: ObservableResolver<MouseEventHandler<T>>,
+    onMouseLeave?: ObservableResolver<MouseEventHandler<T>>,
+    onMouseLeaveCapture?: ObservableResolver<MouseEventHandler<T>>,
+    onMouseMove?: ObservableResolver<MouseEventHandler<T>>,
+    onMouseMoveCapture?: ObservableResolver<MouseEventHandler<T>>,
+    onMouseOut?: ObservableResolver<MouseEventHandler<T>>,
+    onMouseOutCapture?: ObservableResolver<MouseEventHandler<T>>,
+    onMouseOver?: ObservableResolver<MouseEventHandler<T>>,
+    onMouseOverCapture?: ObservableResolver<MouseEventHandler<T>>,
+    onMouseUp?: ObservableResolver<MouseEventHandler<T>>,
+    onMouseUpCapture?: ObservableResolver<MouseEventHandler<T>>,
+    /* SELECTION EVENTS */
+    onSelect?: ObservableResolver<GenericEventHandler<T>>,
+    onSelectCapture?: ObservableResolver<GenericEventHandler<T>>,
+    /* TOUCH EVENTS */
+    onTouchCancel?: ObservableResolver<TouchEventHandler<T>>,
+    onTouchCancelCapture?: ObservableResolver<TouchEventHandler<T>>,
+    onTouchEnd?: ObservableResolver<TouchEventHandler<T>>,
+    onTouchEndCapture?: ObservableResolver<TouchEventHandler<T>>,
+    onTouchMove?: ObservableResolver<TouchEventHandler<T>>,
+    onTouchMoveCapture?: ObservableResolver<TouchEventHandler<T>>,
+    onTouchStart?: ObservableResolver<TouchEventHandler<T>>,
+    onTouchStartCapture?: ObservableResolver<TouchEventHandler<T>>,
+    /* POINTER EVENTS */
+    onPointerOver?: ObservableResolver<PointerEventHandler<T>>,
+    onPointerOverCapture?: ObservableResolver<PointerEventHandler<T>>,
+    onPointerEnter?: ObservableResolver<PointerEventHandler<T>>,
+    onPointerEnterCapture?: ObservableResolver<PointerEventHandler<T>>,
+    onPointerDown?: ObservableResolver<PointerEventHandler<T>>,
+    onPointerDownCapture?: ObservableResolver<PointerEventHandler<T>>,
+    onPointerMove?: ObservableResolver<PointerEventHandler<T>>,
+    onPointerMoveCapture?: ObservableResolver<PointerEventHandler<T>>,
+    onPointerUp?: ObservableResolver<PointerEventHandler<T>>,
+    onPointerUpCapture?: ObservableResolver<PointerEventHandler<T>>,
+    onPointerCancel?: ObservableResolver<PointerEventHandler<T>>,
+    onPointerCancelCapture?: ObservableResolver<PointerEventHandler<T>>,
+    onPointerOut?: ObservableResolver<PointerEventHandler<T>>,
+    onPointerOutCapture?: ObservableResolver<PointerEventHandler<T>>,
+    onPointerLeave?: ObservableResolver<PointerEventHandler<T>>,
+    onPointerLeaveCapture?: ObservableResolver<PointerEventHandler<T>>,
+    onGotPointerCapture?: ObservableResolver<PointerEventHandler<T>>,
+    onGotPointerCaptureCapture?: ObservableResolver<PointerEventHandler<T>>,
+    onLostPointerCapture?: ObservableResolver<PointerEventHandler<T>>,
+    onLostPointerCaptureCapture?: ObservableResolver<PointerEventHandler<T>>,
+    /* UI EVENTS */
+    onScroll?: ObservableResolver<UIEventHandler<T>>,
+    onScrollCapture?: ObservableResolver<UIEventHandler<T>>,
+    /* WHEEL EVENTS */
+    onWheel?: ObservableResolver<WheelEventHandler<T>>,
+    onWheelCapture?: ObservableResolver<WheelEventHandler<T>>,
+    /* ANIMATION EVENTS */
+    onAnimationStart?: ObservableResolver<AnimationEventHandler<T>>,
+    onAnimationStartCapture?: ObservableResolver<AnimationEventHandler<T>>,
+    onAnimationEnd?: ObservableResolver<AnimationEventHandler<T>>,
+    onAnimationEndCapture?: ObservableResolver<AnimationEventHandler<T>>,
+    onAnimationIteration?: ObservableResolver<AnimationEventHandler<T>>,
+    onAnimationIterationCapture?: ObservableResolver<AnimationEventHandler<T>>,
+    /* TRANSITION EVENTS */
+    onTransitionEnd?: ObservableResolver<TransitionEventHandler<T>>,
+    onTransitionEndCapture?: ObservableResolver<TransitionEventHandler<T>>
+  }
+
+  interface ViewAttributes {
+    children?: Child,
+    textContent?: ObservableResolver<string>,
+    innerHTML?: ObservableResolver<string>,
+    outerHTML?: ObservableResolver<string>,
+    dangerouslySetInnerHTML?: ObservableResolver<{
+      __html: ObservableResolver<string>
+    }>
+  }
+
+  interface DOMAttributes<T extends EventTarget> extends EventAttributes<T>, ViewAttributes {
+
+  }
+
+  interface HTMLAttributes<T extends EventTarget> extends AriaAttributes, DOMAttributes<T> {
+    /* REACT-SPECIFIC ATTRIBUTES */
+    defaultChecked?: ObservableResolver<boolean>,
+    defaultValue?: ObservableResolver<string | number | ReadonlyArray<string>>,
+    suppressContentEditableWarning?: ObservableResolver<boolean>,
+    suppressHydrationWarning?: ObservableResolver<boolean>,
+    /* STANDARD HTML ATTRIBUTES */
     accessKey?: ObservableResolver<string>,
-    action?: ObservableResolver<string>,
-    allow?: ObservableResolver<string>,
-    allowFullScreen?: ObservableResolver<boolean>,
-    allowTransparency?: ObservableResolver<boolean>,
-    alt?: ObservableResolver<string>,
-    as?: ObservableResolver<string>,
-    async?: ObservableResolver<boolean>,
-    autocomplete?: ObservableResolver<string>,
-    autoComplete?: ObservableResolver<string>,
-    autocorrect?: ObservableResolver<string>,
-    autoCorrect?: ObservableResolver<string>,
-    autofocus?: ObservableResolver<boolean>,
-    autoFocus?: ObservableResolver<boolean>,
-    autoPlay?: ObservableResolver<boolean>,
-    capture?: ObservableResolver<boolean | string>,
-    cellPadding?: ObservableResolver<number | string>,
-    cellSpacing?: ObservableResolver<number | string>,
-    charSet?: ObservableResolver<string>,
-    challenge?: ObservableResolver<string>,
-    checked?: ObservableResolver<boolean>,
-    cite?: ObservableResolver<string>,
     class?: ObservableResolver<string | ClassProperties>,
     className?: ObservableResolver<string>,
-    cols?: ObservableResolver<number>,
-    colSpan?: ObservableResolver<number>,
-    content?: ObservableResolver<string>,
-    contentEditable?: ObservableResolver<boolean>,
+    contentEditable?: ObservableResolver<boolean | 'true' | 'false' | 'inherit'>,
     contextMenu?: ObservableResolver<string>,
-    controls?: ObservableResolver<boolean>,
-    controlsList?: ObservableResolver<string>,
-    coords?: ObservableResolver<string>,
-    crossOrigin?: ObservableResolver<string>,
-    data?: ObservableResolver<string>,
-    dateTime?: ObservableResolver<string>,
-    default?: ObservableResolver<boolean>,
-    defer?: ObservableResolver<boolean>,
-    dir?: ObservableResolver<'auto' | 'rtl' | 'ltr'>,
-    disabled?: ObservableResolver<boolean>,
-    disableRemotePlayback?: ObservableResolver<boolean>,
+    dir?: ObservableResolver<string>,
+    draggable?: ObservableResolver<boolean | 'true' | 'false'>,
+    hidden?: ObservableResolver<boolean>,
+    id?: ObservableResolver<string>,
+    lang?: ObservableResolver<string>,
+    placeholder?: ObservableResolver<string>,
+    slot?: ObservableResolver<string>,
+    spellCheck?: ObservableResolver<boolean | 'true' | 'false'>,
+    style?: ObservableResolver<string | StyleProperties>,
+    tabIndex?: ObservableResolver<number>,
+    title?: ObservableResolver<string>,
+    translate?: ObservableResolver<'yes' | 'no'>,
+    /* UNKNOWN */
+    radioGroup?: ObservableResolver<string>,
+    /* WAI-ARIA */
+    role?: ObservableResolver<'alert' | 'alertdialog' | 'application' | 'article' | 'banner' | 'button' | 'cell' | 'checkbox' | 'columnheader' | 'combobox' | 'complementary' | 'contentinfo' | 'definition' | 'dialog' | 'directory' | 'document' | 'feed' | 'figure' | 'form' | 'grid' | 'gridcell' | 'group' | 'heading' | 'img' | 'link' | 'list' | 'listbox' | 'listitem' | 'log' | 'main' | 'marquee' | 'math' | 'menu' | 'menubar' | 'menuitem' | 'menuitemcheckbox' | 'menuitemradio' | 'navigation' | 'none' | 'note' | 'option' | 'presentation' | 'progressbar' | 'radio' | 'radiogroup' | 'region' | 'row' | 'rowgroup' | 'rowheader' | 'scrollbar' | 'search' | 'searchbox' | 'separator' | 'slider' | 'spinbutton' | 'status' | 'switch' | 'tab' | 'table' | 'tablist' | 'tabpanel' | 'term' | 'textbox' | 'timer' | 'toolbar' | 'tooltip' | 'tree' | 'treegrid' | 'treeitem'>,
+    /* RDFA ATTRIBUTES */
+    about?: ObservableResolver<string>,
+    datatype?: ObservableResolver<string>,
+    inlist?: ObservableResolver<boolean>;
+    prefix?: ObservableResolver<string>,
+    property?: ObservableResolver<string>,
+    resource?: ObservableResolver<string>,
+    typeof?: ObservableResolver<string>,
+    vocab?: ObservableResolver<string>,
+    /* NON-STANDARD ATTRIBUTES */
+    autoCapitalize?: ObservableResolver<string>,
+    autoCorrect?: ObservableResolver<string>,
+    autoSave?: ObservableResolver<string>,
+    color?: ObservableResolver<string>,
+    itemProp?: ObservableResolver<string>,
+    itemScope?: ObservableResolver<boolean>,
+    itemType?: ObservableResolver<string>,
+    itemID?: ObservableResolver<string>,
+    itemRef?: ObservableResolver<string>,
+    results?: ObservableResolver<number>,
+    security?: ObservableResolver<string>,
+    unselectable?: ObservableResolver<'on' | 'off'>,
+    /* LIVING STANDARD */
+    inputMode?: ObservableResolver<'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search'>,
+    is?: ObservableResolver<string>
+  }
+
+  interface AnchorHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
     download?: ObservableResolver<boolean>,
-    decoding?: ObservableResolver<'sync' | 'async' | 'auto'>,
-    draggable?: ObservableResolver<boolean>,
-    encType?: ObservableResolver<string>,
-    enterkeyhint?: ObservableResolver<'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'>,
+    href?: ObservableResolver<string>,
+    hrefLang?: ObservableResolver<string>,
+    media?: ObservableResolver<string>,
+    ping?: ObservableResolver<string>,
+    rel?: ObservableResolver<string>,
+    target?: ObservableResolver<'_self' | '_blank' | '_parent' | '_top'>,
+    type?: ObservableResolver<string>,
+    referrerPolicy?: ObservableResolver<HTMLAttributeReferrerPolicy>
+  }
+
+  interface AudioHTMLAttributes<T extends EventTarget> extends MediaHTMLAttributes<T> {
+
+  }
+
+  interface AreaHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    alt?: ObservableResolver<string>,
+    coords?: ObservableResolver<string>,
+    download?: ObservableResolver<boolean>,
+    href?: ObservableResolver<string>,
+    hrefLang?: ObservableResolver<string>,
+    media?: ObservableResolver<string>,
+    referrerPolicy?: ObservableResolver<HTMLAttributeReferrerPolicy>,
+    rel?: ObservableResolver<string>,
+    shape?: ObservableResolver<string>,
+    target?: ObservableResolver<string>
+  }
+
+  interface BaseHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    href?: ObservableResolver<string>,
+    target?: ObservableResolver<string>
+  }
+
+  interface BlockquoteHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    cite?: ObservableResolver<string>
+  }
+
+  interface ButtonHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    autoFocus?: ObservableResolver<boolean>,
+    disabled?: ObservableResolver<boolean>,
     form?: ObservableResolver<string>,
     formAction?: ObservableResolver<string>,
     formEncType?: ObservableResolver<string>,
     formMethod?: ObservableResolver<string>,
     formNoValidate?: ObservableResolver<boolean>,
     formTarget?: ObservableResolver<string>,
-    frameBorder?: ObservableResolver<number | string>,
-    headers?: ObservableResolver<string>,
+    name?: ObservableResolver<string>,
+    type?: ObservableResolver<'submit' | 'reset' | 'button'>,
+    value?: ObservableResolver<string | ReadonlyArray<string> | number>
+  }
+
+  interface CanvasHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
     height?: ObservableResolver<number | string>,
-    hidden?: ObservableResolver<boolean>,
-    high?: ObservableResolver<number>,
-    href?: ObservableResolver<string>,
-    hrefLang?: ObservableResolver<string>,
-    for?: ObservableResolver<string>,
-    htmlFor?: ObservableResolver<string>,
-    httpEquiv?: ObservableResolver<string>,
-    icon?: ObservableResolver<string>,
-    id?: ObservableResolver<string>,
-    inputMode?: ObservableResolver<string>,
-    integrity?: ObservableResolver<string>,
-    is?: ObservableResolver<string>,
-    keyParams?: ObservableResolver<string>,
-    keyType?: ObservableResolver<string>,
-    kind?: ObservableResolver<string>,
-    label?: ObservableResolver<string>,
-    lang?: ObservableResolver<string>,
-    list?: ObservableResolver<string>,
+    width?: ObservableResolver<number | string>
+  }
+
+  interface ColHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    span?: ObservableResolver<number>,
+    width?: ObservableResolver<number | string>
+  }
+
+  interface ColgroupHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    span?: ObservableResolver<number>
+  }
+
+  interface DataHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    value?: ObservableResolver<string | ReadonlyArray<string> | number>
+  }
+
+  interface DetailsHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    open?: ObservableResolver<boolean>,
+    onToggle?: ObservableResolver<GenericEventHandler<T>>
+  }
+
+  interface DelHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    cite?: ObservableResolver<string>,
+    dateTime?: ObservableResolver<string>
+  }
+
+  interface DialogHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    open?: ObservableResolver<boolean>
+  }
+
+  interface EmbedHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    height?: ObservableResolver<number | string>,
+    src?: ObservableResolver<string>,
+    type?: ObservableResolver<string>,
+    width?: ObservableResolver<number | string>
+  }
+
+  interface FieldsetHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    disabled?: ObservableResolver<boolean>,
+    form?: ObservableResolver<string>,
+    name?: ObservableResolver<string>
+  }
+
+  interface FormHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    acceptCharset?: ObservableResolver<string>,
+    action?: ObservableResolver<string>,
+    autoComplete?: ObservableResolver<string>,
+    encType?: ObservableResolver<string>,
+    method?: ObservableResolver<string>,
+    name?: ObservableResolver<string>,
+    noValidate?: ObservableResolver<boolean>,
+    target?: ObservableResolver<string>
+  }
+
+  interface HtmlHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    manifest?: ObservableResolver<string>
+  }
+
+  interface IframeHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    allow?: ObservableResolver<string>,
+    allowFullScreen?: ObservableResolver<boolean>,
+    allowTransparency?: ObservableResolver<boolean>,
+    /** @deprecated */
+    frameBorder?: ObservableResolver<number | string>,
+    height?: ObservableResolver<number | string>,
     loading?: ObservableResolver<'eager' | 'lazy'>,
-    loop?: ObservableResolver<boolean>,
-    low?: ObservableResolver<number>,
-    manifest?: ObservableResolver<string>,
+    /** @deprecated */
     marginHeight?: ObservableResolver<number>,
+    /** @deprecated */
     marginWidth?: ObservableResolver<number>,
+    name?: ObservableResolver<string>,
+    referrerPolicy?: ObservableResolver<HTMLAttributeReferrerPolicy>,
+    sandbox?: ObservableResolver<string>,
+    /** @deprecated */
+    scrolling?: ObservableResolver<string>,
+    seamless?: ObservableResolver<boolean>,
+    src?: ObservableResolver<string>,
+    srcDoc?: ObservableResolver<string>,
+    width?: ObservableResolver<number | string>
+  }
+
+  interface ImgHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    alt?: ObservableResolver<string>,
+    crossOrigin?: ObservableResolver<'anonymous' | 'use-credentials' | ''>,
+    decoding?: ObservableResolver<'async' | 'auto' | 'sync'>,
+    height?: ObservableResolver<number | string>,
+    loading?: ObservableResolver<'eager' | 'lazy'>,
+    referrerPolicy?: ObservableResolver<HTMLAttributeReferrerPolicy>,
+    sizes?: ObservableResolver<string>,
+    src?: ObservableResolver<string>,
+    srcSet?: ObservableResolver<string>,
+    useMap?: ObservableResolver<string>,
+    width?: ObservableResolver<number | string>
+  }
+
+  interface InsHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    cite?: ObservableResolver<string>,
+    dateTime?: ObservableResolver<string>
+  }
+
+  interface InputHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    accept?: ObservableResolver<string>,
+    alt?: ObservableResolver<string>,
+    autoComplete?: ObservableResolver<string>,
+    autoFocus?: ObservableResolver<boolean>,
+    capture?: ObservableResolver<boolean | 'user' | 'environment'>,
+    checked?: ObservableResolver<boolean>,
+    crossOrigin?: ObservableResolver<string>,
+    disabled?: ObservableResolver<boolean>,
+    enterKeyHint?: ObservableResolver<'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'>,
+    form?: ObservableResolver<string>,
+    formAction?: ObservableResolver<string>,
+    formEncType?: ObservableResolver<string>,
+    formMethod?: ObservableResolver<string>,
+    formNoValidate?: ObservableResolver<boolean>,
+    formTarget?: ObservableResolver<string>,
+    height?: ObservableResolver<number | string>,
+    list?: ObservableResolver<string>,
     max?: ObservableResolver<number | string>,
     maxLength?: ObservableResolver<number>,
-    media?: ObservableResolver<string>,
-    mediaGroup?: ObservableResolver<string>,
-    method?: ObservableResolver<string>,
     min?: ObservableResolver<number | string>,
     minLength?: ObservableResolver<number>,
     multiple?: ObservableResolver<boolean>,
-    muted?: ObservableResolver<boolean>,
     name?: ObservableResolver<string>,
-    nomodule?: ObservableResolver<boolean>,
-    nonce?: ObservableResolver<string>,
-    noValidate?: ObservableResolver<boolean>,
-    open?: ObservableResolver<boolean>,
-    optimum?: ObservableResolver<number>,
     pattern?: ObservableResolver<string>,
-    ping?: ObservableResolver<string>,
     placeholder?: ObservableResolver<string>,
-    playsInline?: ObservableResolver<boolean>,
-    poster?: ObservableResolver<string>,
-    preload?: ObservableResolver<string>,
-    radioGroup?: ObservableResolver<string>,
-    readonly?: ObservableResolver<boolean>,
     readOnly?: ObservableResolver<boolean>,
-    referrerpolicy?: ObservableResolver<'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url'>,
-    rel?: ObservableResolver<string>,
     required?: ObservableResolver<boolean>,
-    reversed?: ObservableResolver<boolean>,
-    role?: ObservableResolver<string>,
-    rows?: ObservableResolver<number>,
-    rowSpan?: ObservableResolver<number>,
-    sandbox?: ObservableResolver<string>,
-    scope?: ObservableResolver<string>,
-    scoped?: ObservableResolver<boolean>,
-    scrolling?: ObservableResolver<string>,
-    seamless?: ObservableResolver<boolean>,
-    selected?: ObservableResolver<boolean>,
-    shape?: ObservableResolver<string>,
     size?: ObservableResolver<number>,
-    sizes?: ObservableResolver<string>,
-    slot?: ObservableResolver<string>,
-    span?: ObservableResolver<number>,
-    spellcheck?: ObservableResolver<boolean>,
-    spellCheck?: ObservableResolver<boolean>,
     src?: ObservableResolver<string>,
-    srcset?: ObservableResolver<string>,
-    srcDoc?: ObservableResolver<string>,
-    srcLang?: ObservableResolver<string>,
-    srcSet?: ObservableResolver<string>,
-    start?: ObservableResolver<number>,
     step?: ObservableResolver<number | string>,
-    style?: ObservableResolver<string | StyleProperties>,
-    summary?: ObservableResolver<string>,
-    tabIndex?: ObservableResolver<number>,
-    target?: ObservableResolver<string>,
-    title?: ObservableResolver<string>,
-    type?: ObservableResolver<string>,
-    useMap?: ObservableResolver<string>,
-    value?: ObservableResolver<string | string[] | number>,
-    volume?: ObservableResolver<string | number>,
+    type?: ObservableResolver<'button' | 'checkbox' | 'color' | 'date' | 'datetime-local' | 'email' | 'file' | 'hidden' | 'image' | 'month' | 'number' | 'password' | 'radio' | 'range' | 'reset' | 'search' | 'submit' | 'tel' | 'text' | 'time' | 'url' | 'week'>,
+    value?: ObservableResolver<string | ReadonlyArray<string> | number>,
     width?: ObservableResolver<number | string>,
-    wmode?: ObservableResolver<string>,
-    wrap?: ObservableResolver<string>,
-    /* NON-STANDARD ATTRIBUTES */
-    autocapitalize?: ObservableResolver<'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters'>,
-    autoCapitalize?: ObservableResolver<'off' | 'none' | 'on' | 'sentences' | 'words' | 'characters'>,
-    disablePictureInPicture?: ObservableResolver<boolean>,
-    results?: ObservableResolver<number>,
-    translate?: ObservableResolver<'yes' | 'no'>,
-    /* RDFa ATTRIBUTES */
-    about?: ObservableResolver<string>,
-    datatype?: ObservableResolver<string>,
-    inlist?: ObservableResolver<boolean>,
-    prefix?: ObservableResolver<string>,
-    property?: ObservableResolver<string>,
-    resource?: ObservableResolver<string>,
-    typeof?: ObservableResolver<string>,
-    vocab?: ObservableResolver<string>,
-    /* MICRODATA ATTRIBUTES */
-    itemProp?: ObservableResolver<string>,
-    itemScope?: ObservableResolver<boolean>,
-    itemType?: ObservableResolver<string>,
-    itemID?: ObservableResolver<string>,
-    itemRef?: ObservableResolver<string>
+    onChange?: ObservableResolver<KeyboardEventHandler<T>>
   }
 
-  interface IntrinsicAttributes {
-    key?: string
+  interface KeygenHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    autoFocus?: ObservableResolver<boolean>,
+    challenge?: ObservableResolver<string>,
+    disabled?: ObservableResolver<boolean>,
+    form?: ObservableResolver<string>,
+    keyType?: ObservableResolver<string>,
+    keyParams?: ObservableResolver<string>,
+    name?: ObservableResolver<string>
+  }
+
+  interface LabelHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    form?: ObservableResolver<string>,
+    htmlFor?: ObservableResolver<string>
+  }
+
+  interface LiHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    value?: ObservableResolver<string | ReadonlyArray<string> | number>
+  }
+
+  interface LinkHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    as?: ObservableResolver<string>,
+    crossOrigin?: ObservableResolver<string>,
+    href?: ObservableResolver<string>,
+    hrefLang?: ObservableResolver<string>,
+    integrity?: ObservableResolver<string>,
+    media?: ObservableResolver<string>,
+    imageSrcSet?: ObservableResolver<string>,
+    referrerPolicy?: ObservableResolver<HTMLAttributeReferrerPolicy>,
+    rel?: ObservableResolver<string>,
+    sizes?: ObservableResolver<string>,
+    type?: ObservableResolver<string>,
+    charSet?: ObservableResolver<string>
+  }
+
+  interface MapHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    name?: ObservableResolver<string>
+  }
+
+  interface MenuHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    type?: ObservableResolver<string>
+  }
+
+  interface MediaHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    autoPlay?: ObservableResolver<boolean>,
+    controls?: ObservableResolver<boolean>,
+    controlsList?: ObservableResolver<string>,
+    crossOrigin?: ObservableResolver<string>,
+    loop?: ObservableResolver<boolean>,
+    mediaGroup?: ObservableResolver<string>,
+    muted?: ObservableResolver<boolean>,
+    playsInline?: ObservableResolver<boolean>,
+    preload?: ObservableResolver<string>,
+    src?: ObservableResolver<string>
+  }
+
+  interface MetaHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    charSet?: ObservableResolver<string>,
+    content?: ObservableResolver<string>,
+    httpEquiv?: ObservableResolver<string>,
+    name?: ObservableResolver<string>,
+    media?: ObservableResolver<string>
+  }
+
+  interface MeterHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    form?: ObservableResolver<string>,
+    high?: ObservableResolver<number>,
+    low?: ObservableResolver<number>,
+    max?: ObservableResolver<number | string>,
+    min?: ObservableResolver<number | string>,
+    optimum?: ObservableResolver<number>,
+    value?: ObservableResolver<string | ReadonlyArray<string> | number>
+  }
+
+  interface QuoteHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    cite?: ObservableResolver<string>
+  }
+
+  interface ObjectHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    classID?: ObservableResolver<string>,
+    data?: ObservableResolver<string>,
+    form?: ObservableResolver<string>,
+    height?: ObservableResolver<number | string>,
+    name?: ObservableResolver<string>,
+    type?: ObservableResolver<string>,
+    useMap?: ObservableResolver<string>,
+    width?: ObservableResolver<number | string>,
+    wmode?: ObservableResolver<string>
+  }
+
+  interface OlHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    reversed?: ObservableResolver<boolean>,
+    start?: ObservableResolver<number>,
+    type?: ObservableResolver<'1' | 'a' | 'A' | 'i' | 'I'>
+  }
+
+  interface OptgroupHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    disabled?: ObservableResolver<boolean>,
+    label?: ObservableResolver<string>
+  }
+
+  interface OptionHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    disabled?: ObservableResolver<boolean>,
+    label?: ObservableResolver<string>,
+    selected?: ObservableResolver<boolean>,
+    value?: ObservableResolver<string | ReadonlyArray<string> | number>
+  }
+
+  interface OutputHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    form?: ObservableResolver<string>,
+    htmlFor?: ObservableResolver<string>,
+    name?: ObservableResolver<string>
+  }
+
+  interface ParamHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    name?: ObservableResolver<string>,
+    value?: ObservableResolver<string | ReadonlyArray<string> | number>
+  }
+
+  interface ProgressHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    max?: ObservableResolver<number | string>,
+    value?: ObservableResolver<string | ReadonlyArray<string> | number>
+  }
+
+  interface SlotHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    name?: ObservableResolver<string>
+  }
+
+  interface ScriptHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    async?: ObservableResolver<boolean>,
+    /** @deprecated */
+    charSet?: ObservableResolver<string>,
+    crossOrigin?: ObservableResolver<string>,
+    defer?: ObservableResolver<boolean>,
+    integrity?: ObservableResolver<string>,
+    noModule?: ObservableResolver<boolean>,
+    nonce?: ObservableResolver<string>,
+    referrerPolicy?: ObservableResolver<HTMLAttributeReferrerPolicy>,
+    src?: ObservableResolver<string>,
+    type?: ObservableResolver<string>
+  }
+
+  interface SelectHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    autoComplete?: ObservableResolver<string>,
+    autoFocus?: ObservableResolver<boolean>,
+    disabled?: ObservableResolver<boolean>,
+    form?: ObservableResolver<string>,
+    multiple?: ObservableResolver<boolean>,
+    name?: ObservableResolver<string>,
+    required?: ObservableResolver<boolean>,
+    size?: ObservableResolver<number>,
+    value?: ObservableResolver<string | ReadonlyArray<string> | number>,
+    onChange?: ObservableResolver<KeyboardEventHandler<T>>
+  }
+
+  interface SourceHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    height?: ObservableResolver<number | string>,
+    media?: ObservableResolver<string>,
+    sizes?: ObservableResolver<string>,
+    src?: ObservableResolver<string>,
+    srcSet?: ObservableResolver<string>,
+    type?: ObservableResolver<string>,
+    width?: ObservableResolver<number | string>
+  }
+
+  interface StyleHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    media?: ObservableResolver<string>,
+    nonce?: ObservableResolver<string>,
+    scoped?: ObservableResolver<boolean>,
+    type?: ObservableResolver<string>
+  }
+
+  interface TableHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    cellPadding?: ObservableResolver<number | string>,
+    cellSpacing?: ObservableResolver<number | string>,
+    summary?: ObservableResolver<string>,
+    width?: ObservableResolver<number | string>
+  }
+
+  interface TextareaHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    autoComplete?: ObservableResolver<string>,
+    autoFocus?: ObservableResolver<boolean>,
+    cols?: ObservableResolver<number>,
+    dirName?: ObservableResolver<string>,
+    disabled?: ObservableResolver<boolean>,
+    form?: ObservableResolver<string>,
+    maxLength?: ObservableResolver<number>,
+    minLength?: ObservableResolver<number>,
+    name?: ObservableResolver<string>,
+    placeholder?: ObservableResolver<string>,
+    readOnly?: ObservableResolver<boolean>,
+    required?: ObservableResolver<boolean>,
+    rows?: ObservableResolver<number>,
+    value?: ObservableResolver<string | ReadonlyArray<string> | number>,
+    wrap?: ObservableResolver<string>,
+    onChange?: ObservableResolver<KeyboardEventHandler<T>>
+  }
+
+  interface TdHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    align?: ObservableResolver<'left' | 'center' | 'right' | 'justify' | 'char'>,
+    colSpan?: ObservableResolver<number>,
+    headers?: ObservableResolver<string>,
+    rowSpan?: ObservableResolver<number>,
+    scope?: ObservableResolver<string>,
+    abbr?: ObservableResolver<string>,
+    height?: ObservableResolver<number | string>,
+    width?: ObservableResolver<number | string>,
+    valign?: ObservableResolver<'top' | 'middle' | 'bottom' | 'baseline'>
+  }
+
+  interface ThHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    align?: ObservableResolver<'left' | 'center' | 'right' | 'justify' | 'char'>,
+    colSpan?: ObservableResolver<number>,
+    headers?: ObservableResolver<string>,
+    rowSpan?: ObservableResolver<number>,
+    scope?: ObservableResolver<string>,
+    abbr?: ObservableResolver<string>
+  }
+
+  interface TimeHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    dateTime?: ObservableResolver<string>
+  }
+
+  interface TrackHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    default?: ObservableResolver<boolean>,
+    kind?: ObservableResolver<string>,
+    label?: ObservableResolver<string>,
+    src?: ObservableResolver<string>,
+    srcLang?: ObservableResolver<string>
+  }
+
+  interface VideoHTMLAttributes<T extends EventTarget> extends MediaHTMLAttributes<T> {
+    height?: ObservableResolver<number | string>,
+    playsInline?: ObservableResolver<boolean>,
+    poster?: ObservableResolver<string>,
+    width?: ObservableResolver<number | string>,
+    disablePictureInPicture?: ObservableResolver<boolean>,
+    disableRemotePlayback?: ObservableResolver<boolean>
+  }
+
+  interface WebViewHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+    allowFullScreen?: ObservableResolver<boolean>,
+    allowpopups?: ObservableResolver<boolean>,
+    autoFocus?: ObservableResolver<boolean>,
+    autosize?: ObservableResolver<boolean>,
+    blinkfeatures?: ObservableResolver<string>,
+    disableblinkfeatures?: ObservableResolver<string>,
+    disableguestresize?: ObservableResolver<boolean>,
+    disablewebsecurity?: ObservableResolver<boolean>,
+    guestinstance?: ObservableResolver<string>,
+    httpreferrer?: ObservableResolver<string>,
+    nodeintegration?: ObservableResolver<boolean>,
+    partition?: ObservableResolver<string>,
+    plugins?: ObservableResolver<boolean>,
+    preload?: ObservableResolver<string>,
+    src?: ObservableResolver<string>,
+    useragent?: ObservableResolver<string>,
+    webpreferences?: ObservableResolver<string>
   }
 
   interface IntrinsicElements {
-    a: HTMLAttributes<HTMLAnchorElement>,
-    abbr: HTMLAttributes<HTMLElement>,
-    address: HTMLAttributes<HTMLElement>,
-    area: HTMLAttributes<HTMLAreaElement>,
-    article: HTMLAttributes<HTMLElement>,
-    aside: HTMLAttributes<HTMLElement>,
-    audio: HTMLAttributes<HTMLAudioElement>,
-    b: HTMLAttributes<HTMLElement>,
-    base: HTMLAttributes<HTMLBaseElement>,
-    bdi: HTMLAttributes<HTMLElement>,
-    bdo: HTMLAttributes<HTMLElement>,
-    big: HTMLAttributes<HTMLElement>,
-    blockquote: HTMLAttributes<HTMLQuoteElement>,
-    body: HTMLAttributes<HTMLBodyElement>,
-    br: HTMLAttributes<HTMLBRElement>,
-    button: HTMLAttributes<HTMLButtonElement>,
-    canvas: HTMLAttributes<HTMLCanvasElement>,
-    caption: HTMLAttributes<HTMLTableCaptionElement>,
-    cite: HTMLAttributes<HTMLElement>,
-    code: HTMLAttributes<HTMLElement>,
-    col: HTMLAttributes<HTMLTableColElement>,
-    colgroup: HTMLAttributes<HTMLTableColElement>,
-    data: HTMLAttributes<HTMLDataElement>,
-    datalist: HTMLAttributes<HTMLDataListElement>,
-    dd: HTMLAttributes<HTMLElement>,
-    del: HTMLAttributes<HTMLModElement>,
-    details: HTMLAttributes<HTMLDetailsElement>,
-    dfn: HTMLAttributes<HTMLElement>,
-    dialog: HTMLAttributes<HTMLDialogElement>,
-    div: HTMLAttributes<HTMLDivElement>,
-    dl: HTMLAttributes<HTMLDListElement>,
-    dt: HTMLAttributes<HTMLElement>,
-    em: HTMLAttributes<HTMLElement>,
-    embed: HTMLAttributes<HTMLEmbedElement>,
-    fieldset: HTMLAttributes<HTMLFieldSetElement>,
-    figcaption: HTMLAttributes<HTMLElement>,
-    figure: HTMLAttributes<HTMLElement>,
-    footer: HTMLAttributes<HTMLElement>,
-    form: HTMLAttributes<HTMLFormElement>,
-    h1: HTMLAttributes<HTMLHeadingElement>,
-    h2: HTMLAttributes<HTMLHeadingElement>,
-    h3: HTMLAttributes<HTMLHeadingElement>,
-    h4: HTMLAttributes<HTMLHeadingElement>,
-    h5: HTMLAttributes<HTMLHeadingElement>,
-    h6: HTMLAttributes<HTMLHeadingElement>,
-    head: HTMLAttributes<HTMLHeadElement>,
-    header: HTMLAttributes<HTMLElement>,
-    hgroup: HTMLAttributes<HTMLElement>,
-    hr: HTMLAttributes<HTMLHRElement>,
-    html: HTMLAttributes<HTMLHtmlElement>,
-    i: HTMLAttributes<HTMLElement>,
-    iframe: HTMLAttributes<HTMLIFrameElement>,
-    img: HTMLAttributes<HTMLImageElement>,
-    input: HTMLAttributes<HTMLInputElement>,
-    ins: HTMLAttributes<HTMLModElement>,
-    kbd: HTMLAttributes<HTMLElement>,
-    keygen: HTMLAttributes<HTMLUnknownElement>,
-    label: HTMLAttributes<HTMLLabelElement>,
-    legend: HTMLAttributes<HTMLLegendElement>,
-    li: HTMLAttributes<HTMLLIElement>,
-    link: HTMLAttributes<HTMLLinkElement>,
-    main: HTMLAttributes<HTMLElement>,
-    map: HTMLAttributes<HTMLMapElement>,
-    mark: HTMLAttributes<HTMLElement>,
-    marquee: HTMLAttributes<HTMLMarqueeElement>,
-    menu: HTMLAttributes<HTMLMenuElement>,
-    menuitem: HTMLAttributes<HTMLUnknownElement>,
-    meta: HTMLAttributes<HTMLMetaElement>,
-    meter: HTMLAttributes<HTMLMeterElement>,
-    nav: HTMLAttributes<HTMLElement>,
-    noscript: HTMLAttributes<HTMLElement>,
-    object: HTMLAttributes<HTMLObjectElement>,
-    ol: HTMLAttributes<HTMLOListElement>,
-    optgroup: HTMLAttributes<HTMLOptGroupElement>,
-    option: HTMLAttributes<HTMLOptionElement>,
-    output: HTMLAttributes<HTMLOutputElement>,
-    p: HTMLAttributes<HTMLParagraphElement>,
-    param: HTMLAttributes<HTMLParamElement>,
-    picture: HTMLAttributes<HTMLPictureElement>,
-    pre: HTMLAttributes<HTMLPreElement>,
-    progress: HTMLAttributes<HTMLProgressElement>,
-    q: HTMLAttributes<HTMLQuoteElement>,
-    rp: HTMLAttributes<HTMLElement>,
-    rt: HTMLAttributes<HTMLElement>,
-    ruby: HTMLAttributes<HTMLElement>,
-    s: HTMLAttributes<HTMLElement>,
-    samp: HTMLAttributes<HTMLElement>,
-    script: HTMLAttributes<HTMLScriptElement>,
-    section: HTMLAttributes<HTMLElement>,
-    select: HTMLAttributes<HTMLSelectElement>,
-    slot: HTMLAttributes<HTMLSlotElement>,
-    small: HTMLAttributes<HTMLElement>,
-    source: HTMLAttributes<HTMLSourceElement>,
-    span: HTMLAttributes<HTMLSpanElement>,
-    strong: HTMLAttributes<HTMLElement>,
-    style: HTMLAttributes<HTMLStyleElement>,
-    sub: HTMLAttributes<HTMLElement>,
-    summary: HTMLAttributes<HTMLElement>,
-    sup: HTMLAttributes<HTMLElement>,
-    table: HTMLAttributes<HTMLTableElement>,
-    tbody: HTMLAttributes<HTMLTableSectionElement>,
-    td: HTMLAttributes<HTMLTableCellElement>,
-    textarea: HTMLAttributes<HTMLTextAreaElement>,
-    tfoot: HTMLAttributes<HTMLTableSectionElement>,
-    th: HTMLAttributes<HTMLTableCellElement>,
-    thead: HTMLAttributes<HTMLTableSectionElement>,
-    time: HTMLAttributes<HTMLTimeElement>,
-    title: HTMLAttributes<HTMLTitleElement>,
-    tr: HTMLAttributes<HTMLTableRowElement>,
-    track: HTMLAttributes<HTMLTrackElement>,
-    u: HTMLAttributes<HTMLElement>,
-    ul: HTMLAttributes<HTMLUListElement>,
-    var: HTMLAttributes<HTMLElement>,
-    video: HTMLAttributes<HTMLVideoElement>,
-    wbr: HTMLAttributes<HTMLElement>
+    a: DetailedHTMLProps<AnchorHTMLAttributes<HTMLAnchorElement>, HTMLAnchorElement>,
+    abbr: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    address: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    area: DetailedHTMLProps<AreaHTMLAttributes<HTMLAreaElement>, HTMLAreaElement>,
+    article: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    aside: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    audio: DetailedHTMLProps<AudioHTMLAttributes<HTMLAudioElement>, HTMLAudioElement>,
+    b: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    base: DetailedHTMLProps<BaseHTMLAttributes<HTMLBaseElement>, HTMLBaseElement>,
+    bdi: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    bdo: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    big: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    blockquote: DetailedHTMLProps<BlockquoteHTMLAttributes<HTMLElement>, HTMLElement>,
+    body: DetailedHTMLProps<HTMLAttributes<HTMLBodyElement>, HTMLBodyElement>,
+    br: DetailedHTMLProps<HTMLAttributes<HTMLBRElement>, HTMLBRElement>,
+    button: DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>,
+    canvas: DetailedHTMLProps<CanvasHTMLAttributes<HTMLCanvasElement>, HTMLCanvasElement>,
+    caption: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    cite: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    code: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    col: DetailedHTMLProps<ColHTMLAttributes<HTMLTableColElement>, HTMLTableColElement>,
+    colgroup: DetailedHTMLProps<ColgroupHTMLAttributes<HTMLTableColElement>, HTMLTableColElement>,
+    data: DetailedHTMLProps<DataHTMLAttributes<HTMLDataElement>, HTMLDataElement>,
+    datalist: DetailedHTMLProps<HTMLAttributes<HTMLDataListElement>, HTMLDataListElement>,
+    dd: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    del: DetailedHTMLProps<DelHTMLAttributes<HTMLElement>, HTMLElement>,
+    details: DetailedHTMLProps<DetailsHTMLAttributes<HTMLElement>, HTMLElement>,
+    dfn: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    dialog: DetailedHTMLProps<DialogHTMLAttributes<HTMLDialogElement>, HTMLDialogElement>,
+    div: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>,
+    dl: DetailedHTMLProps<HTMLAttributes<HTMLDListElement>, HTMLDListElement>,
+    dt: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    em: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    embed: DetailedHTMLProps<EmbedHTMLAttributes<HTMLEmbedElement>, HTMLEmbedElement>,
+    fieldset: DetailedHTMLProps<FieldsetHTMLAttributes<HTMLFieldSetElement>, HTMLFieldSetElement>,
+    figcaption: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    figure: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    footer: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    form: DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>,
+    h1: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>,
+    h2: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>,
+    h3: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>,
+    h4: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>,
+    h5: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>,
+    h6: DetailedHTMLProps<HTMLAttributes<HTMLHeadingElement>, HTMLHeadingElement>,
+    head: DetailedHTMLProps<HTMLAttributes<HTMLHeadElement>, HTMLHeadElement>,
+    header: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    hgroup: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    hr: DetailedHTMLProps<HTMLAttributes<HTMLHRElement>, HTMLHRElement>,
+    html: DetailedHTMLProps<HtmlHTMLAttributes<HTMLHtmlElement>, HTMLHtmlElement>,
+    i: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    iframe: DetailedHTMLProps<IframeHTMLAttributes<HTMLIFrameElement>, HTMLIFrameElement>,
+    img: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>,
+    input: DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>,
+    ins: DetailedHTMLProps<InsHTMLAttributes<HTMLModElement>, HTMLModElement>,
+    kbd: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    keygen: DetailedHTMLProps<KeygenHTMLAttributes<HTMLElement>, HTMLElement>,
+    label: DetailedHTMLProps<LabelHTMLAttributes<HTMLLabelElement>, HTMLLabelElement>,
+    legend: DetailedHTMLProps<HTMLAttributes<HTMLLegendElement>, HTMLLegendElement>,
+    li: DetailedHTMLProps<LiHTMLAttributes<HTMLLIElement>, HTMLLIElement>,
+    link: DetailedHTMLProps<LinkHTMLAttributes<HTMLLinkElement>, HTMLLinkElement>,
+    main: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    map: DetailedHTMLProps<MapHTMLAttributes<HTMLMapElement>, HTMLMapElement>,
+    mark: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    menu: DetailedHTMLProps<MenuHTMLAttributes<HTMLElement>, HTMLElement>,
+    menuitem: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    meta: DetailedHTMLProps<MetaHTMLAttributes<HTMLMetaElement>, HTMLMetaElement>,
+    meter: DetailedHTMLProps<MeterHTMLAttributes<HTMLElement>, HTMLElement>,
+    nav: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    noindex: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    noscript: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    object: DetailedHTMLProps<ObjectHTMLAttributes<HTMLObjectElement>, HTMLObjectElement>,
+    ol: DetailedHTMLProps<OlHTMLAttributes<HTMLOListElement>, HTMLOListElement>,
+    optgroup: DetailedHTMLProps<OptgroupHTMLAttributes<HTMLOptGroupElement>, HTMLOptGroupElement>,
+    option: DetailedHTMLProps<OptionHTMLAttributes<HTMLOptionElement>, HTMLOptionElement>,
+    output: DetailedHTMLProps<OutputHTMLAttributes<HTMLElement>, HTMLElement>,
+    p: DetailedHTMLProps<HTMLAttributes<HTMLParagraphElement>, HTMLParagraphElement>,
+    param: DetailedHTMLProps<ParamHTMLAttributes<HTMLParamElement>, HTMLParamElement>,
+    picture: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    pre: DetailedHTMLProps<HTMLAttributes<HTMLPreElement>, HTMLPreElement>,
+    progress: DetailedHTMLProps<ProgressHTMLAttributes<HTMLProgressElement>, HTMLProgressElement>,
+    q: DetailedHTMLProps<QuoteHTMLAttributes<HTMLQuoteElement>, HTMLQuoteElement>,
+    rp: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    rt: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    ruby: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    s: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    samp: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    slot: DetailedHTMLProps<SlotHTMLAttributes<HTMLSlotElement>, HTMLSlotElement>,
+    script: DetailedHTMLProps<ScriptHTMLAttributes<HTMLScriptElement>, HTMLScriptElement>,
+    section: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    select: DetailedHTMLProps<SelectHTMLAttributes<HTMLSelectElement>, HTMLSelectElement>,
+    small: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    source: DetailedHTMLProps<SourceHTMLAttributes<HTMLSourceElement>, HTMLSourceElement>,
+    span: DetailedHTMLProps<HTMLAttributes<HTMLSpanElement>, HTMLSpanElement>,
+    strong: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    style: DetailedHTMLProps<StyleHTMLAttributes<HTMLStyleElement>, HTMLStyleElement>,
+    sub: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    summary: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    sup: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    table: DetailedHTMLProps<TableHTMLAttributes<HTMLTableElement>, HTMLTableElement>,
+    template: DetailedHTMLProps<HTMLAttributes<HTMLTemplateElement>, HTMLTemplateElement>,
+    tbody: DetailedHTMLProps<HTMLAttributes<HTMLTableSectionElement>, HTMLTableSectionElement>,
+    td: DetailedHTMLProps<TdHTMLAttributes<HTMLTableDataCellElement>, HTMLTableDataCellElement>,
+    textarea: DetailedHTMLProps<TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>,
+    tfoot: DetailedHTMLProps<HTMLAttributes<HTMLTableSectionElement>, HTMLTableSectionElement>,
+    th: DetailedHTMLProps<ThHTMLAttributes<HTMLTableHeaderCellElement>, HTMLTableHeaderCellElement>,
+    thead: DetailedHTMLProps<HTMLAttributes<HTMLTableSectionElement>, HTMLTableSectionElement>,
+    time: DetailedHTMLProps<TimeHTMLAttributes<HTMLElement>, HTMLElement>,
+    title: DetailedHTMLProps<HTMLAttributes<HTMLTitleElement>, HTMLTitleElement>,
+    tr: DetailedHTMLProps<HTMLAttributes<HTMLTableRowElement>, HTMLTableRowElement>,
+    track: DetailedHTMLProps<TrackHTMLAttributes<HTMLTrackElement>, HTMLTrackElement>,
+    u: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    ul: DetailedHTMLProps<HTMLAttributes<HTMLUListElement>, HTMLUListElement>,
+    var: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    video: DetailedHTMLProps<VideoHTMLAttributes<HTMLVideoElement>, HTMLVideoElement>,
+    wbr: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
+    webview: DetailedHTMLProps<WebViewHTMLAttributes<HTMLWebViewElement>, HTMLWebViewElement>
   }
 
 }
