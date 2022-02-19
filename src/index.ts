@@ -23,6 +23,7 @@ import {useCleanup, useComputed, useDisposed, useEffect, useError, usePromise} f
 import createElement from './create_element';
 import {$, $$} from './observable';
 import render from './render';
+import renderToString from './render_to_string';
 import styled from './styled';
 import template from './template';
 
@@ -30,4 +31,4 @@ import template from './template';
 
 export {Component, ErrorBoundary, For, Fragment, If, Portal};
 export {useCleanup, useComputed, useDisposed, useEffect, useError, usePromise};
-export {$, $$, createElement, render, styled, template};
+export {$, $$, createElement, render, renderToString, styled, template};

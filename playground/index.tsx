@@ -6,7 +6,7 @@
 
 import {Component, ErrorBoundary, For, Fragment, If, Portal} from '../src';
 import {useCleanup, useComputed, useDisposed, useEffect, useError, usePromise} from '../src';
-import {$, $$, createElement, render, styled, template} from '../src';
+import {$, $$, createElement, render, renderToString, styled, template} from '../src';
 
 /* MAIN */
 
@@ -971,6 +971,22 @@ const TestStyledClass = (): JSX.Element => {
   );
 };
 
+const TestRenderToString = async () => {
+  const App = (): JSX.Element => {
+    const o = $( String ( Math.random () ) );
+    return (
+      <div>
+        <h3>renderToString</h3>
+        <p>{o}</p>
+      </div>
+    );
+  };
+  const html = await renderToString ( <App /> );
+  console.log ( { html } );
+};
+
+TestRenderToString ();
+
 const Test = (): JSX.Element => {
   return (
     <>
@@ -1057,4 +1073,4 @@ const Test = (): JSX.Element => {
   );
 };
 
-render ( Test, document.body );
+render ( Test, document.getElementById ( 'app' ) );

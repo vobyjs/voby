@@ -7,7 +7,7 @@ import {Child} from '~/types';
 
 /* MAIN */
 
-const Portal = ({ mount, children }: { mount?: Node, children: Child[] }): void => {
+const Portal = ({ mount, children }: { mount?: Node, children: Child[] }): HTMLDivElement => {
 
   const parent = mount || document.body;
   const wrapper = document.createElement ( 'div' );
@@ -21,6 +21,8 @@ const Portal = ({ mount, children }: { mount?: Node, children: Child[] }): void 
     parent.removeChild ( wrapper );
 
   });
+
+  return wrapper;
 
 };
 

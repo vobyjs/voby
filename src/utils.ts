@@ -23,6 +23,12 @@ const castError = ( exception: unknown ): Error => {
 
 };
 
+const delay = ( ms: number ): Promise<void> => {
+
+  return new Promise ( resolve => setTimeout ( resolve, ms ) );
+
+};
+
 const identity = <T> ( value: T ): T => {
 
   return value;
@@ -187,4 +193,4 @@ const keys = (() => {
 
 /* EXPORT */
 
-export {castArray, castError, identity, indexOf, isAlphanumeric, isArray, isBoolean, isComment, isComponentClass, isElement, isError, isFunction, isNil, isNode, isNumber, isObservable, isPlainObject, isPropertyNonDimensional, isString, isText, isUndefined, keys};
+export {castArray, castError, delay, identity, indexOf, isAlphanumeric, isArray, isBoolean, isComment, isComponentClass, isElement, isError, isFunction, isNil, isNode, isNumber, isObservable, isPlainObject, isPropertyNonDimensional, isString, isText, isUndefined, keys};
