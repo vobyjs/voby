@@ -332,7 +332,7 @@ declare namespace JSX {
     dir?: ObservableResolver<'auto' | 'rtl' | 'ltr'>,
     disabled?: ObservableResolver<boolean>,
     disableRemotePlayback?: ObservableResolver<boolean>,
-    download?: ObservableResolver<any>,
+    download?: ObservableResolver<boolean>,
     decoding?: ObservableResolver<'sync' | 'async' | 'auto'>,
     draggable?: ObservableResolver<boolean>,
     encType?: ObservableResolver<string>,
@@ -442,7 +442,7 @@ declare namespace JSX {
     /* RDFa ATTRIBUTES */
     about?: ObservableResolver<string>,
     datatype?: ObservableResolver<string>,
-    inlist?: ObservableResolver<any>,
+    inlist?: ObservableResolver<boolean>,
     prefix?: ObservableResolver<string>,
     property?: ObservableResolver<string>,
     resource?: ObservableResolver<string>,
@@ -457,7 +457,7 @@ declare namespace JSX {
   }
 
   interface IntrinsicAttributes {
-    key?: any
+    key?: string
   }
 
   interface IntrinsicElements {

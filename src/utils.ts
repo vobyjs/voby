@@ -177,7 +177,7 @@ const keys = (() => {
 
   /* MAIN */
 
-  return <T extends Record<any, any>> ( object: T ): (keyof T)[] => {
+  return <T extends Record<number | string | symbol, unknown>> ( object: T ): (keyof T)[] => {
 
     return _keys ( object );
 

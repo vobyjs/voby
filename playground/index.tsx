@@ -14,9 +14,6 @@ import {$, $$, createElement, render, styled, template} from '../src';
 //TODO: Test child
 //TODO: Test children
 
-//TODO: class with observable as key
-//TODO: style with observable as property
-
 const TEST_INTERVAL = 500; // Lowering this makes it easier to spot some memory leaks
 
 const TestNullStatic = (): JSX.Element => {
