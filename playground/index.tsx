@@ -4,7 +4,7 @@
 
 /* IMPORT */
 
-import {Component, ErrorBoundary, For, Fragment, If, Portal} from '../src';
+import {Component, ErrorBoundary, For, Fragment, If, Portal, Ternary} from '../src';
 import {useCleanup, useComputed, useDisposed, useEffect, useError, usePromise} from '../src';
 import {$, $$, createElement, render, renderToString, styled, template} from '../src';
 
@@ -803,6 +803,37 @@ const TestIfRemoval = (): JSX.Element => {
   );
 };
 
+const TestTernaryStatic = (): JSX.Element => {
+  return (
+    <>
+      <h3>Ternary - Static</h3>
+      <Ternary when={true}>
+        <p>true (1)</p>
+        <p>false (1)</p>
+      </Ternary>
+      <Ternary when={false}>
+        <p>true (2)</p>
+        <p>false (2)</p>
+      </Ternary>
+    </>
+  );
+};
+
+const TestTernaryObservable = (): JSX.Element => {
+  const o = $( true );
+  const toggle = () => o.update ( prev => !prev );
+  setInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Ternary - Observable</h3>
+      <Ternary when={o}>
+        <p>true</p>
+        <p>false</p>
+      </Ternary>
+    </>
+  );
+};
+
 class TestComponentStatic extends Component<{}> {
   render (): JSX.Element {
     return (
@@ -1059,6 +1090,8 @@ const Test = (): JSX.Element => {
       <TestABCD />
       <TestIfStatic />
       <TestIfRemoval />
+      <TestTernaryStatic />
+      <TestTernaryObservable />
       <TestComponentStatic />
       <TestComponentObservable />
       <TestFragmentStatic />
