@@ -10,19 +10,19 @@ import {Child} from '~/types';
 const Portal = ({ mount, children }: { mount?: Node, children: Child[] }): HTMLDivElement => {
 
   const parent = mount || document.body;
-  const wrapper = document.createElement ( 'div' );
+  const portal = document.createElement ( 'div' );
 
-  parent.insertBefore ( wrapper, null );
+  parent.insertBefore ( portal, null );
 
-  render ( children, wrapper );
+  render ( children, portal );
 
   useCleanup ( () => {
 
-    parent.removeChild ( wrapper );
+    parent.removeChild ( portal );
 
   });
 
-  return wrapper;
+  return portal;
 
 };
 

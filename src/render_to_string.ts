@@ -16,11 +16,11 @@ const renderToString = ( child: Child, timeout: number = 1000 ): Promise<string>
 
     $.root ( dispose => {
 
-      const wrapper = Portal ({ children: [child] });
+      const portal = Portal ({ children: [child] });
 
       delay ( timeout ).then ( () => {
 
-        resolve ( wrapper.innerHTML );
+        resolve ( portal.innerHTML );
 
         dispose ();
 
