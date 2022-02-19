@@ -387,7 +387,6 @@ const setClasses = ( element: HTMLElement, object: ObservableResolver<string | R
 
 const setEventStatic = (() => {
 
-  //TODO: Support capturing events
   //TODO: Maybe support more events: [onmousemove, onmouseout, onmouseover, onpointerdown, onpointermove, onpointerout, onpointerover, onpointerup, ontouchend, ontouchmove, ontouchstart]
 
   const delegatedEvents = <const> {

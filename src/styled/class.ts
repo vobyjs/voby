@@ -1,26 +1,27 @@
 
+/* IMPORT */
+
+import {IS_PRODUCTION} from '~/constants';
+
 /* MAIN */
 
 const cls = (() => {
-
-  //TODO: Use the provided name during debugging only, and random strings during production
 
   let id = 0;
 
   return ( name: string ) => {
 
-    name = name.replace ( /\s/g, '_' );
-
-    const raw = `cls-${id++}-${name}`;
+    const suffix = IS_PRODUCTION ? Math.round ( 0xFFFFFF * Math.random () ).toString ( 16 ) : name.replace ( /\s/g, '_' );
+    const raw = `cls-${id++}-${suffix}`;
     const cooked = `.${raw}`;
 
-    const toString = () => cooked;
+    const fn = () => cooked;
 
-    toString.raw = raw;
-    toString.cooked = cooked;
-    toString.toString = toString; // 🤪
+    fn.raw = raw;
+    fn.cooked = cooked;
+    fn.toString = toString;
 
-    return toString;
+    return fn;
 
   };
 
