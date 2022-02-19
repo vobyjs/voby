@@ -7,7 +7,7 @@ import type {ObservableMaybe, Child} from '~/types';
 
 /* MAIN */
 
-const If = ({ when, children }: { when: ObservableMaybe<boolean>, children: Child[] }): Child => {
+const If = ({ when, children }: { when: ObservableMaybe<boolean>, children: Child }): Child => {
 
   if ( isObservable ( when ) ) {
 

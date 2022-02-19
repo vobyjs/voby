@@ -7,7 +7,7 @@ import type {Child} from '~/types';
 
 /* MAIN */
 
-const Portal = ({ mount, children }: { mount?: Node, children: Child[] }): HTMLDivElement => {
+const Portal = ({ mount, children }: { mount?: Node, children: Child }): HTMLDivElement => {
 
   const parent = mount || document.body;
   const portal = document.createElement ( 'div' );

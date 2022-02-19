@@ -4,25 +4,9 @@
 import useEffect from '~/hooks/use_effect';
 import template from '~/template';
 import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isPropertyNonDimensional, isString, isText, isUndefined, keys} from '~/utils';
-import type {Child, ChildMounted, ChildPrepared, EventListener, FunctionResolver, ObservableResolver, Ref} from '~/types';
+import type {Child, ChildMounted, ChildPrepared, EventListener, ObservableResolver, Ref} from '~/types';
 
 /* HELPERS */
-
-const resolveObservable = <T> ( value: ObservableResolver<T> ): T => {
-
-  if ( !isObservable ( value ) ) return value;
-
-  return resolveObservable ( value () );
-
-};
-
-const resolveObservableOrFunction = <T> ( value: ObservableResolver<FunctionResolver<T>> ): T => {
-
-  if ( !isFunction ( value ) ) return value;
-
-  return resolveObservableOrFunction ( value () );
-
-};
 
 const normalizeChildren = ( children: Child[] ): Child[] => {
 
@@ -148,21 +132,36 @@ const getChildrenNextSibling = ( children: ChildMounted ): Node | null | undefin
 
 /* MAIN */
 
-const setAbstract = <T> ( value: ObservableResolver<T>, setter: (( value: T, valuePrev?: T ) => void) ): void => {
+const setAbstract = <T> ( value: ObservableResolver<T>, setter: (( value: T, valuePrev?: T ) => void), resolveFunctions: boolean = false ): void => {
 
   if ( isObservable ( value ) ) {
 
-    let valuePrev: T | undefined;
+    let valuePrev: ObservableResolver<T>;
+    let valuePrevObservable: boolean;
 
     useEffect ( () => {
 
-      const valueNext = resolveObservable ( value );
+      const valueNext = value ();
+      const valueNextObservable = isObservable ( valueNext );
 
-      setter ( valueNext, valuePrev );
+      if ( valueNextObservable ) {
+
+        setAbstract ( valueNext, setter );
+
+      } else {
+
+        setter ( valueNext, valuePrevObservable ? undefined : valuePrev as T ); //TSC
+
+      }
 
       valuePrev = valueNext;
+      valuePrevObservable = valueNextObservable;
 
     });
+
+  } else if ( resolveFunctions && isFunction ( value ) ) {
+
+    setAbstract ( value (), setter );
 
   } else {
 
@@ -269,11 +268,11 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: ChildM
 
         let childrenPrev: ChildMounted = [];
 
-        useEffect ( () => {
+        setAbstract ( childNext, childNext => {
 
-          childrenNext[i] = childrenPrev = setChildStatic ( parent, resolveObservableOrFunction ( childNext ), childrenPrev, childrenNextSibling );
+          childrenNext[i] = childrenPrev = setChildStatic ( parent, childNext, childrenPrev, childrenNextSibling );
 
-        });
+        }, true );
 
       } else if ( isString ( childNext ) ) {
 

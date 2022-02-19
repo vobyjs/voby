@@ -7,10 +7,10 @@ import type {ObservableMaybe, Child} from '~/types';
 
 /* MAIN */
 
-const Switch = <T> ({ when, children }: { when: ObservableMaybe<T>, children: (() => Child[] & ( { when: T } | { default: true } ))[] }): Child => {
+const Switch = <T> ({ when, children }: { when: ObservableMaybe<T>, children: (() => ({ when: T, children: Child } | { default: true, children: Child }))[] }): Child => {
 
-  const results = children.map ( child => child () );
-  const get = ( when: T ) => results.find ( child => 'default' in child || child.when === when );
+  const data = children.map ( child => child () );
+  const get = ( when: T ) => data.find ( datum => 'default' in datum || datum.when === when )?.children;
 
   if ( isObservable ( when ) ) {
 
@@ -30,19 +30,15 @@ const Switch = <T> ({ when, children }: { when: ObservableMaybe<T>, children: ((
 
 /* UTILITIES */
 
-Switch.Case = ({ when, children }: { when: any, children: Child[] }): Child[] => {
+Switch.Case = <T> ({ when, children }: { when: T, children: Child }): { when: T, children: Child } => {
 
-  children['when'] = when;
-
-  return children;
+  return { when, children };
 
 };
 
-Switch.Default = ({ children }: { children: Child[] }): Child[] => {
+Switch.Default = ({ children }: { children: Child }): { default: true, children: Child } => {
 
-  children['default'] = true;
-
-  return children;
+  return { default: true, children };
 
 };
 

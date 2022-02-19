@@ -1160,9 +1160,8 @@ const TestRenderToString = async () => {
   console.log ( { html } );
 };
 
-TestRenderToString ();
-
 const Test = (): JSX.Element => {
+  TestRenderToString ();
   return (
     <>
       <TestNullStatic />

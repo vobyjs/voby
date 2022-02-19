@@ -10,7 +10,7 @@ import type {Child} from '~/types';
 
 /* MAIN */
 
-const ErrorBoundary = ({ fallback, children }: { fallback: (( props: { error: Error, reset: () => void } ) => Child), children: Child[] }): Child => {
+const ErrorBoundary = ({ fallback, children }: { fallback: (( props: { error: Error, reset: () => void } ) => Child), children: Child }): Child => {
 
   const exception = $();
   const hasException = $(false);

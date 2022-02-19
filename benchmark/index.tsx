@@ -35,8 +35,8 @@ const buildData = (() => {
       const color = colors[rand ( colors.length )];
       const noun = nouns[rand ( nouns.length )];
       const label = `${adjective} ${color} ${noun}`;
-      const selected = false;
-      const datum: IDatum = $( { id, label, selected } );
+      const selected: boolean = false;
+      const datum = $( { id, label, selected } );
       data[i] = datum;
     };
     return data;
@@ -117,7 +117,7 @@ const Model = (() => {
 
 })();
 
-const Button = ({ id, text, onClick }: { id: string, text: string, onClick: Function }) => {
+const Button = ({ id, text, onClick }: { id: string, text: string, onClick: (( event: MouseEvent ) => any) }) => {
   return (
     <div class="col-sm-6 smallpad">
       <button id={id} class="btn btn-primary btn-block" type="button" onClick={onClick}>{text}</button>
@@ -125,14 +125,14 @@ const Button = ({ id, text, onClick }: { id: string, text: string, onClick: Func
   );
 };
 
-const RowDynamic = ({ id, cls, label, onSelect, onRemove }: { id: string, cls: string, label: string, onSelect: Function, onRemove: Function }) => (
+const RowDynamic = ({ id, cls, label, onSelect, onRemove }: { id: string, cls: string, label: string, onSelect: (( event: MouseEvent ) => any), onRemove: (( event: MouseEvent ) => any) }) => (
   <tr class={cls}>
     <td class="col-md-1">{id}</td>
     <td class="col-md-4">
-      <a onclick={onSelect}>{label}</a>
+      <a onClick={onSelect}>{label}</a>
     </td>
     <td class="col-md-1">
-      <a onclick={onRemove}>
+      <a onClick={onRemove}>
         <span class="glyphicon glyphicon-remove" ariaHidden={true}></span>
       </a>
     </td>

@@ -7,7 +7,7 @@ import type {ObservableMaybe, Child} from '~/types';
 
 /* MAIN */
 
-const Ternary = ({ when, children }: { when: ObservableMaybe<boolean>, children: Child[] }): Child => {
+const Ternary = ({ when, children }: { when: ObservableMaybe<boolean>, children: [Child, Child] }): Child => {
 
   if ( isObservable ( when ) ) {
 
