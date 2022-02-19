@@ -23,6 +23,8 @@ type ConstructorWith<T = unknown, Arguments extends unknown[] = []> = { new ( ..
 
 type Disposer = () => void;
 
+type EventListener = ( event: Event ) => unknown;
+
 type FunctionResolver<T = unknown> = T | (() => FunctionResolver<T>);
 
 type Observable<T = unknown> = import ( 'oby/dist/types' ).ObservableCallable<T>;
@@ -59,4 +61,4 @@ type TemplateActionWithPaths = [TemplateActionPath, string, string, TemplateActi
 
 /* EXPORT */
 
-export type {Child, ChildMounted, ChildPrepared, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, Disposer, FunctionResolver, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAccessor, ObservableMaybe, ObservableResolver, PromiseStateLoading, PromiseStateError, PromiseStateSuccess, PromiseState, Props, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};
+export type {Child, ChildMounted, ChildPrepared, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, Disposer, EventListener, FunctionResolver, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAccessor, ObservableMaybe, ObservableResolver, PromiseStateLoading, PromiseStateError, PromiseStateSuccess, PromiseState, Props, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};

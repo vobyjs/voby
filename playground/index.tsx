@@ -747,6 +747,53 @@ const TestEventClickRemoval = (): JSX.Element => {
   );
 };
 
+const TestEventClickCaptureStatic = (): JSX.Element => {
+  const o = $( 0 );
+  const increment = () => o.update ( prev => prev + 1 );
+  return (
+    <>
+      <h3>Event - Click Capture Static</h3>
+      <p><button onClickCapture={increment}>{o}</button></p>
+    </>
+  );
+};
+
+const TestEventClickCaptureObservable = (): JSX.Element => {
+  const o = $( 0 );
+  const onClick = $( () => {} );
+  const plus2 = () => o.update ( prev => {
+    onClick.set ( minus1 );
+    return prev + 2;
+  });
+  const minus1 = () => o.update ( prev => {
+    onClick.set ( plus2 );
+    return prev - 1;
+  });
+  onClick.set ( plus2 );
+  return (
+    <>
+      <h3>Event - Click Capture Observable</h3>
+      <p><button onClickCapture={onClick}>{o}</button></p>
+    </>
+  );
+};
+
+const TestEventClickCaptureRemoval = (): JSX.Element => {
+  const o = $( 0 );
+  const onClick = $( () => {} );
+  const increment = () => o.update ( prev => {
+    onClick.set ( null );
+    return prev + 1;
+  });
+  onClick.set ( increment );
+  return (
+    <>
+      <h3>Event - Click Capture Removal</h3>
+      <p><button onClickCapture={onClick}>{o}</button></p>
+    </>
+  );
+};
+
 const TestABCD = () => {
   const AB = (): JSX.ElementObservable => {
     const a = <i>a</i>;
@@ -876,6 +923,56 @@ const TestSwitchObservable = (): JSX.Element => {
         <Switch.Default>
           <p>default</p>
         </Switch.Default>
+      </Switch>
+    </>
+  );
+};
+
+const TestSwitchObservableComplex = (): JSX.Element => {
+  const o = $( 0 );
+  const toggle = () => o.update ( prev => ( prev + 1 ) % 4 );
+  const o2 = $( 2 );
+  const toggle2 = () => o2.update ( prev => ( prev + 1 ) % 5 );
+  const o3 = $( 4 );
+  const toggle3 = () => o3.update ( prev => ( prev + 1 ) % 4 );
+  setInterval ( toggle, TEST_INTERVAL );
+  setInterval ( toggle2, TEST_INTERVAL );
+  setInterval ( toggle3, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Switch - Observable Complex</h3>
+      <Switch when={o}>
+        <Switch.Case when={0}>
+          <p>1 - 0</p>
+        </Switch.Case>
+        <Switch.Case when={1}>
+          <p>1 - 1</p>
+        </Switch.Case>
+        <Switch.Case when={2}>
+          <p>1 - 2</p>
+        </Switch.Case>
+      </Switch>
+      <Switch when={o2}>
+        <Switch.Case when={0}>
+          <p>2 - 0</p>
+        </Switch.Case>
+        <Switch.Case when={1}>
+          <p>2 - 1</p>
+        </Switch.Case>
+        <Switch.Case when={2}>
+          <p>2 - 2</p>
+        </Switch.Case>
+      </Switch>
+      <Switch when={o3}>
+        <Switch.Case when={0}>
+          <p>3 - 0</p>
+        </Switch.Case>
+        <Switch.Case when={1}>
+          <p>3 - 1</p>
+        </Switch.Case>
+        <Switch.Case when={2}>
+          <p>3 - 2</p>
+        </Switch.Case>
       </Switch>
     </>
   );
@@ -1134,6 +1231,9 @@ const Test = (): JSX.Element => {
       <TestEventClickStatic />
       <TestEventClickObservable />
       <TestEventClickRemoval />
+      <TestEventClickCaptureStatic />
+      <TestEventClickCaptureObservable />
+      <TestEventClickCaptureRemoval />
       <TestABCD />
       <TestIfStatic />
       <TestIfRemoval />
@@ -1141,6 +1241,7 @@ const Test = (): JSX.Element => {
       <TestTernaryObservable />
       <TestSwitchStatic />
       <TestSwitchObservable />
+      <TestSwitchObservableComplex />
       <TestComponentStatic />
       <TestComponentObservable />
       <TestFragmentStatic />

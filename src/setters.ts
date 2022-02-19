@@ -4,7 +4,7 @@
 import {$} from '~/observable';
 import template from '~/template';
 import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isPropertyNonDimensional, isString, isText, isUndefined, keys} from '~/utils';
-import {Child, ChildMounted, ChildPrepared, FunctionResolver, ObservableResolver} from '~/types';
+import {Child, ChildMounted, ChildPrepared, EventListener, FunctionResolver, ObservableResolver} from '~/types';
 
 /* HELPERS */
 
@@ -438,17 +438,34 @@ const setEventStatic = (() => {
 
   }
 
-  return ( element: HTMLElement, event: string, value: Function ): void => {
+  return ( element: HTMLElement, event: string, value: null | undefined | EventListener ): void => {
 
-    const key: string = delegatedEvents[event] || event;
+    if ( event.endsWith ( 'capture' ) ) {
 
-    element[key] = value;
+      const type = event.slice ( 2, -7 );
+      const key = `_${event}`;
+
+      const valuePrev = element[key];
+
+      if ( valuePrev ) element.removeEventListener ( type, valuePrev, { capture: true } );
+
+      if ( value ) element.addEventListener ( type, value, { capture: true } );
+
+      element[key] = value;
+
+    } else {
+
+      const key: string = delegatedEvents[event] || event;
+
+      element[key] = value;
+
+    }
 
   };
 
 })();
 
-const setEvent = ( element: HTMLElement, event: string, value: ObservableResolver<Function> ): void => {
+const setEvent = ( element: HTMLElement, event: string, value: ObservableResolver<null | undefined | EventListener> ): void => {
 
   setAbstract ( value, value => {
 
