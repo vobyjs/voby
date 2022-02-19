@@ -3,7 +3,7 @@
 
 import useCleanup from '~/hooks/use_cleanup';
 import {$} from '~/observable';
-import {Observable} from '~/types';
+import type {Observable} from '~/types';
 
 /* MAIN */
 

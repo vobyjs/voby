@@ -3,7 +3,7 @@
 
 import {setChildReplacement, setProp} from '~/setters';
 import {indexOf, isAlphanumeric, isFunction, isString} from '~/utils';
-import {TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths} from '~/types';
+import type {TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths} from '~/types';
 
 /* HELPERS */
 

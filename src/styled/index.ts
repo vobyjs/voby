@@ -5,7 +5,7 @@ import {styled as goober, setup} from 'goober';
 import {prefix} from 'goober/prefixer';
 import createElement from '~/create_element';
 import {isPlainObject, isUndefined} from '~/utils';
-import {Child, Component, Props} from '~/types';
+import type {Child, Component, Props} from '~/types';
 import cls from './class';
 import css from './css';
 import global from './global';

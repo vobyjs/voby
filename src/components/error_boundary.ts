@@ -6,7 +6,7 @@ import {$} from '~/observable';
 import useComputed from '~/hooks/use_computed';
 import useError from '~/hooks/use_error';
 import {castError} from '~/utils';
-import {Child} from '~/types';
+import type {Child} from '~/types';
 
 /* MAIN */
 

@@ -3,7 +3,7 @@
 
 import useCleanup from '~/hooks/use_cleanup';
 import render from '~/render';
-import {Child} from '~/types';
+import type {Child} from '~/types';
 
 /* MAIN */
 

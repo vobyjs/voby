@@ -3,7 +3,7 @@
 
 import {setProps, setRef} from '~/setters';
 import {isComponentClass, isFunction, isNode, isString} from '~/utils';
-import {Child, Component, Props} from '~/types';
+import type {Child, Component, Props} from '~/types';
 
 /* MAIN */
 

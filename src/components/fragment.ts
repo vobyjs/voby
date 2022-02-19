@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {Child, Props} from '~/types';
+import type {Child, Props} from '~/types';
 
 /* MAIN */
 

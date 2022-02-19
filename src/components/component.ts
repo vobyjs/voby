@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {Child} from '~/types';
+import type {Child} from '~/types';
 
 /* MAIN */
 

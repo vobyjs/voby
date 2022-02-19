@@ -51,6 +51,8 @@ type PromiseState<T> = PromiseStateLoading | PromiseStateError | PromiseStateSuc
 
 type Props = Record<string, any>;
 
+type Ref<T> = ( value: T ) => unknown;
+
 type TemplateActionPath = number[];
 
 type TemplateActionProxy = ( target: Node, prop: string, targetNode?: Node ) => void;
@@ -61,4 +63,4 @@ type TemplateActionWithPaths = [TemplateActionPath, string, string, TemplateActi
 
 /* EXPORT */
 
-export type {Child, ChildMounted, ChildPrepared, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, Disposer, EventListener, FunctionResolver, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAccessor, ObservableMaybe, ObservableResolver, PromiseStateLoading, PromiseStateError, PromiseStateSuccess, PromiseState, Props, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};
+export type {Child, ChildMounted, ChildPrepared, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, Disposer, EventListener, FunctionResolver, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAccessor, ObservableMaybe, ObservableResolver, PromiseStateLoading, PromiseStateError, PromiseStateSuccess, PromiseState, Props, Ref, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};

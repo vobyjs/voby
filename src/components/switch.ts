@@ -3,16 +3,14 @@
 
 import useComputed from '~/hooks/use_computed';
 import {isObservable} from '~/utils';
-import {ObservableMaybe, Child} from '~/types';
+import type {ObservableMaybe, Child} from '~/types';
 
 /* MAIN */
 
-//FIXME: it gets rendered in the wrong spot after it updates itself
+const Switch = <T> ({ when, children }: { when: ObservableMaybe<T>, children: (() => Child[] & ( { when: T } | { default: true } ))[] }): Child => {
 
-const Switch = <T> ({ when, children }: { when: ObservableMaybe<T>, children: (Child[] & ( { when: T } | { default: true } ))[] }): Child => {
-
-  const fns = children.map ( child => child () );
-  const get = ( when: T ) => fns.find ( child => 'default' in child || child.when === when );
+  const results = children.map ( child => child () );
+  const get = ( when: T ) => results.find ( child => 'default' in child || child.when === when );
 
   if ( isObservable ( when ) ) {
 

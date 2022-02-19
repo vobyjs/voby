@@ -3,7 +3,7 @@
 
 import {$} from '~/observable';
 import {setChild} from '~/setters';
-import {Child, Disposer} from '~/types';
+import type {Child, Disposer} from '~/types';
 
 /* MAIN */
 

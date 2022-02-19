@@ -4,7 +4,7 @@
 import Portal from '~/components/portal';
 import {$} from '~/observable';
 import {delay} from '~/utils';
-import {Child} from '~/types';
+import type {Child} from '~/types';
 
 /* MAIN */
 

@@ -5,7 +5,7 @@ import useDisposed from '~/hooks/use_disposed';
 import useEffect from '~/hooks/use_effect';
 import {$, $$} from '~/observable';
 import {castError} from '~/utils';
-import {Observable, PromiseState} from '~/types';
+import type {Observable, PromiseState} from '~/types';
 
 /* MAIN */
 

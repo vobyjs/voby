@@ -3,7 +3,7 @@
 
 import Component from '~/components/component';
 import {$} from '~/observable';
-import {ComponentClass, Observable, ObservableAccessor} from '~/types';
+import type {ComponentClass, Observable, ObservableAccessor} from '~/types';
 
 /* MAIN */
 

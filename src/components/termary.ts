@@ -3,7 +3,7 @@
 
 import useComputed from '~/hooks/use_computed';
 import {isObservable} from '~/utils';
-import {ObservableMaybe, Child} from '~/types';
+import type {ObservableMaybe, Child} from '~/types';
 
 /* MAIN */
 

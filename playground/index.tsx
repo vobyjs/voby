@@ -1099,7 +1099,7 @@ const TestPortalStatic = (): JSX.Element => {
 
 const TestRef = (): JSX.Element => {
   const ref = $<HTMLElement>();
-  $.effect ( () => {
+  useEffect ( () => {
     if ( !ref () ) return;
     ref ().textContent = `Got ref - Has parent: ${!!ref ()?.parentElement} - Is connected: ${!!ref ()?.isConnected}`;
   });

@@ -1,8 +1,9 @@
 
 /* IMPORT */
 
-import {$, $$} from '~/observable';
-import {Observable, ObservableReadonlyWithoutInitial, Child} from '~/types';
+import useComputed from '~/hooks/use_computed';
+import {$$} from '~/observable';
+import type {Observable, ObservableReadonlyWithoutInitial, Child} from '~/types';
 
 /* MAIN */
 
@@ -12,11 +13,11 @@ const For = <T extends object> ({ values, children }: { values: Observable<Obser
 
   const cache = new WeakMap<T, Child> ();
 
-  return $.computed ( () => {
+  return useComputed ( () => {
 
     return $$(values).map ( value => {
 
-      return $.computed ( () => {
+      return useComputed ( () => {
 
         const key = $$(value);
         const cached = cache.get ( key );

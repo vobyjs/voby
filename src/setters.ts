@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import {$} from '~/observable';
+import useEffect from '~/hooks/use_effect';
 import template from '~/template';
 import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isPropertyNonDimensional, isString, isText, isUndefined, keys} from '~/utils';
-import {Child, ChildMounted, ChildPrepared, EventListener, FunctionResolver, ObservableResolver} from '~/types';
+import type {Child, ChildMounted, ChildPrepared, EventListener, FunctionResolver, ObservableResolver, Ref} from '~/types';
 
 /* HELPERS */
 
@@ -154,7 +154,7 @@ const setAbstract = <T> ( value: ObservableResolver<T>, setter: (( value: T, val
 
     let valuePrev: T | undefined;
 
-    $.effect ( () => {
+    useEffect ( () => {
 
       const valueNext = resolveObservable ( value );
 
@@ -269,7 +269,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: ChildM
 
         let childrenPrev: ChildMounted = [];
 
-        $.effect ( () => {
+        useEffect ( () => {
 
           childrenNext[i] = childrenPrev = setChildStatic ( parent, resolveObservableOrFunction ( childNext ), childrenPrev, childrenNextSibling );
 
@@ -335,7 +335,7 @@ const setClass = ( classList: DOMTokenList, key: string, value: ObservableResolv
 
 };
 
-const setClassesStatic = ( element: HTMLElement, object: string | Record<string, ObservableResolver<boolean>>, objectPrev?: string | Record<string, ObservableResolver<boolean>> ): void => {
+const setClassesStatic = ( element: HTMLElement, object: string | Record<string, ObservableResolver<null | undefined | boolean>>, objectPrev?: string | Record<string, ObservableResolver<null | undefined | boolean>> ): void => {
 
   if ( isString ( object ) ) {
 
@@ -375,7 +375,7 @@ const setClassesStatic = ( element: HTMLElement, object: string | Record<string,
 
 };
 
-const setClasses = ( element: HTMLElement, object: ObservableResolver<string | Record<string, ObservableResolver<boolean>>> ): void => {
+const setClasses = ( element: HTMLElement, object: ObservableResolver<string | Record<string, ObservableResolver<null | undefined | boolean>>> ): void => {
 
   setAbstract ( object, ( object, objectPrev ) => {
 
@@ -512,7 +512,7 @@ const setProperty = ( element: HTMLElement, key: string, value: ObservableResolv
 
 };
 
-const setRef = <T> ( element: T, value?: (( value: T ) => unknown)): void => {
+const setRef = <T> ( element: T, value?: Ref<T> ): void => {
 
   if ( isUndefined ( value ) ) return;
 
