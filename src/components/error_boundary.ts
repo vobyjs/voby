@@ -33,7 +33,7 @@ const ErrorBoundary = ({ fallback, children }: { fallback: (( props: { error: Er
 
       });
 
-      return children[0](); //FIXME: This looks super buggy, what is there are multiple or no children? Whay if they are not functions? It should probably resolve all children, but returning an array here breaks things, bad sign
+      return children?.[0](); //FIXME: This looks super buggy, what is there are multiple or no children? Whay if they are not functions? It should probably resolve all children, but returning an array here breaks things, bad sign
 
     }
 

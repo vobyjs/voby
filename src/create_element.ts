@@ -3,11 +3,14 @@
 
 import {setProps, setRef} from '~/setters';
 import {isComponentClass, isFunction, isNode, isString} from '~/utils';
-import type {Child, Component, Props} from '~/types';
+import type {Child, ComponentIntrinsicElement, ComponentNode, Component, Props} from '~/types';
 
 /* MAIN */
 
-const createElement = ( component: Component, props: Props | null, ...children: Child[] ): (() => Child) => {
+function createElement <T extends ComponentIntrinsicElement> ( component: T, props: Props | null, ...children: Child[] ): (() => JSX.IntrinsicElementsMap[T]);
+function createElement <T extends ComponentNode> ( component: T | (() => T), props: Props | null, ...children: Child[] ): (() => T);
+function createElement ( component: Component, props: Props | null, ...children: Child[] ): (() => Child);
+function createElement ( component: Component, props: Props | null, ...children: Child[] ): (() => Child) {
 
   return (): Child => { // It's important to wrap components, so that they can be executed in the right order, from parent to child, rather than from child to parent in some cases
 
