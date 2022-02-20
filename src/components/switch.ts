@@ -3,26 +3,28 @@
 
 import useComputed from '~/hooks/use_computed';
 import {extend, isObservable} from '~/utils';
-import type {ObservableMaybe, Child} from '~/types';
+import type {Child, ChildWithMetadata, ObservableMaybe} from '~/types';
 
 /* MAIN */
 
-const Switch = <T> ({ when, children }: { when: ObservableMaybe<T>, children: any }): Child => {
+//TODO: Enforce children of Switch to be of type Switch.Case or Switch.Default
 
-  const data = children.map ( child => child () );
-  const get = ( when: T ) => data.find ( datum => 'default' in datum || datum.when === when )?.children;
+const Switch = <T> ({ when, children }: { when: ObservableMaybe<T>, children: Child[] }): Child => {
+
+  const items = ( children as (() => ChildWithMetadata<{ default?: boolean, when?: T }>)[] ).map ( child => child () ); //TSC
+  const child = ( when: T ) => items.find ( item => item.metadata.default || item.metadata.when === when );
 
   if ( isObservable ( when ) ) {
 
     return useComputed ( () => {
 
-      return get ( when () );
+      return child ( when () );
 
     });
 
   } else {
 
-    return get ( when );
+    return child ( when );
 
   }
 
@@ -30,15 +32,15 @@ const Switch = <T> ({ when, children }: { when: ObservableMaybe<T>, children: an
 
 /* UTILITIES */
 
-Switch.Case = <T> ({ when, children }: { when: T, children: Child }): ((() => Child) & ({ when: T })) => {
+Switch.Case = <T> ({ when, children }: { when: T, children: Child }): ChildWithMetadata<{ when: T }> => {
 
-  return extend ( () => children, { when } );
+  return extend ( () => children, { metadata: { when } } );
 
 };
 
-Switch.Default = ({ children }: { children: Child }): ((() => Child) & ({ default: boolean })) => {
+Switch.Default = ({ children }: { children: Child }): ChildWithMetadata<{ default: boolean }> => {
 
-  return extend ( () => children, { default: true } );
+  return extend ( () => children, { metadata: { default: true } } );
 
 };
 

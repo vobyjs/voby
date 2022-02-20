@@ -2,38 +2,37 @@
 /* IMPORT */
 
 import createElement from '~/create_element';
-import {$} from '~/observable';
 import useComputed from '~/hooks/use_computed';
 import useError from '~/hooks/use_error';
+import {$} from '~/observable';
+import {resolveChild} from '~/setters';
 import {castError} from '~/utils';
-import type {Child} from '~/types';
+import type {Child, Disposer} from '~/types';
 
 /* MAIN */
 
-const ErrorBoundary = ({ fallback, children }: { fallback: (( props: { error: Error, reset: () => void } ) => Child), children: Child }): Child => {
+const ErrorBoundary = ({ fallback, children }: { fallback: (( props: { error: Error, reset: Disposer } ) => Child), children: Child }): Child => {
 
-  const exception = $();
-  const hasException = $(false);
+  const error = $<Error | null>( null );
 
   return useComputed ( () => {
 
-    if ( hasException () ) {
+    if ( error () ) {
 
-      const error = castError ( exception.sample () );
-      const reset = () => hasException ( false );
+      const reset = () => error ( null );
+      const props = { error: error (), reset };
 
-      return createElement ( fallback, { error, reset } );
+      return createElement ( fallback, props );
 
     } else {
 
-      useError ( e => {
+      useError ( err => {
 
-        exception ( e );
-        hasException ( true );
+        error ( castError ( err ) );
 
       });
 
-      return children?.[0](); //FIXME: This looks super buggy, what is there are multiple or no children? Whay if they are not functions? It should probably resolve all children, but returning an array here breaks things, bad sign
+      return resolveChild ( children ); //FIXME: Solid simply returns "children", how does that work? //FIXME: This looks like a major performance issue, a root error boundary like that wouldn't wrap observables with effects
 
     }
 

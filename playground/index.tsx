@@ -5,14 +5,17 @@
 /* IMPORT */
 
 import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from '../src';
-import {useCleanup, useComputed, useDisposed, useEffect, useError, usePromise} from '../src';
+import {useCleanup, useComputed, useDisposed, useEffect, useError, useInterval, usePromise, useTimeout} from '../src';
 import {$, $$, createElement, render, renderToString, styled, template} from '../src';
 
 /* MAIN */
 
+//TODO: Ensure it works without pragma comments
 //TODO: Test all built-in components
+//TODO: Test all built-in hooks
 //TODO: Test child
 //TODO: Test children
+//TODO: Test template
 
 const TEST_INTERVAL = 500; // Lowering this makes it easier to spot some memory leaks
 
@@ -28,7 +31,7 @@ const TestNullStatic = (): JSX.Element => {
 const TestNullObservable = (): JSX.Element => {
   const o = $<string>( null );
   const toggle = () => o.update ( prev => ( prev === null ) ? '' : null );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Null - Observable</h3>
@@ -49,7 +52,7 @@ const TestUndefinedStatic = (): JSX.Element => {
 const TestUndefinedObservable = (): JSX.Element => {
   const o = $<string>( undefined );
   const toggle = () => o.update ( prev => ( prev === undefined ) ? '' : undefined );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Undefined - Observable</h3>
@@ -70,7 +73,7 @@ const TestBooleanStatic = (): JSX.Element => {
 const TestBooleanObservable = (): JSX.Element => {
   const o = $( true );
   const toggle = () => o.update ( prev => !prev );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Boolean - Observable</h3>
@@ -82,7 +85,7 @@ const TestBooleanObservable = (): JSX.Element => {
 const TestBooleanRemoval = (): JSX.Element => {
   const o = $( true );
   const toggle = () => o.update ( prev => prev ? null : true );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Boolean - Removal</h3>
@@ -103,7 +106,7 @@ const TestNumberStatic = (): JSX.Element => {
 const TestNumberObservable = (): JSX.Element => {
   const o = $( Math.random () );
   const randomize = () => o ( Math.random () );
-  setInterval ( randomize, TEST_INTERVAL );
+  useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
       <h3>Number - Observable</h3>
@@ -115,7 +118,7 @@ const TestNumberObservable = (): JSX.Element => {
 const TestNumberRemoval = (): JSX.Element => {
   const o = $( Math.random () );
   const randomize = () => o.update ( prev => prev ? null : Math.random () );
-  setInterval ( randomize, TEST_INTERVAL );
+  useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
       <h3>Number - Removal</h3>
@@ -136,7 +139,7 @@ const TestBigIntStatic = (): JSX.Element => {
 const TestBigIntObservable = (): JSX.Element => {
   const o = $( BigInt ( Math.random () * 100 | 0 ) );
   const randomize = () => o ( BigInt ( Math.random () * 100 | 0 ) );
-  setInterval ( randomize, TEST_INTERVAL );
+  useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
       <h3>BigInt - Observable</h3>
@@ -148,7 +151,7 @@ const TestBigIntObservable = (): JSX.Element => {
 const TestBigIntRemoval = (): JSX.Element => {
   const o = $( BigInt ( Math.random () * 100 | 0 ) );
   const randomize = () => o.update ( prev => prev ? null : BigInt ( Math.random () * 100 | 0 ) );
-  setInterval ( randomize, TEST_INTERVAL );
+  useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
       <h3>BigInt - Removal</h3>
@@ -169,7 +172,7 @@ const TestStringStatic = (): JSX.Element => {
 const TestStringObservable = (): JSX.Element => {
   const o = $( String ( Math.random () ) );
   const randomize = () => o ( String ( Math.random () ) );
-  setInterval ( randomize, TEST_INTERVAL );
+  useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
       <h3>String - Observable</h3>
@@ -181,7 +184,7 @@ const TestStringObservable = (): JSX.Element => {
 const TestStringRemoval = (): JSX.Element => {
   const o = $( String ( Math.random () ) );
   const randomize = () => o.update ( prev => prev ? null : String ( Math.random () ) );
-  setInterval ( randomize, TEST_INTERVAL );
+  useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
       <h3>String - Removal</h3>
@@ -202,7 +205,7 @@ const TestSymbolStatic = (): JSX.Element => {
 const TestSymbolObservable = (): JSX.Element => {
   const o = $( Symbol () );
   const randomize = () => o ( Symbol () );
-  setInterval ( randomize, TEST_INTERVAL );
+  useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
       <h3>Symbol - Observable</h3>
@@ -214,7 +217,7 @@ const TestSymbolObservable = (): JSX.Element => {
 const TestSymbolRemoval = (): JSX.Element => {
   const o = $( Symbol () );
   const randomize = () => o.update ( prev => prev ? null : Symbol () );
-  setInterval ( randomize, TEST_INTERVAL );
+  useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
       <h3>Symbol - Removal</h3>
@@ -244,7 +247,7 @@ const TestAttributeStaticFunction = (): JSX.Element => {
 const TestAttributeObservable = (): JSX.Element => {
   const o = $( 'red' );
   const toggle = () => o.update ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Attribute - Observable</h3>
@@ -256,7 +259,7 @@ const TestAttributeObservable = (): JSX.Element => {
 const TestAttributeObservableBoolean = (): JSX.Element => {
   const o = $( true );
   const toggle = () => o.update ( prev => !prev );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Attribute - Observable Boolean</h3>
@@ -268,7 +271,7 @@ const TestAttributeObservableBoolean = (): JSX.Element => {
 const TestAttributeRemoval = (): JSX.Element => {
   const o = $( 'red' );
   const toggle = () => o.update ( prev => ( prev === 'red' ) ? null : 'red' );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Attribute - Removal</h3>
@@ -289,7 +292,7 @@ const TestPropertyCheckedStatic = (): JSX.Element => {
 const TestPropertyCheckedObservable = (): JSX.Element => {
   const o = $( true );
   const toggle = () => o.update ( prev => !prev );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Property - Checked Observable</h3>
@@ -301,7 +304,7 @@ const TestPropertyCheckedObservable = (): JSX.Element => {
 const TestPropertyCheckedRemoval = (): JSX.Element => {
   const o = $( true );
   const toggle = () => o.update ( prev => prev ? null : true );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Property - Checked Removal</h3>
@@ -322,7 +325,7 @@ const TestPropertyValueStatic = (): JSX.Element => {
 const TestPropertyValueObservable = (): JSX.Element => {
   const o = $( String ( Math.random () ) );
   const randomize = () => o ( String ( Math.random () ) );
-  setInterval ( randomize, TEST_INTERVAL );
+  useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
       <h3>Property - Value Observable</h3>
@@ -334,7 +337,7 @@ const TestPropertyValueObservable = (): JSX.Element => {
 const TestPropertyValueRemoval = (): JSX.Element => {
   const o = $( String ( Math.random () ) );
   const randomize = () => o.update ( prev => prev ? null : String ( Math.random () ) );
-  setInterval ( randomize, TEST_INTERVAL );
+  useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
       <h3>Property - Value Removal</h3>
@@ -355,7 +358,7 @@ const TestClassNameStatic = (): JSX.Element => {
 const TestClassNameObservable = (): JSX.Element => {
   const o = $( 'red' );
   const toggle = () => o.update ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>ClassName - Observable</h3>
@@ -367,7 +370,7 @@ const TestClassNameObservable = (): JSX.Element => {
 const TestClassNameRemoval = (): JSX.Element => {
   const o = $( 'red' );
   const toggle = () => o.update ( prev => prev ? null : 'red' );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>ClassName - Removal</h3>
@@ -397,7 +400,7 @@ const TestClassStaticString = (): JSX.Element => {
 const TestClassObservable = (): JSX.Element => {
   const o = $( true );
   const toggle = () => o.update ( prev => !prev );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Class - Observable</h3>
@@ -409,7 +412,7 @@ const TestClassObservable = (): JSX.Element => {
 const TestClassObservableString = (): JSX.Element => {
   const o = $( 'red' );
   const toggle = () => o.update ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Class - Observable String</h3>
@@ -421,7 +424,7 @@ const TestClassObservableString = (): JSX.Element => {
 const TestClassRemoval = (): JSX.Element => {
   const o = $( true );
   const toggle = () => o.update ( prev => prev ? null : true );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Class - Removal</h3>
@@ -433,7 +436,7 @@ const TestClassRemoval = (): JSX.Element => {
 const TestClassRemovalString = (): JSX.Element => {
   const o = $( 'red' );
   const toggle = () => o.update ( prev => prev ? null : 'red' );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Class - Removal String</h3>
@@ -454,7 +457,7 @@ const TestClassesStatic = (): JSX.Element => {
 const TestClassesObservable = (): JSX.Element => {
   const o = $({ red: true, blue: false });
   const toggle = () => o.update ( prev => prev.red ? { red: false, blue: true } : { red: true, blue: false } );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Classes - Observable</h3>
@@ -466,7 +469,7 @@ const TestClassesObservable = (): JSX.Element => {
 const TestClassesCleanup = (): JSX.Element => {
   const o = $<JSX.ClassProperties>({ red: true });
   const toggle = () => o.update ( prev => prev.red ? { blue: true } : { red: true } );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Classes - Cleanup</h3>
@@ -514,7 +517,7 @@ const TestStyleStaticVariable = (): JSX.Element => {
 const TestStyleObservable = (): JSX.Element => {
   const o = $( 'green' );
   const toggle = () => o.update ( prev => ( prev === 'green' ) ? 'orange' : 'green' );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Style - Observable</h3>
@@ -526,7 +529,7 @@ const TestStyleObservable = (): JSX.Element => {
 const TestStyleObservableNumeric = (): JSX.Element => {
   const o = $( { flexGrow: 1, width: 50 } );
   const toggle = () => o.update ( prev => ( prev.flexGrow === 1 ) ? { flexGrow: 2, width: 100 } : { flexGrow: 1, width: 50 } );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Style - Static Numeric</h3>
@@ -538,7 +541,7 @@ const TestStyleObservableNumeric = (): JSX.Element => {
 const TestStyleObservableString = (): JSX.Element => {
   const o = $( 'color: green' );
   const toggle = () => o.update ( prev => ( prev === 'color: green' ) ? 'color: orange' : 'color: green' );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Style - Observable String</h3>
@@ -550,7 +553,7 @@ const TestStyleObservableString = (): JSX.Element => {
 const TestStyleObservableVariable = (): JSX.Element => {
   const o = $( 'green' );
   const toggle = () => o.update ( prev => ( prev === 'orange' ) ? 'green' : 'orange' );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Style - Observable Variable</h3>
@@ -562,7 +565,7 @@ const TestStyleObservableVariable = (): JSX.Element => {
 const TestStyleRemoval = (): JSX.Element => {
   const o = $( 'green' );
   const toggle = () => o.update ( prev => prev ? null : 'green' );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Style - Removal</h3>
@@ -583,7 +586,7 @@ const TestStylesStatic = (): JSX.Element => {
 const TestStylesObservable = (): JSX.Element => {
   const o = $({ color: 'orange', fontWeight: 'normal' });
   const toggle = () => o.update ( prev => ( prev.color === 'orange' ) ? { color: 'green', fontWeight: 'bold' } : { color: 'orange', fontWeight: 'normal' } );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Styles - Observable</h3>
@@ -595,7 +598,7 @@ const TestStylesObservable = (): JSX.Element => {
 const TestStylesObservableCleanup = (): JSX.Element => {
   const o = $<JSX.StyleProperties>({ color: 'orange', fontWeight: 'bold' });
   const toggle = () => o.update ( prev => ( prev.color === 'orange' ) ? { fontStyle: 'italic', textDecoration: 'line-through' } : { color: 'orange', fontWeight: 'bold' } );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Styles - Observable Cleanup</h3>
@@ -616,7 +619,7 @@ const TestHTMLInnerHTMLStatic = (): JSX.Element => {
 const TestHTMLInnerHTMLObservable = (): JSX.Element => {
   const o = $( '<b>danger1</b>' );
   const toggle = () => o.update ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>HTML - innerHTML - Observable</h3>
@@ -637,7 +640,7 @@ const TestHTMLOuterHTMLStatic = (): JSX.Element => {
 const TestHTMLOuterHTMLObservable = (): JSX.Element => {
   const o = $( '<b>danger1</b>' );
   const toggle = () => o.update ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>HTML - outerHTML - Observable</h3>
@@ -658,7 +661,7 @@ const TestHTMLTextContentStatic = (): JSX.Element => {
 const TestHTMLTextContentObservable = (): JSX.Element => {
   const o = $( '<b>danger1</b>' );
   const toggle = () => o.update ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>HTML - textContent - Observable</h3>
@@ -679,7 +682,7 @@ const TestHTMLDangerouslySetInnerHTMLStatic = (): JSX.Element => {
 const TestHTMLDangerouslySetInnerHTMLObservable = (): JSX.Element => {
   const o = $( { __html: '<i>danger</i>' } );
   const toggle = () => o.update ( prev => ( prev.__html === '<i>danger</i>' ) ? { __html: '<b>danger</b>' } : { __html: '<i>danger</i>' } );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>HTML - dangerouslySetInnerHTML - Observable</h3>
@@ -691,7 +694,7 @@ const TestHTMLDangerouslySetInnerHTMLObservable = (): JSX.Element => {
 const TestHTMLDangerouslySetInnerHTMLObservableString = (): JSX.Element => {
   const o = $( '<i>danger</i>' );
   const toggle = () => o.update ( prev => ( prev === '<i>danger</i>' ) ? '<b>danger</b>' : '<i>danger</i>' );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>HTML - dangerouslySetInnerHTML - Observable String</h3>
@@ -794,13 +797,13 @@ const TestEventClickCaptureRemoval = (): JSX.Element => {
   );
 };
 
-const TestABCD = () => {
+const TestABCD = (): JSX.Element => {
   const AB = (): JSX.Element => {
     const a = <i>a</i>;
     const b = <u>b</u>;
     const component = $( a );
     const toggle = () => component ( ( component () === a ) ? b : a );
-    setInterval ( toggle, TEST_INTERVAL / 2 );
+    useInterval ( toggle, TEST_INTERVAL / 2 );
     return component;
   };
   const CD = (): JSX.Element => {
@@ -808,14 +811,14 @@ const TestABCD = () => {
     const d = <span>d</span>;
     const component = $( c );
     const toggle = () => component ( ( component () === c ) ? d : c );
-    setInterval ( toggle, TEST_INTERVAL / 2 );
+    useInterval ( toggle, TEST_INTERVAL / 2 );
     return component;
   };
   const ab = <AB />;
   const cd = <CD />;
   const component = $( ab );
   const toggle = () => component ( ( component () === ab ) ? cd : ab );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Children - ABCD</h3>
@@ -841,7 +844,7 @@ const TestIfStatic = (): JSX.Element => {
 const TestIfRemoval = (): JSX.Element => {
   const o = $( true );
   const toggle = () => o.update ( prev => !prev );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>If - Removal</h3>
@@ -869,13 +872,44 @@ const TestTernaryStatic = (): JSX.Element => {
 const TestTernaryObservable = (): JSX.Element => {
   const o = $( true );
   const toggle = () => o.update ( prev => !prev );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Ternary - Observable</h3>
       <Ternary when={o}>
         <p>true</p>
         <p>false</p>
+      </Ternary>
+    </>
+  );
+};
+
+const TestTernaryObservableChildren = (): JSX.Element => {
+  const AB = (): JSX.Element => {
+    const a = <i>a</i>;
+    const b = <u>b</u>;
+    const component = $( a );
+    const toggle = () => component ( ( component () === a ) ? b : a );
+    useInterval ( toggle, TEST_INTERVAL / 2 );
+    return component;
+  };
+  const CD = (): JSX.Element => {
+    const c = <b>c</b>;
+    const d = <span>d</span>;
+    const component = $( c );
+    const toggle = () => component ( ( component () === c ) ? d : c );
+    useInterval ( toggle, TEST_INTERVAL / 2 );
+    return component;
+  };
+  const o = $( true );
+  const toggle = () => o.update ( prev => !prev );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Ternary - Observable Children</h3>
+      <Ternary when={o}>
+        <AB />
+        <CD />
       </Ternary>
     </>
   );
@@ -906,7 +940,7 @@ const TestSwitchStatic = (): JSX.Element => {
 const TestSwitchObservable = (): JSX.Element => {
   const o = $( 0 );
   const toggle = () => o.update ( prev => ( prev + 1 ) % 4 );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Switch - Observable</h3>
@@ -935,9 +969,9 @@ const TestSwitchObservableComplex = (): JSX.Element => {
   const toggle2 = () => o2.update ( prev => ( prev + 1 ) % 5 );
   const o3 = $( 4 );
   const toggle3 = () => o3.update ( prev => ( prev + 1 ) % 4 );
-  setInterval ( toggle, TEST_INTERVAL );
-  setInterval ( toggle2, TEST_INTERVAL );
-  setInterval ( toggle3, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle2, TEST_INTERVAL );
+  useInterval ( toggle3, TEST_INTERVAL );
   return (
     <>
       <h3>Switch - Observable Complex</h3>
@@ -989,6 +1023,17 @@ class TestComponentStatic extends Component<{}> {
   }
 }
 
+class TestComponentStaticProps extends Component<{ value: number }> {
+  render (): JSX.Element {
+    return (
+      <>
+        <h3>Component - Static Props</h3>
+        <p>{this.props.value}</p>
+      </>
+    );
+  }
+}
+
 class TestComponentObservable extends Component<{}> {
   getRandom (): number {
     return Math.random ();
@@ -996,7 +1041,7 @@ class TestComponentObservable extends Component<{}> {
   render (): JSX.Element {
     const o = $( this.getRandom () );
     const randomize = () => o ( this.getRandom () );
-    setInterval ( randomize, TEST_INTERVAL );
+    useInterval ( randomize, TEST_INTERVAL );
     return (
       <>
         <h3>Component - Observable</h3>
@@ -1006,12 +1051,76 @@ class TestComponentObservable extends Component<{}> {
   }
 }
 
+const TestForStatic = (): JSX.Element => {
+  const values = [1, 2, 3];
+  return (
+    <>
+      <h3>For - Static</h3>
+      <For values={values}>
+        {( value, index ) => {
+          return <p>Value: {value} - Index: {index}</p>
+        }}
+      </For>
+    </>
+  )
+};
+
+const TestForObservables = (): JSX.Element => {
+  const v1 = $(1);
+  const v2 = $(2);
+  const v3 = $(3);
+  const values = [v1, v2, v3];
+  useInterval ( () => v1 ( v1 () + 1 ), TEST_INTERVAL );
+  useInterval ( () => v2 ( v2 () + 1 ), TEST_INTERVAL );
+  useInterval ( () => v3 ( v3 () + 1 ), TEST_INTERVAL );
+  return (
+    <>
+      <h3>For - Observables</h3>
+      <For values={values}>
+        {( value, index ) => {
+          return <p>Value: {value} - Index: {index}</p>
+        }}
+      </For>
+    </>
+  )
+};
+
+const TestForObservableObservables = (): JSX.Element => {
+  const v1 = $(1);
+  const v2 = $(2);
+  const v3 = $(3);
+  const values = $([v1, v2, v3]);
+  useInterval ( () => v1 ( v1 () + 1 ), TEST_INTERVAL );
+  useInterval ( () => v2 ( v2 () + 1 ), TEST_INTERVAL );
+  useInterval ( () => v3 ( v3 () + 1 ), TEST_INTERVAL );
+  useInterval ( () => values ( values ().slice ().sort ( () => .5 - Math.random () ) ), TEST_INTERVAL );
+  return (
+    <>
+      <h3>For - Observable Observables</h3>
+      <For values={values}>
+        {( value, index ) => {
+          return <p>Value: {value} - Index: {index}</p>
+        }}
+      </For>
+    </>
+  )
+};
+
 const TestFragmentStatic = (): JSX.Element => {
   return (
     <>
       <h3>Fragment - Static</h3>
       <p>content</p>
     </>
+  );
+};
+
+const TestFragmentStaticComponent = (): JSX.Element => {
+  return (
+    <Fragment>
+      <h3>Fragment - Static Component</h3>
+      <p>content</p>
+    </Fragment>
   );
 };
 
@@ -1038,18 +1147,18 @@ const TestFragmentStaticDeep = (): JSX.Element => {
   );
 };
 
-const TestErrorBundary = (): JSX.Element => {
+const TestErrorBoundary = (): JSX.Element => {
   const Erroring = (): JSX.Element => {
     const o = $( true );
     const toggle = () => o.update ( prev => !prev );
-    setTimeout ( toggle, TEST_INTERVAL );
+    useTimeout ( toggle, TEST_INTERVAL );
     return o.on ( value => {
-       if ( value ) return <p>content</p>;
-       throw new Error ( 'Custom error' );
+      if ( value ) return <p>content</p>;
+      throw new Error ( 'Custom error' );
     });
   };
   const Fallback = ({ error, reset }): JSX.Element => {
-    setTimeout ( reset, TEST_INTERVAL );
+    useTimeout ( reset, TEST_INTERVAL );
     return <p>Error caught: {error.message}</p>;
   };
   return (
@@ -1086,17 +1195,6 @@ const TestChildren = (): JSX.Element => {
   );
 };
 
-const TestPortalStatic = (): JSX.Element => {
-  return (
-    <>
-      <h3>Portal - Static</h3>
-      <Portal>
-        <p>content</p>
-      </Portal>
-    </>
-  );
-};
-
 const TestRef = (): JSX.Element => {
   const ref = $<HTMLElement>();
   useEffect ( () => {
@@ -1107,6 +1205,28 @@ const TestRef = (): JSX.Element => {
     <>
       <h3>Ref</h3>
       <p ref={ref}>content</p>
+    </>
+  );
+};
+
+const TestKeyframeStatic = (): JSX.Element => {
+  const rotate = styled.keyframes`
+    from, to {
+      width: 50px;
+    }
+    50% {
+      width: 150px;
+    }
+  `;
+  const P = styled.p`
+    background: tomato;
+    color: white;
+    animation: ${rotate} 1s ease-in-out infinite;
+  `;
+  return (
+    <>
+      <h3>Keyframes - Static</h3>
+      <P>content</P>
     </>
   );
 };
@@ -1137,7 +1257,7 @@ const TestStyledClass = (): JSX.Element => {
   const oBlue = $( true );
   const oRed = $( false );
   const toggle = () => oBlue () ? ( oBlue ( false ), oRed ( true ) ) : ( oBlue ( true ), oRed ( false ) );
-  setInterval ( toggle, TEST_INTERVAL );
+  useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
       <h3>Styled - Class</h3>
@@ -1146,7 +1266,34 @@ const TestStyledClass = (): JSX.Element => {
   );
 };
 
-const TestRenderToString = async () => {
+const TestStyledCSSStatic = (): JSX.Element => {
+  const className = styled.css`
+    color: red;
+  `;
+  return (
+    <>
+      <h3>Styled - CSS Static</h3>
+      <p class={className}>content</p>
+    </>
+  );
+};
+
+const TestStyledGlobalStatic = (): JSX.Element => {
+  const Globals = styled.global`
+    :root {
+      --color: red;
+    }
+  `;
+  return (
+    <>
+      <Globals />
+      <h3>Styled - Global Static</h3>
+      <p style={{ color: 'var(--color)' }}>content</p>
+    </>
+  );
+};
+
+const TestRenderToString = async (): Promise<string> => {
   const App = (): JSX.Element => {
     const o = $( String ( Math.random () ) );
     return (
@@ -1158,6 +1305,78 @@ const TestRenderToString = async () => {
   };
   const html = await renderToString ( <App /> );
   console.log ( { html } );
+  return html;
+};
+
+const TestPortalStatic = (): JSX.Element => {
+  return (
+    <>
+      <h3>Portal - Static</h3>
+      <Portal>
+        <p>content</p>
+      </Portal>
+    </>
+  );
+};
+
+const TestPortalObservable = (): JSX.Element => {
+  const AB = (): JSX.Element => {
+    const a = <i>a</i>;
+    const b = <u>b</u>;
+    const component = $( a );
+    const toggle = () => component ( ( component () === a ) ? b : a );
+    useInterval ( toggle, TEST_INTERVAL / 2 );
+    return component;
+  };
+  const CD = (): JSX.Element => {
+    const c = <b>c</b>;
+    const d = <span>d</span>;
+    const component = $( c );
+    const toggle = () => component ( ( component () === c ) ? d : c );
+    useInterval ( toggle, TEST_INTERVAL / 2 );
+    return component;
+  };
+  const ab = <AB />;
+  const cd = <CD />;
+  const component = $( ab );
+  const toggle = () => component ( ( component () === ab ) ? cd : ab );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Portal - Observable</h3>
+      <Portal>
+        {component}
+      </Portal>
+    </>
+  );
+};
+
+const TestPortalRemoval = (): JSX.Element => {
+  const Inner = () => {
+    const log = () => console.count ( 'portal.inner' );
+    useInterval ( log, TEST_INTERVAL / 4 );
+    return <p>content</p>;
+  };
+  const Portalized = () => {
+    const log = () => console.count ( 'portal' );
+    useInterval ( log, TEST_INTERVAL / 4 );
+    return (
+      <Portal>
+        <Inner />
+      </Portal>
+    );
+  };
+  const o = $( true );
+  const toggle = () => o.update ( prev => prev ? null : true );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Portal - Removal</h3>
+      <If when={o}>
+        <Portalized />
+      </If>
+    </>
+  );
 };
 
 const Test = (): JSX.Element => {
@@ -1238,19 +1457,31 @@ const Test = (): JSX.Element => {
       <TestIfRemoval />
       <TestTernaryStatic />
       <TestTernaryObservable />
+      <TestTernaryObservableChildren />
       <TestSwitchStatic />
       <TestSwitchObservable />
       <TestSwitchObservableComplex />
       <TestComponentStatic />
+      <TestComponentStaticProps value={123} />
       <TestComponentObservable />
+      <TestForStatic />
+      <TestForObservables />
+      <TestForObservableObservables />
       <TestFragmentStatic />
+      <TestFragmentStaticComponent />
       <TestFragmentStaticDeep />
-      <TestErrorBundary />
+      <TestErrorBoundary />
       <TestChildren />
-      {/* <TestPortalStatic /> */}
       <TestRef />
+      <TestKeyframeStatic />
       <TestStyledStatic />
       <TestStyledClass />
+      <TestStyledCSSStatic />
+      <TestStyledGlobalStatic />
+      <TestPortalStatic />
+      <TestPortalObservable />
+      <TestPortalRemoval />
+      <hr />
     </>
   );
 };

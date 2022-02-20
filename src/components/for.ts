@@ -3,32 +3,21 @@
 
 import useComputed from '~/hooks/use_computed';
 import {$$} from '~/observable';
-import type {Observable, ObservableReadonlyWithoutInitial, Child} from '~/types';
+import type {Child, ObservableReadonlyWithoutInitial, ObservableResolver} from '~/types';
 
 /* MAIN */
 
-//TODO: Write this better, and more generally
+//TODO: Write this better, with much much better performance and generality
 
-const For = <T extends object> ({ values, children }: { values: Observable<Observable<T>[]>, children: (( value: Observable<T> ) => Child) }): ObservableReadonlyWithoutInitial<ObservableReadonlyWithoutInitial<Child>[]> => {
-
-  const cache = new WeakMap<T, Child> ();
+const For = <T, V extends ObservableResolver<T>, VV extends ObservableResolver<V[]>> ({ values, children }: { values: VV, children: (( value: T, index: number, values: V[] ) => Child) }): ObservableReadonlyWithoutInitial<ObservableReadonlyWithoutInitial<Child>[]> => {
 
   return useComputed ( () => {
 
-    return $$(values).map ( value => {
+    return $$(values).map ( ( value: V, index: number, values: V[] ) => {
 
       return useComputed ( () => {
 
-        const key = $$(value);
-        const cached = cache.get ( key );
-
-        if ( cached ) return cached;
-
-        const result = children[0]( value ); //FIXME: `children[0]` shouldn't be needed
-
-        cache.set ( key, result );
-
-        return result;
+        return children ( $$(value), index, values );
 
       });
 

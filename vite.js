@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import path from 'path';
-import {defineConfig} from 'vite';
+const path = require ( 'path' );
+const {defineConfig} = require ( 'vite' );
 
 /* MAIN */
 
@@ -16,4 +16,4 @@ const config = defineConfig ({
 
 /* EXPORT */
 
-export default config;
+module.exports = config;

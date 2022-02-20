@@ -2,8 +2,9 @@
 /* IMPORT */
 
 import Component from '~/components/component';
+import {SYMBOL_TEMPLATE_PROPERTY_ACCESSOR} from '~/constants';
 import {$} from '~/observable';
-import type {ComponentClass, Observable, ObservableAccessor} from '~/types';
+import type {ComponentClass, Observable, ObservableAccessor, TemplateActionProxy} from '~/types';
 
 /* MAIN */
 
@@ -127,6 +128,16 @@ const isNumber = ( value: unknown ): value is number => {
 
 };
 
+const isObject = ( value: unknown ): value is object => {
+
+  if ( value === null ) return false;
+
+  const type = typeof value;
+
+  return type === 'object' || type === 'function';
+
+};
+
 const isObservable = <T> ( value: T | Observable<T> | ObservableAccessor<T> ): value is Observable<T> | ObservableAccessor<T> => {
 
   return $.is ( value );
@@ -149,6 +160,12 @@ const isPlainObject = (() => {
 
 })();
 
+const isPrimitive = ( value: unknown ): value is null | undefined | string | number | boolean | symbol | bigint => {
+
+  return !isObject ( value );
+
+};
+
 const isPropertyNonDimensional = (() => {
 
   const nonDimensionalRe = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
@@ -164,6 +181,12 @@ const isPropertyNonDimensional = (() => {
 const isString = ( value: unknown ): value is string => {
 
   return typeof value === 'string';
+
+};
+
+const isTemplateActionProxy = ( value: unknown ): value is TemplateActionProxy => {
+
+  return isFunction ( value ) && value.hasOwnProperty ( SYMBOL_TEMPLATE_PROPERTY_ACCESSOR );
 
 };
 
@@ -195,4 +218,4 @@ const keys = (() => {
 
 /* EXPORT */
 
-export {castArray, castError, delay, extend, identity, indexOf, isAlphanumeric, isArray, isBoolean, isComment, isComponentClass, isElement, isError, isFunction, isNil, isNode, isNumber, isObservable, isPlainObject, isPropertyNonDimensional, isString, isText, isUndefined, keys};
+export {castArray, castError, delay, extend, identity, indexOf, isAlphanumeric, isArray, isBoolean, isComment, isComponentClass, isElement, isError, isFunction, isNil, isNode, isNumber, isObject, isObservable, isPlainObject, isPrimitive, isPropertyNonDimensional, isString, isTemplateActionProxy, isText, isUndefined, keys};

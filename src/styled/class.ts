@@ -19,7 +19,7 @@ const cls = (() => {
 
     fn.raw = raw;
     fn.cooked = cooked;
-    fn.toString = toString;
+    fn.toString = fn;
 
     return fn;
 

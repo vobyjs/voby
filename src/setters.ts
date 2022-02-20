@@ -2,9 +2,8 @@
 /* IMPORT */
 
 import useEffect from '~/hooks/use_effect';
-import template from '~/template';
-import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isPropertyNonDimensional, isString, isText, isUndefined, keys} from '~/utils';
-import type {Child, ChildMounted, ChildPrepared, EventListener, ObservableResolver, Ref} from '~/types';
+import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isPropertyNonDimensional, isString, isTemplateActionProxy, isText, isUndefined, keys} from '~/utils';
+import type {Child, ChildMounted, ChildPrepared, ChildResolved, EventListener, ObservableResolver, Ref} from '~/types';
 
 /* HELPERS */
 
@@ -85,6 +84,28 @@ const prepareChild = ( child: Child ): ChildPrepared => {
   }
 
   return String ( child );
+
+};
+
+const resolveChild = ( child: Child ): ChildResolved => { //TODO: This probably leads to problems, there need to be effects wrapped around functions, they can't just be resolved willy nilly like this
+
+  if ( isFunction ( child ) ) return resolveChild ( child () );
+
+  if ( isArray ( child ) ) {
+
+    const childResolved: ChildResolved[] = new Array ( child.length );
+
+    for ( let i = 0, l = child.length; i < l; i++ ) {
+
+      childResolved[i] = resolveChild ( child[i] );
+
+    }
+
+    return childResolved;
+
+  }
+
+  return child;
 
 };
 
@@ -243,7 +264,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: ChildM
   //URL: https://github.com/luwes/sinuous/blob/master/packages/sinuous/h/src/h.js
   //URL: https://github.com/ryansolid/dom-expressions/blob/main/packages/dom-expressions/src/client.js
 
-  if ( childrenPrev.length === 0 && template.isProxy ( child ) ) { // Template proxy function
+  if ( childrenPrev.length === 0 && isTemplateActionProxy ( child ) ) { // Template proxy function
 
     const placeholder = new Text ();
 
@@ -254,6 +275,8 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: ChildM
     return [placeholder];
 
   } else { // Regular child
+
+    if ( !childrenPrev.length && ( isNil ( child ) || isBoolean ( child ) ) ) childrenPrev; // Nothing to mount
 
     const childrenNext = castArray ( ( isArray ( child ) ? prepareChildren ( child ) : prepareChild ( child ) ) ?? new Comment () );
     const childrenNextSibling = getChildrenNextSibling ( childrenPrev ) || childrenPrevSibling;
@@ -308,11 +331,19 @@ const setChild = ( parent: HTMLElement, child: Child, childrenPrev: ChildMounted
 
 };
 
-const setChildren = ( parent: HTMLElement, children: Child[] ): void => {
+const setChildren = ( parent: HTMLElement, children: Child | Child[] ): void => {
 
-  for ( let i = 0, l = children.length; i < l; i++ ) {
+  if ( isArray ( children ) ) {
 
-    setChild ( parent, children[i] );
+    for ( let i = 0, l = children.length; i < l; i++ ) {
+
+      setChild ( parent, children[i] );
+
+    }
+
+  } else {
+
+    setChild ( parent, children );
 
   }
 
@@ -605,7 +636,7 @@ const setStyles = ( element: HTMLElement, object: ObservableResolver<string | Re
 
 const setProp = ( element: HTMLElement, key: string, value: any ): void => {
 
-  if ( template.isProxy ( value ) ) {
+  if ( isTemplateActionProxy ( value ) ) {
 
     value ( element, key );
 
@@ -661,4 +692,4 @@ const setProps = ( element: HTMLElement, object: Record<string, any> ): void => 
 
 /* EXPORT */
 
-export {setAbstract, setAttributeStatic, setAttribute, setChildReplacement, setChildStatic, setChild, setChildren, setClassStatic, setClass, setClassesStatic, setClasses, setEventStatic, setEvent, setHTMLStatic, setHTML, setPropertyStatic, setProperty, setRef, setStyleStatic, setStyle, setStylesStatic, setStyles, setProp, setProps};
+export {resolveChild, setAbstract, setAttributeStatic, setAttribute, setChildReplacement, setChildStatic, setChild, setChildren, setClassStatic, setClass, setClassesStatic, setClasses, setEventStatic, setEvent, setHTMLStatic, setHTML, setPropertyStatic, setProperty, setRef, setStyleStatic, setStyle, setStylesStatic, setStyles, setProp, setProps};

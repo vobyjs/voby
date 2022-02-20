@@ -16,7 +16,7 @@ const renderToString = ( child: Child, timeout: number = 1 ): Promise<string> =>
 
     $.root ( dispose => {
 
-      const portal = Portal ({ children: [child] });
+      const {portal} = Portal ({ children: child }).metadata;
 
       delay ( timeout ).then ( () => {
 

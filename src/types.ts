@@ -1,11 +1,17 @@
 
 /* MAIN */
 
-type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child) | ({ (): Child, get (): Child, sample (): Child });
+type Callback = () => void;
+
+type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child) | ((() => Child) & { metadata: any }) | ({ (): Child, get (): Child, sample (): Child });
 
 type ChildPrepared = null | string | Node | Array<ChildPrepared> | (() => Child) | ({ (): Child, get (): Child, sample (): Child });
 
+type ChildResolved = null | undefined | boolean | bigint | number | string | symbol | Node | Array<ChildResolved>;
+
 type ChildMounted = Node[] | ChildMounted[];
+
+type ChildWithMetadata<T = unknown> = (() => Child) & { metadata: T };
 
 type ComponentClass<P = {}, S = {}> = ConstructorWith<import ( '~/components/component' ).default<P, S>, [P]>;
 
@@ -45,13 +51,13 @@ type PromiseStateLoading = { loading: true, error?: never, value?: never };
 
 type PromiseStateError = { loading: false, error: Error, value?: never };
 
-type PromiseStateSuccess<T> = { loading: false, error?: never, value: T };
+type PromiseStateSuccess<T = unknown> = { loading: false, error?: never, value: T };
 
-type PromiseState<T> = PromiseStateLoading | PromiseStateError | PromiseStateSuccess<T>;
+type PromiseState<T = unknown> = PromiseStateLoading | PromiseStateError | PromiseStateSuccess<T>;
 
 type Props = Record<string, any>;
 
-type Ref<T> = ( value: T ) => unknown;
+type Ref<T = unknown> = ( value: T ) => unknown;
 
 type TemplateActionPath = number[];
 
@@ -63,4 +69,4 @@ type TemplateActionWithPaths = [TemplateActionPath, string, string, TemplateActi
 
 /* EXPORT */
 
-export type {Child, ChildMounted, ChildPrepared, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, Disposer, EventListener, FunctionResolver, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAccessor, ObservableMaybe, ObservableResolver, PromiseStateLoading, PromiseStateError, PromiseStateSuccess, PromiseState, Props, Ref, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};
+export type {Callback, Child, ChildMounted, ChildPrepared, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, Disposer, EventListener, FunctionResolver, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAccessor, ObservableMaybe, ObservableResolver, PromiseStateLoading, PromiseStateError, PromiseStateSuccess, PromiseState, Props, Ref, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};

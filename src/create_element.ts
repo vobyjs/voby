@@ -7,14 +7,18 @@ import type {Child, ComponentIntrinsicElement, ComponentNode, Component, Props} 
 
 /* MAIN */
 
-function createElement <T extends ComponentIntrinsicElement> ( component: T, props: Props | null, ...children: Child[] ): (() => JSX.IntrinsicElementsMap[T]);
-function createElement <T extends ComponentNode> ( component: T | (() => T), props: Props | null, ...children: Child[] ): (() => T);
-function createElement ( component: Component, props: Props | null, ...children: Child[] ): (() => Child);
-function createElement ( component: Component, props: Props | null, ...children: Child[] ): (() => Child) {
+//TODO: Optimize this, pushing as much code as possible out of the wrapper function
 
-  return (): Child => { // It's important to wrap components, so that they can be executed in the right order, from parent to child, rather than from child to parent in some cases
+function createElement <T extends ComponentIntrinsicElement> ( component: T, props: Props | null, ..._children: Child[] ): (() => JSX.IntrinsicElementsMap[T]);
+function createElement <T extends ComponentNode> ( component: T | (() => T), props: Props | null, ..._children: Child[] ): (() => T);
+function createElement ( component: Component, props: Props | null, ..._children: Child[] ): (() => Child);
+function createElement ( component: Component, props: Props | null, ..._children: Child[] ): (() => Child) {
+
+  return (): Child => { // It's important to wrap components, so that they can be executed in the right order, from parent to child, rather than from child to parent in some case
 
     const { children: _, key, ref, ...rest } = props || {};
+
+    const children = ( _children.length === 1 ) ? _children[0] : _children;
 
     if ( isFunction ( component ) ) {
 

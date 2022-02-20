@@ -15,15 +15,11 @@ const If = ({ when, children }: { when: ObservableMaybe<boolean>, children: Chil
 
       if ( when () ) return children;
 
-      return null;
-
     });
 
   } else {
 
     if ( when ) return children;
-
-    return null;
 
   }
 

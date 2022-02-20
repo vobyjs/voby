@@ -9,7 +9,7 @@ interface Document {
 
 /* HELPERS */
 
-type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child) | ({ (): Child, get (): Child, sample (): Child });
+type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child) | ((() => Child) & { metadata: any }) | ({ (): Child, get (): Child, sample (): Child });
 
 type ComponentClass<P = {}> = {
   render: () => Child;
@@ -38,8 +38,6 @@ type HTMLAttributeReferrerPolicy = '' | 'no-referrer' | 'no-referrer-when-downgr
 interface HTMLWebViewElement extends HTMLElement {}
 
 /* MAIN */
-
-//FIXME: link children props with return type
 
 declare namespace JSX {
 

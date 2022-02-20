@@ -1,13 +1,13 @@
 
 /* IMPORT */
 
-import type {Child, Props} from '~/types';
+import type {Child} from '~/types';
 
 /* MAIN */
 
-const Fragment = ( props: Props ): Child => {
+const Fragment = ({ children }: { children: Child }): Child => {
 
-  return props.children;
+  return children;
 
 };
 
