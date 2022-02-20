@@ -166,8 +166,7 @@ const App = () => {
       <table class="table table-hover table-striped test-data">
         <tbody>
           <For values={data$}>
-            {datum$ => {
-              const datum = datum$.sample ();
+            {datum => {
               const id = datum.id;
               const label = datum.label;
               const cls = datum.selected ? 'danger' : '';

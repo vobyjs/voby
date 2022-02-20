@@ -8,6 +8,7 @@
     "forceConsistentCasingInFileNames": true,
     "inlineSourceMap": false,
     "jsx": "react-jsx",
+    "jsxImportSource": ".",
     "lib": ["dom", "esnext"],
     "module": "commonjs",
     "moduleResolution": "node",

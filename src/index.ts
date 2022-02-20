@@ -6,7 +6,7 @@
 
 /* IMPORT */
 
-import './jsx';
+import './jsx/types';
 import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from './components';
 import {useCleanup, useComputed, useDisposed, useEffect, useError, useInterval, usePromise, useTimeout} from './hooks';
 import createElement from './create_element';
