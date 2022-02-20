@@ -13,11 +13,11 @@ const For = <T, V extends ObservableResolver<T>, VV extends ObservableResolver<V
 
   return useComputed ( () => {
 
-    return $$(values).map ( ( value: V, index: number, values: V[] ) => {
+    return ( $$(values) as any ).map ( ( value: V, index: number, values: V[] ) => {
 
       return useComputed ( () => {
 
-        return children ( $$(value), index, values );
+        return children ( $$(value) as any, index, values );
 
       });
 
