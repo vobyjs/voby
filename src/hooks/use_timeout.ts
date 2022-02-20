@@ -10,7 +10,7 @@ import type {Callback, Disposer, ObservableMaybe} from '~/types';
 
 const useTimeout = ( callback: ObservableMaybe<Callback>, ms?: ObservableMaybe<number> ): Disposer => {
 
-  let timeoutId = -1;
+  let timeoutId: ReturnType<typeof setInterval>;
 
   const dispose = (): void => {
 
