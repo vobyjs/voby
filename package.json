@@ -6,9 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "compile": "tsc --skipLibCheck",
-    "compile:bundle": "esbuild --bundle --format=esm ./src/index.ts",
-    "compile:watch": "tsc --skipLibCheck --watch",
+    "compile": "tsc --skipLibCheck && tscpaths -p tsconfig.json -s src -o dist",
+    "bundle": "esbuild --bundle --format=esm ./src/index.ts",
     "bench": "rm -rf node_modules/.vite && vite --config vite.js benchmark --force",
     "play": "rm -rf node_modules/.vite && vite --config vite.js playground --force",
     "prepublishOnly": "npm run clean && npm run compile"
@@ -42,6 +41,7 @@
   "devDependencies": {
     "esbuild": "^0.14.23",
     "rimraf": "^3.0.2",
+    "tscpaths": "^0.0.9",
     "typescript": "^4.5.5",
     "vite": "^2.8.4"
   }

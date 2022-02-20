@@ -8,8 +8,6 @@
     "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true,
     "inlineSourceMap": false,
-    "jsx": "react-jsx",
-    "jsxImportSource": "voby",
     "lib": ["dom", "esnext"],
     "module": "commonjs",
     "moduleResolution": "node",
