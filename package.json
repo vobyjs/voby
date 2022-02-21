@@ -8,8 +8,12 @@
     "clean": "rimraf dist",
     "compile": "tsc --skipLibCheck",
     "compile:watch": "tsc --skipLibCheck --watch",
-    "start:benchmark": "rm -rf node_modules/.vite && vite --config vite.js benchmark --force",
-    "start:playground": "rm -rf node_modules/.vite && vite --config vite.js playground --force",
+    "dev:benchmark": "cd demo/benchmark && npm i && npm run dev",
+    "prod:benchmark": "cd demo/benchmark && npm i && npm run prod",
+    "dev:playground": "cd demo/playground && npm i && npm run dev",
+    "prod:playground": "cd demo/playground && npm i && npm run prod",
+    "dev": "npm run dev:playground",
+    "prod": "npm run prod:playground",
     "prepublishOnly": "npm run clean && npm run compile"
   },
   "bugs": {

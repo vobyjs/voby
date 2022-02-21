@@ -2,10 +2,11 @@
   "private": true,
   "name": "playground",
   "scripts": {
-    "start": "vite --force --config vite.js"
+    "dev": "DEV=1 vite --force --config vite.js",
+    "prod": "PROD=1 vite --force --config vite.js"
   },
   "dependencies": {
     "vite": "^2.8.4",
-    "voby": "^0.0.3"
+    "voby": "*"
   }
 }

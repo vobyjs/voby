@@ -1,12 +1,9 @@
 
-/** @jsx createElement */
-/** @jsxFrag Fragment */
-
 /* IMPORT */
 
-import {For} from '../src';
-import {$, $$, createElement, render, styled, template} from '../src';
-import type {Observable} from '../src/types';
+import type {Observable} from 'voby/dist/types';
+import {For} from 'voby';
+import {$, $$, createElement, render, styled, template} from 'voby';
 
 /* MAIN */
 

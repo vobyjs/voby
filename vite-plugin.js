@@ -6,7 +6,7 @@
 const plugin = () => {
 
   return {
-    name: 'voby:jsx',
+    name: 'voby:runtime',
     config: () => {
       return {
         esbuild: {

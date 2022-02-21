@@ -1,12 +1,9 @@
 
-/** @jsx createElement */
-/** @jsxFrag Fragment */
-
 /* IMPORT */
 
-import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from '../../src';
-import {useCleanup, useComputed, useDisposed, useEffect, useError, useInterval, usePromise, useTimeout} from '../../src';
-import {$, $$, createElement, render, renderToString, styled, template} from '../../src';
+import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from 'voby';
+import {useCleanup, useComputed, useDisposed, useEffect, useError, useInterval, usePromise, useTimeout} from 'voby';
+import {$, $$, createElement, render, renderToString, styled, template} from 'voby';
 
 /* MAIN */
 

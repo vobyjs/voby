@@ -3,13 +3,17 @@
 
 const path = require ( 'path' );
 const {defineConfig} = require ( 'vite' );
+const voby = require ( 'voby/vite-plugin' );
 
 /* MAIN */
 
 const config = defineConfig ({
+  plugins: [
+    voby ()
+  ],
   resolve: {
     alias: {
-      '~': path.resolve ( __dirname, './src' )
+      voby: process.env.DEV ? path.resolve ( __dirname, '../../src' ) : 'voby'
     }
   }
 });
