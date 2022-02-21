@@ -13,7 +13,7 @@ type ChildMounted = Node[] | ChildMounted[];
 
 type ChildWithMetadata<T = unknown> = (() => Child) & { metadata: T };
 
-type ComponentClass<P = {}, S = {}> = ConstructorWith<import ( '~/components/component' ).default<P, S>, [P]>;
+type ComponentClass<P = {}, S = {}> = ConstructorWith<import ( './components/component' ).default<P, S>, [P]>;
 
 type ComponentFunction<P = {}> = ( props: P ) => Child;
 

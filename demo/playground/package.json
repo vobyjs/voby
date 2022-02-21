@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "name": "playground",
+  "scripts": {
+    "start": "vite --force --config vite.js"
+  },
+  "dependencies": {
+    "vite": "^2.8.4",
+    "voby": "^0.0.3"
+  }
+}

@@ -2,16 +2,20 @@
 /* IMPORT */
 
 import './types';
-import createElement from '~/create_element';
-import Fragment from '~/components/fragment';
+import createElement from '../create_element';
+import Fragment from '../components/fragment';
 
 /* MAIN */
 
-//TODO: Write this properly
+const jsx = ( type, props, key ) => {
 
-const jsx = ( type, props, key, source, self ) => {
+  props ||= {};
 
-  return createElement ( type, props );
+  props.key = key;
+
+  const children = props.children || [];
+
+  return createElement ( type, props, ...children );
 
 };
 

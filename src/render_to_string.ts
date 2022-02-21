@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import Portal from '~/components/portal';
-import {$} from '~/observable';
-import {delay} from '~/utils';
-import type {Child} from '~/types';
+import type {Child} from './types';
+import Portal from './components/portal';
+import {$} from './observable';
+import {delay} from './utils';
 
 /* MAIN */
 

@@ -1,13 +1,13 @@
 
 /* IMPORT */
 
-import createElement from '~/create_element';
-import useComputed from '~/hooks/use_computed';
-import useError from '~/hooks/use_error';
-import {$} from '~/observable';
-import {resolveChild} from '~/setters';
-import {castError} from '~/utils';
-import type {Child, Disposer} from '~/types';
+import type {Child, Disposer} from '../types';
+import createElement from '../create_element';
+import useComputed from '../hooks/use_computed';
+import useError from '../hooks/use_error';
+import {$} from '../observable';
+import {resolveChild} from '../setters';
+import {castError} from '../utils';
 
 /* MAIN */
 

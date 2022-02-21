@@ -1,11 +1,11 @@
 
 /* IMPORT */
 
-import useDisposed from '~/hooks/use_disposed';
-import useEffect from '~/hooks/use_effect';
-import {$, $$} from '~/observable';
-import {castError} from '~/utils';
-import type {Observable, ObservableMaybe, PromiseState} from '~/types';
+import type {Observable, ObservableMaybe, PromiseState} from '../types';
+import {$, $$} from '../observable';
+import {castError} from '../utils';
+import useDisposed from './use_disposed';
+import useEffect from './use_effect';
 
 /* MAIN */
 

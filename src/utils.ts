@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import Component from '~/components/component';
-import {SYMBOL_TEMPLATE_PROPERTY_ACCESSOR} from '~/constants';
-import {$} from '~/observable';
-import type {ComponentClass, Observable, ObservableAccessor, TemplateActionProxy} from '~/types';
+import type {ComponentClass, Observable, ObservableAccessor, TemplateActionProxy} from './types';
+import Component from './components/component';
+import {SYMBOL_TEMPLATE_PROPERTY_ACCESSOR} from './constants';
+import {$} from './observable';
 
 /* MAIN */
 

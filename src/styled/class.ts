@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {IS_PRODUCTION} from '~/constants';
+import {IS_PRODUCTION} from '../constants';
 
 /* MAIN */
 

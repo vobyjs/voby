@@ -1,9 +1,9 @@
 
 /* IMPORT */
 
-import useComputed from '~/hooks/use_computed';
-import {$$} from '~/observable';
-import type {Child, ObservableReadonlyWithoutInitial, ObservableResolver} from '~/types';
+import type {Child, ObservableReadonlyWithoutInitial, ObservableResolver} from '../types';
+import useComputed from '../hooks/use_computed';
+import {$$} from '../observable';
 
 /* MAIN */
 

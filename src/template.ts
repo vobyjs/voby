@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import {SYMBOL_TEMPLATE_PROPERTY_ACCESSOR} from '~/constants';
-import {setChildReplacement, setProp} from '~/setters';
-import {indexOf, isAlphanumeric, isFunction, isString} from '~/utils';
-import type {Child, TemplateActionPath, TemplateActionWithNodes, TemplateActionWithPaths} from '~/types';
+import type {Child, TemplateActionPath, TemplateActionWithNodes, TemplateActionWithPaths} from './types';
+import {SYMBOL_TEMPLATE_PROPERTY_ACCESSOR} from './constants';
+import {setChildReplacement, setProp} from './setters';
+import {indexOf, isAlphanumeric, isFunction, isString} from './utils';
 
 /* MAIN */
 

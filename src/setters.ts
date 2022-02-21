@@ -1,9 +1,9 @@
 
 /* IMPORT */
 
-import useEffect from '~/hooks/use_effect';
-import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isPropertyNonDimensional, isString, isTemplateActionProxy, isText, isUndefined, keys} from '~/utils';
-import type {Child, ChildMounted, ChildPrepared, ChildResolved, EventListener, ObservableResolver, Ref} from '~/types';
+import type {Child, ChildMounted, ChildPrepared, ChildResolved, EventListener, ObservableResolver, Ref} from './types';
+import useEffect from './hooks/use_effect';
+import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isPropertyNonDimensional, isString, isTemplateActionProxy, isText, isUndefined, keys} from './utils';
 
 /* HELPERS */
 

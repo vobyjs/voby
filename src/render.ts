@@ -1,9 +1,9 @@
 
 /* IMPORT */
 
-import {$} from '~/observable';
-import {setChild} from '~/setters';
-import type {Child, Disposer} from '~/types';
+import type {Child, Disposer} from './types';
+import {$} from './observable';
+import {setChild} from './setters';
 
 /* MAIN */
 

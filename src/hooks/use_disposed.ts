@@ -1,9 +1,9 @@
 
 /* IMPORT */
 
-import useCleanup from '~/hooks/use_cleanup';
-import {$} from '~/observable';
-import type {Observable} from '~/types';
+import type {Observable} from '../types';
+import {$} from '../observable';
+import useCleanup from './use_cleanup';
 
 /* MAIN */
 

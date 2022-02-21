@@ -1,9 +1,9 @@
 
 /* IMPORT */
 
-import {setProps, setRef} from '~/setters';
-import {isComponentClass, isFunction, isNode, isString} from '~/utils';
-import type {Child, ComponentIntrinsicElement, ComponentNode, Component, Props} from '~/types';
+import type {Child, ComponentIntrinsicElement, ComponentNode, Component, Props} from './types';
+import {setProps, setRef} from './setters';
+import {isComponentClass, isFunction, isNode, isString} from './utils';
 
 /* MAIN */
 

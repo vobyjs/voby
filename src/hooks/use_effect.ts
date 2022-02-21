@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {$} from '~/observable';
+import {$} from '../observable';
 
 /* MAIN */
 

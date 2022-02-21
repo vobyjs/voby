@@ -1,9 +1,9 @@
 
 /* IMPORT */
 
-import useComputed from '~/hooks/use_computed';
-import {extend, isObservable} from '~/utils';
-import type {Child, ChildWithMetadata, ObservableMaybe} from '~/types';
+import type {Child, ChildWithMetadata, ObservableMaybe} from '../types';
+import useComputed from '../hooks/use_computed';
+import {extend, isObservable} from '../utils';
 
 /* MAIN */
 

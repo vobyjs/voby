@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import useCleanup from '~/hooks/use_cleanup';
-import useEffect from '~/hooks/use_effect';
-import {$$} from '~/observable';
-import type {Callback, Disposer, ObservableMaybe} from '~/types';
+import type {Callback, Disposer, ObservableMaybe} from '../types';
+import {$$} from '../observable';
+import useCleanup from './use_cleanup';
+import useEffect from './use_effect';
 
 /* MAIN */
 
