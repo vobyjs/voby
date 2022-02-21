@@ -9,7 +9,7 @@ import Fragment from '../components/fragment';
 
 const jsx = ( type, props, key ) => {
 
-  props ||= {};
+  props = props || {};
 
   props.key = key;
 

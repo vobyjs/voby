@@ -10,6 +10,8 @@
     "compile:watch": "tsc --skipLibCheck --watch",
     "dev:benchmark": "cd demo/benchmark && npm i && npm run dev",
     "prod:benchmark": "cd demo/benchmark && npm i && npm run prod",
+    "dev:counter": "cd demo/counter && npm i && npm run dev",
+    "prod:counter": "cd demo/counter && npm i && npm run prod",
     "dev:playground": "cd demo/playground && npm i && npm run dev",
     "prod:playground": "cd demo/playground && npm i && npm run prod",
     "dev": "npm run dev:playground",
