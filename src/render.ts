@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import type {Child, Disposer} from './types';
-import {$} from './observable';
+import useRoot from './hooks/use_root';
 import {setChild} from './setters';
 
 /* MAIN */
@@ -15,7 +15,7 @@ const render = ( child: Child, parent?: HTMLElement | null ): Disposer => {
 
   parent.textContent = '';
 
-  $.root ( dispose => {
+  useRoot ( dispose => {
 
     disposeRoot = dispose;
 

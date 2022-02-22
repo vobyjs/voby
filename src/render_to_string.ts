@@ -3,7 +3,7 @@
 
 import type {Child} from './types';
 import Portal from './components/portal';
-import {$} from './observable';
+import useRoot from './hooks/use_root';
 import {delay} from './utils';
 
 /* MAIN */
@@ -14,7 +14,7 @@ const renderToString = ( child: Child, timeout: number = 1 ): Promise<string> =>
 
   return new Promise ( resolve => {
 
-    $.root ( dispose => {
+    useRoot ( dispose => {
 
       const {portal} = Portal ({ children: child }).metadata;
 
