@@ -23,6 +23,35 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
 - Counter: https://codesandbox.io/s/voby-demo-counter-23fv5
 - Benchmark: https://codesandbox.io/s/voby-demo-benchmark-x0nr40
 
+## APIs
+
+- [**Observable**](#observable)
+  - [`$, $$`](#observable)
+- [**Methods**](#methods)
+  - [`createElement`](#createelement)
+  - [`render`](#render)
+  - [`renderToString`](#rendertostring)
+  - [`styled`](#styled)
+  - [`template`](#template)
+- [**Components**](#components)
+  - [`Component`](#component)
+  - [`ErrorBoundary`](#errorboundary)
+  - [`Fragment`](#fragment)
+  - [`For`](#for)
+  - [`If`](#if)
+  - [`Portal`](#portal)
+  - [`Switch`](#switch)
+  - [`Ternary`](#ternary)
+- [**Hooks**](#hooks)
+  - [`useCleanup`](#usecleanup)
+  - [`useComputed`](#usecomputed)
+  - [`useDisposed`](#usedisposed)
+  - [`useEffect`](#useeffect)
+  - [`useError`](#useerror)
+  - [`useInterval`](#useinterval)
+  - [`usePromise`](#usepromise)
+  - [`useTimeout`](#usetimeout)
+
 ## Usage
 
 The following is going to be a very shallow documentation of the API. As I mentioned this isn't production-grade software, it may become that in the future though, are you interested?
@@ -58,7 +87,7 @@ const element = createElement ( 'div', { class: 'foo' }, 'child' ); // => () => 
 
 #### `render`
 
-This function mounts a component inside a provided DOM element and returns a disposer function;
+This function mounts a component inside a provided DOM element and returns a disposer function.
 
 ```tsx
 import {render} from 'voby';
@@ -272,7 +301,7 @@ const App = () => {
 
 #### `Portal`
 
-This components mounts its children inside a provided DOM element, or inside `document.body` otherwise.
+This component mounts its children inside a provided DOM element, or inside `document.body` otherwise.
 
 Events will propagate according to the natural DOM hierarchy, not the components hierarchy.
 
