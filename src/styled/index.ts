@@ -5,7 +5,7 @@ import {styled as goober, setup} from 'goober';
 import {prefix} from 'goober/prefixer';
 import type {Child, Component, Props} from '../types';
 import createElement from '../create_element';
-import {isPlainObject, isUndefined} from '../utils';
+import {castArray, isPlainObject, isUndefined} from '../utils';
 import cls from './class';
 import css from './css';
 import global from './global';
@@ -19,7 +19,7 @@ const h = ( component: Component, props: Props | null ): (() => Child) => {
 
   if ( !isUndefined ( rest.class ) && !isPlainObject ( rest.class ) ) throw new Error ( 'Invalid class, in styled components it can only be undefined or a plain object' );
 
-  return createElement ( component, rest, children );
+  return createElement ( component, rest, ...castArray ( children ) );
 
 };
 

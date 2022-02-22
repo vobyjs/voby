@@ -7,7 +7,9 @@ import {setChild} from './setters';
 
 /* MAIN */
 
-const render = ( child: Child, parent: HTMLElement ): Disposer => {
+const render = ( child: Child, parent?: HTMLElement | null ): Disposer => {
+
+  if ( !parent ) throw new Error ( 'Invalid parent node' );
 
   let disposeRoot: Disposer;
 

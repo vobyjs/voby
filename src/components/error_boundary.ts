@@ -32,7 +32,7 @@ const ErrorBoundary = ({ fallback, children }: { fallback: (( props: { error: Er
 
       });
 
-      return resolveChild ( children ); //FIXME: Solid simply returns "children", how does that work? //FIXME: This looks like a major performance issue, a root error boundary like that wouldn't wrap observables with effects
+      return resolveChild ( children );
 
     }
 

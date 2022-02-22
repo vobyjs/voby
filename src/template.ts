@@ -181,7 +181,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child) ): (( props: P ) => () =
 
       return (): HTMLElement => {
 
-        const root = template.cloneNode ( true ) as HTMLElement; //TSC
+        const root = template.cloneNode ( true );
 
         return reviver ( root, props );
 

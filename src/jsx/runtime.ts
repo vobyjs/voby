@@ -2,20 +2,22 @@
 /* IMPORT */
 
 import './types';
+import {Child, Component, Props, Key} from '../types';
 import createElement from '../create_element';
 import Fragment from '../components/fragment';
+import {castArray} from '../utils'
 
 /* MAIN */
 
-const jsx = ( type, props, key ) => {
+const jsx = ( component: Component, props: Props | null, key?: Key ): (() => Child) => {
 
   props = props || {};
 
   props.key = key;
 
-  const children = props.children || [];
+  const children = castArray ( props.children || [] );
 
-  return createElement ( type, props, ...children );
+  return createElement ( component, props, ...children );
 
 };
 

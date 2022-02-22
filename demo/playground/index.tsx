@@ -2,17 +2,10 @@
 /* IMPORT */
 
 import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from 'voby';
-import {useCleanup, useComputed, useDisposed, useEffect, useError, useInterval, usePromise, useTimeout} from 'voby';
+import {useEffect, useInterval, usePromise, useTimeout} from 'voby';
 import {$, $$, createElement, render, renderToString, styled, template} from 'voby';
 
 /* MAIN */
-
-//TODO: Ensure it works without pragma comments
-//TODO: Test all built-in components
-//TODO: Test all built-in hooks
-//TODO: Test child
-//TODO: Test children
-//TODO: Test template
 
 const TEST_INTERVAL = 500; // Lowering this makes it easier to spot some memory leaks
 
@@ -1021,11 +1014,11 @@ class TestComponentStatic extends Component<{}> {
 }
 
 class TestComponentStaticProps extends Component<{ value: number }> {
-  render (): JSX.Element {
+  render ( props ): JSX.Element {
     return (
       <>
         <h3>Component - Static Props</h3>
-        <p>{this.props.value}</p>
+        <p>{props.value}</p>
       </>
     );
   }
@@ -1202,6 +1195,43 @@ const TestRef = (): JSX.Element => {
     <>
       <h3>Ref</h3>
       <p ref={ref}>content</p>
+    </>
+  );
+};
+
+const TestPromise = (): JSX.Element => {
+  const resolved = usePromise<number> ( new Promise ( resolve => setTimeout ( () => resolve ( 123 ), TEST_INTERVAL ) ) );
+  const rejected = usePromise<number> ( new Promise ( ( _, reject ) => setTimeout ( () => reject ( 'Custom Error' ), TEST_INTERVAL ) ) );
+  return (
+    <>
+      <h3>Promise</h3>
+      {resolved.on ( state => {
+        if ( state.loading ) return <p>loading...</p>;
+        if ( state.error ) return <p>{state.error.message}</p>;
+        return <p>{state.value}</p>
+      })}
+      {rejected.on ( state => {
+        if ( state.loading ) return <p>loading...</p>;
+        if ( state.error ) return <p>{state.error.message}</p>;
+        return <p>{state.value}</p>
+      })}
+    </>
+  );
+};
+
+const TestTemplateExternal = (): JSX.Element => {
+  const Templated = template<{ class: string, color: string }> ( props => {
+    return (
+      <div class={props.class}>
+        <span>outer <span data-color={props.color}>inner</span></span>
+      </div>
+    );
+  });
+  return (
+    <>
+      <h3>Template - External</h3>
+      <Templated class="red" color="blue" />
+      <Templated class="blue" color="red" />
     </>
   );
 };
@@ -1470,6 +1500,8 @@ const Test = (): JSX.Element => {
       <TestErrorBoundary />
       <TestChildren />
       <TestRef />
+      <TestTemplateExternal />
+      <TestPromise />
       <TestKeyframeStatic />
       <TestStyledStatic />
       <TestStyledClass />

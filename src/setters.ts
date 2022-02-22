@@ -1,11 +1,11 @@
 
 /* IMPORT */
 
-import type {Child, ChildMounted, ChildPrepared, ChildResolved, EventListener, ObservableResolver, Ref} from './types';
+import type {Child, ChildMounted, ChildPrepared, ChildResolved, EventListener, ObservableResolver, Ref, TemplateActionProxy} from './types';
 import useEffect from './hooks/use_effect';
 import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isPropertyNonDimensional, isString, isTemplateActionProxy, isText, isUndefined, keys} from './utils';
 
-/* HELPERS */
+/* HELPERS */ //TODO: These functions should be reduced as much as possible
 
 const normalizeChildren = ( children: Child[] ): Child[] => {
 
@@ -87,7 +87,7 @@ const prepareChild = ( child: Child ): ChildPrepared => {
 
 };
 
-const resolveChild = ( child: Child ): ChildResolved => { //TODO: This probably leads to problems, there need to be effects wrapped around functions, they can't just be resolved willy nilly like this
+const resolveChild = ( child: Child ): ChildResolved => {
 
   if ( isFunction ( child ) ) return resolveChild ( child () );
 
@@ -157,26 +157,23 @@ const setAbstract = <T> ( value: ObservableResolver<T>, setter: (( value: T, val
 
   if ( isObservable ( value ) ) {
 
-    let valuePrev: ObservableResolver<T>;
-    let valuePrevObservable: boolean;
+    let valuePrev: T | undefined;
 
     useEffect ( () => {
 
       const valueNext = value ();
-      const valueNextObservable = isObservable ( valueNext );
 
-      if ( valueNextObservable ) {
+      if ( isObservable ( valueNext ) ) {
 
         setAbstract ( valueNext, setter );
 
       } else {
 
-        setter ( valueNext, valuePrevObservable ? undefined : valuePrev as T ); //TSC
+        setter ( valueNext, valuePrev );
+
+        valuePrev = valueNext;
 
       }
-
-      valuePrev = valueNext;
-      valuePrevObservable = valueNextObservable;
 
     });
 
@@ -256,7 +253,7 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
 };
 
-const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: ChildMounted, childrenPrevSibling: Node | null = null ): ChildMounted => {
+const setChildStatic = ( parent: HTMLElement, child: Child | TemplateActionProxy, childrenPrev: ChildMounted, childrenPrevSibling: Node | null = null ): ChildMounted => {
 
   //TODO: Optimize this massively, after it works reliably, currently it may not quite work and it certainly has **terrible** performance
   //URL: https://github.com/adamhaile/surplus/blob/2aca5a36ceb6a7cbb4d609cd04ee631714602f91/src/runtime/content.ts
@@ -264,13 +261,13 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: ChildM
   //URL: https://github.com/luwes/sinuous/blob/master/packages/sinuous/h/src/h.js
   //URL: https://github.com/ryansolid/dom-expressions/blob/main/packages/dom-expressions/src/client.js
 
-  if ( childrenPrev.length === 0 && isTemplateActionProxy ( child ) ) { // Template proxy function
+  if ( isTemplateActionProxy ( child ) ) { // Template proxy function
 
     const placeholder = new Text ();
 
     parent.insertBefore ( placeholder, null );
 
-    ( child as any )( parent, 'child', placeholder ); //TSC
+    child ( parent, 'child', placeholder );
 
     return [placeholder];
 
@@ -417,7 +414,7 @@ const setClasses = ( element: HTMLElement, object: ObservableResolver<string | R
 
 const setEventStatic = (() => {
 
-  //TODO: Maybe support more events: [onmousemove, onmouseout, onmouseover, onpointerdown, onpointermove, onpointerout, onpointerover, onpointerup, ontouchend, ontouchmove, ontouchstart]
+  //TODO: Maybe delegate more events (on demand?): [onmousemove, onmouseout, onmouseover, onpointerdown, onpointermove, onpointerout, onpointerover, onpointerup, ontouchend, ontouchmove, ontouchstart]
 
   const delegatedEvents = <const> {
     onbeforeinput: '_onbeforeinput',

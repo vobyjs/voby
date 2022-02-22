@@ -8,7 +8,7 @@ import {extend} from '../utils';
 
 /* MAIN */
 
-const Portal = ({ mount, children }: { mount?: Node, children: Child }): ChildWithMetadata<{ portal: HTMLDivElement }> => {
+const Portal = ({ mount, children }: { mount?: Node | null, children: Child }): ChildWithMetadata<{ portal: HTMLDivElement }> => {
 
   const parent = mount || document.body;
   const portal = document.createElement ( 'div' );

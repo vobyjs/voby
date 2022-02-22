@@ -20,7 +20,7 @@
     "pretty": true,
     "resolveJsonModule": true,
     "strictNullChecks": true,
-    "target": "es2020"
+    "target": "es2015"
   },
   "include": [
     "src"

@@ -7,13 +7,11 @@ interface Document {
   onfocusout: (( this: GlobalEventHandlers, event: FocusEvent ) => any) | null
 }
 
+interface HTMLElement {
+  cloneNode ( deep?: boolean ): HTMLElement
+}
+
 /* HELPERS */
-
-type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child) | ((() => Child) & { metadata: any }) | ({ (): Child, get (): Child, sample (): Child });
-
-type ComponentClass<P = {}> = {
-  render: () => Child;
-};
 
 type ObservableResolver<T = unknown> = T | ({
   (): ObservableResolver<T>,
@@ -41,9 +39,13 @@ interface HTMLWebViewElement extends HTMLElement {}
 
 declare namespace JSX {
 
+  type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child) | ((() => Child) & { metadata: any }) | ({ (): Child, get (): Child, sample (): Child });
+
+  type Children = Child;
+
   type Element = Child;
 
-  type ElementClass<P = {}> = ComponentClass<P>;
+  type ElementClass<P = {}, S = {}> = { render: ( props: P ) => Child };
 
   interface ClassProperties extends AllClassProperties {}
 
@@ -336,7 +338,7 @@ declare namespace JSX {
   }
 
   interface ViewAttributes {
-    children?: Child,
+    children?: Children,
     textContent?: ObservableResolver<string>,
     innerHTML?: ObservableResolver<string>,
     outerHTML?: ObservableResolver<string>,

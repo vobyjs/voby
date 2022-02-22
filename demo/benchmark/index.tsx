@@ -3,7 +3,7 @@
 
 import type {Observable} from 'voby/dist/types';
 import {For} from 'voby';
-import {$, $$, createElement, render, styled, template} from 'voby';
+import {$, render, template} from 'voby';
 
 /* MAIN */
 
@@ -182,5 +182,3 @@ const App = () => {
 };
 
 render ( <App />, document.getElementById ( 'app' ) );
-
-window['model'] = Model;

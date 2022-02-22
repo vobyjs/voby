@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import type {ComponentClass, Observable, ObservableAccessor, TemplateActionProxy} from './types';
+import type {ComponentClass, ObservableAny, ObservableAccessor, TemplateActionProxy} from './types';
 import Component from './components/component';
 import {SYMBOL_TEMPLATE_PROPERTY_ACCESSOR} from './constants';
 import {$} from './observable';
@@ -52,7 +52,7 @@ const indexOf = (() => {
 
 const isAlphanumeric = (() => {
 
-  const alphanumericRe = /^[a-z0-9]+$/i;
+  const alphanumericRe = /^[a-z0-9-_]+$/i;
 
   return ( value: string ): boolean => {
 
@@ -138,7 +138,7 @@ const isObject = ( value: unknown ): value is object => {
 
 };
 
-const isObservable = <T> ( value: T | Observable<T> | ObservableAccessor<T> ): value is Observable<T> | ObservableAccessor<T> => {
+const isObservable = <T> ( value: T | ObservableAny<T> | ObservableAccessor<T> ): value is ObservableAny<T> | ObservableAccessor<T> => {
 
   return $.is ( value );
 
@@ -205,8 +205,6 @@ const isUndefined = ( value: unknown ): value is undefined => {
 const keys = (() => {
 
   const _keys = Object.keys;
-
-  /* MAIN */
 
   return <T extends Record<number | string | symbol, unknown>> ( object: T ): (keyof T)[] => {
 
