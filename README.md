@@ -408,26 +408,12 @@ useComputed // => Same as require ( 'oby' ).computed
 
 #### `useDisposed`
 
-This hook returns a boolean read-observable that is set to `true` you when the parent computation got disposed.
+This hook returns a boolean read-only observable that is set to `true` you when the parent computation got disposed.
 
 ```tsx
-import {$, useDisposed, useEffect, useTimeout} from 'voby';
+import {useDisposed} from 'voby';
 
-const value = $(0);
-
-useEffect ( () => {
-
-  const disposed = useDisposed ();
-
-  useTimeout ( () => {
-
-    console.log ( 'Disposed in the meantime?', disposed () );
-
-  }, 1000 );
-
-});
-
-value ( 1 ); // This causes the effect to be re-executed, and the previous `disposed` observable will be set to `true`
+useDisposed // => Same as require ( 'oby' ).disposed
 ```
 
 #### `useEffect`

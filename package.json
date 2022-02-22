@@ -44,7 +44,7 @@
   ],
   "dependencies": {
     "goober": "^2.1.8",
-    "oby": "^2.2.1"
+    "oby": "^2.3.0"
   },
   "devDependencies": {
     "rimraf": "^3.0.2",
