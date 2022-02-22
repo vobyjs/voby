@@ -4,7 +4,7 @@
 import type {Child, TemplateActionPath, TemplateActionWithNodes, TemplateActionWithPaths} from './types';
 import {SYMBOL_TEMPLATE_PROPERTY_ACCESSOR} from './constants';
 import {setChildReplacement, setProp} from './setters';
-import {indexOf, isAlphanumeric, isFunction, isString} from './utils';
+import {indexOf, isFunction, isPropertySafe, isString} from './utils';
 
 /* MAIN */
 
@@ -14,7 +14,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child) ): (( props: P ) => () =
 
   const checkValidProperty = ( property: unknown ): property is string => {
 
-    if ( isString ( property ) && isAlphanumeric ( property ) ) return true;
+    if ( isString ( property ) && isPropertySafe ( property ) ) return true;
 
     throw new Error ( `Invalid property, only alphanumeric properties are allowed inside templates, received: "${property}"` );
 

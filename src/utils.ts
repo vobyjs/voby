@@ -50,18 +50,6 @@ const indexOf = (() => {
 
 })();
 
-const isAlphanumeric = (() => {
-
-  const alphanumericRe = /^[a-z0-9-_]+$/i;
-
-  return ( value: string ): boolean => {
-
-    return alphanumericRe.test ( value );
-
-  };
-
-})();
-
 const isArray = (() => {
 
   const _isArray = Array.isArray;
@@ -178,6 +166,18 @@ const isPropertyNonDimensional = (() => {
 
 })();
 
+const isPropertySafe = (() => {
+
+  const safeRe = /^[a-z0-9-_]+$/i;
+
+  return ( value: string ): boolean => {
+
+    return safeRe.test ( value );
+
+  };
+
+})();
+
 const isString = ( value: unknown ): value is string => {
 
   return typeof value === 'string';
@@ -216,4 +216,4 @@ const keys = (() => {
 
 /* EXPORT */
 
-export {castArray, castError, delay, extend, identity, indexOf, isAlphanumeric, isArray, isBoolean, isComment, isComponentClass, isElement, isError, isFunction, isNil, isNode, isNumber, isObject, isObservable, isPlainObject, isPrimitive, isPropertyNonDimensional, isString, isTemplateActionProxy, isText, isUndefined, keys};
+export {castArray, castError, delay, extend, identity, indexOf, isArray, isBoolean, isComment, isComponentClass, isElement, isError, isFunction, isNil, isNode, isNumber, isObject, isObservable, isPlainObject, isPrimitive, isPropertyNonDimensional, isPropertySafe, isString, isTemplateActionProxy, isText, isUndefined, keys};
