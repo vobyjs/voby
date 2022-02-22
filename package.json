@@ -1,6 +1,6 @@
 {
   "name": "voby",
-  "description": "A wannabe high-performance framework for writing web apps.",
+  "description": "A high-performance vdom-less framework with fine-grained observable-based reactivity for building rich applications.",
   "version": "0.0.5",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -37,8 +37,10 @@
     "observable",
     "fast",
     "performant",
+    "performance",
     "small",
-    "fine-grained"
+    "fine-grained",
+    "updates"
   ],
   "dependencies": {
     "goober": "^2.1.8",
