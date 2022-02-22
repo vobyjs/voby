@@ -3,7 +3,7 @@
 
 import type {Child, ObservableMaybe, ObservableReadonlyWithoutInitial} from '../types';
 import useComputed from '../hooks/use_computed';
-import {$, $$} from '../observable';
+import {$$} from '../observable';
 
 /* MAIN */
 

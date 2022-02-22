@@ -47,7 +47,7 @@ type ObservableAny<T = unknown> = import ( 'oby/dist/types' ).ObservableAny<T>;
 
 type ObservableAccessor<T = unknown> = ({ (): T, get (): T, sample (): T });
 
-type ObservableMaybe<T = unknown> = T | ObservableAny<T>;
+type ObservableMaybe<T = unknown> = T | Observable<T> | ObservableReadonly<T>;
 
 type ObservableRecordMaybe<T = {}> = { [P in keyof T]: P extends 'ref' | 'children' ? T[P] : ObservableMaybe<T[P]> };
 
