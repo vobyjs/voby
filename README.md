@@ -1,19 +1,19 @@
 # Voby
 
-A high-performance vdom-less framework with fine-grained observable-based reactivity for building rich applications.
+A high-performance framework with fine-grained observable-based reactivity for building rich applications.
 
 ## Features
 
 This works similarly to [Solid](https://www.solidjs.com), but without the need for the Babel transform and with a different API.
 
-- **vdom-less**: there's no vdom overhead, the framework deals with raw DOM nodes directly.
+- **No VDOM**: there's no VDOM overhead, the framework deals with raw DOM nodes directly.
 - **No stale closures**: components are executed once, so you don't need to worry about stale closures.
 - **No dependencies arrays**: the framework is able to detect what depends on what else automatically, no need to specify dependencies manually.
 - **No diffing**: updates are fine grained, there's no reconciliation overhead, no props diffing, whenever an attribute/property/class/handler/etc. should be updated it's updated directly and immediately.
 - **No Babel**: there's no need to use Babel with this framework, it works with plain old JS (plus JSX if you are into that). As a consequence we have 0 transform function bugs, because we don't have a transform function.
-- **No server support**: for the time being this framework is laser focused on local-first rich applications, ~no server-related features are implemented: no hydration, no server components, no SSR, no suspense etc.
-- **Observable-based**: observables are at the core of our reactivity system. The way it works is very different from a React-like system, it may be more challenging to learn, but the result is awesome.
-- **Work in progress**: this is at best alpha software, I'm working on it because I need something with spectacular performance for [Notable](https://github.com/notable/notable), I'm allergic to third-party dependenceis, I'd like something with an API that resonates with me, and I wanted to deeply understand how the more solid [Solid](https://www.solidjs.com), which you should probably use instead, works.
+- **No server support**: for the time being this framework is focused on local-first rich applications, ~no server-related features are implemented: no hydration, no server components, no SSR, no suspense etc.
+- **Observable-based**: observables are at the core of our reactivity system. The way it works is very different from a React-like system, it may be more challenging to learn, but the effort is well worth it.
+- **Work in progress**: this is at best alpha software, I'm working on it because I need something with great performance for [Notable](https://github.com/notable/notable), I'm allergic to third-party dependencies, I'd like something with an API that resonates with me, and I wanted to deeply understand how the more solid [Solid](https://www.solidjs.com), which you should probably use instead, works.
 
 ## Demo
 
@@ -61,11 +61,13 @@ The following is going to be a very shallow documentation of the API. As I menti
 
 ### Observable
 
-First of all this framework is just a UI layer built on top of the Observable library [oby](https://github.com/fabiospampinato/oby).
+First of all this framework is just a UI layer built on top of the Observable library [oby](https://github.com/fabiospampinato/oby), knowing how that works is necessary to understand how this works.
 
-Everything that `oby` provides is used internally and it's simply re-exported by `voby`:
+Everything that `oby` provides is used internally and it's simply re-exported by `voby`.
 
 Generally whenever you can use a raw value you can also use an observable, for example if you pass a plain string as the value of an attribute it will never change, it you use an observable instead it will change whenever the value inside the observable changes, automatically.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#usage).
 
 ```tsx
 import {$, $$} from 'voby';
@@ -80,7 +82,7 @@ The following top-level methods are provided.
 
 #### `createElement`
 
-This is the function that will make DOM nodes and call/instantiate components, it will be called for you automatically by JSX.
+This is the function that will make DOM nodes and call/instantiate components, it will be called for you automatically via JSX.
 
 ```tsx
 import {createElement} from 'voby';
@@ -99,7 +101,7 @@ const App = () => <p>Hello, World!</p>;
 
 const dispose = render ( <App />, document.body );
 
-dispose (); // Unmounted and all reactivity stopped
+dispose (); // Unmounted and all reactivity inside it stopped
 ```
 
 #### `renderToString`
@@ -166,7 +168,7 @@ const App = () => {
 
 This function enables constructing elements with [Solid](https://www.solidjs.com)-level performance without using the Babel transform, but also without the convenience of that.
 
-It basically works like [sinuous](https://github.com/luwes/sinuous/tree/master)'s template function, but with a slightly cleaner API, since you don't have to access your props any differently inside a template here.
+It basically works like [sinuous](https://github.com/luwes/sinuous/tree/master)'s template function, but with a slightly cleaner API, since you don't have to access your props any differently inside the template here.
 
 ```tsx
 import {template} from 'voby';
@@ -306,7 +308,7 @@ const App = () => {
 
 This component mounts its children inside a provided DOM element, or inside `document.body` otherwise.
 
-Events will propagate according to the natural DOM hierarchy, not the components hierarchy.
+Events will propagate natively according to the resulting DOM hierarchy, not the components hierarchy.
 
 ```tsx
 import Portal from 'voby';
@@ -391,6 +393,8 @@ Hooks are just regular functions, if their name starts with `use` then we call t
 
 This hook registers a function to be called when the parent computation is disposed.
 
+[Read upstream documentation](https://github.com/fabiospampinato/oby#cleanup).
+
 ```tsx
 import {useCleanup} from 'voby';
 
@@ -403,6 +407,8 @@ This hook is the crucial other ingredients that we need, other than observables 
 
 This hook registers a function to be called when any of its dependencies change, and the return of that function is wrapped in a read-only observable and returned.
 
+[Read upstream documentation](https://github.com/fabiospampinato/oby#computed).
+
 ```tsx
 import {useComputed} from 'voby';
 
@@ -411,7 +417,9 @@ useComputed // => Same as require ( 'oby' ).computed
 
 #### `useDisposed`
 
-This hook returns a boolean read-only observable that is set to `true` you when the parent computation got disposed.
+This hook returns a boolean read-only observable that is set to `true` when the parent computation gets disposed of.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#disposed).
 
 ```tsx
 import {useDisposed} from 'voby';
@@ -421,7 +429,9 @@ useDisposed // => Same as require ( 'oby' ).disposed
 
 #### `useEffect`
 
-This hook registers a function to be called when any of its dependencies change.
+This hook registers a function to be called when any of its dependencies change. If a function is returned it's automatically registered as a cleanup function.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#effect).
 
 ```tsx
 import {useEffect} from 'voby';
@@ -432,6 +442,8 @@ useEffect // => Same as require ( 'oby' ).effect
 #### `useError`
 
 This hook registers a function to be called when the parent computation throws.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#error).
 
 ```tsx
 import {useError} from 'voby';
@@ -470,6 +482,8 @@ const App = () => {
 ### `useRoot`
 
 This hook creates a new computation root, detached from any parent computation.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#root).
 
 ```tsx
 import {useRoot} from 'voby';
