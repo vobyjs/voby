@@ -50,6 +50,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`useError`](#useerror)
   - [`useInterval`](#useinterval)
   - [`usePromise`](#usepromise)
+  - [`useRoot`](#useroot)
   - [`useTimeout`](#usetimeout)
 - [**Extras**](#extras)
   - [`vite`](#vite)
@@ -464,6 +465,16 @@ const App = () => {
     return <p>{JSON.stringify ( state.value )}</p>
   });
 };
+```
+
+### `useRoot`
+
+This hook creates a new computation root, detached from any parent computation.
+
+```tsx
+import {useRoot} from 'voby';
+
+useRoot // => Same as require ( 'oby' ).root
 ```
 
 #### `useTimeout`
