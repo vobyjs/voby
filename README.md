@@ -29,6 +29,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`$, $$`](#observable)
 - [**Methods**](#methods)
   - [`createElement`](#createelement)
+  - [`isObservable`](#isobservable)
   - [`render`](#render)
   - [`renderToString`](#rendertostring)
   - [`styled`](#styled)
@@ -89,6 +90,17 @@ This is the function that will make DOM nodes and call/instantiate components, i
 import {createElement} from 'voby';
 
 const element = createElement ( 'div', { class: 'foo' }, 'child' ); // => () => HTMLDivElement
+```
+
+### `isObservable`
+
+This function tells you if a variable is an observable or not.
+
+```tsx
+import {$, isObservable} from 'voby';
+
+isObservable ( 123 ); // => false
+isObservable ( $(123) ); // => false
 ```
 
 #### `render`
