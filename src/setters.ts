@@ -179,7 +179,7 @@ const setAbstract = <T> ( value: ObservableResolver<T>, setter: (( value: T, val
 
   } else if ( resolveFunctions && isFunction ( value ) ) {
 
-    setAbstract ( value (), setter );
+    setAbstract ( value (), setter ); //TODO: Should this be wrapped in a useEffect?
 
   } else {
 

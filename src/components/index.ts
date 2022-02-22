@@ -8,7 +8,7 @@ import Fragment from './fragment';
 import If from './if';
 import Portal from './portal';
 import Switch from './switch';
-import Ternary from './termary';
+import Ternary from './ternary';
 
 /* EXPORT */
 

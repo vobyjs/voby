@@ -13,7 +13,7 @@ type ChildMounted = Node[] | ChildMounted[];
 
 type ChildWithMetadata<T = unknown> = (() => Child) & { metadata: T };
 
-type ComponentClass<P = {}, S = {}> = Constructor<import ( './components/component' ).default<P, S>>;
+type ComponentClass<P = {}, S = {}> = ConstructorWith<import ( './components/component' ).default<P, S>, [P]>;
 
 type ComponentFunction<P = {}> = ( props: P ) => Child;
 
@@ -55,11 +55,11 @@ type ObservableResolver<T = unknown> = ({ (): ObservableResolver<T>, get (): Obs
 
 type PromiseStateLoading = { loading: true, error?: never, value?: never };
 
-type PromiseStateError = { loading: false, error: Error, value?: never };
+type PromiseStateRejected = { loading: false, error: Error, value?: never };
 
-type PromiseStateSuccess<T = unknown> = { loading: false, error?: never, value: T };
+type PromiseStateResolved<T = unknown> = { loading: false, error?: never, value: T };
 
-type PromiseState<T = unknown> = PromiseStateLoading | PromiseStateError | PromiseStateSuccess<T>;
+type PromiseState<T = unknown> = PromiseStateLoading | PromiseStateRejected | PromiseStateResolved<T>;
 
 type Props = Record<string, any>;
 
@@ -75,4 +75,4 @@ type TemplateActionWithPaths = [TemplateActionPath, string, string, TemplateActi
 
 /* EXPORT */
 
-export type {Callback, Child, ChildMounted, ChildPrepared, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, Disposer, EventListener, FunctionResolver, Key, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableAccessor, ObservableMaybe, ObservableRecordMaybe, ObservableResolver, PromiseStateLoading, PromiseStateError, PromiseStateSuccess, PromiseState, Props, Ref, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};
+export type {Callback, Child, ChildMounted, ChildPrepared, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, Disposer, EventListener, FunctionResolver, Key, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableAccessor, ObservableMaybe, ObservableRecordMaybe, ObservableResolver, PromiseStateLoading, PromiseStateRejected, PromiseStateResolved, PromiseState, Props, Ref, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};

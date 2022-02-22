@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import './types';
-import {Child, Component, Props, Key} from '../types';
+import type {Child, Component, Props, Key} from '../types';
 import createElement from '../create_element';
 import Fragment from '../components/fragment';
 import {castArray} from '../utils'

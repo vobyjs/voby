@@ -4,6 +4,7 @@
   "version": "0.0.6",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "sideEffects": false,
   "scripts": {
     "clean": "rimraf dist",
     "compile": "tsc --skipLibCheck",

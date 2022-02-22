@@ -25,8 +25,8 @@ function createElement ( component: Component, props: Props | null, ..._children
 
       return (): Child => {
 
-        const instance = new component ();
-        const child = instance.render ( props );
+        const instance = new component ( props );
+        const child = instance.render ();
 
         setRef ( instance, ref );
 

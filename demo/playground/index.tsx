@@ -859,6 +859,16 @@ const TestTernaryStatic = (): JSX.Element => {
   );
 };
 
+const TestTernaryStaticInline = (): JSX.Element => {
+  return (
+    <>
+      <h3>Ternary - Static Inline</h3>
+      <Ternary when={true}><p>true (1)</p><p>false (1)</p></Ternary>
+      <Ternary when={false}><p>true (2)</p><p>false (2)</p></Ternary>
+    </>
+  );
+};
+
 const TestTernaryObservable = (): JSX.Element => {
   const o = $( true );
   const toggle = () => o.update ( prev => !prev );
@@ -1014,11 +1024,11 @@ class TestComponentStatic extends Component<{}> {
 }
 
 class TestComponentStaticProps extends Component<{ value: number }> {
-  render ( props ): JSX.Element {
+  render (): JSX.Element {
     return (
       <>
         <h3>Component - Static Props</h3>
-        <p>{props.value}</p>
+        <p>{this.props.value}</p>
       </>
     );
   }
@@ -1483,6 +1493,7 @@ const Test = (): JSX.Element => {
       <TestIfStatic />
       <TestIfRemoval />
       <TestTernaryStatic />
+      <TestTernaryStaticInline />
       <TestTernaryObservable />
       <TestTernaryObservableChildren />
       <TestSwitchStatic />

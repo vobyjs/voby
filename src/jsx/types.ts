@@ -45,7 +45,7 @@ declare namespace JSX {
 
   type Element = Child;
 
-  type ElementClass<P = {}, S = {}> = { render: ( props: P ) => Child };
+  type ElementClass<P = {}, S = {}> = { render: () => Child };
 
   interface ClassProperties extends AllClassProperties {}
 
