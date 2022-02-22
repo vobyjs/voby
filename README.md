@@ -51,6 +51,8 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`useInterval`](#useinterval)
   - [`usePromise`](#usepromise)
   - [`useTimeout`](#usetimeout)
+- [**Extras**](#extras)
+  - [`vite`](#vite)
 
 ## Usage
 
@@ -472,6 +474,26 @@ This hook is just an alternative to `setTimeout` that automatically clears itsel
 import {useTimeout} from 'voby';
 
 useTimeout ( () => console.log ( 'called' ), 1000 );
+```
+
+## Extras
+
+The following extra functionalities are provided via submodules.
+
+### `vite`
+
+A basic [Vite](https://github.com/vitejs/vite) plugin is provided.
+
+```js
+// vite.js
+
+const voby = require ( 'voby/vite-plugin' );
+
+module.exports = defineConfig ({
+  plugins: [
+    voby ()
+  ]
+});
 ```
 
 ## Thanks
