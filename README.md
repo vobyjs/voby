@@ -48,6 +48,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`useDisposed`](#usedisposed)
   - [`useEffect`](#useeffect)
   - [`useError`](#useerror)
+  - [`useFrom`](#usefrom)
   - [`useInterval`](#useinterval)
   - [`usePromise`](#usepromise)
   - [`useRoot`](#useroot)
@@ -449,6 +450,18 @@ This hook registers a function to be called when the parent computation throws.
 import {useError} from 'voby';
 
 useError // => Same as require ( 'oby' ).error
+```
+
+#### `useFrom`
+
+This hook is useful for encapsulating values that may change over time into an observable.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#from).
+
+```tsx
+import {useFrom} from 'voby';
+
+useFrom // => Same as require ( 'oby' ).from
 ```
 
 #### `useInterval`
