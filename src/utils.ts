@@ -39,12 +39,6 @@ const indexOf = (() => {
 
 const {isArray} = Array;
 
-const isBoolean = ( value: unknown ): value is boolean => {
-
-  return typeof value === 'boolean';
-
-};
-
 const isError = ( value: unknown ): value is Error => {
 
   return value instanceof Error;
@@ -101,4 +95,4 @@ const keys = (() => {
 
 /* EXPORT */
 
-export {assign, castArray, castError, indexOf, isArray, isBoolean, isError, isFunction, isNil, isNode, isObservable, isString, isTemplateActionProxy, keys};
+export {assign, castArray, castError, indexOf, isArray, isError, isFunction, isNil, isNode, isObservable, isString, isTemplateActionProxy, keys};

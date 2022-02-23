@@ -5,11 +5,7 @@ type Callback = () => void;
 
 type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child) | ((() => Child) & { metadata: any }) | ({ (): Child, get (): Child, sample (): Child });
 
-type ChildPrepared = null | string | Node | Array<ChildPrepared> | (() => Child) | ({ (): Child, get (): Child, sample (): Child });
-
 type ChildResolved = null | undefined | boolean | bigint | number | string | symbol | Node | Array<ChildResolved>;
-
-type ChildMounted = Node[] | ChildMounted[];
 
 type ChildWithMetadata<T = unknown> = (() => Child) & { metadata: T };
 
@@ -83,4 +79,4 @@ type TemplateActionWithPaths = [TemplateActionPath, string, string, TemplateActi
 
 /* EXPORT */
 
-export type {Callback, Child, ChildMounted, ChildPrepared, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, Disposer, EventListener, FetchStateLoading, FetchStateRejected, FetchStateResolved, FetchState, FunctionResolver, Key, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableAccessor, ObservableMaybe, ObservableRecordMaybe, ObservableResolver, PromiseStateLoading, PromiseStateRejected, PromiseStateResolved, PromiseState, Props, Ref, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};
+export type {Callback, Child, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, Disposer, EventListener, FetchStateLoading, FetchStateRejected, FetchStateResolved, FetchState, FunctionResolver, Key, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableAccessor, ObservableMaybe, ObservableRecordMaybe, ObservableResolver, PromiseStateLoading, PromiseStateRejected, PromiseStateResolved, PromiseState, Props, Ref, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};

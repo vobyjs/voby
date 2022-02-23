@@ -1,95 +1,16 @@
 
 /* IMPORT */
 
-import type {Child, ChildMounted, ChildPrepared, ChildResolved, EventListener, ObservableResolver, Ref} from './types';
+import diff from 'udomdiff';
+import type {Child, ChildResolved, EventListener, ObservableResolver, Ref} from './types';
 import useEffect from './hooks/use_effect';
-import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isString, isTemplateActionProxy, keys} from './utils';
+import {castArray, isArray, isFunction, isNil, isObservable, isString, isTemplateActionProxy, keys} from './utils';
 
 //TODO: Support functions as values that get wrapped in an automatic effect
 
-/* HELPERS */ //TODO: These functions should be reduced as much as possible
+/* HELPERS */
 
-const normalizeChildren = ( children: Child[] ): Child[] => {
-
-  // It flattes the array and removes nil and boolean values, quickly
-
-  for ( let i = children.length - 1; i >= 0; i-- ) {
-
-    const child = children[i];
-
-    if ( isNil ( child ) || isBoolean ( child ) ) {
-
-      children.splice ( i, 1 );
-
-    } else if ( isArray ( child ) ) {
-
-      for ( let ci = child.length -1; ci >= 0; ci-- ) {
-
-        const childChild = child[ci];
-
-        if ( isNil ( childChild ) || isBoolean ( childChild ) ) {
-
-          child.splice ( ci, 1 );
-
-        }
-
-      }
-
-      children.splice ( i, 1, ...child );
-
-    }
-
-  }
-
-  return children;
-
-};
-
-const prepareChildren = ( children: Child[] ): ChildPrepared => {
-
-  children = normalizeChildren ( children );
-
-  if ( children.length === 0 ) return null;
-
-  if ( children.length === 1 ) return prepareChild ( children[0] );
-
-  const childrenPrepared: ChildPrepared = new Array ( children.length );
-
-  for ( let i = children.length - 1; i >= 0; i-- ) {
-
-    childrenPrepared[i] = prepareChild ( children[i] );
-
-  }
-
-  return childrenPrepared;
-
-};
-
-const prepareChild = ( child: Child ): ChildPrepared => {
-
-  if ( isNil ( child ) ) return null;
-
-  if ( isBoolean ( child ) ) return null;
-
-  if ( isNode ( child ) ) return child;
-
-  if ( isFunction ( child ) ) return child;
-
-  if ( isArray ( child ) ) {
-
-    if ( child.length === 0 ) return null;
-
-    if ( child.length === 1 ) return prepareChild ( child[0] );
-
-    return prepareChildren ( child );
-
-  }
-
-  return String ( child );
-
-};
-
-const resolveChild = ( child: Child ): ChildResolved => {
+const resolveChild = ( child: Child ): ChildResolved => { //TODO: this function should probably be removed 🤔
 
   if ( isFunction ( child ) ) return resolveChild ( child () );
 
@@ -108,56 +29,6 @@ const resolveChild = ( child: Child ): ChildResolved => {
   }
 
   return child;
-
-};
-
-const removeChildren = ( parent: HTMLElement, children: ChildMounted ): void => {
-
-  if ( parent.childNodes.length === children.length ) {
-
-    parent.textContent = '';
-
-  } else {
-
-    for ( let i = 0, l = children.length; i < l; i++ ) {
-
-      const child = children[i];
-
-      if ( isArray ( child ) ) {
-
-        removeChildren ( parent, child );
-
-      } else if ( isNode ( child ) ) {
-
-        parent.removeChild ( child );
-
-      }
-
-    }
-
-  }
-
-};
-
-const getChildrenNextSibling = ( children: ChildMounted ): Node | null | undefined => {
-
-  for ( let i = children.length - 1; i >= 0; i-- ) {
-
-    const child = children[i];
-
-    if ( isArray ( child ) ) {
-
-      const nextSibling = getChildrenNextSibling ( child );
-
-      if ( nextSibling !== undefined ) return nextSibling;
-
-    } else {
-
-      return child.nextSibling;
-
-    }
-
-  }
 
 };
 
@@ -293,64 +164,71 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
 };
 
-const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: ChildMounted, childrenPrevSibling: Node | null = null ): ChildMounted => {
+const setChildStatic = (() => { //FIXME: This function is most probably buggy in some way, it should be tested extensively, clearing doesn't work //TODO: Optimize this further, until it's comparable with Solid
 
-  //TODO: Optimize this massively, after it works reliably, currently it may not quite work and it certainly has **terrible** performance
-  //URL: https://github.com/adamhaile/surplus/blob/2aca5a36ceb6a7cbb4d609cd04ee631714602f91/src/runtime/content.ts
-  //URL: https://github.com/adamhaile/surplus/blob/2aca5a36ceb6a7cbb4d609cd04ee631714602f91/src/runtime/insert.ts
-  //URL: https://github.com/luwes/sinuous/blob/master/packages/sinuous/h/src/h.js
-  //URL: https://github.com/ryansolid/dom-expressions/blob/main/packages/dom-expressions/src/client.js
+  const cache = new WeakMap ();
 
-  if ( !childrenPrev.length && ( isNil ( child ) || isBoolean ( child ) ) ) childrenPrev; // Nothing to mount
+  return ( parent: HTMLElement, child: Child, childrenPrev: Node[], childrenPrevSibling: Node | null = null ): Node[] => {
 
-  const childrenNext = castArray ( ( isArray ( child ) ? prepareChildren ( child ) : prepareChild ( child ) ) ?? new Comment () );
-  const childrenNextSibling = getChildrenNextSibling ( childrenPrev ) || childrenPrevSibling;
+    const next: Node[] = [];
+    const nextSibling = childrenPrev[childrenPrev.length - 1]?.nextSibling || childrenPrevSibling;
 
-  removeChildren ( parent, childrenPrev );
+    const children: Node[] = castArray ( child ).flat ( Infinity ); //TSC
 
-  for ( let i = 0, l = childrenNext.length; i < l; i++ ) {
+    for ( let i = 0, l = children.length; i < l; i++ ) {
 
-    const childNext = childrenNext[i];
+      const child = children[i];
+      const type = typeof child;
 
-    if ( isFunction ( childNext ) ) {
+      if ( type === 'string' || type === 'number' || type === 'bigint' || type === 'symbol' ) {
 
-      let childrenPrev: ChildMounted = [];
+        next.push ( new Text ( String ( child ) ) );
 
-      setAbstract ( childNext, childNext => {
+      } else if ( type === 'object' && typeof child.nodeType === 'number' ) {
 
-        childrenNext[i] = childrenPrev = setChildStatic ( parent, childNext, childrenPrev, childrenNextSibling );
+        next.push ( child );
 
-      }, true );
+      } else if ( type === 'function' ) {
 
-    } else if ( isString ( childNext ) ) {
+        let prev: Node[] = [];
 
-      const textNode = new Text ( childNext );
+        setAbstract ( child, childResolved => {
 
-      parent.insertBefore ( textNode, childrenNextSibling );
+          prev = cache.get ( child ) || prev;
 
-      childrenNext[i] = textNode;
+          prev = setChildStatic ( parent, childResolved, prev, nextSibling );
 
-    } else if ( isNode ( childNext ) ) {
+          cache.set ( child, prev );
 
-      parent.insertBefore ( childNext, childrenNextSibling );
+          next.push.apply ( next, prev );
+
+        }, true );
+
+      }
 
     }
 
-  }
+    if ( !next.length ) { // Placeholder
 
-  return childrenNext as ChildMounted; //TSC
+      next[0] = new Comment ();
 
-};
+    }
 
-const setChild = ( parent: HTMLElement, child: Child, childrenPrev: ChildMounted = [], childrenPrevSibling: Node | null = null ): ChildMounted => {
+    diff ( parent, childrenPrev, next, x => x, nextSibling );
+
+    return next;
+
+  };
+
+})();
+
+const setChild = ( parent: HTMLElement, child: Child, childrenPrev: Node[] = [], childrenPrevSibling: Node | null = null ): void => {
 
   setAbstract ( child, child => {
 
     childrenPrev = setChildStatic ( parent, child, childrenPrev, childrenPrevSibling );
 
   });
-
-  return childrenPrev;
 
 };
 
