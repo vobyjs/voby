@@ -31,6 +31,14 @@ type Disposer = () => void;
 
 type EventListener = ( event: Event ) => unknown;
 
+type FetchStateLoading = { loading: true, error?: never, response?: never };
+
+type FetchStateRejected = { loading: false, error: Error, response?: never };
+
+type FetchStateResolved = { loading: false, error?: never, response: Response };
+
+type FetchState = FetchStateLoading | FetchStateRejected | FetchStateResolved;
+
 type FunctionResolver<T = unknown> = T | (() => FunctionResolver<T>);
 
 type Key = string;
@@ -75,4 +83,4 @@ type TemplateActionWithPaths = [TemplateActionPath, string, string, TemplateActi
 
 /* EXPORT */
 
-export type {Callback, Child, ChildMounted, ChildPrepared, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, Disposer, EventListener, FunctionResolver, Key, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableAccessor, ObservableMaybe, ObservableRecordMaybe, ObservableResolver, PromiseStateLoading, PromiseStateRejected, PromiseStateResolved, PromiseState, Props, Ref, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};
+export type {Callback, Child, ChildMounted, ChildPrepared, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, Disposer, EventListener, FetchStateLoading, FetchStateRejected, FetchStateResolved, FetchState, FunctionResolver, Key, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableAccessor, ObservableMaybe, ObservableRecordMaybe, ObservableResolver, PromiseStateLoading, PromiseStateRejected, PromiseStateResolved, PromiseState, Props, Ref, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};

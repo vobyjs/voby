@@ -53,6 +53,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`useDisposed`](#usedisposed)
   - [`useEffect`](#useeffect)
   - [`useError`](#useerror)
+  - [`useFetch`](#usefetch)
   - [`useFrom`](#usefrom)
   - [`useIdleCallback`](#useidlecallback)
   - [`useIdleLoop`](#useidleloop)
@@ -519,6 +520,23 @@ This hook registers a function to be called when the parent computation throws.
 import {useError} from 'voby';
 
 useError // => Same as require ( 'oby' ).error
+```
+
+#### `useFetch`
+
+This hook wraps the output of a fetch request in an observable, so that you can be notified when it resolves or rejects. The request is also aborted automatically when the parent computation gets disposed of.
+
+```tsx
+import {useFetch} from 'voby';
+
+const App = () => {
+  const state = useFetch ( 'https://my.api' );
+  return state.on ( state => {
+    if ( state.loading ) return <p>loading...</p>;
+    if ( state.error ) return <p>{state.error.message}</p>;
+    return <p>Status: {state.value.status}</p>
+  });
+};
 ```
 
 #### `useFrom`

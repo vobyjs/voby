@@ -7,15 +7,15 @@ import useCleanup from './use_cleanup';
 
 const useAbortController = (): AbortController => {
 
-  const controller = new AbortController ();
+  const aborter = new AbortController ();
 
   useCleanup ( () => {
 
-    controller.abort ();
+    aborter.abort ();
 
   });
 
-  return controller;
+  return aborter;
 
 };
 

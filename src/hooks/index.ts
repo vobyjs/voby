@@ -9,6 +9,7 @@ import useComputed from './use_computed';
 import useDisposed from './use_disposed';
 import useEffect from './use_effect';
 import useError from './use_error';
+import useFetch from './use_fetch';
 import useFrom from './use_from';
 import useIdleCallback from './use_idle_callback';
 import useIdleLoop from './use_idle_loop';
@@ -19,4 +20,4 @@ import useTimeout from './use_timeout';
 
 /* EXPORT */
 
-export {useAbortController, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useDisposed, useEffect, useError, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useRoot, useTimeout};
+export {useAbortController, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useDisposed, useEffect, useError, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useRoot, useTimeout};
