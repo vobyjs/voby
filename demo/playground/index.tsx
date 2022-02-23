@@ -3,7 +3,7 @@
 
 import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from 'voby';
 import {useEffect, useInterval, usePromise, useTimeout} from 'voby';
-import {$, $$, createElement, render, renderToString, styled, template} from 'voby';
+import {$, $$, createElement, render, renderToString, styled, svg, template} from 'voby';
 
 /* MAIN */
 
@@ -1229,6 +1229,20 @@ const TestPromise = (): JSX.Element => {
   );
 };
 
+const TestSVG = (): JSX.Element => {
+  const color = `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
+  return (
+    <>
+      <h3>SVG</h3>
+      {svg`
+        <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke="${color}" stroke-width="3" fill="white">
+          <circle cx="25" cy="25" r="20" />
+        </svg>
+      `}
+    </>
+  );
+};
+
 const TestTemplateExternal = (): JSX.Element => {
   const Templated = template<{ class: string, color: string }> ( props => {
     return (
@@ -1511,6 +1525,7 @@ const Test = (): JSX.Element => {
       <TestErrorBoundary />
       <TestChildren />
       <TestRef />
+      <TestSVG />
       <TestTemplateExternal />
       <TestPromise />
       <TestKeyframeStatic />

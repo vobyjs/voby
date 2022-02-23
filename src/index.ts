@@ -1,7 +1,6 @@
 
 //TODO: Implement context support
 //TODO: Implement "key" support
-//TODO: Implement SVG support
 
 /* IMPORT */
 
@@ -15,6 +14,7 @@ import {$, $$} from './observable';
 import render from './render';
 import renderToString from './render_to_string';
 import styled from './styled';
+import svg from './svg';
 import template from './template';
 
 /* EXPORT */
@@ -22,4 +22,4 @@ import template from './template';
 export type {Observable, ObservableMaybe, ObservableRecordMaybe, ObservableMaybe as O, ObservableRecordMaybe as OO, PromiseState};
 export {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary};
 export {useCleanup, useComputed, useDisposed, useEffect, useError, useFrom, useInterval, usePromise, useTimeout};
-export {$, $$, createElement, isObservable, render, renderToString, styled, template};
+export {$, $$, createElement, isObservable, render, renderToString, styled, svg, template};

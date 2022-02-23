@@ -33,6 +33,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`render`](#render)
   - [`renderToString`](#rendertostring)
   - [`styled`](#styled)
+  - [`svg`](#svg)
   - [`template`](#template)
 - [**Components**](#components)
   - [`Component`](#component)
@@ -173,6 +174,27 @@ const App = () => {
       <GlobalStyle />
       <P class={{ [disabled.raw]: true }}>content</P>
     </>
+  );
+};
+```
+
+#### `svg`
+
+This function enables you to embed an SVG relatively cleanly in your page.
+
+_This function internally uses `innerHTML` and must therefor only be used with trusted input_.
+
+```tsx
+const App = () => {
+  const hex = `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
+  return (
+    <div class="something">
+      {svg`
+        <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke="${color}" stroke-width="3" fill="white">
+          <circle cx="25" cy="25" r="20" />
+        </svg>
+      `}
+    </div>
   );
 };
 ```
