@@ -3,9 +3,8 @@
 
 import {styled as goober, setup} from 'goober';
 import {prefix} from 'goober/prefixer';
-import type {Child, Component, Props} from '../types';
+import type {Component} from '../types';
 import createElement from '../create_element';
-import {castArray, isPlainObject, isNil} from '../utils';
 import cls from './class';
 import css from './css';
 import global from './global';
@@ -13,17 +12,7 @@ import keyframes from './keyframes';
 
 /* SETUP */
 
-const h = ( component: Component, props: Props | null ): (() => Child) => {
-
-  const {children, ...rest} = props || {};
-
-  if ( !isNil ( rest.class ) && !isPlainObject ( rest.class ) ) throw new Error ( 'Invalid class attribute, in styled components it can only be null, undefined or a plain object' );
-
-  return createElement ( component, rest, ...castArray ( children ) );
-
-};
-
-setup ( h, prefix );
+setup ( createElement, prefix );
 
 /* MAIN */
 

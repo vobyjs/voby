@@ -3,7 +3,7 @@
 
 import type {Child, ChildWithMetadata, ObservableMaybe} from '../types';
 import useComputed from '../hooks/use_computed';
-import {extend, isObservable} from '../utils';
+import {assign, isObservable} from '../utils';
 
 /* MAIN */
 
@@ -34,13 +34,13 @@ const Switch = <T> ({ when, children }: { when: ObservableMaybe<T>, children: Ch
 
 Switch.Case = <T> ({ when, children }: { when: T, children: Child }): ChildWithMetadata<{ when: T }> => {
 
-  return extend ( () => children, { metadata: { when } } );
+  return assign ( () => children, { metadata: { when } } );
 
 };
 
 Switch.Default = ({ children }: { children: Child }): ChildWithMetadata<{ default: boolean }> => {
 
-  return extend ( () => children, { metadata: { default: true } } );
+  return assign ( () => children, { metadata: { default: true } } );
 
 };
 

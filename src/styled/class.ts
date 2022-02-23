@@ -15,7 +15,7 @@ const cls = (() => {
     const raw = `cls-${id++}-${suffix}`;
     const cooked = `.${raw}`;
 
-    const fn = () => cooked;
+    const fn = (): string => cooked;
 
     fn.raw = raw;
     fn.cooked = cooked;

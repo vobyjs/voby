@@ -11,6 +11,10 @@ interface HTMLElement {
   cloneNode ( deep?: boolean ): HTMLElement
 }
 
+interface Object {
+  isPrototypeOf<T extends Object> ( this: T, object: Object ): object is T
+}
+
 /* HELPERS */
 
 type ObservableResolver<T = unknown> = T | ({

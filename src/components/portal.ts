@@ -4,7 +4,7 @@
 import type {Child, ChildWithMetadata} from '../types';
 import useCleanup from '../hooks/use_cleanup';
 import render from '../render';
-import {extend} from '../utils';
+import {assign} from '../utils';
 
 /* MAIN */
 
@@ -25,7 +25,7 @@ const Portal = ({ mount, children }: { mount?: Node | null, children: Child }): 
 
   });
 
-  return extend ( () => null, { metadata: { portal } } );
+  return assign ( () => null, { metadata: { portal } } );
 
 };
 

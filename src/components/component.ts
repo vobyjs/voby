@@ -5,7 +5,7 @@ import type {Child} from '../types';
 
 /* MAIN */
 
-abstract class Component<P = {}, S = {}> {
+class Component<P = {}, S = {}> {
 
   /* VARIABLES */
 
@@ -22,7 +22,11 @@ abstract class Component<P = {}, S = {}> {
 
   /* API */
 
-  abstract render (): Child;
+  render (): Child {
+
+    throw new Error ( 'Missing render function' );
+
+  }
 
 }
 

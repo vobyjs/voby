@@ -4,7 +4,6 @@
 import type {Child} from './types';
 import Portal from './components/portal';
 import useRoot from './hooks/use_root';
-import {delay} from './utils';
 
 /* MAIN */
 
@@ -18,13 +17,13 @@ const renderToString = ( child: Child, timeout: number = 1 ): Promise<string> =>
 
       const {portal} = Portal ({ children: child }).metadata;
 
-      delay ( timeout ).then ( () => {
+      setTimeout ( () => {
 
         resolve ( portal.innerHTML );
 
         dispose ();
 
-      });
+      }, timeout );
 
     });
 

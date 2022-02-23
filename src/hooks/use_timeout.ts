@@ -3,14 +3,13 @@
 
 import type {Callback, Disposer, ObservableMaybe} from '../types';
 import {$$} from '../observable';
-import useCleanup from './use_cleanup';
 import useEffect from './use_effect';
 
 /* MAIN */
 
 const useTimeout = ( callback: ObservableMaybe<Callback>, ms?: ObservableMaybe<number> ): Disposer => {
 
-  let timeoutId: ReturnType<typeof setInterval>;
+  let timeoutId: ReturnType<typeof setTimeout>;
 
   const dispose = (): void => {
 
@@ -22,7 +21,7 @@ const useTimeout = ( callback: ObservableMaybe<Callback>, ms?: ObservableMaybe<n
 
     timeoutId = setTimeout ( $$(callback), $$(ms) );
 
-    useCleanup ( dispose );
+    return dispose;
 
   });
 

@@ -3,21 +3,20 @@
 
 import './types';
 import type {Child, Component, Props, Key} from '../types';
-import createElement from '../create_element';
 import Fragment from '../components/fragment';
-import {castArray} from '../utils'
+import createElement from '../create_element';
 
 /* MAIN */
 
-const jsx = ( component: Component, props: Props | null, key?: Key ): (() => Child) => {
+const jsx = ( component: Component, props: Props, key?: Key ): (() => Child) => {
 
-  props = props || {};
+  if ( key ) { // It's probably better/faster not to change the shape of "props" if not necessary
 
-  props.key = key;
+    props.key = key;
 
-  const children = castArray ( props.children || [] );
+  }
 
-  return createElement ( component, props, ...children );
+  return createElement ( component, props );
 
 };
 

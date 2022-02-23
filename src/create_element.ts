@@ -2,8 +2,9 @@
 /* IMPORT */
 
 import type {Child, ComponentIntrinsicElement, ComponentNode, Component, Props} from './types';
+import BaseComponent from './components/component';
 import {setProps, setRef} from './setters';
-import {isComponentClass, isFunction, isNode, isString} from './utils';
+import {isFunction, isNode, isString} from './utils';
 
 /* MAIN */
 
@@ -14,12 +15,12 @@ function createElement ( component: Component, props: Props | null, ..._children
 
   // It's important to wrap components, so that they can be executed in the right order, from parent to child, rather than from child to parent in some case
 
-  const { children: _, key, ref, ...rest } = props || {};
-  const children = ( _children.length === 1 ) ? _children[0] : _children;
+  const { children: __children, key, ref, ...rest } = props || {};
+  const children = ( _children.length === 1 ) ? _children[0] : ( _children.length === 0 ) ? __children : _children;
 
   if ( isFunction ( component ) ) {
 
-    if ( isComponentClass ( component ) ) {
+    if ( BaseComponent.isPrototypeOf ( component ) ) {
 
       const props = { ...rest, children };
 

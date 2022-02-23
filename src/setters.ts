@@ -3,7 +3,7 @@
 
 import type {Child, ChildMounted, ChildPrepared, ChildResolved, EventListener, ObservableResolver, Ref, TemplateActionProxy} from './types';
 import useEffect from './hooks/use_effect';
-import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isPropertyNonDimensional, isString, isTemplateActionProxy, isText, isUndefined, keys} from './utils';
+import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isString, isTemplateActionProxy, isText, keys} from './utils';
 
 /* HELPERS */ //TODO: These functions should be reduced as much as possible
 
@@ -139,11 +139,11 @@ const getChildrenNextSibling = ( children: ChildMounted ): Node | null | undefin
 
       const nextSibling = getChildrenNextSibling ( child );
 
-      if ( !isUndefined ( nextSibling ) ) return nextSibling;
+      if ( nextSibling !== undefined ) return nextSibling;
 
     } else {
 
-      return child.nextSibling || null;
+      return child.nextSibling;
 
     }
 
@@ -435,28 +435,25 @@ const setEventStatic = (() => {
 
     document[event] = ( event: Event ): void => {
 
-      let node = event.composedPath ()[0] as Node | null;
+      const targets = event.composedPath ();
+      const target = targets[0] || document;
 
       Object.defineProperty ( event, 'currentTarget', {
         configurable: true,
         get () {
-          return node || document;
+          return target;
         }
       });
 
-      while ( node ) {
+      for ( let i = 0, l = targets.length; i < l; i++ ) {
 
-        const handler = node[key];
+        const handler = targets[i][key];
 
-        if ( handler ) {
+        if ( !handler ) continue;
 
-          handler ( event );
+        handler ( event );
 
-          if ( event.cancelBubble ) break;
-
-        }
-
-        node = node.parentNode;
+        if ( event.cancelBubble ) break;
 
       }
 
@@ -541,7 +538,7 @@ const setProperty = ( element: HTMLElement, key: string, value: ObservableResolv
 
 const setRef = <T> ( element: T, value?: Ref<T> ): void => {
 
-  if ( isUndefined ( value ) ) return;
+  if ( isNil ( value ) ) return;
 
   if ( !isFunction ( value ) ) throw new Error ( 'Invalid ref' );
 
@@ -553,23 +550,29 @@ const setRef = <T> ( element: T, value?: Ref<T> ): void => {
 
 };
 
-const setStyleStatic = ( style: CSSStyleDeclaration, key: string, value: null | undefined | number | string ): void => {
+const setStyleStatic = (() => {
 
-  if ( key.charCodeAt ( 0 ) === 45 ) { // /^-/
+  const propertyNonDimensionalRe = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i
 
-    style.setProperty ( key, String ( value ) );
+  return ( style: CSSStyleDeclaration, key: string, value: null | undefined | number | string ): void => {
 
-  } else if ( isNil ( value ) ) {
+    if ( key.charCodeAt ( 0 ) === 45 ) { // /^-/
 
-    style[key] = null;
+      style.setProperty ( key, String ( value ) );
 
-  } else {
+    } else if ( isNil ( value ) ) {
 
-    style[key] = ( isString ( value ) || isPropertyNonDimensional ( key ) ? value : `${value}px` );
+      style[key] = null;
 
-  }
+    } else {
 
-};
+      style[key] = ( isString ( value ) || propertyNonDimensionalRe.test ( key ) ? value : `${value}px` );
+
+    }
+
+  };
+
+})();
 
 const setStyle = ( style: CSSStyleDeclaration, key: string, value: ObservableResolver<null | undefined | number | string> ): void => {
 

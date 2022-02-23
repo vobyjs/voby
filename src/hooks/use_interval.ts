@@ -3,7 +3,6 @@
 
 import type {Callback, Disposer, ObservableMaybe} from '../types';
 import {$$} from '../observable';
-import useCleanup from './use_cleanup';
 import useEffect from './use_effect';
 
 /* MAIN */
@@ -22,7 +21,7 @@ const useInterval = ( callback: ObservableMaybe<Callback>, ms?: ObservableMaybe<
 
     intervalId = setInterval ( $$(callback), $$(ms) );
 
-    useCleanup ( dispose );
+    return dispose;
 
   });
 
