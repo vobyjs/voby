@@ -135,7 +135,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child) ): (( props: P ) => () =
 
         if ( targetNodePath.length ) {
 
-          actions.push ( `this.setChildReplacement ( props["${key}"], root.${targetNodePath.map ( index => ( Object.is ( 0, index ) ) ? 'firstChild' : Object.is ( -0, index ) ? 'lastChild' : `childNodes[${index}]` ).reverse ().join ( '.' )} );` );
+          actions.push ( `this.setChildReplacement ( props["${key}"], root${targetNodePath.slice ().reverse ().map ( index => ( Object.is ( 0, index ) ) ? '.firstChild' : Object.is ( -0, index ) ? '.lastChild' : `.firstChild${'.nextSibling'.repeat ( index )}` ).join ( '' )} );` );
 
         } else {
 
@@ -147,7 +147,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child) ): (( props: P ) => () =
 
         if ( nodePath.length ) {
 
-          actions.push ( `this.setProp ( root.${nodePath.map ( index => ( Object.is ( 0, index ) ) ? 'firstChild' : Object.is ( -0, index ) ? 'lastChild' : `childNodes[${index}]` ).reverse ().join ( '.' )}, "${prop}", props["${key}"] );` );
+          actions.push ( `this.setProp ( root${nodePath.slice ().reverse ().map ( index => ( Object.is ( 0, index ) ) ? '.firstChild' : Object.is ( -0, index ) ? '.lastChild' : `.firstChild${'.nextSibling'.repeat ( index )}` ).join ( '' )}, "${prop}", props["${key}"] );` );
 
         } else {
 
