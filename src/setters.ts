@@ -1,9 +1,11 @@
 
 /* IMPORT */
 
-import type {Child, ChildMounted, ChildPrepared, ChildResolved, EventListener, ObservableResolver, Ref, TemplateActionProxy} from './types';
+import type {Child, ChildMounted, ChildPrepared, ChildResolved, EventListener, ObservableResolver, Ref} from './types';
 import useEffect from './hooks/use_effect';
-import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isString, isTemplateActionProxy, isText, keys} from './utils';
+import {castArray, isArray, isBoolean, isFunction, isNil, isNode, isObservable, isString, isTemplateActionProxy, keys} from './utils';
+
+//TODO: Support functions as values that get wrapped in an automatic effect
 
 /* HELPERS */ //TODO: These functions should be reduced as much as possible
 
@@ -111,17 +113,25 @@ const resolveChild = ( child: Child ): ChildResolved => {
 
 const removeChildren = ( parent: HTMLElement, children: ChildMounted ): void => {
 
-  for ( let i = 0, l = children.length; i < l; i++ ) {
+  if ( parent.childNodes.length === children.length ) {
 
-    const child = children[i];
+    parent.textContent = '';
 
-    if ( isArray ( child ) ) {
+  } else {
 
-      removeChildren ( parent, child );
+    for ( let i = 0, l = children.length; i < l; i++ ) {
 
-    } else if ( isNode ( child ) ) {
+      const child = children[i];
 
-      parent.removeChild ( child );
+      if ( isArray ( child ) ) {
+
+        removeChildren ( parent, child );
+
+      } else if ( isNode ( child ) ) {
+
+        parent.removeChild ( child );
+
+      }
 
     }
 
@@ -237,9 +247,39 @@ const setAttribute = ( element: HTMLElement, key: string, value: ObservableResol
 
 const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
-  if ( isString ( child ) && isText ( childPrev ) ) {
+  const type = typeof child;
 
-    childPrev.data = child;
+  if ( child === null || ( type !== 'object' && type !== 'function' ) ) {
+
+    if ( child === null || child === undefined || type === 'boolean' ) {
+
+      const parent = childPrev.parentElement;
+
+      if ( !parent ) throw new Error ( 'Invalid child replacement' );
+
+      parent.removeChild ( childPrev );
+
+    } else {
+
+      const text = ( type === 'string' ) ? ( child as string ) : String ( child ); //TSC
+
+      if ( childPrev.nodeType === 3 ) {
+
+        childPrev.nodeValue = text;
+
+      } else {
+
+        const parent = childPrev.parentElement;
+
+        if ( !parent ) throw new Error ( 'Invalid child replacement' );
+
+        const textNode = new Text ( text );
+
+        parent.replaceChild ( textNode, childPrev );
+
+      }
+
+    }
 
   } else {
 
@@ -253,7 +293,7 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
 };
 
-const setChildStatic = ( parent: HTMLElement, child: Child | TemplateActionProxy, childrenPrev: ChildMounted, childrenPrevSibling: Node | null = null ): ChildMounted => {
+const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: ChildMounted, childrenPrevSibling: Node | null = null ): ChildMounted => {
 
   //TODO: Optimize this massively, after it works reliably, currently it may not quite work and it certainly has **terrible** performance
   //URL: https://github.com/adamhaile/surplus/blob/2aca5a36ceb6a7cbb4d609cd04ee631714602f91/src/runtime/content.ts
@@ -261,58 +301,44 @@ const setChildStatic = ( parent: HTMLElement, child: Child | TemplateActionProxy
   //URL: https://github.com/luwes/sinuous/blob/master/packages/sinuous/h/src/h.js
   //URL: https://github.com/ryansolid/dom-expressions/blob/main/packages/dom-expressions/src/client.js
 
-  if ( isTemplateActionProxy ( child ) ) { // Template proxy function
+  if ( !childrenPrev.length && ( isNil ( child ) || isBoolean ( child ) ) ) childrenPrev; // Nothing to mount
 
-    const placeholder = new Text ();
+  const childrenNext = castArray ( ( isArray ( child ) ? prepareChildren ( child ) : prepareChild ( child ) ) ?? new Comment () );
+  const childrenNextSibling = getChildrenNextSibling ( childrenPrev ) || childrenPrevSibling;
 
-    parent.insertBefore ( placeholder, null );
+  removeChildren ( parent, childrenPrev );
 
-    child ( parent, 'child', placeholder );
+  for ( let i = 0, l = childrenNext.length; i < l; i++ ) {
 
-    return [placeholder];
+    const childNext = childrenNext[i];
 
-  } else { // Regular child
+    if ( isFunction ( childNext ) ) {
 
-    if ( !childrenPrev.length && ( isNil ( child ) || isBoolean ( child ) ) ) childrenPrev; // Nothing to mount
+      let childrenPrev: ChildMounted = [];
 
-    const childrenNext = castArray ( ( isArray ( child ) ? prepareChildren ( child ) : prepareChild ( child ) ) ?? new Comment () );
-    const childrenNextSibling = getChildrenNextSibling ( childrenPrev ) || childrenPrevSibling;
+      setAbstract ( childNext, childNext => {
 
-    removeChildren ( parent, childrenPrev );
+        childrenNext[i] = childrenPrev = setChildStatic ( parent, childNext, childrenPrev, childrenNextSibling );
 
-    for ( let i = 0, l = childrenNext.length; i < l; i++ ) {
+      }, true );
 
-      const childNext = childrenNext[i];
+    } else if ( isString ( childNext ) ) {
 
-      if ( isFunction ( childNext ) ) {
+      const textNode = new Text ( childNext );
 
-        let childrenPrev: ChildMounted = [];
+      parent.insertBefore ( textNode, childrenNextSibling );
 
-        setAbstract ( childNext, childNext => {
+      childrenNext[i] = textNode;
 
-          childrenNext[i] = childrenPrev = setChildStatic ( parent, childNext, childrenPrev, childrenNextSibling );
+    } else if ( isNode ( childNext ) ) {
 
-        }, true );
-
-      } else if ( isString ( childNext ) ) {
-
-        const textNode = new Text ( childNext );
-
-        parent.insertBefore ( textNode, childrenNextSibling );
-
-        childrenNext[i] = textNode;
-
-      } else if ( isNode ( childNext ) ) {
-
-        parent.insertBefore ( childNext, childrenNextSibling );
-
-      }
+      parent.insertBefore ( childNext, childrenNextSibling );
 
     }
 
-    return childrenNext as ChildMounted; //TSC
-
   }
+
+  return childrenNext as ChildMounted; //TSC
 
 };
 
@@ -638,7 +664,19 @@ const setProp = ( element: HTMLElement, key: string, value: any ): void => {
 
   if ( isTemplateActionProxy ( value ) ) {
 
-    value ( element, key );
+    if ( key === 'children' ) {
+
+      const placeholder = new Text ();
+
+      element.insertBefore ( placeholder, null );
+
+      value ( element, 'child', placeholder );
+
+    } else {
+
+      value ( element, key );
+
+    }
 
   } else if ( key === 'children' ) {
 

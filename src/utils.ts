@@ -87,12 +87,6 @@ const isTemplateActionProxy = ( value: unknown ): value is TemplateActionProxy =
 
 };
 
-const isText = ( value: unknown ): value is Text => {
-
-  return value instanceof Text;
-
-};
-
 const keys = (() => {
 
   const _keys = Object.keys;
@@ -107,4 +101,4 @@ const keys = (() => {
 
 /* EXPORT */
 
-export {assign, castArray, castError, indexOf, isArray, isBoolean, isError, isFunction, isNil, isNode, isObservable, isString, isTemplateActionProxy, isText, keys};
+export {assign, castArray, castError, indexOf, isArray, isBoolean, isError, isFunction, isNil, isNode, isObservable, isString, isTemplateActionProxy, keys};
