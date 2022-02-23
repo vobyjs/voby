@@ -63,6 +63,16 @@ const isNode = ( value: unknown ): value is Node => {
 
 };
 
+const isObject = ( value: unknown ): value is object => {
+
+  if ( value === null ) return false;
+
+  const type = typeof value;
+
+  return type === 'object' || type === 'function';
+
+};
+
 const isObservable = <T> ( value: T | ObservableAny<T> | ObservableAccessor<T> ): value is ObservableAny<T> | ObservableAccessor<T> => {
 
   return $.is ( value );
@@ -95,4 +105,4 @@ const keys = (() => {
 
 /* EXPORT */
 
-export {assign, castArray, castError, indexOf, isArray, isError, isFunction, isNil, isNode, isObservable, isString, isTemplateActionProxy, keys};
+export {assign, castArray, castError, indexOf, isArray, isError, isFunction, isNil, isNode, isObject, isObservable, isString, isTemplateActionProxy, keys};

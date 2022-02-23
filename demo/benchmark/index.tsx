@@ -164,7 +164,8 @@ const App = () => {
       <table class="table table-hover table-striped test-data">
         <tbody>
           <For values={data$}>
-            {({ id, label, className }) => {
+            {( datum$: IDatum ) => {
+              const {id, label, className} = datum$ ();
               const onSelect = () => select ( id );
               const onRemove = () => remove ( id );
               const props = {id, label, className, onSelect, onRemove};

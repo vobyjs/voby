@@ -1,6 +1,7 @@
 
 /* IMPORT */
 
+import {Observable} from 'voby';
 import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from 'voby';
 import {useEffect, useInterval, usePromise, useTimeout} from 'voby';
 import {$, $$, createElement, render, renderToString, styled, svg, template} from 'voby';
@@ -1059,7 +1060,7 @@ const TestForStatic = (): JSX.Element => {
     <>
       <h3>For - Static</h3>
       <For values={values}>
-        {( value, index ) => {
+        {( value: number, index: number ) => {
           return <p>Value: {value} - Index: {index}</p>
         }}
       </For>
@@ -1079,7 +1080,7 @@ const TestForObservables = (): JSX.Element => {
     <>
       <h3>For - Observables</h3>
       <For values={values}>
-        {( value, index ) => {
+        {( value: Observable<number>, index: number ) => {
           return <p>Value: {value} - Index: {index}</p>
         }}
       </For>
@@ -1100,7 +1101,7 @@ const TestForObservableObservables = (): JSX.Element => {
     <>
       <h3>For - Observable Observables</h3>
       <For values={values}>
-        {( value, index ) => {
+        {( value: Observable<number>, index: number ) => {
           return <p>Value: {value} - Index: {index}</p>
         }}
       </For>
