@@ -45,6 +45,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`Switch`](#switch)
   - [`Ternary`](#ternary)
 - [**Hooks**](#hooks)
+  - [`useAbortController`](#useabortcontroller)
   - [`useAnimationFrame`](#useanimationframe)
   - [`useAnimationLoop`](#useanimationloop)
   - [`useCleanup`](#usecleanup)
@@ -427,6 +428,16 @@ The following hooks are provided.
 Many of these are just functions that `oby` provides, re-exported as `use*` functions.
 
 Hooks are just regular functions, if their name starts with `use` then we call them hooks.
+
+#### `useAbortController`
+
+This hook is just an alternative to `new AbortController ()` that automatically aborts itself when the parent computation is disposed.
+
+```tsx
+import {useAbortController} from 'voby';
+
+const controller = useAbortController ();
+```
 
 #### `useAnimationFrame`
 

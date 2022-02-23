@@ -8,7 +8,7 @@
 import './jsx/types';
 import type {Observable, ObservableReadonly, ObservableMaybe, ObservableRecordMaybe, PromiseState} from './types';
 import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from './components';
-import {useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useDisposed, useEffect, useError, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useTimeout} from './hooks';
+import {useAbortController, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useDisposed, useEffect, useError, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useTimeout} from './hooks';
 import createElement from './create_element';
 import isObservable from './is_observable';
 import {$, $$} from './observable';
@@ -22,5 +22,5 @@ import template from './template';
 
 export type {Observable, ObservableReadonly, ObservableMaybe, ObservableRecordMaybe, ObservableMaybe as O, ObservableRecordMaybe as OO, PromiseState};
 export {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary};
-export {useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useDisposed, useEffect, useError, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useTimeout};
+export {useAbortController, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useDisposed, useEffect, useError, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useTimeout};
 export {$, $$, createElement, isObservable, render, renderToString, styled, svg, template};

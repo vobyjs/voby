@@ -1,6 +1,7 @@
 
 /* IMPORT */
 
+import useAbortController from './use_abort_controller';
 import useAnimationFrame from './use_animation_frame';
 import useAnimationLoop from './use_animation_loop';
 import useCleanup from './use_cleanup';
@@ -18,4 +19,4 @@ import useTimeout from './use_timeout';
 
 /* EXPORT */
 
-export {useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useDisposed, useEffect, useError, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useRoot, useTimeout};
+export {useAbortController, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useDisposed, useEffect, useError, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useRoot, useTimeout};
