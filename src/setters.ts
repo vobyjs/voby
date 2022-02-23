@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import diff from 'udomdiff';
+import diff from './diff';
 import type {Child, ChildResolved, EventListener, ObservableResolver, Ref} from './types';
 import useEffect from './hooks/use_effect';
 import {castArray, isArray, isFunction, isNil, isObservable, isString, isTemplateActionProxy, keys} from './utils';
@@ -46,7 +46,7 @@ const setAbstract = <T> ( value: ObservableResolver<T>, setter: (( value: T, val
 
       if ( isObservable ( valueNext ) ) {
 
-        setAbstract ( valueNext, setter );
+        setAbstract ( valueNext, setter, resolveFunctions );
 
       } else {
 
@@ -60,7 +60,7 @@ const setAbstract = <T> ( value: ObservableResolver<T>, setter: (( value: T, val
 
   } else if ( resolveFunctions && isFunction ( value ) ) {
 
-    setAbstract ( value (), setter ); //TODO: Should this be wrapped in a useEffect?
+    setAbstract ( value (), setter, resolveFunctions ); //TODO: Should this be wrapped in a useEffect?
 
   } else {
 
@@ -120,35 +120,21 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
   const type = typeof child;
 
-  if ( child === null || ( type !== 'object' && type !== 'function' ) ) {
+  if ( type === 'string' || type === 'number' || type === 'bigint' || type === 'symbol' ) {
 
-    if ( child === null || child === undefined || type === 'boolean' ) {
+    if ( childPrev.nodeType === 3 ) {
+
+      childPrev.nodeValue = String ( child );
+
+    } else {
 
       const parent = childPrev.parentElement;
 
       if ( !parent ) throw new Error ( 'Invalid child replacement' );
 
-      parent.removeChild ( childPrev );
+      const textNode = new Text ( String ( child ) );
 
-    } else {
-
-      const text = ( type === 'string' ) ? ( child as string ) : String ( child ); //TSC
-
-      if ( childPrev.nodeType === 3 ) {
-
-        childPrev.nodeValue = text;
-
-      } else {
-
-        const parent = childPrev.parentElement;
-
-        if ( !parent ) throw new Error ( 'Invalid child replacement' );
-
-        const textNode = new Text ( text );
-
-        parent.replaceChild ( textNode, childPrev );
-
-      }
+      parent.replaceChild ( textNode, childPrev );
 
     }
 
@@ -222,13 +208,21 @@ const setChildStatic = (() => { //FIXME: This function is most probably buggy in
 
     }
 
-    if ( !next.length ) { // Placeholder
+    if ( !next.length && parent.childNodes.length === childrenPrev.length ) { // Fast path for removing every child
+
+      parent.textContent = '';
+
+      childrenPrev = [];
+
+    }
+
+    if ( !next.length ) { // Placeholder, to keep the right stop in the array of children
 
       next[0] = new Comment ();
 
     }
 
-    diff ( parent, childrenPrev, next, x => x, nextSibling );
+    diff ( parent, childrenPrev, next, nextSibling );
 
     return next;
 

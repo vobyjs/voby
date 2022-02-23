@@ -1,5 +1,6 @@
 
-//TODO: Check that className and css don't conflict
+//TODO: Check that className and css don't conflict, and in general check that other similar problems are handled
+//TODO: Replace some isObservable checks with isFunction checks
 //TODO: Implement context support
 //TODO: Implement "key" support
 

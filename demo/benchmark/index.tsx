@@ -1,13 +1,13 @@
 
 /* IMPORT */
 
-import type {Observable} from 'voby/dist/types';
+import type {Observable, ObservableMaybe} from 'voby/dist/types';
 import {For} from 'voby';
 import {$, render, template} from 'voby';
 
 /* MAIN */
 
-type IDatum = Observable<{ id: string, label: string, selected: boolean }>;
+type IDatum = Observable<{ id: string, label: Observable<string>, selected: Observable<boolean>, className: Observable<string> }>;
 
 type IData = IDatum[];
 
@@ -31,9 +31,10 @@ const buildData = (() => {
       const adjective = adjectives[rand ( adjectives.length )];
       const color = colors[rand ( colors.length )];
       const noun = nouns[rand ( nouns.length )];
-      const label = `${adjective} ${color} ${noun}`;
-      const selected: boolean = false;
-      const datum = $( { id, label, selected } );
+      const label = $(`${adjective} ${color} ${noun}`);
+      const selected = $(false);
+      const className = $('');
+      const datum = $( { id, label, selected, className } );
       data[i] = datum;
     };
     return data;
@@ -58,6 +59,7 @@ const Model = (() => {
   };
 
   const runWith = ( length: number ): void => {
+    clear ();
     data$ ( buildData ( length ) );
   };
 
@@ -70,8 +72,7 @@ const Model = (() => {
     for ( let i = 0, l = data.length; i < l; i += 10 ) {
       const datum$ = data[i];
       const datum = datum$ ();
-      datum.label += ' !!!';
-      datum$ ( {...datum} );
+      datum.label ( datum.label () + ' !!!' );
     }
   };
 
@@ -79,11 +80,11 @@ const Model = (() => {
     const data = data$ ();
     if ( data.length <= 998 ) return;
     const pos1$ = data[1];
-    const pos1 = pos1$ ();
     const pos998$ = data[998];
-    const pos998 = pos998$ ();
-    pos1$ ( pos998 );
-    pos998$ ( pos1 );
+    const data2 = data.slice ();
+    data2[1] = pos998$;
+    data2[998] = pos1$;
+    data$ ( data2 );
   };
 
   const clear = (): void => {
@@ -99,14 +100,14 @@ const Model = (() => {
   const select = ( id: string ): void => {
     if ( selected$ ) {
       const datum = selected$ ();
-      datum.selected = false;
-      selected$ ( { ...datum } );
+      datum.selected ( false );
+      datum.className ( '' );
     }
     const data = data$ ();
     const datum$ = data.find ( datum => datum.sample ().id === id )!;
     const datum = datum$ ();
-    datum.selected = true;
-    datum$ ( {...datum} );
+    datum.selected ( true );
+    datum.className ( 'danger' );
     selected$ = datum$;
   };
 
@@ -122,8 +123,8 @@ const Button = ({ id, text, onClick }: { id: string, text: string, onClick: (( e
   );
 };
 
-const RowDynamic = ({ id, cls, label, onSelect, onRemove }: { id: string, cls: string, label: string, onSelect: (( event: MouseEvent ) => any), onRemove: (( event: MouseEvent ) => any) }) => (
-  <tr class={cls}>
+const RowDynamic = ({ id, label, className, onSelect, onRemove }: { id: ObservableMaybe<string>, label: ObservableMaybe<string>, className: ObservableMaybe<string>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }) => (
+  <tr class={className}>
     <td class="col-md-1">{id}</td>
     <td class="col-md-4">
       <a onClick={onSelect}>{label}</a>
@@ -163,13 +164,10 @@ const App = () => {
       <table class="table table-hover table-striped test-data">
         <tbody>
           <For values={data$}>
-            {datum => {
-              const id = datum.id;
-              const label = datum.label;
-              const cls = datum.selected ? 'danger' : '';
+            {({ id, label, className }) => {
               const onSelect = () => select ( id );
               const onRemove = () => remove ( id );
-              const props = {id, label, cls, onSelect, onRemove};
+              const props = {id, label, className, onSelect, onRemove};
               return RowTemplate ( props );
               // return RowDynamic ( props );
             }}
