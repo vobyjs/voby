@@ -4,7 +4,7 @@
 import type {Child, ComponentIntrinsicElement, ComponentNode, Component, Props} from './types';
 import BaseComponent from './components/component';
 import {setProps, setRef} from './setters';
-import {isFunction, isNode, isString} from './utils';
+import {isFunction, isNil, isNode, isString} from './utils';
 
 /* MAIN */
 
@@ -22,7 +22,9 @@ function createElement ( component: Component, props: Props | null, ..._children
 
     if ( BaseComponent.isPrototypeOf ( component ) ) {
 
-      const props = { ...rest, children };
+      const props = rest;
+
+      if ( !isNil ( children ) ) props.children = children;
 
       return (): Child => {
 
@@ -37,7 +39,10 @@ function createElement ( component: Component, props: Props | null, ..._children
 
     } else {
 
-      const props = { ...rest, children, ref };
+      const props = rest;
+
+      if ( !isNil ( children ) ) props.children = children;
+      if ( !isNil ( ref ) ) props.ref = ref;
 
       return (): Child => {
 
@@ -49,7 +54,10 @@ function createElement ( component: Component, props: Props | null, ..._children
 
   } else if ( isString ( component ) ) {
 
-    const props = { ...rest, children, ref };
+    const props = rest;
+
+    if ( !isNil ( children ) ) props.children = children;
+    if ( !isNil ( ref ) ) props.ref = ref;
 
     return (): Child => {
 
