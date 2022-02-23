@@ -45,6 +45,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`Switch`](#switch)
   - [`Ternary`](#ternary)
 - [**Hooks**](#hooks)
+  - [`useAnimationFrame`](#useanimationframe)
   - [`useCleanup`](#usecleanup)
   - [`useComputed`](#usecomputed)
   - [`useDisposed`](#usedisposed)
@@ -423,6 +424,16 @@ The following hooks are provided.
 Many of these are just functions that `oby` provides, re-exported as `use*` functions.
 
 Hooks are just regular functions, if their name starts with `use` then we call them hooks.
+
+#### `useAnimationFrame`
+
+This hook is just an alternative to `requestAnimationFrame` that automatically clears itself when the parent computation is disposed.
+
+```tsx
+import {useAnimationFrme} from 'voby';
+
+useAnimationFrme ( () => console.log ( 'called' ) );
+```
 
 #### `useCleanup`
 

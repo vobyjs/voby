@@ -1,6 +1,7 @@
 
 /* IMPORT */
 
+import useAnimationFrame from './use_animation_frame';
 import useCleanup from './use_cleanup';
 import useComputed from './use_computed';
 import useDisposed from './use_disposed';
@@ -14,4 +15,4 @@ import useTimeout from './use_timeout';
 
 /* EXPORT */
 
-export {useCleanup, useComputed, useDisposed, useEffect, useError, useFrom, useInterval, usePromise, useRoot, useTimeout};
+export {useAnimationFrame, useCleanup, useComputed, useDisposed, useEffect, useError, useFrom, useInterval, usePromise, useRoot, useTimeout};
