@@ -1,0 +1,48 @@
+
+.clock {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clock svg {
+  aspect-ratio: 1;
+  width: 100%;
+  height: 100%;
+  max-width: 80vw;
+  max-height: 80vh;
+}
+
+.clock-face {
+  stroke: #333333;
+  fill: white;
+}
+
+.minor {
+  stroke: #999999;
+  stroke-width: 0.5;
+}
+
+.major {
+  stroke: #333333;
+  stroke-width: 1;
+}
+
+.hour {
+  stroke: #333333;
+}
+
+.minute {
+  stroke: #666666;
+}
+
+.second,
+.second-counterweight {
+  stroke: #dd0000;
+}
+
+.second-counterweight {
+  stroke-width: 3;
+}

@@ -4,22 +4,31 @@
 import type {Child, ObservableMaybe, ObservableReadonlyWithoutInitial} from '../types';
 import useComputed from '../hooks/use_computed';
 import {$$} from '../observable';
+import {isObservable} from '../utils';
 
 /* MAIN */
 
-//TODO: Write this better, with much much better performance and generality
+//TODO: Write this with much much better performance
 
-const For = <T, V extends ObservableMaybe<T>, VV extends ObservableMaybe<V[]>> ({ values, children }: { values: VV, children: (( value: T, index: number, values: V[] ) => Child) }): ObservableReadonlyWithoutInitial<ObservableReadonlyWithoutInitial<Child>[]> => {
+const For = <T> ({ values, children }: { values: ObservableMaybe<ObservableMaybe<T>[]>, children: (( value: T, index: number ) => Child) }): ObservableReadonlyWithoutInitial<Child[]> => {
 
   return useComputed ( () => {
 
-    return ($$(values) as V[] ).map ( ( value: V, index: number, values: V[] ) => { //TSC
+    return $$(values).map ( ( value: ObservableMaybe<T>, index: number ) => {
 
-      return useComputed ( () => {
+      if ( isObservable ( value ) ) {
 
-        return children ( $$(value) as T, index, values ); //TSC
+        return useComputed ( () => {
 
-      });
+          return children ( value (), index );
+
+        });
+
+      } else {
+
+        return children ( value, index );
+
+      }
 
     });
 
