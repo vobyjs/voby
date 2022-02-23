@@ -46,6 +46,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`Ternary`](#ternary)
 - [**Hooks**](#hooks)
   - [`useAnimationFrame`](#useanimationframe)
+  - [`useAnimationLoop`](#useanimationloop)
   - [`useCleanup`](#usecleanup)
   - [`useComputed`](#usecomputed)
   - [`useDisposed`](#usedisposed)
@@ -433,6 +434,16 @@ This hook is just an alternative to `requestAnimationFrame` that automatically c
 import {useAnimationFrme} from 'voby';
 
 useAnimationFrme ( () => console.log ( 'called' ) );
+```
+
+#### `useAnimationLoop`
+
+This hook is just a version of `useAnimationFrame` that loops.
+
+```tsx
+import {useAnimationLoop} from 'voby';
+
+useAnimationLoop ( () => console.log ( 'called' ) );
 ```
 
 #### `useCleanup`
