@@ -170,6 +170,20 @@ const setChildStatic = (() => { //FIXME: This function is most probably buggy in
 
   return ( parent: HTMLElement, child: Child, childrenPrev: Node[], childrenPrevSibling: Node | null = null ): Node[] => {
 
+    if ( childrenPrev.length === 1 && childrenPrev[0] instanceof Text ) { // Simple text child shortcut
+
+      const type = typeof child;
+
+      if ( type === 'string' || type === 'number' || type === 'bigint' || type === 'symbol' ) {
+
+        childrenPrev[0].data = String ( child );
+
+        return childrenPrev;
+
+      }
+
+    }
+
     const next: Node[] = [];
     const nextSibling = childrenPrev[childrenPrev.length - 1]?.nextSibling || childrenPrevSibling;
 
@@ -184,7 +198,7 @@ const setChildStatic = (() => { //FIXME: This function is most probably buggy in
 
         next.push ( new Text ( String ( child ) ) );
 
-      } else if ( type === 'object' && typeof child.nodeType === 'number' ) {
+      } else if ( type === 'object' && child !== null && typeof child.nodeType === 'number' ) {
 
         next.push ( child );
 
