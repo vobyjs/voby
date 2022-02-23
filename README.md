@@ -53,6 +53,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`useEffect`](#useeffect)
   - [`useError`](#useerror)
   - [`useFrom`](#usefrom)
+  - [`useIdleCallback`](#useidlecallback)
   - [`useInterval`](#useinterval)
   - [`usePromise`](#usepromise)
   - [`useRoot`](#useroot)
@@ -518,6 +519,16 @@ This hook is useful for encapsulating values that may change over time into an o
 import {useFrom} from 'voby';
 
 useFrom // => Same as require ( 'oby' ).from
+```
+
+#### `useIdleCallback`
+
+This hook is just an alternative to `requestIdleCallback` that automatically clears itself when the parent computation is disposed.
+
+```tsx
+import {useIdleCallback} from 'voby';
+
+useIdleCallback ( () => console.log ( 'called' ) );
 ```
 
 #### `useInterval`
