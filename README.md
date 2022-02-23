@@ -54,6 +54,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`useError`](#useerror)
   - [`useFrom`](#usefrom)
   - [`useIdleCallback`](#useidlecallback)
+  - [`useIdleLoop`](#useidleloop)
   - [`useInterval`](#useinterval)
   - [`usePromise`](#usepromise)
   - [`useRoot`](#useroot)
@@ -529,6 +530,16 @@ This hook is just an alternative to `requestIdleCallback` that automatically cle
 import {useIdleCallback} from 'voby';
 
 useIdleCallback ( () => console.log ( 'called' ) );
+```
+
+#### `useIdleLoop`
+
+This hook is just a version of `useIdleCallback` that loops.
+
+```tsx
+import {useIdleLoop} from 'voby';
+
+useIdleLoop ( () => console.log ( 'called' ) );
 ```
 
 #### `useInterval`
