@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import diff from './diff';
+import diff from 'tiny-diff';
 import type {Child, ChildResolved, EventListener, ObservableResolver, Ref} from './types';
 import useEffect from './hooks/use_effect';
 import {castArray, isArray, isFunction, isNil, isObservable, isString, isTemplateActionProxy, keys} from './utils';
