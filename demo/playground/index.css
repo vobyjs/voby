@@ -1,4 +1,16 @@
 
+.darkred,
+[data-color="darkred"],
+[data-darkred] {
+  color: darkred;
+}
+
+.darkblue,
+[data-color="darkblue"],
+[data-darkblue] {
+  color: darkblue;
+}
+
 .red,
 [data-color="red"],
 [data-red] {
