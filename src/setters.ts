@@ -162,7 +162,7 @@ const setChildStatic = (() => { //FIXME: This function is most probably buggy in
 
   return ( parent: HTMLElement, child: Child, childrenPrev: Node[], childrenPrevSibling: Node | null = null ): Node[] => {
 
-    if ( childrenPrev.length === 1 && childrenPrev[0] instanceof Text ) { // Simple text child shortcut
+    if ( childrenPrev.length === 1 && childrenPrev[0].nodeType === 3 ) { // Simple text child shortcut
 
       const type = typeof child;
 
@@ -170,9 +170,9 @@ const setChildStatic = (() => { //FIXME: This function is most probably buggy in
 
         const value = String ( child );
 
-        if ( childrenPrev[0].data !== value ) {
+        if ( childrenPrev[0].nodeValue !== value ) {
 
-          childrenPrev[0].data = value;
+          childrenPrev[0].nodeValue = value;
 
         }
 
