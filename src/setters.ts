@@ -220,7 +220,13 @@ const setChildStatic = (() => { //FIXME: This function is most probably buggy in
 
     }
 
-    if ( !next.length && parent.childNodes.length === childrenPrev.length ) { // Fast path for removing every child
+    if ( !next.length && childrenPrev.length === 1 && childrenPrev[0].nodeType === 8 ) { // It's a comment already
+
+      return childrenPrev;
+
+    }
+
+    if ( !next.length && parent.childNodes.length === childrenPrev.length ) { // Fast path for removing all children
 
       parent.textContent = '';
 
@@ -228,7 +234,7 @@ const setChildStatic = (() => { //FIXME: This function is most probably buggy in
 
     }
 
-    if ( !next.length ) { // Placeholder, to keep the right stop in the array of children
+    if ( !next.length ) { // Placeholder, to keep the right spot in the array of children
 
       next[0] = new Comment ();
 
