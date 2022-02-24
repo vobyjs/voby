@@ -38,13 +38,15 @@ const setAbstract = <T> ( value: ObservableResolver<T>, setter: (( value: T, val
 
   if ( isObservable ( value ) ) {
 
+    const isFn = resolveFunctions ? isFunction : isObservable;
+
     let valuePrev: T | undefined;
 
     useEffect ( () => {
 
       const valueNext = value ();
 
-      if ( isObservable ( valueNext ) ) {
+      if ( isFn ( valueNext ) ) {
 
         setAbstract ( valueNext, setter, resolveFunctions );
 
@@ -156,9 +158,7 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
 };
 
-const setChildStatic = (() => { //FIXME: This function is most probably buggy in some way, it should be tested extensively, clearing doesn't work //TODO: Optimize this further, until it's comparable with Solid
-
-  const cache = new WeakMap ();
+const setChildStatic = (() => {
 
   return ( parent: HTMLElement, child: Child, childrenPrev: Node[], childrenPrevSibling: Node | null = null ): Node[] => {
 
@@ -206,13 +206,14 @@ const setChildStatic = (() => { //FIXME: This function is most probably buggy in
 
         setAbstract ( child, childResolved => {
 
-          prev = cache.get ( child ) || prev;
+          const prevLength = prev.length;
+          const start = prev[0];
 
           prev = setChildStatic ( parent, childResolved, prev, nextSibling );
 
-          cache.set ( child, prev );
+          const startIndex = start ? next.indexOf ( start ) : next.length;
 
-          next.push.apply ( next, prev );
+          next.splice ( startIndex, prevLength, ...prev );
 
         }, true );
 
