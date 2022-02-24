@@ -1232,19 +1232,37 @@ const TestPromise = (): JSX.Element => {
   );
 };
 
-const TestSVG = (): JSX.Element => {
-  const color = `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
+const TestSVGStatic = (): JSX.Element => {
+  const getColor = () => `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
   return (
     <>
       <h3>SVG</h3>
       {svg`
-        <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke="${color}" stroke-width="3" fill="white">
+        <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke="${getColor ()}" stroke-width="3" fill="white">
           <circle cx="25" cy="25" r="20" />
         </svg>
       `}
     </>
   );
 };
+
+const TestSVGObservable = (): JSX.Element => {
+  const getColor = () => `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
+  const color = $(getColor ());
+  const update = () => color ( getColor () );
+  useInterval ( update, TEST_INTERVAL / 2 );
+  return (
+    <>
+      <h3>SVG</h3>
+      {color.on ( color => svg`
+        <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke="${color}" stroke-width="3" fill="white">
+          <circle cx="25" cy="25" r="20" />
+        </svg>
+      `)}
+    </>
+  );
+};
+
 
 const TestTemplateExternal = (): JSX.Element => {
   const Templated = template<{ class: string, color: string }> ( props => {
@@ -1444,6 +1462,9 @@ const Test = (): JSX.Element => {
       <TestBooleanStatic />
       <TestBooleanObservable />
       <TestBooleanRemoval />
+      <TestSymbolStatic />
+      <TestSymbolObservable />
+      <TestSymbolRemoval />
       <TestNumberStatic />
       <TestNumberObservable />
       <TestNumberRemoval />
@@ -1453,9 +1474,6 @@ const Test = (): JSX.Element => {
       <TestStringStatic />
       <TestStringObservable />
       <TestStringRemoval />
-      <TestSymbolStatic />
-      <TestSymbolObservable />
-      <TestSymbolRemoval />
       <TestAttributeStatic />
       <TestAttributeStaticFunction />
       <TestAttributeObservable />
@@ -1528,7 +1546,8 @@ const Test = (): JSX.Element => {
       <TestErrorBoundary />
       <TestChildren />
       <TestRef />
-      <TestSVG />
+      <TestSVGStatic />
+      <TestSVGObservable />
       <TestTemplateExternal />
       <TestPromise />
       <TestKeyframeStatic />

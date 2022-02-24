@@ -162,6 +162,9 @@ const setChildStatic = (() => {
 
   return ( parent: HTMLElement, child: Child, childrenPrev: Node[], childrenPrevSibling: Node | null = null ): Node[] => {
 
+    //TODO: Fast path for appending nodes to parent, maybe
+    //TODO: Fast path for converting string to new text node, maybe
+
     if ( childrenPrev.length === 1 && childrenPrev[0].nodeType === 3 ) { // Simple text child shortcut
 
       const type = typeof child;
