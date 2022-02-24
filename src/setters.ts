@@ -122,9 +122,15 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
   if ( type === 'string' || type === 'number' || type === 'bigint' || type === 'symbol' ) {
 
+    const value = String ( child );
+
     if ( childPrev.nodeType === 3 ) {
 
-      childPrev.nodeValue = String ( child );
+      if ( childPrev.nodeValue !== value ) {
+
+        childPrev.nodeValue = value;
+
+      }
 
     } else {
 
@@ -132,7 +138,7 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
       if ( !parent ) throw new Error ( 'Invalid child replacement' );
 
-      const textNode = new Text ( String ( child ) );
+      const textNode = new Text ( value );
 
       parent.replaceChild ( textNode, childPrev );
 
@@ -162,7 +168,13 @@ const setChildStatic = (() => { //FIXME: This function is most probably buggy in
 
       if ( type === 'string' || type === 'number' || type === 'bigint' || type === 'symbol' ) {
 
-        childrenPrev[0].data = String ( child );
+        const value = String ( child );
+
+        if ( childrenPrev[0].data !== value ) {
+
+          childrenPrev[0].data = value;
+
+        }
 
         return childrenPrev;
 
