@@ -120,7 +120,7 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
   const type = typeof child;
 
-  if ( type === 'string' || type === 'number' || type === 'bigint' || type === 'symbol' ) {
+  if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
     const value = String ( child );
 
@@ -166,7 +166,7 @@ const setChildStatic = (() => { //FIXME: This function is most probably buggy in
 
       const type = typeof child;
 
-      if ( type === 'string' || type === 'number' || type === 'bigint' || type === 'symbol' ) {
+      if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
         const value = String ( child );
 
@@ -192,7 +192,7 @@ const setChildStatic = (() => { //FIXME: This function is most probably buggy in
       const child = children[i];
       const type = typeof child;
 
-      if ( type === 'string' || type === 'number' || type === 'bigint' || type === 'symbol' ) {
+      if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
         next.push ( new Text ( String ( child ) ) );
 
