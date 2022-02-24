@@ -316,8 +316,8 @@ const App = () => {
   const numbers = [1, 2, 3, 4, 5];
   return (
     <For values={numbers}>
-      {( value, index, values ) => {
-        return <p>Value: {value} - Index: {index}</p>
+      {( value ) => {
+        return <p>Value: {value}</p>
       }}
     </For>
   )

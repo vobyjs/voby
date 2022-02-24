@@ -1060,8 +1060,8 @@ const TestForStatic = (): JSX.Element => {
     <>
       <h3>For - Static</h3>
       <For values={values}>
-        {( value: number, index: number ) => {
-          return <p>Value: {value} - Index: {index}</p>
+        {( value: number ) => {
+          return <p>Value: {value}</p>
         }}
       </For>
     </>
@@ -1080,8 +1080,8 @@ const TestForObservables = (): JSX.Element => {
     <>
       <h3>For - Observables</h3>
       <For values={values}>
-        {( value: Observable<number>, index: number ) => {
-          return <p>Value: {value} - Index: {index}</p>
+        {( value: Observable<number> ) => {
+          return <p>Value: {value}</p>
         }}
       </For>
     </>
@@ -1101,8 +1101,8 @@ const TestForObservableObservables = (): JSX.Element => {
     <>
       <h3>For - Observable Observables</h3>
       <For values={values}>
-        {( value: Observable<number>, index: number ) => {
-          return <p>Value: {value} - Index: {index}</p>
+        {( value: Observable<number> ) => {
+          return <p>Value: {value}</p>
         }}
       </For>
     </>

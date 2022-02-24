@@ -11,13 +11,13 @@ import {isObject} from '../utils';
 
 //TODO: Write this with much better performance
 
-const For = <T> ({ values, children }: { values: ObservableMaybe<T[]>, children: (( value: T, index: number ) => Child) }): ObservableReadonlyWithoutInitial<Child[]> => {
+const For = <T> ({ values, children }: { values: ObservableMaybe<T[]>, children: (( value: T ) => Child) }): ObservableReadonlyWithoutInitial<Child[]> => {
 
   const cache = new WeakMap<object, Child> ();
 
   return useComputed ( () => {
 
-    return $$(values).map ( ( value: T, index: number ) => {
+    return $$(values).map ( ( value: T ) => {
 
       return $.sample ( () => {
 
@@ -25,7 +25,7 @@ const For = <T> ({ values, children }: { values: ObservableMaybe<T[]>, children:
 
         if ( key && cache.has ( key ) ) return cache.get ( key );
 
-        const child = resolveChild ( children ( value, index ) );
+        const child = resolveChild ( children ( value ) );
 
         if ( key ) cache.set ( key, child );
 
