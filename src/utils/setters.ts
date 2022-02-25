@@ -107,17 +107,27 @@ const setChildStatic = (() => {
 
   return ( parent: HTMLElement, child: Child, childrenPrev: Node[] ): Node[] => {
 
-    //TODO: Fast path for converting string to new text node, maybe
-
     const childrenPrevLength = childrenPrev.length;
 
-    if ( childrenPrevLength === 0 ) {
+    if ( childrenPrevLength === 0 ) { // Fast path for appending a node the first time
 
-      if ( isNode ( child ) ) {
+      const type = typeof child;
 
-        parent.insertBefore ( child, null );
+      if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
-        return [child];
+        const textNode = new Text ( String ( child ) );
+
+        parent.appendChild ( textNode );
+
+        return [textNode];
+
+      } else if ( type === 'object' && child !== null && typeof ( child as Node ).nodeType === 'number' ) { //TSC
+
+        const node = child as Node;
+
+        parent.insertBefore ( node, null );
+
+        return [node];
 
       }
 
