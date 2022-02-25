@@ -1,14 +1,14 @@
 
 /* IMPORT */
 
-import type {ObservableMaybe, Child} from '../types';
+import type {Child, FunctionResolver} from '../types';
 import useComputed from '../hooks/use_computed';
 import useResolved from '../hooks/use_resolved';
 import {isFunction} from '../utils/lang';
 
 /* MAIN */
 
-const Ternary = ({ when, children }: { when: ObservableMaybe<boolean>, children: [Child, Child] }): Child => {
+const Ternary = ({ when, children }: { when: FunctionResolver<boolean>, children: [Child, Child] }): Child => {
 
   if ( isFunction ( when ) ) {
 

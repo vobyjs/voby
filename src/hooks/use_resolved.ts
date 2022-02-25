@@ -37,7 +37,7 @@ function useResolved <T, R> ( value: FunctionResolver<T>, callback?: (( value: T
 
       });
 
-      return result!; //TSC
+      return result!;
 
     } else {
 

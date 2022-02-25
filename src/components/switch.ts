@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import type {Child, ChildWithMetadata, ObservableMaybe} from '../types';
+import type {Child, ChildWithMetadata, FunctionResolver} from '../types';
 import useComputed from '../hooks/use_computed';
 import useResolved from '../hooks/use_resolved';
 import {assign, isFunction} from '../utils/lang';
@@ -10,7 +10,7 @@ import {assign, isFunction} from '../utils/lang';
 
 //TODO: Enforce children of Switch to be of type Switch.Case or Switch.Default
 
-const Switch = <T> ({ when, children }: { when: ObservableMaybe<T>, children: Child[] }): Child => {
+const Switch = <T> ({ when, children }: { when: FunctionResolver<T>, children: Child[] }): Child => {
 
   const items = ( children as (() => ChildWithMetadata<{ default?: boolean, when?: T }>)[] ).map ( child => child () ); //TSC
   const child = ( when: T ) => items.find ( item => item.metadata.default || item.metadata.when === when );

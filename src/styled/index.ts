@@ -3,7 +3,7 @@
 
 import {styled as goober, setup} from 'goober';
 import {prefix} from 'goober/prefixer';
-import type {Component} from '../types';
+import type {Child, Component, Props} from '../types';
 import createElement from '../create_element';
 import cls from './class';
 import css from './css';
@@ -16,7 +16,7 @@ setup ( createElement, prefix );
 
 /* MAIN */
 
-const styled = <P = {}> ( component: Component ) => {
+const styled = <P extends Props> ( component: Component ): (( strings: TemplateStringsArray, ...expressions: any[] ) => ( props: P ) => Child) => {
 
   return goober<Component, P> ( component as any ); //TSC
 
