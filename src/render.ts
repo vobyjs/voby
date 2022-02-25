@@ -3,7 +3,7 @@
 
 import type {Child, Disposer} from './types';
 import useRoot from './hooks/use_root';
-import {setChild} from './setters';
+import {setChild} from './utils/setters';
 
 /* MAIN */
 

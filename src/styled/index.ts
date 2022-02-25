@@ -22,7 +22,12 @@ const styled = <P = {}> ( component: Component ) => {
 
 };
 
-/* HELPERS */
+/* UTILITIES */
+
+styled.class = cls;
+styled.css = css;
+styled.global = global;
+styled.keyframes = keyframes;
 
 styled.a = styled ( 'a' );
 styled.abbr = styled ( 'abbr' );
@@ -138,13 +143,6 @@ styled.ul = styled ( 'ul' );
 styled.var = styled ( 'var' );
 styled.video = styled ( 'video' );
 styled.wbr = styled ( 'wbr' );
-
-/* UTILITIES */
-
-styled.class = cls;
-styled.css = css;
-styled.global = global;
-styled.keyframes = keyframes;
 
 /* EXPORT */
 

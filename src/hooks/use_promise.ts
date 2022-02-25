@@ -3,7 +3,7 @@
 
 import type {Observable, ObservableMaybe, PromiseState} from '../types';
 import {$, $$} from '../observable';
-import {castError} from '../utils';
+import {castError} from '../utils/lang';
 import useDisposed from './use_disposed';
 import useEffect from './use_effect';
 

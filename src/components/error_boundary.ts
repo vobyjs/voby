@@ -6,8 +6,8 @@ import createElement from '../create_element';
 import useComputed from '../hooks/use_computed';
 import useError from '../hooks/use_error';
 import {$} from '../observable';
-import {resolveChild} from '../setters';
-import {castError} from '../utils';
+import {castError} from '../utils/lang';
+import {resolveChild} from '../utils/resolvers';
 
 /* MAIN */
 

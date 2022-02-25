@@ -27,6 +27,8 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
 
 ## APIs
 
+//TODO: List types too
+
 - [**Observable**](#observable)
   - [`$, $$`](#observable)
 - [**Methods**](#methods)
@@ -40,8 +42,8 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
 - [**Components**](#components)
   - [`Component`](#component)
   - [`ErrorBoundary`](#errorboundary)
-  - [`Fragment`](#fragment)
   - [`For`](#for)
+  - [`Fragment`](#fragment)
   - [`If`](#if)
   - [`Portal`](#portal)
   - [`Switch`](#switch)
@@ -61,6 +63,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`useIdleLoop`](#useidleloop)
   - [`useInterval`](#useinterval)
   - [`usePromise`](#usepromise)
+  - [`useResolved`](#useresolved)
   - [`useRoot`](#useroot)
   - [`useTimeout`](#usetimeout)
 - [**Extras**](#extras)
@@ -290,23 +293,6 @@ const App = () => {
 };
 ```
 
-#### `Fragment`
-
-This is just the internal component used for rendering fragments: `<></>`, you probably would never use this directly even if you are not using JSX, since you can return plain arrays from your components anyway.
-
-```tsx
-import {Fragment} from 'voby';
-
-const App = () => {
-  return (
-    <Fragment>
-      <p>child 1</p>
-      <p>child 2</p>
-    </Fragment>
-  )
-}
-```
-
 #### `For`
 
 This component is the reactive alternative to natively mapping over an array.
@@ -324,6 +310,23 @@ const App = () => {
     </For>
   )
 };
+```
+
+#### `Fragment`
+
+This is just the internal component used for rendering fragments: `<></>`, you probably would never use this directly even if you are not using JSX, since you can return plain arrays from your components anyway.
+
+```tsx
+import {Fragment} from 'voby';
+
+const App = () => {
+  return (
+    <Fragment>
+      <p>child 1</p>
+      <p>child 2</p>
+    </Fragment>
+  )
+}
 ```
 
 #### `If`
@@ -599,6 +602,30 @@ const App = () => {
     return <p>{JSON.stringify ( state.value )}</p>
   });
 };
+```
+
+### `useResolved`
+
+This hook receives a value potentially wrapped in functions and/or observables, and unwraps it recursively.
+
+If no callback is used then it returns the unwrapped value, otherwise it returns whatever the callback returns.
+
+This is useful for handling reactive and non reactive values the same way. Usually if the value is a function, or always for convenience, you'd want to wrap the `useResolved` call in a `useComputed`, to maintain reactivity.
+
+```tsx
+import {$, useResolved} from 'voby';
+
+useResolved ( 123 ); // => 123
+
+useResolved ( $($(123)) ); // => 123
+
+useResolved ( () => () => 123 ); // => 123
+
+useResolved ( 123, value => 321 ); // => 321
+
+useResolved ( $($(123)), value => 321 ); // => 321
+
+useResolved ( () => () => 123, value => 321 ); // => 321
 ```
 
 ### `useRoot`

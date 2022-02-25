@@ -10,12 +10,6 @@ import createElement from '../create_element';
 
 const jsx = ( component: Component, props: Props, key?: Key ): (() => Child) => {
 
-  if ( key ) { // It's probably better/faster not to change the shape of "props" if not necessary
-
-    props.key = key;
-
-  }
-
   return createElement ( component, props );
 
 };

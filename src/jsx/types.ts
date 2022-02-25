@@ -23,16 +23,18 @@ type ObservableResolver<T = unknown> = T | ({
   sample (): ObservableResolver<T>
 });
 
+type FunctionResolver<T = unknown> = ({ (): FunctionResolver<T> }) | T;
+
 type AllClassProperties = {
-  [key: string]: ObservableResolver<null | undefined | boolean>
+  [key: string]: FunctionResolver<null | undefined | boolean>
 };
 
 type AllCSSProperties = {
-  [key: string]: ObservableResolver<string | number | null | undefined>
+  [key: string]: FunctionResolver<string | number | null | undefined>
 };
 
 type DOMCSSProperties = {
-  [key in keyof Omit<CSSStyleDeclaration, 'item' | 'setProperty' | 'removeProperty' | 'getPropertyValue' | 'getPropertyPriority'>]?: ObservableResolver<string | number | null | undefined>
+  [key in keyof Omit<CSSStyleDeclaration, 'item' | 'setProperty' | 'removeProperty' | 'getPropertyValue' | 'getPropertyPriority'>]?: FunctionResolver<string | number | null | undefined>
 };
 
 type HTMLAttributeReferrerPolicy = '' | 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url';
@@ -50,6 +52,8 @@ declare namespace JSX {
   type Element = Child;
 
   type ElementClass<P = {}, S = {}> = { render: () => Child };
+
+  type Ref<T = unknown> = (( value: T ) => unknown);
 
   interface ClassProperties extends AllClassProperties {}
 
@@ -87,7 +91,7 @@ declare namespace JSX {
   type DetailedHTMLProps<Attributes extends HTMLAttributes<T>, T extends EventTarget> = ClassAttributes<T> & Attributes;
 
   interface ClassAttributes<T> {
-    ref?: (( value: T ) => unknown)
+    ref?: Ref<T>
   }
 
   interface ElementAttributesProperty {
@@ -103,54 +107,54 @@ declare namespace JSX {
   }
 
   interface AriaAttributes {
-    ariaActivedescendant?: ObservableResolver<string>,
-    ariaAtomic?: ObservableResolver<boolean | 'true' | 'false'>,
-    ariaAutocomplete?: ObservableResolver<'none' | 'inline' | 'list' | 'both'>,
-    ariaBusy?: ObservableResolver<boolean | 'true' | 'false'>,
-    ariaChecked?: ObservableResolver<boolean | 'false' | 'mixed' | 'true'>,
-    ariaColcount?: ObservableResolver<number>,
-    ariaColindex?: ObservableResolver<number>,
-    ariaColspan?: ObservableResolver<number>,
-    ariaControls?: ObservableResolver<string>,
-    ariaCurrent?: ObservableResolver<boolean | 'false' | 'true' | 'page' | 'step' | 'location' | 'date' | 'time'>,
-    ariaDescribedby?: ObservableResolver<string>,
-    ariaDetails?: ObservableResolver<string>,
-    ariaDisabled?: ObservableResolver<boolean | 'true' | 'false'>,
-    ariaDropeffect?: ObservableResolver<'none' | 'copy' | 'execute' | 'link' | 'move' | 'popup'>,
-    ariaErrormessage?: ObservableResolver<string>,
-    ariaExpanded?: ObservableResolver<boolean | 'true' | 'false'>,
-    ariaFlowto?: ObservableResolver<string>,
-    ariaGrabbed?: ObservableResolver<boolean | 'true' | 'false'>,
-    ariaHaspopup?: ObservableResolver<boolean | 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog'>,
-    ariaHidden?: ObservableResolver<boolean | 'true' | 'false'>,
-    ariaInvalid?: ObservableResolver<boolean | 'false' | 'true' | 'grammar' | 'spelling'>,
-    ariaKeyshortcuts?: ObservableResolver<string>,
-    ariaLabel?: ObservableResolver<string>,
-    ariaLabelledby?: ObservableResolver<string>,
-    ariaLevel?: ObservableResolver<number>,
-    ariaLive?: ObservableResolver<'off' | 'assertive' | 'polite'>,
-    ariaModal?: ObservableResolver<boolean | 'true' | 'false'>,
-    ariaMultiline?: ObservableResolver<boolean | 'true' | 'false'>,
-    ariaMultiselectable?: ObservableResolver<boolean | 'true' | 'false'>,
-    ariaOrientation?: ObservableResolver<'horizontal' | 'vertical'>,
-    ariaOwns?: ObservableResolver<string>,
-    ariaPlaceholder?: ObservableResolver<string>,
-    ariaPosinset?: ObservableResolver<number>,
-    ariaPressed?: ObservableResolver<boolean | 'false' | 'mixed' | 'true'>,
-    ariaReadonly?: ObservableResolver<boolean | 'true' | 'false'>,
-    ariaRelevant?: ObservableResolver<'additions' | 'additions removals' | 'additions text' | 'all' | 'removals' | 'removals additions' | 'removals text' | 'text' | 'text additions' | 'text removals'>,
-    ariaRequired?: ObservableResolver<boolean | 'true' | 'false'>,
-    ariaRoledescription?: ObservableResolver<string>,
-    ariaRowcount?: ObservableResolver<number>,
-    ariaRowindex?: ObservableResolver<number>,
-    ariaRowspan?: ObservableResolver<number>,
-    ariaSelected?: ObservableResolver<boolean | 'true' | 'false'>,
-    ariaSetsize?: ObservableResolver<number>,
-    ariaSort?: ObservableResolver<'none' | 'ascending' | 'descending' | 'other'>,
-    ariaValuemax?: ObservableResolver<number>,
-    ariaValuemin?: ObservableResolver<number>,
-    ariaValuenow?: ObservableResolver<number>,
-    ariaValuetext?: ObservableResolver<string>
+    ariaActivedescendant?: FunctionResolver<string>,
+    ariaAtomic?: FunctionResolver<boolean | 'true' | 'false'>,
+    ariaAutocomplete?: FunctionResolver<'none' | 'inline' | 'list' | 'both'>,
+    ariaBusy?: FunctionResolver<boolean | 'true' | 'false'>,
+    ariaChecked?: FunctionResolver<boolean | 'false' | 'mixed' | 'true'>,
+    ariaColcount?: FunctionResolver<number>,
+    ariaColindex?: FunctionResolver<number>,
+    ariaColspan?: FunctionResolver<number>,
+    ariaControls?: FunctionResolver<string>,
+    ariaCurrent?: FunctionResolver<boolean | 'false' | 'true' | 'page' | 'step' | 'location' | 'date' | 'time'>,
+    ariaDescribedby?: FunctionResolver<string>,
+    ariaDetails?: FunctionResolver<string>,
+    ariaDisabled?: FunctionResolver<boolean | 'true' | 'false'>,
+    ariaDropeffect?: FunctionResolver<'none' | 'copy' | 'execute' | 'link' | 'move' | 'popup'>,
+    ariaErrormessage?: FunctionResolver<string>,
+    ariaExpanded?: FunctionResolver<boolean | 'true' | 'false'>,
+    ariaFlowto?: FunctionResolver<string>,
+    ariaGrabbed?: FunctionResolver<boolean | 'true' | 'false'>,
+    ariaHaspopup?: FunctionResolver<boolean | 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog'>,
+    ariaHidden?: FunctionResolver<boolean | 'true' | 'false'>,
+    ariaInvalid?: FunctionResolver<boolean | 'false' | 'true' | 'grammar' | 'spelling'>,
+    ariaKeyshortcuts?: FunctionResolver<string>,
+    ariaLabel?: FunctionResolver<string>,
+    ariaLabelledby?: FunctionResolver<string>,
+    ariaLevel?: FunctionResolver<number>,
+    ariaLive?: FunctionResolver<'off' | 'assertive' | 'polite'>,
+    ariaModal?: FunctionResolver<boolean | 'true' | 'false'>,
+    ariaMultiline?: FunctionResolver<boolean | 'true' | 'false'>,
+    ariaMultiselectable?: FunctionResolver<boolean | 'true' | 'false'>,
+    ariaOrientation?: FunctionResolver<'horizontal' | 'vertical'>,
+    ariaOwns?: FunctionResolver<string>,
+    ariaPlaceholder?: FunctionResolver<string>,
+    ariaPosinset?: FunctionResolver<number>,
+    ariaPressed?: FunctionResolver<boolean | 'false' | 'mixed' | 'true'>,
+    ariaReadonly?: FunctionResolver<boolean | 'true' | 'false'>,
+    ariaRelevant?: FunctionResolver<'additions' | 'additions removals' | 'additions text' | 'all' | 'removals' | 'removals additions' | 'removals text' | 'text' | 'text additions' | 'text removals'>,
+    ariaRequired?: FunctionResolver<boolean | 'true' | 'false'>,
+    ariaRoledescription?: FunctionResolver<string>,
+    ariaRowcount?: FunctionResolver<number>,
+    ariaRowindex?: FunctionResolver<number>,
+    ariaRowspan?: FunctionResolver<number>,
+    ariaSelected?: FunctionResolver<boolean | 'true' | 'false'>,
+    ariaSetsize?: FunctionResolver<number>,
+    ariaSort?: FunctionResolver<'none' | 'ascending' | 'descending' | 'other'>,
+    ariaValuemax?: FunctionResolver<number>,
+    ariaValuemin?: FunctionResolver<number>,
+    ariaValuenow?: FunctionResolver<number>,
+    ariaValuetext?: FunctionResolver<string>
   }
 
   interface EventAttributes<T extends EventTarget> {
@@ -343,11 +347,11 @@ declare namespace JSX {
 
   interface ViewAttributes {
     children?: Children,
-    textContent?: ObservableResolver<string>,
-    innerHTML?: ObservableResolver<string>,
-    outerHTML?: ObservableResolver<string>,
-    dangerouslySetInnerHTML?: ObservableResolver<{
-      __html: ObservableResolver<string>
+    textContent?: FunctionResolver<string>,
+    innerHTML?: FunctionResolver<string>,
+    outerHTML?: FunctionResolver<string>,
+    dangerouslySetInnerHTML?: FunctionResolver<{
+      __html: FunctionResolver<string>
     }>
   }
 
@@ -357,69 +361,69 @@ declare namespace JSX {
 
   interface HTMLAttributes<T extends EventTarget> extends AriaAttributes, DOMAttributes<T> {
     /* REACT-SPECIFIC ATTRIBUTES */
-    defaultChecked?: ObservableResolver<boolean>,
-    defaultValue?: ObservableResolver<string | number | ReadonlyArray<string>>,
-    suppressContentEditableWarning?: ObservableResolver<boolean>,
-    suppressHydrationWarning?: ObservableResolver<boolean>,
+    defaultChecked?: FunctionResolver<boolean>,
+    defaultValue?: FunctionResolver<string | number | ReadonlyArray<string>>,
+    suppressContentEditableWarning?: FunctionResolver<boolean>,
+    suppressHydrationWarning?: FunctionResolver<boolean>,
     /* STANDARD HTML ATTRIBUTES */
-    accessKey?: ObservableResolver<string>,
-    class?: ObservableResolver<string | ClassProperties>,
-    className?: ObservableResolver<string>,
-    contentEditable?: ObservableResolver<boolean | 'true' | 'false' | 'inherit'>,
-    contextMenu?: ObservableResolver<string>,
-    dir?: ObservableResolver<string>,
-    draggable?: ObservableResolver<boolean | 'true' | 'false'>,
-    hidden?: ObservableResolver<boolean>,
-    id?: ObservableResolver<string>,
-    lang?: ObservableResolver<string>,
-    placeholder?: ObservableResolver<string>,
-    slot?: ObservableResolver<string>,
-    spellCheck?: ObservableResolver<boolean | 'true' | 'false'>,
-    style?: ObservableResolver<string | StyleProperties>,
-    tabIndex?: ObservableResolver<number>,
-    title?: ObservableResolver<string>,
-    translate?: ObservableResolver<'yes' | 'no'>,
+    accessKey?: FunctionResolver<string>,
+    class?: FunctionResolver<string | ClassProperties>,
+    className?: FunctionResolver<string>,
+    contentEditable?: FunctionResolver<boolean | 'true' | 'false' | 'inherit'>,
+    contextMenu?: FunctionResolver<string>,
+    dir?: FunctionResolver<string>,
+    draggable?: FunctionResolver<boolean | 'true' | 'false'>,
+    hidden?: FunctionResolver<boolean>,
+    id?: FunctionResolver<string>,
+    lang?: FunctionResolver<string>,
+    placeholder?: FunctionResolver<string>,
+    slot?: FunctionResolver<string>,
+    spellCheck?: FunctionResolver<boolean | 'true' | 'false'>,
+    style?: FunctionResolver<string | StyleProperties>,
+    tabIndex?: FunctionResolver<number>,
+    title?: FunctionResolver<string>,
+    translate?: FunctionResolver<'yes' | 'no'>,
     /* UNKNOWN */
-    radioGroup?: ObservableResolver<string>,
+    radioGroup?: FunctionResolver<string>,
     /* WAI-ARIA */
-    role?: ObservableResolver<'alert' | 'alertdialog' | 'application' | 'article' | 'banner' | 'button' | 'cell' | 'checkbox' | 'columnheader' | 'combobox' | 'complementary' | 'contentinfo' | 'definition' | 'dialog' | 'directory' | 'document' | 'feed' | 'figure' | 'form' | 'grid' | 'gridcell' | 'group' | 'heading' | 'img' | 'link' | 'list' | 'listbox' | 'listitem' | 'log' | 'main' | 'marquee' | 'math' | 'menu' | 'menubar' | 'menuitem' | 'menuitemcheckbox' | 'menuitemradio' | 'navigation' | 'none' | 'note' | 'option' | 'presentation' | 'progressbar' | 'radio' | 'radiogroup' | 'region' | 'row' | 'rowgroup' | 'rowheader' | 'scrollbar' | 'search' | 'searchbox' | 'separator' | 'slider' | 'spinbutton' | 'status' | 'switch' | 'tab' | 'table' | 'tablist' | 'tabpanel' | 'term' | 'textbox' | 'timer' | 'toolbar' | 'tooltip' | 'tree' | 'treegrid' | 'treeitem'>,
+    role?: FunctionResolver<'alert' | 'alertdialog' | 'application' | 'article' | 'banner' | 'button' | 'cell' | 'checkbox' | 'columnheader' | 'combobox' | 'complementary' | 'contentinfo' | 'definition' | 'dialog' | 'directory' | 'document' | 'feed' | 'figure' | 'form' | 'grid' | 'gridcell' | 'group' | 'heading' | 'img' | 'link' | 'list' | 'listbox' | 'listitem' | 'log' | 'main' | 'marquee' | 'math' | 'menu' | 'menubar' | 'menuitem' | 'menuitemcheckbox' | 'menuitemradio' | 'navigation' | 'none' | 'note' | 'option' | 'presentation' | 'progressbar' | 'radio' | 'radiogroup' | 'region' | 'row' | 'rowgroup' | 'rowheader' | 'scrollbar' | 'search' | 'searchbox' | 'separator' | 'slider' | 'spinbutton' | 'status' | 'switch' | 'tab' | 'table' | 'tablist' | 'tabpanel' | 'term' | 'textbox' | 'timer' | 'toolbar' | 'tooltip' | 'tree' | 'treegrid' | 'treeitem'>,
     /* RDFA ATTRIBUTES */
-    about?: ObservableResolver<string>,
-    datatype?: ObservableResolver<string>,
-    inlist?: ObservableResolver<boolean>;
-    prefix?: ObservableResolver<string>,
-    property?: ObservableResolver<string>,
-    resource?: ObservableResolver<string>,
-    typeof?: ObservableResolver<string>,
-    vocab?: ObservableResolver<string>,
+    about?: FunctionResolver<string>,
+    datatype?: FunctionResolver<string>,
+    inlist?: FunctionResolver<boolean>;
+    prefix?: FunctionResolver<string>,
+    property?: FunctionResolver<string>,
+    resource?: FunctionResolver<string>,
+    typeof?: FunctionResolver<string>,
+    vocab?: FunctionResolver<string>,
     /* NON-STANDARD ATTRIBUTES */
-    autoCapitalize?: ObservableResolver<string>,
-    autoCorrect?: ObservableResolver<string>,
-    autoSave?: ObservableResolver<string>,
-    color?: ObservableResolver<string>,
-    itemProp?: ObservableResolver<string>,
-    itemScope?: ObservableResolver<boolean>,
-    itemType?: ObservableResolver<string>,
-    itemID?: ObservableResolver<string>,
-    itemRef?: ObservableResolver<string>,
-    results?: ObservableResolver<number>,
-    security?: ObservableResolver<string>,
-    unselectable?: ObservableResolver<'on' | 'off'>,
+    autoCapitalize?: FunctionResolver<string>,
+    autoCorrect?: FunctionResolver<string>,
+    autoSave?: FunctionResolver<string>,
+    color?: FunctionResolver<string>,
+    itemProp?: FunctionResolver<string>,
+    itemScope?: FunctionResolver<boolean>,
+    itemType?: FunctionResolver<string>,
+    itemID?: FunctionResolver<string>,
+    itemRef?: FunctionResolver<string>,
+    results?: FunctionResolver<number>,
+    security?: FunctionResolver<string>,
+    unselectable?: FunctionResolver<'on' | 'off'>,
     /* LIVING STANDARD */
-    inputMode?: ObservableResolver<'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search'>,
-    is?: ObservableResolver<string>
+    inputMode?: FunctionResolver<'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search'>,
+    is?: FunctionResolver<string>
   }
 
   interface AnchorHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    download?: ObservableResolver<boolean>,
-    href?: ObservableResolver<string>,
-    hrefLang?: ObservableResolver<string>,
-    media?: ObservableResolver<string>,
-    ping?: ObservableResolver<string>,
-    rel?: ObservableResolver<string>,
-    target?: ObservableResolver<'_self' | '_blank' | '_parent' | '_top'>,
-    type?: ObservableResolver<string>,
-    referrerPolicy?: ObservableResolver<HTMLAttributeReferrerPolicy>
+    download?: FunctionResolver<boolean>,
+    href?: FunctionResolver<string>,
+    hrefLang?: FunctionResolver<string>,
+    media?: FunctionResolver<string>,
+    ping?: FunctionResolver<string>,
+    rel?: FunctionResolver<string>,
+    target?: FunctionResolver<'_self' | '_blank' | '_parent' | '_top'>,
+    type?: FunctionResolver<string>,
+    referrerPolicy?: FunctionResolver<HTMLAttributeReferrerPolicy>
   }
 
   interface AudioHTMLAttributes<T extends EventTarget> extends MediaHTMLAttributes<T> {
@@ -427,437 +431,437 @@ declare namespace JSX {
   }
 
   interface AreaHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    alt?: ObservableResolver<string>,
-    coords?: ObservableResolver<string>,
-    download?: ObservableResolver<boolean>,
-    href?: ObservableResolver<string>,
-    hrefLang?: ObservableResolver<string>,
-    media?: ObservableResolver<string>,
-    referrerPolicy?: ObservableResolver<HTMLAttributeReferrerPolicy>,
-    rel?: ObservableResolver<string>,
-    shape?: ObservableResolver<string>,
-    target?: ObservableResolver<string>
+    alt?: FunctionResolver<string>,
+    coords?: FunctionResolver<string>,
+    download?: FunctionResolver<boolean>,
+    href?: FunctionResolver<string>,
+    hrefLang?: FunctionResolver<string>,
+    media?: FunctionResolver<string>,
+    referrerPolicy?: FunctionResolver<HTMLAttributeReferrerPolicy>,
+    rel?: FunctionResolver<string>,
+    shape?: FunctionResolver<string>,
+    target?: FunctionResolver<string>
   }
 
   interface BaseHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    href?: ObservableResolver<string>,
-    target?: ObservableResolver<string>
+    href?: FunctionResolver<string>,
+    target?: FunctionResolver<string>
   }
 
   interface BlockquoteHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    cite?: ObservableResolver<string>
+    cite?: FunctionResolver<string>
   }
 
   interface ButtonHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    autoFocus?: ObservableResolver<boolean>,
-    disabled?: ObservableResolver<boolean>,
-    form?: ObservableResolver<string>,
-    formAction?: ObservableResolver<string>,
-    formEncType?: ObservableResolver<string>,
-    formMethod?: ObservableResolver<string>,
-    formNoValidate?: ObservableResolver<boolean>,
-    formTarget?: ObservableResolver<string>,
-    name?: ObservableResolver<string>,
-    type?: ObservableResolver<'submit' | 'reset' | 'button'>,
-    value?: ObservableResolver<string | ReadonlyArray<string> | number>
+    autoFocus?: FunctionResolver<boolean>,
+    disabled?: FunctionResolver<boolean>,
+    form?: FunctionResolver<string>,
+    formAction?: FunctionResolver<string>,
+    formEncType?: FunctionResolver<string>,
+    formMethod?: FunctionResolver<string>,
+    formNoValidate?: FunctionResolver<boolean>,
+    formTarget?: FunctionResolver<string>,
+    name?: FunctionResolver<string>,
+    type?: FunctionResolver<'submit' | 'reset' | 'button'>,
+    value?: FunctionResolver<string | ReadonlyArray<string> | number>
   }
 
   interface CanvasHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    height?: ObservableResolver<number | string>,
-    width?: ObservableResolver<number | string>
+    height?: FunctionResolver<number | string>,
+    width?: FunctionResolver<number | string>
   }
 
   interface ColHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    span?: ObservableResolver<number>,
-    width?: ObservableResolver<number | string>
+    span?: FunctionResolver<number>,
+    width?: FunctionResolver<number | string>
   }
 
   interface ColgroupHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    span?: ObservableResolver<number>
+    span?: FunctionResolver<number>
   }
 
   interface DataHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    value?: ObservableResolver<string | ReadonlyArray<string> | number>
+    value?: FunctionResolver<string | ReadonlyArray<string> | number>
   }
 
   interface DetailsHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    open?: ObservableResolver<boolean>,
+    open?: FunctionResolver<boolean>,
     onToggle?: ObservableResolver<GenericEventHandler<T>>
   }
 
   interface DelHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    cite?: ObservableResolver<string>,
-    dateTime?: ObservableResolver<string>
+    cite?: FunctionResolver<string>,
+    dateTime?: FunctionResolver<string>
   }
 
   interface DialogHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    open?: ObservableResolver<boolean>
+    open?: FunctionResolver<boolean>
   }
 
   interface EmbedHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    height?: ObservableResolver<number | string>,
-    src?: ObservableResolver<string>,
-    type?: ObservableResolver<string>,
-    width?: ObservableResolver<number | string>
+    height?: FunctionResolver<number | string>,
+    src?: FunctionResolver<string>,
+    type?: FunctionResolver<string>,
+    width?: FunctionResolver<number | string>
   }
 
   interface FieldsetHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    disabled?: ObservableResolver<boolean>,
-    form?: ObservableResolver<string>,
-    name?: ObservableResolver<string>
+    disabled?: FunctionResolver<boolean>,
+    form?: FunctionResolver<string>,
+    name?: FunctionResolver<string>
   }
 
   interface FormHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    acceptCharset?: ObservableResolver<string>,
-    action?: ObservableResolver<string>,
-    autoComplete?: ObservableResolver<string>,
-    encType?: ObservableResolver<string>,
-    method?: ObservableResolver<string>,
-    name?: ObservableResolver<string>,
-    noValidate?: ObservableResolver<boolean>,
-    target?: ObservableResolver<string>
+    acceptCharset?: FunctionResolver<string>,
+    action?: FunctionResolver<string>,
+    autoComplete?: FunctionResolver<string>,
+    encType?: FunctionResolver<string>,
+    method?: FunctionResolver<string>,
+    name?: FunctionResolver<string>,
+    noValidate?: FunctionResolver<boolean>,
+    target?: FunctionResolver<string>
   }
 
   interface HtmlHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    manifest?: ObservableResolver<string>
+    manifest?: FunctionResolver<string>
   }
 
   interface IframeHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    allow?: ObservableResolver<string>,
-    allowFullScreen?: ObservableResolver<boolean>,
-    allowTransparency?: ObservableResolver<boolean>,
+    allow?: FunctionResolver<string>,
+    allowFullScreen?: FunctionResolver<boolean>,
+    allowTransparency?: FunctionResolver<boolean>,
     /** @deprecated */
-    frameBorder?: ObservableResolver<number | string>,
-    height?: ObservableResolver<number | string>,
-    loading?: ObservableResolver<'eager' | 'lazy'>,
+    frameBorder?: FunctionResolver<number | string>,
+    height?: FunctionResolver<number | string>,
+    loading?: FunctionResolver<'eager' | 'lazy'>,
     /** @deprecated */
-    marginHeight?: ObservableResolver<number>,
+    marginHeight?: FunctionResolver<number>,
     /** @deprecated */
-    marginWidth?: ObservableResolver<number>,
-    name?: ObservableResolver<string>,
-    referrerPolicy?: ObservableResolver<HTMLAttributeReferrerPolicy>,
-    sandbox?: ObservableResolver<string>,
+    marginWidth?: FunctionResolver<number>,
+    name?: FunctionResolver<string>,
+    referrerPolicy?: FunctionResolver<HTMLAttributeReferrerPolicy>,
+    sandbox?: FunctionResolver<string>,
     /** @deprecated */
-    scrolling?: ObservableResolver<string>,
-    seamless?: ObservableResolver<boolean>,
-    src?: ObservableResolver<string>,
-    srcDoc?: ObservableResolver<string>,
-    width?: ObservableResolver<number | string>
+    scrolling?: FunctionResolver<string>,
+    seamless?: FunctionResolver<boolean>,
+    src?: FunctionResolver<string>,
+    srcDoc?: FunctionResolver<string>,
+    width?: FunctionResolver<number | string>
   }
 
   interface ImgHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    alt?: ObservableResolver<string>,
-    crossOrigin?: ObservableResolver<'anonymous' | 'use-credentials' | ''>,
-    decoding?: ObservableResolver<'async' | 'auto' | 'sync'>,
-    height?: ObservableResolver<number | string>,
-    loading?: ObservableResolver<'eager' | 'lazy'>,
-    referrerPolicy?: ObservableResolver<HTMLAttributeReferrerPolicy>,
-    sizes?: ObservableResolver<string>,
-    src?: ObservableResolver<string>,
-    srcSet?: ObservableResolver<string>,
-    useMap?: ObservableResolver<string>,
-    width?: ObservableResolver<number | string>
+    alt?: FunctionResolver<string>,
+    crossOrigin?: FunctionResolver<'anonymous' | 'use-credentials' | ''>,
+    decoding?: FunctionResolver<'async' | 'auto' | 'sync'>,
+    height?: FunctionResolver<number | string>,
+    loading?: FunctionResolver<'eager' | 'lazy'>,
+    referrerPolicy?: FunctionResolver<HTMLAttributeReferrerPolicy>,
+    sizes?: FunctionResolver<string>,
+    src?: FunctionResolver<string>,
+    srcSet?: FunctionResolver<string>,
+    useMap?: FunctionResolver<string>,
+    width?: FunctionResolver<number | string>
   }
 
   interface InsHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    cite?: ObservableResolver<string>,
-    dateTime?: ObservableResolver<string>
+    cite?: FunctionResolver<string>,
+    dateTime?: FunctionResolver<string>
   }
 
   interface InputHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    accept?: ObservableResolver<string>,
-    alt?: ObservableResolver<string>,
-    autoComplete?: ObservableResolver<string>,
-    autoFocus?: ObservableResolver<boolean>,
-    capture?: ObservableResolver<boolean | 'user' | 'environment'>,
-    checked?: ObservableResolver<boolean>,
-    crossOrigin?: ObservableResolver<string>,
-    disabled?: ObservableResolver<boolean>,
-    enterKeyHint?: ObservableResolver<'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'>,
-    form?: ObservableResolver<string>,
-    formAction?: ObservableResolver<string>,
-    formEncType?: ObservableResolver<string>,
-    formMethod?: ObservableResolver<string>,
-    formNoValidate?: ObservableResolver<boolean>,
-    formTarget?: ObservableResolver<string>,
-    height?: ObservableResolver<number | string>,
-    list?: ObservableResolver<string>,
-    max?: ObservableResolver<number | string>,
-    maxLength?: ObservableResolver<number>,
-    min?: ObservableResolver<number | string>,
-    minLength?: ObservableResolver<number>,
-    multiple?: ObservableResolver<boolean>,
-    name?: ObservableResolver<string>,
-    pattern?: ObservableResolver<string>,
-    placeholder?: ObservableResolver<string>,
-    readOnly?: ObservableResolver<boolean>,
-    required?: ObservableResolver<boolean>,
-    size?: ObservableResolver<number>,
-    src?: ObservableResolver<string>,
-    step?: ObservableResolver<number | string>,
-    type?: ObservableResolver<'button' | 'checkbox' | 'color' | 'date' | 'datetime-local' | 'email' | 'file' | 'hidden' | 'image' | 'month' | 'number' | 'password' | 'radio' | 'range' | 'reset' | 'search' | 'submit' | 'tel' | 'text' | 'time' | 'url' | 'week'>,
-    value?: ObservableResolver<string | ReadonlyArray<string> | number>,
-    width?: ObservableResolver<number | string>,
+    accept?: FunctionResolver<string>,
+    alt?: FunctionResolver<string>,
+    autoComplete?: FunctionResolver<string>,
+    autoFocus?: FunctionResolver<boolean>,
+    capture?: FunctionResolver<boolean | 'user' | 'environment'>,
+    checked?: FunctionResolver<boolean>,
+    crossOrigin?: FunctionResolver<string>,
+    disabled?: FunctionResolver<boolean>,
+    enterKeyHint?: FunctionResolver<'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'>,
+    form?: FunctionResolver<string>,
+    formAction?: FunctionResolver<string>,
+    formEncType?: FunctionResolver<string>,
+    formMethod?: FunctionResolver<string>,
+    formNoValidate?: FunctionResolver<boolean>,
+    formTarget?: FunctionResolver<string>,
+    height?: FunctionResolver<number | string>,
+    list?: FunctionResolver<string>,
+    max?: FunctionResolver<number | string>,
+    maxLength?: FunctionResolver<number>,
+    min?: FunctionResolver<number | string>,
+    minLength?: FunctionResolver<number>,
+    multiple?: FunctionResolver<boolean>,
+    name?: FunctionResolver<string>,
+    pattern?: FunctionResolver<string>,
+    placeholder?: FunctionResolver<string>,
+    readOnly?: FunctionResolver<boolean>,
+    required?: FunctionResolver<boolean>,
+    size?: FunctionResolver<number>,
+    src?: FunctionResolver<string>,
+    step?: FunctionResolver<number | string>,
+    type?: FunctionResolver<'button' | 'checkbox' | 'color' | 'date' | 'datetime-local' | 'email' | 'file' | 'hidden' | 'image' | 'month' | 'number' | 'password' | 'radio' | 'range' | 'reset' | 'search' | 'submit' | 'tel' | 'text' | 'time' | 'url' | 'week'>,
+    value?: FunctionResolver<string | ReadonlyArray<string> | number>,
+    width?: FunctionResolver<number | string>,
     onChange?: ObservableResolver<KeyboardEventHandler<T>>
   }
 
   interface KeygenHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    autoFocus?: ObservableResolver<boolean>,
-    challenge?: ObservableResolver<string>,
-    disabled?: ObservableResolver<boolean>,
-    form?: ObservableResolver<string>,
-    keyType?: ObservableResolver<string>,
-    keyParams?: ObservableResolver<string>,
-    name?: ObservableResolver<string>
+    autoFocus?: FunctionResolver<boolean>,
+    challenge?: FunctionResolver<string>,
+    disabled?: FunctionResolver<boolean>,
+    form?: FunctionResolver<string>,
+    keyType?: FunctionResolver<string>,
+    keyParams?: FunctionResolver<string>,
+    name?: FunctionResolver<string>
   }
 
   interface LabelHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    form?: ObservableResolver<string>,
-    htmlFor?: ObservableResolver<string>
+    form?: FunctionResolver<string>,
+    htmlFor?: FunctionResolver<string>
   }
 
   interface LiHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    value?: ObservableResolver<string | ReadonlyArray<string> | number>
+    value?: FunctionResolver<string | ReadonlyArray<string> | number>
   }
 
   interface LinkHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    as?: ObservableResolver<string>,
-    crossOrigin?: ObservableResolver<string>,
-    href?: ObservableResolver<string>,
-    hrefLang?: ObservableResolver<string>,
-    integrity?: ObservableResolver<string>,
-    media?: ObservableResolver<string>,
-    imageSrcSet?: ObservableResolver<string>,
-    referrerPolicy?: ObservableResolver<HTMLAttributeReferrerPolicy>,
-    rel?: ObservableResolver<string>,
-    sizes?: ObservableResolver<string>,
-    type?: ObservableResolver<string>,
-    charSet?: ObservableResolver<string>
+    as?: FunctionResolver<string>,
+    crossOrigin?: FunctionResolver<string>,
+    href?: FunctionResolver<string>,
+    hrefLang?: FunctionResolver<string>,
+    integrity?: FunctionResolver<string>,
+    media?: FunctionResolver<string>,
+    imageSrcSet?: FunctionResolver<string>,
+    referrerPolicy?: FunctionResolver<HTMLAttributeReferrerPolicy>,
+    rel?: FunctionResolver<string>,
+    sizes?: FunctionResolver<string>,
+    type?: FunctionResolver<string>,
+    charSet?: FunctionResolver<string>
   }
 
   interface MapHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    name?: ObservableResolver<string>
+    name?: FunctionResolver<string>
   }
 
   interface MenuHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    type?: ObservableResolver<string>
+    type?: FunctionResolver<string>
   }
 
   interface MediaHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    autoPlay?: ObservableResolver<boolean>,
-    controls?: ObservableResolver<boolean>,
-    controlsList?: ObservableResolver<string>,
-    crossOrigin?: ObservableResolver<string>,
-    loop?: ObservableResolver<boolean>,
-    mediaGroup?: ObservableResolver<string>,
-    muted?: ObservableResolver<boolean>,
-    playsInline?: ObservableResolver<boolean>,
-    preload?: ObservableResolver<string>,
-    src?: ObservableResolver<string>
+    autoPlay?: FunctionResolver<boolean>,
+    controls?: FunctionResolver<boolean>,
+    controlsList?: FunctionResolver<string>,
+    crossOrigin?: FunctionResolver<string>,
+    loop?: FunctionResolver<boolean>,
+    mediaGroup?: FunctionResolver<string>,
+    muted?: FunctionResolver<boolean>,
+    playsInline?: FunctionResolver<boolean>,
+    preload?: FunctionResolver<string>,
+    src?: FunctionResolver<string>
   }
 
   interface MetaHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    charSet?: ObservableResolver<string>,
-    content?: ObservableResolver<string>,
-    httpEquiv?: ObservableResolver<string>,
-    name?: ObservableResolver<string>,
-    media?: ObservableResolver<string>
+    charSet?: FunctionResolver<string>,
+    content?: FunctionResolver<string>,
+    httpEquiv?: FunctionResolver<string>,
+    name?: FunctionResolver<string>,
+    media?: FunctionResolver<string>
   }
 
   interface MeterHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    form?: ObservableResolver<string>,
-    high?: ObservableResolver<number>,
-    low?: ObservableResolver<number>,
-    max?: ObservableResolver<number | string>,
-    min?: ObservableResolver<number | string>,
-    optimum?: ObservableResolver<number>,
-    value?: ObservableResolver<string | ReadonlyArray<string> | number>
+    form?: FunctionResolver<string>,
+    high?: FunctionResolver<number>,
+    low?: FunctionResolver<number>,
+    max?: FunctionResolver<number | string>,
+    min?: FunctionResolver<number | string>,
+    optimum?: FunctionResolver<number>,
+    value?: FunctionResolver<string | ReadonlyArray<string> | number>
   }
 
   interface QuoteHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    cite?: ObservableResolver<string>
+    cite?: FunctionResolver<string>
   }
 
   interface ObjectHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    classID?: ObservableResolver<string>,
-    data?: ObservableResolver<string>,
-    form?: ObservableResolver<string>,
-    height?: ObservableResolver<number | string>,
-    name?: ObservableResolver<string>,
-    type?: ObservableResolver<string>,
-    useMap?: ObservableResolver<string>,
-    width?: ObservableResolver<number | string>,
-    wmode?: ObservableResolver<string>
+    classID?: FunctionResolver<string>,
+    data?: FunctionResolver<string>,
+    form?: FunctionResolver<string>,
+    height?: FunctionResolver<number | string>,
+    name?: FunctionResolver<string>,
+    type?: FunctionResolver<string>,
+    useMap?: FunctionResolver<string>,
+    width?: FunctionResolver<number | string>,
+    wmode?: FunctionResolver<string>
   }
 
   interface OlHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    reversed?: ObservableResolver<boolean>,
-    start?: ObservableResolver<number>,
-    type?: ObservableResolver<'1' | 'a' | 'A' | 'i' | 'I'>
+    reversed?: FunctionResolver<boolean>,
+    start?: FunctionResolver<number>,
+    type?: FunctionResolver<'1' | 'a' | 'A' | 'i' | 'I'>
   }
 
   interface OptgroupHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    disabled?: ObservableResolver<boolean>,
-    label?: ObservableResolver<string>
+    disabled?: FunctionResolver<boolean>,
+    label?: FunctionResolver<string>
   }
 
   interface OptionHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    disabled?: ObservableResolver<boolean>,
-    label?: ObservableResolver<string>,
-    selected?: ObservableResolver<boolean>,
-    value?: ObservableResolver<string | ReadonlyArray<string> | number>
+    disabled?: FunctionResolver<boolean>,
+    label?: FunctionResolver<string>,
+    selected?: FunctionResolver<boolean>,
+    value?: FunctionResolver<string | ReadonlyArray<string> | number>
   }
 
   interface OutputHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    form?: ObservableResolver<string>,
-    htmlFor?: ObservableResolver<string>,
-    name?: ObservableResolver<string>
+    form?: FunctionResolver<string>,
+    htmlFor?: FunctionResolver<string>,
+    name?: FunctionResolver<string>
   }
 
   interface ParamHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    name?: ObservableResolver<string>,
-    value?: ObservableResolver<string | ReadonlyArray<string> | number>
+    name?: FunctionResolver<string>,
+    value?: FunctionResolver<string | ReadonlyArray<string> | number>
   }
 
   interface ProgressHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    max?: ObservableResolver<number | string>,
-    value?: ObservableResolver<string | ReadonlyArray<string> | number>
+    max?: FunctionResolver<number | string>,
+    value?: FunctionResolver<string | ReadonlyArray<string> | number>
   }
 
   interface SlotHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    name?: ObservableResolver<string>
+    name?: FunctionResolver<string>
   }
 
   interface ScriptHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    async?: ObservableResolver<boolean>,
+    async?: FunctionResolver<boolean>,
     /** @deprecated */
-    charSet?: ObservableResolver<string>,
-    crossOrigin?: ObservableResolver<string>,
-    defer?: ObservableResolver<boolean>,
-    integrity?: ObservableResolver<string>,
-    noModule?: ObservableResolver<boolean>,
-    nonce?: ObservableResolver<string>,
-    referrerPolicy?: ObservableResolver<HTMLAttributeReferrerPolicy>,
-    src?: ObservableResolver<string>,
-    type?: ObservableResolver<string>
+    charSet?: FunctionResolver<string>,
+    crossOrigin?: FunctionResolver<string>,
+    defer?: FunctionResolver<boolean>,
+    integrity?: FunctionResolver<string>,
+    noModule?: FunctionResolver<boolean>,
+    nonce?: FunctionResolver<string>,
+    referrerPolicy?: FunctionResolver<HTMLAttributeReferrerPolicy>,
+    src?: FunctionResolver<string>,
+    type?: FunctionResolver<string>
   }
 
   interface SelectHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    autoComplete?: ObservableResolver<string>,
-    autoFocus?: ObservableResolver<boolean>,
-    disabled?: ObservableResolver<boolean>,
-    form?: ObservableResolver<string>,
-    multiple?: ObservableResolver<boolean>,
-    name?: ObservableResolver<string>,
-    required?: ObservableResolver<boolean>,
-    size?: ObservableResolver<number>,
-    value?: ObservableResolver<string | ReadonlyArray<string> | number>,
+    autoComplete?: FunctionResolver<string>,
+    autoFocus?: FunctionResolver<boolean>,
+    disabled?: FunctionResolver<boolean>,
+    form?: FunctionResolver<string>,
+    multiple?: FunctionResolver<boolean>,
+    name?: FunctionResolver<string>,
+    required?: FunctionResolver<boolean>,
+    size?: FunctionResolver<number>,
+    value?: FunctionResolver<string | ReadonlyArray<string> | number>,
     onChange?: ObservableResolver<KeyboardEventHandler<T>>
   }
 
   interface SourceHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    height?: ObservableResolver<number | string>,
-    media?: ObservableResolver<string>,
-    sizes?: ObservableResolver<string>,
-    src?: ObservableResolver<string>,
-    srcSet?: ObservableResolver<string>,
-    type?: ObservableResolver<string>,
-    width?: ObservableResolver<number | string>
+    height?: FunctionResolver<number | string>,
+    media?: FunctionResolver<string>,
+    sizes?: FunctionResolver<string>,
+    src?: FunctionResolver<string>,
+    srcSet?: FunctionResolver<string>,
+    type?: FunctionResolver<string>,
+    width?: FunctionResolver<number | string>
   }
 
   interface StyleHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    media?: ObservableResolver<string>,
-    nonce?: ObservableResolver<string>,
-    scoped?: ObservableResolver<boolean>,
-    type?: ObservableResolver<string>
+    media?: FunctionResolver<string>,
+    nonce?: FunctionResolver<string>,
+    scoped?: FunctionResolver<boolean>,
+    type?: FunctionResolver<string>
   }
 
   interface TableHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    cellPadding?: ObservableResolver<number | string>,
-    cellSpacing?: ObservableResolver<number | string>,
-    summary?: ObservableResolver<string>,
-    width?: ObservableResolver<number | string>
+    cellPadding?: FunctionResolver<number | string>,
+    cellSpacing?: FunctionResolver<number | string>,
+    summary?: FunctionResolver<string>,
+    width?: FunctionResolver<number | string>
   }
 
   interface TextareaHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    autoComplete?: ObservableResolver<string>,
-    autoFocus?: ObservableResolver<boolean>,
-    cols?: ObservableResolver<number>,
-    dirName?: ObservableResolver<string>,
-    disabled?: ObservableResolver<boolean>,
-    form?: ObservableResolver<string>,
-    maxLength?: ObservableResolver<number>,
-    minLength?: ObservableResolver<number>,
-    name?: ObservableResolver<string>,
-    placeholder?: ObservableResolver<string>,
-    readOnly?: ObservableResolver<boolean>,
-    required?: ObservableResolver<boolean>,
-    rows?: ObservableResolver<number>,
-    value?: ObservableResolver<string | ReadonlyArray<string> | number>,
-    wrap?: ObservableResolver<string>,
+    autoComplete?: FunctionResolver<string>,
+    autoFocus?: FunctionResolver<boolean>,
+    cols?: FunctionResolver<number>,
+    dirName?: FunctionResolver<string>,
+    disabled?: FunctionResolver<boolean>,
+    form?: FunctionResolver<string>,
+    maxLength?: FunctionResolver<number>,
+    minLength?: FunctionResolver<number>,
+    name?: FunctionResolver<string>,
+    placeholder?: FunctionResolver<string>,
+    readOnly?: FunctionResolver<boolean>,
+    required?: FunctionResolver<boolean>,
+    rows?: FunctionResolver<number>,
+    value?: FunctionResolver<string | ReadonlyArray<string> | number>,
+    wrap?: FunctionResolver<string>,
     onChange?: ObservableResolver<KeyboardEventHandler<T>>
   }
 
   interface TdHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    align?: ObservableResolver<'left' | 'center' | 'right' | 'justify' | 'char'>,
-    colSpan?: ObservableResolver<number>,
-    headers?: ObservableResolver<string>,
-    rowSpan?: ObservableResolver<number>,
-    scope?: ObservableResolver<string>,
-    abbr?: ObservableResolver<string>,
-    height?: ObservableResolver<number | string>,
-    width?: ObservableResolver<number | string>,
-    valign?: ObservableResolver<'top' | 'middle' | 'bottom' | 'baseline'>
+    align?: FunctionResolver<'left' | 'center' | 'right' | 'justify' | 'char'>,
+    colSpan?: FunctionResolver<number>,
+    headers?: FunctionResolver<string>,
+    rowSpan?: FunctionResolver<number>,
+    scope?: FunctionResolver<string>,
+    abbr?: FunctionResolver<string>,
+    height?: FunctionResolver<number | string>,
+    width?: FunctionResolver<number | string>,
+    valign?: FunctionResolver<'top' | 'middle' | 'bottom' | 'baseline'>
   }
 
   interface ThHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    align?: ObservableResolver<'left' | 'center' | 'right' | 'justify' | 'char'>,
-    colSpan?: ObservableResolver<number>,
-    headers?: ObservableResolver<string>,
-    rowSpan?: ObservableResolver<number>,
-    scope?: ObservableResolver<string>,
-    abbr?: ObservableResolver<string>
+    align?: FunctionResolver<'left' | 'center' | 'right' | 'justify' | 'char'>,
+    colSpan?: FunctionResolver<number>,
+    headers?: FunctionResolver<string>,
+    rowSpan?: FunctionResolver<number>,
+    scope?: FunctionResolver<string>,
+    abbr?: FunctionResolver<string>
   }
 
   interface TimeHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    dateTime?: ObservableResolver<string>
+    dateTime?: FunctionResolver<string>
   }
 
   interface TrackHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    default?: ObservableResolver<boolean>,
-    kind?: ObservableResolver<string>,
-    label?: ObservableResolver<string>,
-    src?: ObservableResolver<string>,
-    srcLang?: ObservableResolver<string>
+    default?: FunctionResolver<boolean>,
+    kind?: FunctionResolver<string>,
+    label?: FunctionResolver<string>,
+    src?: FunctionResolver<string>,
+    srcLang?: FunctionResolver<string>
   }
 
   interface VideoHTMLAttributes<T extends EventTarget> extends MediaHTMLAttributes<T> {
-    height?: ObservableResolver<number | string>,
-    playsInline?: ObservableResolver<boolean>,
-    poster?: ObservableResolver<string>,
-    width?: ObservableResolver<number | string>,
-    disablePictureInPicture?: ObservableResolver<boolean>,
-    disableRemotePlayback?: ObservableResolver<boolean>
+    height?: FunctionResolver<number | string>,
+    playsInline?: FunctionResolver<boolean>,
+    poster?: FunctionResolver<string>,
+    width?: FunctionResolver<number | string>,
+    disablePictureInPicture?: FunctionResolver<boolean>,
+    disableRemotePlayback?: FunctionResolver<boolean>
   }
 
   interface WebViewHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    allowFullScreen?: ObservableResolver<boolean>,
-    allowpopups?: ObservableResolver<boolean>,
-    autoFocus?: ObservableResolver<boolean>,
-    autosize?: ObservableResolver<boolean>,
-    blinkfeatures?: ObservableResolver<string>,
-    disableblinkfeatures?: ObservableResolver<string>,
-    disableguestresize?: ObservableResolver<boolean>,
-    disablewebsecurity?: ObservableResolver<boolean>,
-    guestinstance?: ObservableResolver<string>,
-    httpreferrer?: ObservableResolver<string>,
-    nodeintegration?: ObservableResolver<boolean>,
-    partition?: ObservableResolver<string>,
-    plugins?: ObservableResolver<boolean>,
-    preload?: ObservableResolver<string>,
-    src?: ObservableResolver<string>,
-    useragent?: ObservableResolver<string>,
-    webpreferences?: ObservableResolver<string>
+    allowFullScreen?: FunctionResolver<boolean>,
+    allowpopups?: FunctionResolver<boolean>,
+    autoFocus?: FunctionResolver<boolean>,
+    autosize?: FunctionResolver<boolean>,
+    blinkfeatures?: FunctionResolver<string>,
+    disableblinkfeatures?: FunctionResolver<string>,
+    disableguestresize?: FunctionResolver<boolean>,
+    disablewebsecurity?: FunctionResolver<boolean>,
+    guestinstance?: FunctionResolver<string>,
+    httpreferrer?: FunctionResolver<string>,
+    nodeintegration?: FunctionResolver<boolean>,
+    partition?: FunctionResolver<string>,
+    plugins?: FunctionResolver<boolean>,
+    preload?: FunctionResolver<string>,
+    src?: FunctionResolver<string>,
+    useragent?: FunctionResolver<string>,
+    webpreferences?: FunctionResolver<string>
   }
 
   interface IntrinsicElementsMap {

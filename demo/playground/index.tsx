@@ -4,11 +4,13 @@
 import {Observable} from 'voby';
 import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from 'voby';
 import {useEffect, useInterval, usePromise, useTimeout} from 'voby';
-import {$, $$, render, renderToString, styled, svg, template} from 'voby';
+import {$, render, renderToString, styled, svg, template} from 'voby';
 
 /* MAIN */
 
 //TODO: Test mixed observable and static content, there might be problems with rendering that in the right order maybe
+//TODO: Styled that extends another component
+//TODO: Test that error boundaries wrapped around built-in components work
 
 const TEST_INTERVAL = 500; // Lowering this makes it easier to spot some memory leaks
 
@@ -656,7 +658,7 @@ const TestClassesFunction = (): JSX.Element => {
 
 const TestClassesRemoval = (): JSX.Element => {
   const o = $({ red: true, blue: false });
-  const toggle = () => o.update ( prev => prev.red ? null : { red: true, blue: false } );
+  const toggle = () => o.update ( prev => prev ? null : { red: true, blue: false } );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -857,7 +859,7 @@ const TestStylesFunction = (): JSX.Element => {
 
 const TestStylesRemoval = (): JSX.Element => {
   const o = $({ color: 'orange', fontWeight: 'normal' });
-  const toggle = () => o.update ( prev => ( prev.color === 'orange' ) ? null : { color: 'orange', fontWeight: 'normal' } );
+  const toggle = () => o.update ( prev => prev ? null : { color: 'orange', fontWeight: 'normal' } );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -1528,8 +1530,24 @@ const TestForFunctionObservables = (): JSX.Element => {
   return (
     <>
       <h3>For - Function Observables</h3>
-      <For values={() => values ()}>
+      <For values={() => values}>
         {( value: Observable<number> ) => {
+          return <p>Value: {value}</p>
+        }}
+      </For>
+    </>
+  )
+};
+
+const TestForRandom = (): JSX.Element => {
+  const values = $([Math.random (), Math.random (), Math.random ()]);
+  const update = () => values ( [Math.random (), Math.random (), Math.random ()] );
+  useInterval ( update, TEST_INTERVAL );
+  return (
+    <>
+      <h3>For - Random</h3>
+      <For values={values}>
+        {( value: number ) => {
           return <p>Value: {value}</p>
         }}
       </For>
@@ -2034,6 +2052,7 @@ const Test = (): JSX.Element => {
       <TestForObservables />
       <TestForObservableObservables />
       <TestForFunctionObservables />
+      <TestForRandom />
       <TestFragmentStatic />
       <TestFragmentStaticComponent />
       <TestFragmentStaticDeep />

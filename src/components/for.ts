@@ -1,37 +1,41 @@
 
 /* IMPORT */
 
-import type {Child, ObservableMaybe, ObservableReadonlyWithoutInitial} from '../types';
+import type {Child, ObservableReadonlyWithoutInitial, Resolvable} from '../types';
 import useComputed from '../hooks/use_computed';
-import {$, $$} from '../observable';
-import {resolveChild} from '../setters';
-import {isObject} from '../utils';
+import useResolved from '../hooks/use_resolved';
+import {$} from '../observable';
+import {resolveChild} from '../utils/resolvers';
 
 /* MAIN */
 
-//TODO: Write this with much better performance
+//TODO: Write and test this much much better
 
-const For = <T> ({ values, children }: { values: ObservableMaybe<T[]>, children: (( value: T ) => Child) }): ObservableReadonlyWithoutInitial<Child[]> => {
+const For = <T> ({ values, children }: { values: Resolvable<T[]>, children: (( value: T ) => Child) }): ObservableReadonlyWithoutInitial<Child[]> => {
 
-  const cache = new WeakMap<object, Child> ();
+  let prev = new Map<T, Child> ();
 
   return useComputed ( () => {
 
-    return $$(values).map ( ( value: T ) => {
+    const next = new Map<T, Child> ();
 
-      return $.sample ( () => {
+    const resolved = useResolved ( values );
 
-        const key = isObject ( value ) ? value : undefined;
+    return $.sample ( () => {
 
-        if ( key && cache.has ( key ) ) return cache.get ( key );
+      const results = resolved.map ( ( value: T ): Child => {
 
-        const child = resolveChild ( children ( value ) );
+        const result = prev.has ( value ) ? prev.get ( value ) : resolveChild ( children ( value ) );
 
-        if ( key ) cache.set ( key, child );
+        next.set ( value, result );
 
-        return child;
+        return result;
 
       });
+
+      prev = next;
+
+      return results;
 
     });
 

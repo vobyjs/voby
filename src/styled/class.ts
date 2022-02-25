@@ -1,8 +1,4 @@
 
-/* IMPORT */
-
-import {IS_PRODUCTION} from '../constants';
-
 /* MAIN */
 
 const cls = (() => {
@@ -11,8 +7,9 @@ const cls = (() => {
 
   return ( name: string ) => {
 
-    const suffix = IS_PRODUCTION ? Math.round ( 0xFFFFFF * Math.random () ).toString ( 16 ) : name.replace ( /\s/g, '_' );
-    const raw = `cls-${id++}-${suffix}`;
+    const suffixName = name.replace ( /\s/g, '_' );
+    const suffixRandom = Math.round ( 0xFFFFFF * Math.random () ).toString ( 16 );
+    const raw = `cls-${id++}-${suffixName}-${suffixRandom}`;
     const cooked = `.${raw}`;
 
     const fn = (): string => cooked;

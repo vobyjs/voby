@@ -3,29 +3,16 @@
 
 import type {Disposer, ObservableMaybe} from '../types';
 import {$$} from '../observable';
-import useEffect from './use_effect';
+import useScheduler from './use_scheduler';
 
 /* MAIN */
 
 const useAnimationFrame = ( callback: ObservableMaybe<FrameRequestCallback> ): Disposer => {
 
-  let animationId: number;
-
-  const dispose = (): void => {
-
-    cancelAnimationFrame ( animationId );
-
-  };
-
-  useEffect ( () => {
-
-    animationId = requestAnimationFrame ( $$(callback) );
-
-    return dispose;
-
+  return useScheduler ({
+    cancel: cancelAnimationFrame,
+    schedule: () => requestAnimationFrame ( $$(callback) )
   });
-
-  return dispose;
 
 };
 

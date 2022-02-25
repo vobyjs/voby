@@ -4,7 +4,7 @@
 import type {Child, ChildWithMetadata} from '../types';
 import useCleanup from '../hooks/use_cleanup';
 import render from '../render';
-import {assign} from '../utils';
+import {assign} from '../utils/lang';
 
 /* MAIN */
 

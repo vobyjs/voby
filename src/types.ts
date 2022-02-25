@@ -35,7 +35,7 @@ type FetchStateResolved = { loading: false, error?: never, response: Response };
 
 type FetchState = FetchStateLoading | FetchStateRejected | FetchStateResolved;
 
-type FunctionResolver<T = unknown> = T | (() => FunctionResolver<T>);
+type FunctionResolver<T = unknown> = ({ (): FunctionResolver<T> }) | T;
 
 type Key = string;
 
@@ -53,9 +53,9 @@ type ObservableAccessor<T = unknown> = ({ (): T, get (): T, sample (): T });
 
 type ObservableMaybe<T = unknown> = T | Observable<T> | ObservableReadonly<T>;
 
-type ObservableRecordMaybe<T = {}> = { [P in keyof T]: P extends 'ref' | 'children' ? T[P] : ObservableMaybe<T[P]> };
+type ObservableRecordMaybe<T = {}> = { [P in keyof T]: P extends 'key' | 'ref' | 'children' ? T[P] : ObservableMaybe<T[P]> };
 
-type ObservableResolver<T = unknown> = ({ (): ObservableResolver<T>, get (): ObservableResolver<T>, sample (): ObservableResolver<T> }) | T;
+type ObservableResolver<T = unknown> = Observable<T> | ObservableReadonly<T> | ({ (): ObservableResolver<T>, get (): ObservableResolver<T>, sample (): ObservableResolver<T> }) | T;
 
 type PromiseStateLoading = { loading: true, error?: never, value?: never };
 
@@ -69,6 +69,8 @@ type Props = Record<string, any>;
 
 type Ref<T = unknown> = ( value: T ) => unknown;
 
+type Resolvable<T = unknown> = FunctionResolver<T>;
+
 type TemplateActionPath = number[];
 
 type TemplateActionProxy = ( target: Node, prop: string, targetNode?: Node ) => void;
@@ -79,4 +81,4 @@ type TemplateActionWithPaths = [TemplateActionPath, string, string, TemplateActi
 
 /* EXPORT */
 
-export type {Callback, Child, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, Disposer, EventListener, FetchStateLoading, FetchStateRejected, FetchStateResolved, FetchState, FunctionResolver, Key, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableAccessor, ObservableMaybe, ObservableRecordMaybe, ObservableResolver, PromiseStateLoading, PromiseStateRejected, PromiseStateResolved, PromiseState, Props, Ref, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};
+export type {Callback, Child, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, Disposer, EventListener, FetchStateLoading, FetchStateRejected, FetchStateResolved, FetchState, FunctionResolver, Key, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableAccessor, ObservableMaybe, ObservableRecordMaybe, ObservableResolver, PromiseStateLoading, PromiseStateRejected, PromiseStateResolved, PromiseState, Props, Ref, Resolvable, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};

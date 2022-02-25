@@ -3,8 +3,8 @@
 
 import type {Child, ComponentIntrinsicElement, ComponentNode, Component, Props} from './types';
 import BaseComponent from './components/component';
-import {setProps, setRef} from './setters';
-import {isFunction, isNil, isNode, isString} from './utils';
+import {isFunction, isNil, isNode, isString} from './utils/lang';
+import {setProps, setRef} from './utils/setters';
 
 /* MAIN */
 
@@ -13,7 +13,7 @@ function createElement <T extends ComponentNode> ( component: T | (() => T), pro
 function createElement ( component: Component, props: Props | null, ..._children: Child[] ): (() => Child);
 function createElement ( component: Component, props: Props | null, ..._children: Child[] ): (() => Child) {
 
-  // It's important to wrap components, so that they can be executed in the right order, from parent to child, rather than from child to parent in some case
+  // It's important to wrap components, so that they can be executed in the right order, from parent to child, rather than from child to parent in some cases
 
   const { children: __children, key, ref, ...rest } = props || {};
   const children = ( _children.length === 1 ) ? _children[0] : ( _children.length === 0 ) ? __children : _children;
@@ -31,7 +31,7 @@ function createElement ( component: Component, props: Props | null, ..._children
         const instance = new component ( props );
         const child = instance.render ();
 
-        setRef ( instance, ref );
+        if ( !isNil ( ref ) ) setRef ( instance, ref );
 
         return child;
 

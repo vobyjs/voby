@@ -3,7 +3,8 @@
 
 import type {Child, ChildWithMetadata, ObservableMaybe} from '../types';
 import useComputed from '../hooks/use_computed';
-import {assign, isObservable} from '../utils';
+import useResolved from '../hooks/use_resolved';
+import {assign, isFunction} from '../utils/lang';
 
 /* MAIN */
 
@@ -14,11 +15,11 @@ const Switch = <T> ({ when, children }: { when: ObservableMaybe<T>, children: Ch
   const items = ( children as (() => ChildWithMetadata<{ default?: boolean, when?: T }>)[] ).map ( child => child () ); //TSC
   const child = ( when: T ) => items.find ( item => item.metadata.default || item.metadata.when === when );
 
-  if ( isObservable ( when ) ) {
+  if ( isFunction ( when ) ) {
 
     return useComputed ( () => {
 
-      return child ( when () );
+      return child ( useResolved ( when ) );
 
     });
 

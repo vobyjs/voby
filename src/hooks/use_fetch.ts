@@ -3,7 +3,7 @@
 
 import type {FetchState, Observable, ObservableMaybe} from '../types';
 import {$, $$} from '../observable';
-import {castError} from '../utils';
+import {castError} from '../utils/lang';
 import useAbortController from './use_abort_controller';
 import useDisposed from './use_disposed';
 import useEffect from './use_effect';
@@ -38,10 +38,12 @@ const useFetch = ( input: ObservableMaybe<RequestInfo>, init?: ObservableMaybe<R
 
     };
 
-    init = $$(init) || {};
-    init.signal = init.signal || useAbortController ().signal;
+    const options = $$(init) || {};
+    const signal = options.signal || useAbortController ().signal;
 
-    fetch ( $$(input), init ).then ( onResolve, onReject );
+    options.signal = signal;
+
+    fetch ( $$(input), options ).then ( onResolve, onReject );
 
   });
 

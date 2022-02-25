@@ -8,6 +8,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "compile": "tsc --skipLibCheck",
+    "compile:bundle": "esbuild --bundle --minify --format=cjs --target=es2015 ./src/index.ts > ./dist/index.js",
     "compile:watch": "tsc --skipLibCheck --watch",
     "dev:benchmark": "cd demo/benchmark && npm i && npm update && npm run dev",
     "prod:benchmark": "cd demo/benchmark && npm i && npm update && npm run prod",
@@ -23,7 +24,7 @@
     "prod:triangle": "cd demo/triangle && npm i && npm update && npm run prod",
     "dev": "npm run dev:playground",
     "prod": "npm run prod:playground",
-    "prepublishOnly": "npm run clean && npm run compile"
+    "prepublishOnly": "npm run clean && npm run compile && npm run compile:bundle"
   },
   "bugs": {
     "url": "https://github.com/fabiospampinato/voby/issues"
@@ -55,6 +56,7 @@
     "tiny-diff": "npm:@fabiospampinato/tiny-diff@^1.0.0"
   },
   "devDependencies": {
+    "esbuild": "^0.14.23",
     "rimraf": "^3.0.2",
     "typescript": "^4.5.5"
   }

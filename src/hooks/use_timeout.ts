@@ -3,29 +3,16 @@
 
 import type {Callback, Disposer, ObservableMaybe} from '../types';
 import {$$} from '../observable';
-import useEffect from './use_effect';
+import useScheduler from './use_scheduler';
 
 /* MAIN */
 
 const useTimeout = ( callback: ObservableMaybe<Callback>, ms?: ObservableMaybe<number> ): Disposer => {
 
-  let timeoutId: ReturnType<typeof setTimeout>;
-
-  const dispose = (): void => {
-
-    clearTimeout ( timeoutId );
-
-  };
-
-  useEffect ( () => {
-
-    timeoutId = setTimeout ( $$(callback), $$(ms) );
-
-    return dispose;
-
+  return useScheduler ({
+    cancel: clearTimeout,
+    schedule: () => setTimeout ( $$(callback), $$(ms) )
   });
-
-  return dispose;
 
 };
 

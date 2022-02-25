@@ -2,38 +2,23 @@
 /* IMPORT */
 
 import type {Disposer, ObservableMaybe} from '../types';
-import {NOOP} from '../constants';
 import {$$} from '../observable';
-import useAnimationFrame from './use_animation_frame';
-import useEffect from './use_effect';
+import useSchedulerLoop from './use_scheduler_loop';
 
 /* MAIN */
 
 const useAnimationLoop = ( callback: ObservableMaybe<FrameRequestCallback> ): Disposer => {
 
-  let dispose: Disposer = NOOP;
-
-  useEffect ( () => {
-
-    callback = $$(callback);
-
-    const schedule = (): void => {
-
-      dispose = useAnimationFrame ( ( time: DOMHighResTimeStamp ) => {
-
-        callback ( time );
-
-        schedule ();
-
+  return useSchedulerLoop ({
+    cancel: cancelAnimationFrame,
+    schedule: loop => {
+      const cb = $$(callback);
+      return requestAnimationFrame ( time => {
+        loop ();
+        cb ( time );
       });
-
-    };
-
-    schedule ();
-
+    }
   });
-
-  return dispose;
 
 };
 
