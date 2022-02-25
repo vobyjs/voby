@@ -5,9 +5,10 @@ import {$, render} from 'voby';
 
 /* MAIN */
 
-const Counter = () => {
+const Counter = (): JSX.Element => {
 
   const value = $(0);
+
   const increment = () => value ( value () + 1 );
   const decrement = () => value ( value () - 1 );
 
