@@ -1,5 +1,4 @@
 
-//TODO: Check that className and class don't conflict, and in general check that other similar problems are handled
 //TODO: Implement context support
 
 /* IMPORT */

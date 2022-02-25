@@ -18,6 +18,12 @@ function createElement ( component: Component, props: Props | null, ..._children
   const { children: __children, key, ref, ...rest } = props || {};
   const children = ( _children.length === 1 ) ? _children[0] : ( _children.length === 0 ) ? __children : _children;
 
+  if ( !isNil ( rest.className ) && isString ( rest.class ) ) {
+
+    throw new Error ( 'Invalid class prop, it can only be null, undefined or an object when className is provided too' );
+
+  }
+
   if ( isFunction ( component ) ) {
 
     if ( BaseComponent.isPrototypeOf ( component ) ) {

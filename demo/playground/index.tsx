@@ -1822,6 +1822,23 @@ const TestStyledStatic = (): JSX.Element => {
   );
 };
 
+const TestStyledStaticError = (): JSX.Element => {
+  const P = styled.p`
+    color: red;
+  `;
+  const Fallback = ({ error }: { error: Error }) => {
+    return <p>{error.message}</p>;
+  };
+  return (
+    <>
+      <h3>Styled - Static Error</h3>
+      <ErrorBoundary fallback={Fallback}>
+        <P class="blue">content</P>
+      </ErrorBoundary>
+    </>
+  );
+};
+
 const TestStyledClass = (): JSX.Element => {
   const blue = styled.class ( 'blue' );
   const red = styled.class ( 'red' );
@@ -2097,6 +2114,7 @@ const Test = (): JSX.Element => {
       <TestPromise />
       <TestKeyframeStatic />
       <TestStyledStatic />
+      <TestStyledStaticError />
       <TestStyledClass />
       <TestStyledCSSStatic />
       <TestStyledGlobalStatic />
