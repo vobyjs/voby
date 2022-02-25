@@ -32,6 +32,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
 - [**Observable**](#observable)
   - [`$, $$`](#observable)
 - [**Methods**](#methods)
+  - [`batch`](#batch)
   - [`createElement`](#createelement)
   - [`isObservable`](#isobservable)
   - [`render`](#render)
@@ -94,6 +95,18 @@ $$ // => Same as require ( 'oby' ).get
 ### Methods
 
 The following top-level methods are provided.
+
+#### `batch`
+
+This function holds onto updates within its scope and flushes them out at once once it exits.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#batch).
+
+```tsx
+import {batch} from 'voby';
+
+batch // => Same as require ( 'oby' ).batch
+```
 
 #### `createElement`
 
