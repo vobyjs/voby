@@ -40,7 +40,7 @@ const useFetch = ( input: ObservableMaybe<RequestInfo>, init?: ObservableMaybe<R
 
     const request = $$(input);
     const options = $$(init) || {};
-    const signal = options.signal || useAbortController ().signal;
+    const signal = useAbortController ( options.signal ? [options.signal] : [] ).signal;
 
     options.signal = signal;
 
