@@ -38,12 +38,13 @@ const useFetch = ( input: ObservableMaybe<RequestInfo>, init?: ObservableMaybe<R
 
     };
 
+    const request = $$(input);
     const options = $$(init) || {};
     const signal = options.signal || useAbortController ().signal;
 
     options.signal = signal;
 
-    fetch ( $$(input), options ).then ( onResolve, onReject );
+    fetch ( request, options ).then ( onResolve, onReject );
 
   });
 

@@ -1,6 +1,6 @@
 {
   "name": "voby",
-  "description": "A high-performance vdom-less framework with fine-grained observable-based reactivity for building rich applications.",
+  "description": "A high-performance framework with fine-grained observable-based reactivity for building rich applications.",
   "version": "0.0.6",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,7 +24,7 @@
     "prod:triangle": "cd demo/triangle && npm i && npm update && npm run prod",
     "dev": "npm run dev:playground",
     "prod": "npm run prod:playground",
-    "prepublishOnly": "npm run clean && npm run compile && npm run compile:bundle"
+    "prepublishOnly": "npm run clean && npm run compile"
   },
   "bugs": {
     "url": "https://github.com/fabiospampinato/voby/issues"

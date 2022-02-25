@@ -7,9 +7,10 @@ const cls = (() => {
 
   return ( name: string ) => {
 
+    const suffixId = id++;
     const suffixName = name.replace ( /\s/g, '_' );
     const suffixRandom = Math.round ( 0xFFFFFF * Math.random () ).toString ( 16 );
-    const raw = `cls-${id++}-${suffixName}-${suffixRandom}`;
+    const raw = `cls-${suffixId}-${suffixName}-${suffixRandom}`;
     const cooked = `.${raw}`;
 
     const fn = (): string => cooked;
