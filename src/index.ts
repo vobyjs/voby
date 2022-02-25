@@ -1,6 +1,5 @@
 
 //TODO: Check that className and class don't conflict, and in general check that other similar problems are handled
-//TODO: Replace some isObservable checks with isFunction checks
 //TODO: Implement context support
 //TODO: add sample and batch functions (maybe others?)
 
@@ -15,6 +14,7 @@ import isObservable from './is_observable';
 import {$, $$} from './observable';
 import render from './render';
 import renderToString from './render_to_string';
+import sample from './sample';
 import styled from './styled';
 import svg from './svg';
 import template from './template';
@@ -24,4 +24,4 @@ import template from './template';
 export type {Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableMaybe, ObservableRecordMaybe, ObservableMaybe as O, ObservableRecordMaybe as OO, FetchState, PromiseState, Resolvable};
 export {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary};
 export {useAbortController, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useDisposed, useEffect, useError, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useRoot, useTimeout};
-export {$, $$, createElement, isObservable, render, renderToString, styled, svg, template};
+export {$, $$, createElement, isObservable, render, renderToString, sample, styled, svg, template};

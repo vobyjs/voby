@@ -36,6 +36,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`isObservable`](#isobservable)
   - [`render`](#render)
   - [`renderToString`](#rendertostring)
+  - [`sample`](#sample)
   - [`styled`](#styled)
   - [`svg`](#svg)
   - [`template`](#template)
@@ -141,6 +142,18 @@ import {renderToString} from 'voby';
 const App = () => <p>Hello, World!</p>;
 
 const html = await renderToString ( <App /> );
+```
+
+#### `sample`
+
+This function executes the provided function without creating dependencies on observables retrieved inside it.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#sample).
+
+```tsx
+import {sample} from 'voby';
+
+sample // => Same as require ( 'oby' ).sample
 ```
 
 #### `styled`
