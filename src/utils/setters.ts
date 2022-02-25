@@ -4,12 +4,11 @@
 import diff from 'tiny-diff';
 import type {Child, EventListener, FunctionResolver, ObservableResolver, Ref, TemplateActionProxy} from '../types';
 import template from '../template';
-import {isFunction, isNil, isNode, isString} from './lang';
+import {isFunction, isNil, isString} from './lang';
 import {resolveChild, resolveFunction, resolveObservable} from './resolvers';
 
 /* MAIN */
 
-//TODO: Optimize the case were we are setting the same thing
 //TODO: Optimize the same case where the same class/style is being updated
 //TODO: Use the same empty array whenever needed/possible
 
@@ -31,7 +30,11 @@ const setAttributeStatic = ( attributes: NamedNodeMap, key: string, value: null 
 
     if ( attribute ) {
 
-      attribute.value = value;
+      if ( attribute.value !== value ) {
+
+        attribute.value = value;
+
+      }
 
     } else {
 
@@ -246,7 +249,11 @@ const setClassesStatic = ( element: HTMLElement, classList: DOMTokenList, object
 
   if ( isString ( object ) ) {
 
-    element.className = object;
+    if ( element.className !== object ) {
+
+      element.className = object;
+
+    }
 
   } else {
 
@@ -254,7 +261,11 @@ const setClassesStatic = ( element: HTMLElement, classList: DOMTokenList, object
 
       if ( isString ( objectPrev ) ) {
 
-        element.className = '';
+        if ( objectPrev ) {
+
+          element.className = '';
+
+        }
 
       } else {
 
@@ -414,11 +425,21 @@ const setPropertyStatic = ( element: HTMLElement, key: string, value: null | und
 
   if ( key === 'className' ) {
 
-    element[key] = String ( value ?? '' );
+    const className = String ( value ?? '' );
+
+    if ( element.className !== className ) {
+
+      element.className = className;
+
+    }
 
   } else {
 
-    element[key] = value;
+    if ( element[key] !== value ) {
+
+      element[key] = value;
+
+    }
 
   }
 
@@ -462,7 +483,13 @@ const setStyleStatic = (() => {
 
     } else {
 
-      style[key] = ( isString ( value ) || propertyNonDimensionalRe.test ( key ) ? value : `${value}px` );
+      value = ( isString ( value ) || propertyNonDimensionalRe.test ( key ) ? value : `${value}px` );
+
+      if ( style[key] !== value ) {
+
+        style[key] = value;
+
+      }
 
     }
 
@@ -484,7 +511,11 @@ const setStylesStatic = ( style: CSSStyleDeclaration, object: null | undefined |
 
   if ( isString ( object ) ) {
 
-    style.cssText = object;
+    if ( style.cssText !== object ) {
+
+      style.cssText = object;
+
+    }
 
   } else {
 
@@ -492,7 +523,11 @@ const setStylesStatic = ( style: CSSStyleDeclaration, object: null | undefined |
 
       if ( isString ( objectPrev ) ) {
 
-        style.cssText = '';
+        if ( objectPrev ) {
+
+          style.cssText = '';
+
+        }
 
       } else {
 

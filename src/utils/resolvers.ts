@@ -72,7 +72,7 @@ const resolveChild = <T> ( value: ObservableResolver<T>, setter: (( value: T ) =
 
 };
 
-const resolveChildDeep = ( child: Child ): ChildResolved => { //TODO: this function should probably be removed, it's used to make ErrorBoundary work and to cache For items
+const resolveChildDeep = ( child: Child ): ChildResolved => { //TODO: This function should probably be removed, it's used to make ErrorBoundary work and to cache For items
 
   while ( isFunction ( child ) ) {
 
