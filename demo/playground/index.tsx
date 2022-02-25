@@ -9,7 +9,6 @@ import {$, render, renderToString, styled, svg, template} from 'voby';
 /* MAIN */
 
 //TODO: Test mixed observable and static content, there might be problems with rendering that in the right order maybe
-//TODO: Styled that extends another component
 //TODO: Test that error boundaries wrapped around built-in components work
 
 const TEST_INTERVAL = 500; // Lowering this makes it easier to spot some memory leaks
@@ -1874,6 +1873,21 @@ const TestStyledCSSStatic = (): JSX.Element => {
   );
 };
 
+const TestStyledExtension = (): JSX.Element => {
+  const Button1 = styled.button`
+    color: red;
+  `;
+  const Button2 = styled ( Button1 )`
+    background-color: pink;
+  `;
+  return (
+    <>
+      <h3>Styled - Extension</h3>
+      <Button2>content</Button2>
+    </>
+  );
+};
+
 const TestStyledGlobalStatic = (): JSX.Element => {
   const Globals = styled.global`
     :root {
@@ -2117,6 +2131,7 @@ const Test = (): JSX.Element => {
       <TestStyledStaticError />
       <TestStyledClass />
       <TestStyledCSSStatic />
+      <TestStyledExtension />
       <TestStyledGlobalStatic />
       <TestPortalStatic />
       <TestPortalObservable />
