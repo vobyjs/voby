@@ -4,7 +4,7 @@
 import diff from 'tiny-diff';
 import type {Child, EventListener, FunctionResolver, ObservableResolver, Ref, TemplateActionProxy} from '../types';
 import template from '../template';
-import {isFunction, isNil, isString} from './lang';
+import {isFunction, isNil, isNode, isString} from './lang';
 import {resolveChild, resolveFunction, resolveObservable} from './resolvers';
 
 /* MAIN */
@@ -107,10 +107,23 @@ const setChildStatic = (() => {
 
   return ( parent: HTMLElement, child: Child, childrenPrev: Node[] ): Node[] => {
 
-    //TODO: Fast path for appending nodes to parent, maybe
     //TODO: Fast path for converting string to new text node, maybe
 
-    if ( childrenPrev.length === 1 ) { // Fast path for single text child
+    const childrenPrevLength = childrenPrev.length;
+
+    if ( childrenPrevLength === 0 ) {
+
+      if ( isNode ( child ) ) {
+
+        parent.insertBefore ( child, null );
+
+        return [child];
+
+      }
+
+    }
+
+    if ( childrenPrevLength === 1 ) { // Fast path for single text child
 
       const type = typeof child;
 
@@ -123,7 +136,7 @@ const setChildStatic = (() => {
     }
 
     const childrenNext: Node[] = [];
-    const childrenNextSibling = childrenPrev[childrenPrev.length - 1]?.nextSibling || null;
+    const childrenNextSibling = childrenPrev[childrenPrevLength - 1]?.nextSibling || null;
 
     const children: Node[] = Array.isArray ( child ) ? child.flat ( Infinity ) : [child]; //TSC //TODO: don't create another array if there's no need for flattening
 
@@ -163,13 +176,13 @@ const setChildStatic = (() => {
 
     }
 
-    if ( !childrenNext.length && childrenPrev.length === 1 && childrenPrev[0].nodeType === 8 ) { // It's a comment already, no need to replace it
+    if ( !childrenNext.length && childrenPrevLength === 1 && childrenPrev[0].nodeType === 8 ) { // It's a comment already, no need to replace it
 
       return childrenPrev;
 
     }
 
-    if ( !childrenNext.length && parent.childNodes.length === childrenPrev.length ) { // Fast path for removing all children
+    if ( !childrenNext.length && parent.childNodes.length === childrenPrevLength ) { // Fast path for removing all children
 
       parent.textContent = '';
 
