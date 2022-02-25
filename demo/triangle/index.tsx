@@ -1,11 +1,12 @@
 
 /* IMPORT */
 
-import {$, render, useInterval, Observable, ObservableReadonly, useAnimationLoop, useComputed} from 'voby';
+import {Observable, ObservableReadonly} from 'voby';
+import {$, render, useInterval, useAnimationLoop, useComputed} from 'voby';
 
 /* MAIN */
 
-const TARGET = 25;
+const RADIUS = 25;
 
 const useSeconds = (): Observable<number> => {
 
@@ -55,10 +56,13 @@ const Dot = ({ x, y, s, text }: { x: number, y: number, s: number, text: Observa
   const top = y;
   const borderRadius = s / 2;
   const lineHeight = `${s}px`;
-  const background = hovering.on ( value => value ? '#ffff00' : '#61dafb' );
+  const background = () => hovering () ? '#ffff00' : '#61dafb';
   const style = { width, height, left, top, borderRadius, lineHeight, background };
 
-  const content = hovering.on ( value => value ? text.on ( text => `**${text}**` ) : text );
+  const content = useComputed ( () => {
+    if ( !hovering () ) return text;
+    return `**${text ()}**`;
+  });
 
   return (
     <div class="dot" style={style} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
@@ -68,11 +72,11 @@ const Dot = ({ x, y, s, text }: { x: number, y: number, s: number, text: Observa
 
 };
 
-const Triangle = ({ x, y, s, seconds }: { x: number, y: number; s: number, seconds: Observable<number> }) => {
+const Triangle = ({ x, y, s, seconds }: { x: number, y: number; s: number, seconds: Observable<number> }): JSX.Element => {
 
-  if ( s <= TARGET ) {
+  if ( s <= RADIUS ) {
 
-    return <Dot x={x - TARGET / 2} y={y - TARGET / 2} s={TARGET} text={seconds} />;
+    return <Dot x={x - RADIUS / 2} y={y - RADIUS / 2} s={RADIUS} text={seconds} />;
 
   } else {
 
@@ -90,13 +94,13 @@ const Triangle = ({ x, y, s, seconds }: { x: number, y: number; s: number, secon
 
 };
 
-const SierpinskiTriangle = () => {
+const SierpinskiTriangle = (): JSX.Element => {
 
   const seconds = useSeconds ();
   const elapsed = useElapsed ();
   const scale = useScale ( elapsed );
 
-  const transform = scale.on ( value => `scaleX(${value / 3}) scaleY(.5) translateZ(0.1px)` );
+  const transform = () => `scaleX(${scale () / 3}) scaleY(.5) translateZ(0.1px)`;
 
   return (
     <div class="container" style={{ transform }}>
