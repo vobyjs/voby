@@ -3,7 +3,7 @@
 
 import {Observable} from 'voby';
 import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from 'voby';
-import {useEffect, useInterval, usePromise, useTimeout} from 'voby';
+import {useComputed, useEffect, useInterval, usePromise, useTimeout} from 'voby';
 import {$, render, renderToString, styled, svg, template} from 'voby';
 
 /* MAIN */
@@ -303,6 +303,34 @@ const TestStringObservable = (): JSX.Element => {
       <p>{o}</p>
     </>
   );
+};
+
+const TestStringObservableStatic = (): JSX.Element => {
+  const o = $( String ( Math.random () ) );
+  const randomize = () => o ( String ( Math.random () ) );
+  useInterval ( randomize, TEST_INTERVAL );
+  return (
+    <>
+      <h3>String - Observable Static</h3>
+      <p>{o ()}</p>
+    </>
+  );
+};
+
+const TestStringObservableDeepStatic = (): JSX.Element => {
+  return useComputed ( () => {
+    return () => {
+      const o = $( String ( Math.random () ) );
+      const randomize = () => o ( String ( Math.random () ) );
+      useInterval ( randomize, TEST_INTERVAL );
+      return (
+        <>
+          <h3>String - Observable Deep Static</h3>
+          <p>{o ()}</p>
+        </>
+      );
+    };
+  });
 };
 
 const TestStringFunction = (): JSX.Element => {
@@ -1960,6 +1988,8 @@ const Test = (): JSX.Element => {
       <TestBigIntRemoval />
       <TestStringStatic />
       <TestStringObservable />
+      <TestStringObservableStatic />
+      <TestStringObservableDeepStatic />
       <TestStringFunction />
       <TestStringRemoval />
       <TestAttributeStatic />

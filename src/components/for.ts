@@ -5,7 +5,7 @@ import type {Child, ObservableReadonlyWithoutInitial, Resolvable} from '../types
 import useComputed from '../hooks/use_computed';
 import useResolved from '../hooks/use_resolved';
 import {$} from '../observable';
-import {resolveChild} from '../utils/resolvers';
+import {resolveChildDeep} from '../utils/resolvers';
 
 /* MAIN */
 
@@ -21,11 +21,11 @@ const For = <T> ({ values, children }: { values: Resolvable<T[]>, children: (( v
 
     const resolved = useResolved ( values );
 
-    return $.sample ( () => {
+    return $.sample ( () => { //FIXME: We want to sample here, but we want to be able to dispose of inner computations too
 
       const results = resolved.map ( ( value: T ): Child => {
 
-        const result = prev.has ( value ) ? prev.get ( value ) : resolveChild ( children ( value ) );
+        const result = prev.has ( value ) ? prev.get ( value ) : resolveChildDeep ( children ( value ) );
 
         next.set ( value, result );
 

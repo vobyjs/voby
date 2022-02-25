@@ -7,7 +7,7 @@ import useComputed from '../hooks/use_computed';
 import useError from '../hooks/use_error';
 import {$} from '../observable';
 import {castError} from '../utils/lang';
-import {resolveChild} from '../utils/resolvers';
+import {resolveChildDeep} from '../utils/resolvers';
 
 /* MAIN */
 
@@ -32,7 +32,7 @@ const ErrorBoundary = ({ fallback, children }: { fallback: (( props: { error: Er
 
       });
 
-      return resolveChild ( children );
+      return resolveChildDeep ( children );
 
     }
 

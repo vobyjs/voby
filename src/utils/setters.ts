@@ -5,7 +5,7 @@ import diff from 'tiny-diff';
 import type {Child, EventListener, FunctionResolver, ObservableResolver, Ref, TemplateActionProxy} from '../types';
 import template from '../template';
 import {isFunction, isNil, isString} from './lang';
-import {setResolvedChild, resolveFunction, resolveObservable} from './resolvers';
+import {resolveChild, resolveFunction, resolveObservable} from './resolvers';
 
 /* MAIN */
 
@@ -144,7 +144,7 @@ const setChildStatic = (() => {
 
         let prev: Node[] = [];
 
-        setResolvedChild ( child, child => {
+        resolveChild ( child, child => {
 
           const prevLength = prev.length;
           const prevStart = prev[0];
@@ -193,7 +193,7 @@ const setChildStatic = (() => {
 
 const setChild = ( parent: HTMLElement, child: Child, childPrev: Node[] = [] ): Node[] => {
 
-  setResolvedChild ( child, child => {
+  resolveChild ( child, child => {
 
     childPrev = setChildStatic ( parent, child, childPrev );
 
