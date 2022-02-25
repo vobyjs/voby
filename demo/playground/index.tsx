@@ -318,7 +318,7 @@ const TestStringObservableStatic = (): JSX.Element => {
 
 const TestStringObservableDeepStatic = (): JSX.Element => {
   return useComputed ( () => {
-    return () => {
+    return (): JSX.Element => {
       const o = $( String ( Math.random () ) );
       const randomize = () => o ( String ( Math.random () ) );
       useInterval ( randomize, TEST_INTERVAL );
