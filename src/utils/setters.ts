@@ -4,13 +4,10 @@
 import diff from 'tiny-diff';
 import type {Child, EventListener, FunctionResolver, ObservableResolver, Ref, TemplateActionProxy} from '../types';
 import template from '../template';
-import {isFunction, isNil, isString} from './lang';
+import {flatten, isFunction, isNil, isString} from './lang';
 import {resolveChild, resolveFunction, resolveObservable} from './resolvers';
 
 /* MAIN */
-
-//TODO: Optimize the same case where the same class/style is being updated
-//TODO: Use the same empty array whenever needed/possible
 
 const setAttributeStatic = ( attributes: NamedNodeMap, key: string, value: null | undefined | boolean | number | string ): void => {
 
@@ -106,116 +103,112 @@ const setChildReplacement = ( child: Child, childPrev: Node ): Node[] => {
 
 };
 
-const setChildStatic = (() => {
+const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[] ): Node[] => {
 
-  return ( parent: HTMLElement, child: Child, childrenPrev: Node[] ): Node[] => {
+  const childrenPrevLength = childrenPrev.length;
 
-    const childrenPrevLength = childrenPrev.length;
+  if ( childrenPrevLength === 0 ) { // Fast path for appending a node the first time
 
-    if ( childrenPrevLength === 0 ) { // Fast path for appending a node the first time
+    const type = typeof child;
 
-      const type = typeof child;
+    if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
-      if ( type === 'string' || type === 'number' || type === 'bigint' ) {
+      const textNode = new Text ( String ( child ) );
 
-        const textNode = new Text ( String ( child ) );
+      parent.appendChild ( textNode );
 
-        parent.appendChild ( textNode );
+      return [textNode];
 
-        return [textNode];
+    } else if ( type === 'object' && child !== null && typeof ( child as Node ).nodeType === 'number' ) { //TSC
 
-      } else if ( type === 'object' && child !== null && typeof ( child as Node ).nodeType === 'number' ) { //TSC
+      const node = child as Node;
 
-        const node = child as Node;
+      parent.insertBefore ( node, null );
 
-        parent.insertBefore ( node, null );
-
-        return [node];
-
-      }
+      return [node];
 
     }
 
-    if ( childrenPrevLength === 1 ) { // Fast path for single text child
+  }
 
-      const type = typeof child;
+  if ( childrenPrevLength === 1 ) { // Fast path for single text child
 
-      if ( type === 'string' || type === 'number' || type === 'bigint' ) {
+    const type = typeof child;
 
-          return setChildReplacement ( child, childrenPrev[0] );
+    if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
-      }
-
-    }
-
-    const childrenNext: Node[] = [];
-    const childrenNextSibling = childrenPrev[childrenPrevLength - 1]?.nextSibling || null;
-
-    const children: Node[] = Array.isArray ( child ) ? child.flat ( Infinity ) : [child]; //TSC //TODO: don't create another array if there's no need for flattening
-
-    for ( let i = 0, l = children.length; i < l; i++ ) {
-
-      const child = children[i];
-      const type = typeof child;
-
-      if ( type === 'string' || type === 'number' || type === 'bigint' ) {
-
-        childrenNext.push ( new Text ( String ( child ) ) );
-
-      } else if ( type === 'object' && child !== null && typeof child.nodeType === 'number' ) {
-
-        childrenNext.push ( child );
-
-      } else if ( type === 'function' ) {
-
-        let prev: Node[] = [];
-
-        resolveChild ( child, child => {
-
-          const prevLength = prev.length;
-          const prevStart = prev[0];
-
-          prev = setChildStatic ( parent, child, prev );
-
-          const prevStartIndex = prevStart ? childrenNext.indexOf ( prevStart ) : childrenNext.length;
-
-          // if ( prevStartIndex === -1 ) debugger; // This should never happen, if it does happen we've got a bug
-
-          childrenNext.splice ( prevStartIndex, prevLength, ...prev );
-
-        });
-
-      }
+        return setChildReplacement ( child, childrenPrev[0] );
 
     }
 
-    if ( !childrenNext.length && childrenPrevLength === 1 && childrenPrev[0].nodeType === 8 ) { // It's a comment already, no need to replace it
+  }
 
-      return childrenPrev;
+  const childrenNext: Node[] = [];
+  const childrenNextSibling = childrenPrev[childrenPrevLength - 1]?.nextSibling || null;
+
+  const children: Node[] = Array.isArray ( child ) ? flatten ( child ) : [child]; //TSC
+
+  for ( let i = 0, l = children.length; i < l; i++ ) {
+
+    const child = children[i];
+    const type = typeof child;
+
+    if ( type === 'string' || type === 'number' || type === 'bigint' ) {
+
+      childrenNext.push ( new Text ( String ( child ) ) );
+
+    } else if ( type === 'object' && child !== null && typeof child.nodeType === 'number' ) {
+
+      childrenNext.push ( child );
+
+    } else if ( type === 'function' ) {
+
+      let prev: Node[] = [];
+
+      resolveChild ( child, child => {
+
+        const prevLength = prev.length;
+        const prevStart = prev[0];
+
+        prev = setChildStatic ( parent, child, prev );
+
+        const prevStartIndex = prevStart ? childrenNext.indexOf ( prevStart ) : childrenNext.length;
+
+        // if ( prevStartIndex === -1 ) debugger; // This should never happen, if it does happen we've got a bug
+
+        childrenNext.splice ( prevStartIndex, prevLength, ...prev );
+
+      });
 
     }
 
-    if ( !childrenNext.length && parent.childNodes.length === childrenPrevLength ) { // Fast path for removing all children
+  }
 
-      parent.textContent = '';
+  if ( !childrenNext.length && childrenPrevLength === 1 && childrenPrev[0].nodeType === 8 ) { // It's a comment already, no need to replace it
 
-      childrenPrev = [];
+    return childrenPrev;
 
-    }
+  }
 
-    if ( !childrenNext.length ) { // Placeholder, to keep the right spot in the array of children
+  if ( !childrenNext.length && parent.childNodes.length === childrenPrevLength ) { // Fast path for removing all children
 
-      childrenNext[0] = new Comment ();
+    parent.textContent = '';
 
-    }
+    childrenPrev = [];
 
-    diff ( parent, childrenPrev, childrenNext, childrenNextSibling );
+  }
 
-    return childrenNext;
+  if ( !childrenNext.length ) { // Placeholder, to keep the right spot in the array of children
 
-  };
+    childrenNext[0] = new Comment ();
 
-})();
+  }
+
+  diff ( parent, childrenPrev, childrenNext, childrenNextSibling );
+
+  return childrenNext;
+
+};
 
 const setChild = ( parent: HTMLElement, child: Child, childPrev: Node[] = [] ): Node[] => {
 

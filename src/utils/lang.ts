@@ -13,6 +13,26 @@ const castError = ( exception: unknown ): Error => {
 
 };
 
+const flatten = (() => {
+
+  const {isArray} = Array;
+
+  return <T> ( arr: T[] ) => {
+
+    for ( let i = 0, l = arr.length; i < l; i++ ) {
+
+      if ( !isArray ( arr[i] ) ) continue;
+
+      return arr.flat ( Infinity );
+
+    }
+
+    return arr;
+
+  };
+
+})();
+
 const indexOf = (() => {
 
   const _indexOf = Array.prototype.indexOf;
@@ -57,4 +77,4 @@ const isString = ( value: unknown ): value is string => {
 
 /* EXPORT */
 
-export {assign, castError, indexOf, isError, isFunction, isNil, isNode, isString};
+export {assign, castError, flatten, indexOf, isError, isFunction, isNil, isNode, isString};
