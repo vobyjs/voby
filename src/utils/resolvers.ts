@@ -3,7 +3,7 @@
 
 import type {Child, ChildResolved, FunctionResolver, ObservableResolver} from '../types';
 import useEffect from '../hooks/use_effect';
-import {$} from '../observable';
+import isObservable from '../is_observable';
 import {isFunction} from './lang';
 
 /* MAIN */
@@ -42,7 +42,7 @@ const resolveAbstract = <T> ( value: FunctionResolver<T>, setter: (( value: T, v
 
 const resolveChild = <T> ( value: ObservableResolver<T>, setter: (( value: T ) => void) ): void => {
 
-  if ( $.is ( value ) ) {
+  if ( isObservable ( value ) ) {
 
     useEffect ( () => {
 
@@ -106,7 +106,7 @@ const resolveFunction = <T> ( value: FunctionResolver<T>, setter: (( value: T, v
 
 const resolveObservable = <T> ( value: ObservableResolver<T>, setter: (( value?: T, valuePrev?: T ) => void) ): void => {
 
-  return resolveAbstract ( value, setter, $.is );
+  return resolveAbstract ( value, setter, isObservable );
 
 };
 
