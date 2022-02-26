@@ -8,12 +8,12 @@ import {setProps, setRef} from './utils/setters';
 
 /* MAIN */
 
+// It's important to wrap components, so that they can be executed in the right order, from parent to child, rather than from child to parent in some cases
+
 function createElement <T extends ComponentIntrinsicElement> ( component: T, props: Props | null, ..._children: Child[] ): (() => JSX.IntrinsicElementsMap[T]);
 function createElement <T extends ComponentNode> ( component: T | (() => T), props: Props | null, ..._children: Child[] ): (() => T);
 function createElement ( component: Component, props: Props | null, ..._children: Child[] ): (() => Child);
 function createElement ( component: Component, props: Props | null, ..._children: Child[] ): (() => Child) {
-
-  // It's important to wrap components, so that they can be executed in the right order, from parent to child, rather than from child to parent in some cases
 
   const { children: __children, key, ref, ...rest } = props || {};
   const children = ( _children.length === 1 ) ? _children[0] : ( _children.length === 0 ) ? __children : _children;

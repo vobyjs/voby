@@ -50,7 +50,7 @@ class CacheStatic<T> extends Cache<T> {
 
   dispose (): void {
 
-    for ( const [child, dispose] of this.cache.values () ) {
+    for ( const [, dispose] of this.cache.values () ) {
 
       dispose ();
 

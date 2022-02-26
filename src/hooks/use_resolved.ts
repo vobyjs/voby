@@ -1,15 +1,15 @@
 
 /* IMPORT */
 
-import type {FunctionResolver} from '../types';
+import type {Resolvable} from '../types';
 import {isFunction} from '../utils/lang';
 import useEffect from './use_effect';
 
 /* MAIN */
 
-function useResolved <T> ( value: FunctionResolver<T> ): T;
-function useResolved <T, R> ( value: FunctionResolver<T>, callback: (( value: T, valuePrev?: T ) => R) ): R;
-function useResolved <T, R> ( value: FunctionResolver<T>, callback?: (( value: T, valuePrev?: T ) => R) ): T | R {
+function useResolved <T> ( value: Resolvable<T> ): T;
+function useResolved <T, R> ( value: Resolvable<T>, callback: (( value: T, valuePrev?: T ) => R) ): R;
+function useResolved <T, R> ( value: Resolvable<T>, callback?: (( value: T, valuePrev?: T ) => R) ): T | R {
 
   if ( callback ) {
 
