@@ -7,9 +7,10 @@ A high-performance framework with fine-grained observable-based reactivity for b
 This works similarly to [Solid](https://www.solidjs.com), but without the need for the Babel transform and with a different API.
 
 - **No VDOM**: there's no VDOM overhead, the framework deals with raw DOM nodes directly.
-- **No stale closures**: components are executed once, so you don't need to worry about stale closures.
+- **No stale closures**: functions are always executed afresh, no need to worry about previous potential executions of the current function, ever.
+- **No rules of hooks**: hooks are just regular functions, which you can nest indefinitely, call conditionally, use outside components, whatever you want.
 - **No dependencies arrays**: the framework is able to detect what depends on what else automatically, no need to specify dependencies manually.
-- **No diffing**: updates are fine grained, there's no reconciliation overhead, no props diffing, whenever an attribute/property/class/handler/etc. should be updated it's updated directly and immediately.
+- **No diffing**: updates are fine grained, there's no props diffing, whenever an attribute/property/class/handler/etc. should be updated it's updated directly and immediately.
 - **No Babel**: there's no need to use Babel with this framework, it works with plain old JS (plus JSX if you are into that). As a consequence we have 0 transform function bugs, because we don't have a transform function.
 - **No server support**: for the time being this framework is focused on local-first rich applications, ~no server-related features are implemented: no hydration, no server components, no SSR, no suspense etc.
 - **Observable-based**: observables are at the core of our reactivity system. The way it works is very different from a React-like system, it may be more challenging to learn, but the effort is well worth it.
