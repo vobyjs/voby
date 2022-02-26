@@ -18,11 +18,33 @@ type Rotation = Observable<[number, number, number]>;
 /* HELPERS */
 
 const COUNT_INITIAL = 100;
-const COUNT_MIN = 20;
-const COUNT_MAX = 2000;
+const COUNT_MIN = 1;
+const COUNT_MAX = 10000;
 const SPEED = 0.01;
 
 /* MAIN */
+
+const useIdleInput = ( callback: (( event: Event ) => void) ) => {
+
+  let pending = false;
+
+  return ( event: Event ): void => {
+
+    if ( pending ) return;
+
+    pending = true;
+
+    setTimeout ( () => {
+
+      pending = false;
+
+      callback ( event );
+
+    }, 50 );
+
+  };
+
+};
 
 const useRotations = ( count: Observable<number> ): Observable<Rotation[]> => {
 
@@ -167,11 +189,11 @@ const App = (): JSX.Element => {
   const count = $(COUNT_INITIAL);
   const rotations = useRotations ( count );
 
-  const onInput = ( event ): void => {
+  const onInput = useIdleInput ( event => {
 
     count ( parseInt ( event.target.value ) );
 
-  };
+  });
 
   return (
     <main>

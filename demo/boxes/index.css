@@ -6,10 +6,16 @@ body {
 
 .controls {
   position: fixed;
+  left: 20px;
   top: 20px;
   right: 20px;
   display: flex;
   align-items: center;
+  justify-content: center;
+}
+
+input {
+  flex-grow: 1;
 }
 
 label {
