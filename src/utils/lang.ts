@@ -69,16 +69,6 @@ const isNode = ( value: unknown ): value is Node => {
 
 };
 
-const isObject = ( value: unknown ): value is unknown => {
-
-  if ( value === null ) return false;
-
-  const type = typeof value;
-
-  return type === 'object' || type === 'function';
-
-};
-
 const isString = ( value: unknown ): value is string => {
 
   return typeof value === 'string';
@@ -87,4 +77,4 @@ const isString = ( value: unknown ): value is string => {
 
 /* EXPORT */
 
-export {assign, castError, flatten, indexOf, isError, isFunction, isNil, isNode, isObject, isString};
+export {assign, castError, flatten, indexOf, isError, isFunction, isNil, isNode, isString};

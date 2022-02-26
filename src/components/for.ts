@@ -1,52 +1,40 @@
 
 /* IMPORT */
 
-import type {Child, ObservableReadonlyWithoutInitial, Resolvable} from '../types';
+import type {Child, ComponentFunction, ConstructorWith, ObservableReadonlyWithoutInitial, Resolvable} from '../types';
 import useComputed from '../hooks/use_computed';
 import useResolved from '../hooks/use_resolved';
-import sample from '../sample';
-import {isObject} from '../utils/lang';
-import {resolveChildDeep} from '../utils/resolvers';
+import {Cache, CacheStatic, CacheDynamic} from './for.caches';
 
 /* MAIN */
 
 //TODO: Write and test this much much better
 
-const For = <T> ({ values, children }: { values: Resolvable<T[]>, children: (( value: T ) => Child) }): ObservableReadonlyWithoutInitial<Child[]> => {
+const For = <T> ({ Cache, values, children }: { Cache?: ConstructorWith<Cache<T>, [ComponentFunction<T>]>, values: Resolvable<T[]>, children: (( value: T ) => Child) }): ObservableReadonlyWithoutInitial<Child[]> => {
 
-  let cachePersistent = new WeakMap<any, Child> (); //TSC
-  let cachePrevious = new Map<T, Child> ();
+  Cache = Cache || For.CacheDynamic;
+
+  const cache = new Cache ( children );
 
   return useComputed ( () => {
 
-    const cacheNext = new Map<T, Child> ();
+    cache.before ();
 
-    const resolved = useResolved ( values );
+    const result = useResolved ( values ).map ( value => cache.render ( value ) );
 
-    return sample ( () => { //FIXME: We want to sample here, but we want to be able to dispose of inner computations too
+    cache.after ();
 
-      const results = resolved.map ( ( value: T ): Child => {
-
-        const isPersistent = isObject ( value );
-        const cacheRead = isPersistent ? cachePersistent : cachePrevious;
-        const cacheWrite = isPersistent ? cachePersistent : cacheNext;
-        const result = cacheRead.has ( value ) ? cacheRead.get ( value ) : resolveChildDeep ( children ( value ) );
-
-        cacheWrite.set ( value, result );
-
-        return result;
-
-      });
-
-      cachePrevious = cacheNext;
-
-      return results;
-
-    });
+    return result;
 
   });
 
 };
+
+/* UTILITIES */
+
+For.Cache = Cache;
+For.CacheStatic = CacheStatic;
+For.CacheDynamic = CacheDynamic;
 
 /* EXPORT */
 
