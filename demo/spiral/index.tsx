@@ -1,14 +1,15 @@
 
 /* IMPORT */
 
-import {$, render, For, If, useAnimationLoop, useComputed, Observable, ObservableReadonly, ObservableMaybe} from 'voby';
+import {Observable, ObservableReadonly} from 'voby';
+import {$, render, For, If, useAnimationLoop, useComputed} from 'voby';
 
 /* MAIN */
 
-const COUNT = 500;
+const COUNT = 400;
 const LOOPS = 6;
 
-const Cursor = ({ big, label, x, y, color }: { big: ObservableMaybe<boolean>, label: ObservableMaybe<boolean>, x: Observable<number>, y: Observable<number>, color: string }): JSX.Element => {
+const Cursor = ({ big, label, x, y, color }: { big: Observable<boolean>, label: boolean, x: ObservableReadonly<number>, y: ObservableReadonly<number>, color?: ObservableReadonly<string> }): JSX.Element => {
 
   return (
     <div class={{ cursor: true, label, big }} style={{ left: x, top: y, borderColor: color }}>
@@ -75,10 +76,10 @@ const Spiral = (): JSX.Element => {
 
   return (
     <div id="main">
-      <Cursor label big={big} x={x} y={y} />
+      <Cursor label={true} big={big} x={x} y={y} />
       <For values={cursors}>
         {({ x, y, color }) => {
-          return <Cursor big={big} x={x ()} y={y ()} color={color ()} />
+          return <Cursor big={big} label={false} x={x} y={y} color={color} />
         }}
       </For>
     </div>

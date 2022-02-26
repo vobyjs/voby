@@ -12,6 +12,8 @@
     "compile:watch": "tsc --skipLibCheck --watch",
     "dev:benchmark": "cd demo/benchmark && npm i && npm update && npm run dev",
     "prod:benchmark": "cd demo/benchmark && npm i && npm update && npm run prod",
+    "dev:boxes": "cd demo/boxes && npm i && npm update && npm run dev",
+    "prod:boxes": "cd demo/boxes && npm i && npm update && npm run prod",
     "dev:clock": "cd demo/clock && npm i && npm update && npm run dev",
     "prod:clock": "cd demo/clock && npm i && npm update && npm run prod",
     "dev:counter": "cd demo/counter && npm i && npm update && npm run dev",
@@ -52,7 +54,7 @@
   ],
   "dependencies": {
     "goober": "2.1.8",
-    "oby": "^2.3.1",
+    "oby": "^2.4.0",
     "tiny-diff": "npm:@fabiospampinato/tiny-diff@^1.0.0"
   },
   "devDependencies": {

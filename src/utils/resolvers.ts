@@ -4,6 +4,7 @@
 import type {Child, ChildResolved, FunctionResolver, ObservableResolver} from '../types';
 import useEffect from '../hooks/use_effect';
 import isObservable from '../is_observable';
+import sample from '../sample';
 import {isFunction} from './lang';
 
 /* MAIN */
@@ -62,7 +63,7 @@ const resolveChild = <T> ( value: ObservableResolver<T>, setter: (( value: T ) =
 
   } else if ( isFunction ( value ) ) {
 
-    resolveChild ( value (), setter ); //FIXME: "value" should be sampled here, or it may be accidentally wrapped in a paret effect, the problem is we want to know about inner computations so that we can disposed of them, we just want them to not be reactive, we can't do that currently
+    resolveChild ( sample ( value ), setter );
 
   } else {
 

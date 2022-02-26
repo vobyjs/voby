@@ -27,7 +27,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
 
 ## APIs
 
-//TODO: List types too
+<!-- //TODO: List types too -->
 
 - [**Observable**](#observable)
   - [`$, $$`](#observable)
