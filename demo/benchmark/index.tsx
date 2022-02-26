@@ -4,7 +4,7 @@
 import {Observable, ObservableMaybe} from 'voby';
 import {$, render, template, For} from 'voby';
 
-/* TPYES */
+/* TYPES */
 
 type IDatum = Observable<{ id: string, label: Observable<string>, selected: Observable<boolean>, className: Observable<string> }>;
 
