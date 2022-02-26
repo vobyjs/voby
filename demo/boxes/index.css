@@ -1,0 +1,17 @@
+
+html,
+body {
+  overflow: hidden;
+}
+
+.controls {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+}
+
+label {
+  padding-left: 10px;
+}
