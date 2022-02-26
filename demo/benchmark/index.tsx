@@ -75,8 +75,8 @@ const Model = (() => {
   const update = (): void => {
     const data = $data ();
     for ( let i = 0, l = data.length; i < l; i += 10 ) {
-      const datum$ = data[i];
-      const datum = datum$ ();
+      const $datum = data[i];
+      const datum = $datum ();
       datum.label ( datum.label () + ' !!!' );
     }
   };
@@ -109,11 +109,11 @@ const Model = (() => {
       datum.className ( '' );
     }
     const data = $data ();
-    const datum$ = data.find ( datum => datum.sample ().id === id )!;
-    const datum = datum$ ();
+    const $datum = data.find ( datum => datum.sample ().id === id )!;
+    const datum = $datum ();
     datum.selected ( true );
     datum.className ( 'danger' );
-    $selected = datum$;
+    $selected = $datum;
   };
 
   return { $data, $selected, run, runLots, runWith, add, update, swapRows, clear, remove, select };
@@ -171,8 +171,8 @@ const App = (): JSX.Element => {
       <table class="table table-hover table-striped test-data">
         <tbody>
           <For values={$data}>
-            {( datum$: IDatum ) => {
-              const {id, label, className} = datum$ ();
+            {( $datum: IDatum ) => {
+              const {id, label, className} = $datum ();
               const onSelect = () => select ( id );
               const onRemove = () => remove ( id );
               const props = {id, label, className, onSelect, onRemove};
