@@ -617,7 +617,8 @@ declare namespace JSX {
 
   interface LabelHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
     form?: FunctionResolver<string>,
-    htmlFor?: FunctionResolver<string>
+    htmlFor?: FunctionResolver<string>,
+    for?: FunctionResolver<string>
   }
 
   interface LiHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
@@ -715,6 +716,7 @@ declare namespace JSX {
   interface OutputHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
     form?: FunctionResolver<string>,
     htmlFor?: FunctionResolver<string>,
+    for?: FunctionResolver<string>,
     name?: FunctionResolver<string>
   }
 

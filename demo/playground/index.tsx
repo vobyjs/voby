@@ -515,6 +515,20 @@ const TestPropertyValueRemoval = (): JSX.Element => {
   );
 };
 
+const TestInputLabelFor = (): JSX.Element => {
+  const o = $( String ( Math.random () ) );
+  const randomize = () => o.update ( prev => prev ? null : String ( Math.random () ) );
+  useInterval ( randomize, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Input - Label For</h3>
+      <p><label htmlFor="for-target">htmlFor</label></p>
+      <p><label for="for-target">for</label></p>
+      <p><input id="for-target" /></p>
+    </>
+  );
+};
+
 const TestClassNameStatic = (): JSX.Element => {
   return (
     <>
@@ -2037,6 +2051,7 @@ const Test = (): JSX.Element => {
       <TestPropertyValueObservable />
       <TestPropertyValueFunction />
       <TestPropertyValueRemoval />
+      <TestInputLabelFor />
       <TestClassNameStatic />
       <TestClassNameObservable />
       <TestClassNameFunction />
