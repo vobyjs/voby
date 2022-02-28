@@ -75,6 +75,12 @@ const isString = ( value: unknown ): value is string => {
 
 };
 
+const isUndefined = ( value: unknown ): value is undefined => {
+
+  return value === undefined;
+
+};
+
 /* EXPORT */
 
-export {assign, castError, flatten, indexOf, isError, isFunction, isNil, isNode, isString};
+export {assign, castError, flatten, indexOf, isError, isFunction, isNil, isNode, isString, isUndefined};

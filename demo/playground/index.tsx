@@ -3,8 +3,8 @@
 
 import {Observable} from 'voby';
 import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from 'voby';
-import {useComputed, useEffect, useInterval, usePromise, useTimeout} from 'voby';
-import {$, render, renderToString, styled, svg, template} from 'voby';
+import {useComputed, useContext, useEffect, useInterval, usePromise, useTimeout} from 'voby';
+import {$, createContext, render, renderToString, styled, svg, template} from 'voby';
 
 /* MAIN */
 
@@ -1917,6 +1917,54 @@ const TestStyledGlobalStatic = (): JSX.Element => {
   );
 };
 
+const TestContextComponents = (): JSX.Element => {
+  const Context = createContext ();
+  return (
+    <>
+      <h3>Context - Components</h3>
+      <Context.Provider value="outer">
+        <Context.Consumer>
+          {value => {
+            return <p>{value}</p>;
+          }}
+        </Context.Consumer>
+        <Context.Provider value="inner">
+          <Context.Consumer>
+            {value => {
+              return <p>{value}</p>;
+            }}
+          </Context.Consumer>
+        </Context.Provider>
+        <Context.Consumer>
+          {value => {
+            return <p>{value}</p>;
+          }}
+        </Context.Consumer>
+      </Context.Provider>
+    </>
+  );
+};
+
+const TestContextHook = (): JSX.Element => {
+  const Context = createContext ();
+  const Reader = (): JSX.Element => {
+    const value = useContext ( Context );
+    return <p>{value}</p>;
+  };
+  return (
+    <>
+      <h3>Context - Hook</h3>
+      <Context.Provider value="outer">
+        <Reader />
+        <Context.Provider value="inner">
+          <Reader />
+        </Context.Provider>
+        <Reader />
+      </Context.Provider>
+    </>
+  );
+};
+
 const TestRenderToString = async (): Promise<string> => {
   const App = (): JSX.Element => {
     const o = $( String ( Math.random () ) );
@@ -2148,6 +2196,8 @@ const Test = (): JSX.Element => {
       <TestStyledCSSStatic />
       <TestStyledExtension />
       <TestStyledGlobalStatic />
+      <TestContextComponents />
+      <TestContextHook />
       <TestPortalStatic />
       <TestPortalObservable />
       <TestPortalRemoval />

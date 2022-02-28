@@ -37,6 +37,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`$, $$`](#observable)
 - [**Methods**](#methods)
   - [`batch`](#batch)
+  - [`createContext`](#createcontext)
   - [`createElement`](#createelement)
   - [`isObservable`](#isobservable)
   - [`render`](#render)
@@ -60,6 +61,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`useAnimationLoop`](#useanimationloop)
   - [`useCleanup`](#usecleanup)
   - [`useComputed`](#usecomputed)
+  - [`useContext`](#usecontext)
   - [`useDisposed`](#usedisposed)
   - [`useEffect`](#useeffect)
   - [`useError`](#useerror)
@@ -110,6 +112,30 @@ This function holds onto updates within its scope and flushes them out at once o
 import {batch} from 'voby';
 
 batch // => Same as require ( 'oby' ).batch
+```
+
+#### `createContext`
+
+This function creates a context object, optionally with a default value, which can later be used to provide a new value for the context and to read the current value.
+
+```tsx
+import {createContext} from 'voby';
+
+const App = () => {
+  const ctx = createContext ( 123 );
+  return (
+    <>
+      <Context.Consumer>
+        {value => <p>{value}</p>}
+      </Context.Consumer>
+      <Context.Provider value={312}>
+        <Context.Consumer>
+          {value => <p>{value}</p>}
+        </Context.Consumer>
+      </Context.Provider>
+    </>
+  );
+};
 ```
 
 #### `createElement`
@@ -519,6 +545,20 @@ This hook registers a function to be called when any of its dependencies change,
 import {useComputed} from 'voby';
 
 useComputed // => Same as require ( 'oby' ).computed
+```
+
+#### `useContext`
+
+This hook retrieves the value of a context object.
+
+```tsx
+import {createContext, useContext} from 'voby';
+
+const App = () => {
+  const ctx = createContext ( 123 );
+  const value = useContext ( ctx );
+  return <p>{value}</p>;
+};
 ```
 
 #### `useDisposed`
