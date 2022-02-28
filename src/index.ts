@@ -4,7 +4,7 @@
 import './jsx/types';
 import type {Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableMaybe, ObservableRecordMaybe, FetchState, PromiseState, Resolvable} from './types';
 import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from './components';
-import {useAbortController, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useRoot, useTimeout} from './hooks';
+import {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useRoot, useTimeout} from './hooks';
 import batch from './batch';
 import createContext from './create_context';
 import createElement from './create_element';
@@ -21,5 +21,5 @@ import template from './template';
 
 export type {Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableMaybe, ObservableRecordMaybe, ObservableMaybe as O, ObservableRecordMaybe as OO, FetchState, PromiseState, Resolvable};
 export {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary};
-export {useAbortController, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useRoot, useTimeout};
+export {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useRoot, useTimeout};
 export {$, $$, batch, createContext, createElement, isObservable, render, renderToString, sample, styled, svg, template};

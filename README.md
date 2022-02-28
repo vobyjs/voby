@@ -57,6 +57,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`Ternary`](#ternary)
 - [**Hooks**](#hooks)
   - [`useAbortController`](#useabortcontroller)
+  - [`useAbortSignal`](#useabortsignal)
   - [`useAnimationFrame`](#useanimationframe)
   - [`useAnimationLoop`](#useanimationloop)
   - [`useCleanup`](#usecleanup)
@@ -499,6 +500,16 @@ This hook is just an alternative to `new AbortController ()` that automatically 
 import {useAbortController} from 'voby';
 
 const controller = useAbortController ();
+```
+
+#### `useAbortSignal`
+
+This hook is just a convenient alternative to `useAbortController`, if you are only interested in the signal, which is automatically aborted when the parent computation is disposed.
+
+```tsx
+import {useAbortSignal} from 'voby';
+
+const signal = useAbortSignal ();
 ```
 
 #### `useAnimationFrame`
