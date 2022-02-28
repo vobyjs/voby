@@ -1172,6 +1172,17 @@ const TestEventClickCaptureRemoval = (): JSX.Element => {
   );
 };
 
+const TestEventClickAndClickCaptureStatic = (): JSX.Element => {
+  const o = $( 0 );
+  const increment = () => o.update ( prev => prev + 1 );
+  return (
+    <>
+      <h3>Event - Click & Click Capture Static</h3>
+      <p><button onClick={increment} onClickCapture={increment}>{o}</button></p>
+    </>
+  );
+};
+
 const TestABCD = (): JSX.Element => {
   const AB = (): JSX.Element => {
     const a = <i>a</i>;
@@ -2155,6 +2166,7 @@ const Test = (): JSX.Element => {
       <TestEventClickCaptureStatic />
       <TestEventClickCaptureObservable />
       <TestEventClickCaptureRemoval />
+      <TestEventClickAndClickCaptureStatic />
       <TestABCD />
       <TestIfStatic />
       <TestIfObservable />
