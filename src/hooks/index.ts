@@ -11,6 +11,7 @@ import useContext from './use_context';
 import useDisposed from './use_disposed';
 import useEffect from './use_effect';
 import useError from './use_error';
+import useEventListener from './use_event_listener';
 import useFetch from './use_fetch';
 import useFrom from './use_from';
 import useIdleCallback from './use_idle_callback';
@@ -23,4 +24,4 @@ import useTimeout from './use_timeout';
 
 /* EXPORT */
 
-export {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useRoot, useTimeout};
+export {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useEventListener, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useRoot, useTimeout};

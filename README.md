@@ -67,6 +67,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`useDisposed`](#usedisposed)
   - [`useEffect`](#useeffect)
   - [`useError`](#useerror)
+  - [`useEventListener`](#useeventlistener)
   - [`useFetch`](#usefetch)
   - [`useFrom`](#usefrom)
   - [`useIdleCallback`](#useidlecallback)
@@ -619,6 +620,16 @@ This hook registers a function to be called when the parent computation throws.
 import {useError} from 'voby';
 
 useError // => Same as require ( 'oby' ).error
+```
+
+#### `useEventListener`
+
+This hook is just an alternative to `addEventListener` that automatically clears itself when the parent computation is disposed.
+
+```tsx
+import {useEventListener} from 'voby';
+
+useEventListener ( document, 'click', console.log );
 ```
 
 #### `useFetch`
