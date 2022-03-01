@@ -39,6 +39,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`batch`](#batch)
   - [`createContext`](#createcontext)
   - [`createElement`](#createelement)
+  - [`createObservable`](#createobservable)
   - [`isObservable`](#isobservable)
   - [`render`](#render)
   - [`renderToString`](#rendertostring)
@@ -147,6 +148,18 @@ This is the function that will make DOM nodes and call/instantiate components, i
 import {createElement} from 'voby';
 
 const element = createElement ( 'div', { class: 'foo' }, 'child' ); // => () => HTMLDivElement
+```
+
+#### `createObservable`
+
+This function creates a new observable.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#usage).
+
+```tsx
+import {createObservable} from 'voby';
+
+createObservable // => Same as require ( 'oby' ).default
 ```
 
 ### `isObservable`
