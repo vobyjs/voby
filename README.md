@@ -13,8 +13,8 @@ This works similarly to [Solid](https://www.solidjs.com), but without the need f
 - **No diffing**: updates are fine grained, there's no props diffing, whenever an attribute/property/class/handler/etc. should be updated it's updated directly and immediately.
 - **No Babel**: there's no need to use Babel with this framework, it works with plain old JS (plus JSX if you are into that). As a consequence we have 0 transform function bugs, because we don't have a transform function.
 - **No magic**: what you see if what you get, your code is not transformed to actually do something different than what you write, there are no surprises.
-- **No server support**: for the time being this framework is focused on local-first rich applications, ~no server-related features are implemented: no hydration, no server components, no SSR, no suspense etc.
-- **Observable-based**: observables are at the core of our reactivity system. The way it works is very different from a React-like system, it may be more challenging to learn, but the effort is well worth it.
+- **No server support**: for the time being this framework is focused on local-first rich applications, no server-related features are implemented: no hydration, no server components, no SSR, no suspense etc.
+- **Observable-based**: observables are at the core of our reactivity system. The way it works is very different from a React-like system, it may be more challenging to learn, but it's well worth the effort.
 - **Work in progress**: this is at best alpha software, I'm working on it because I need something with great performance for [Notable](https://github.com/notable/notable), I'm allergic to third-party dependencies, I'd like something with an API that resonates with me, and I wanted to deeply understand how the more solid [Solid](https://www.solidjs.com), which you should probably use instead, works.
 
 ## Demo
@@ -33,9 +33,9 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
 
 <!-- //TODO: List types too -->
 
-- [**Observable**](#observable)
-  - [`$, $$`](#observable)
 - [**Methods**](#methods)
+  - [`$`](#$)
+  - [`$$`](#$$)
   - [`batch`](#batch)
   - [`createContext`](#createcontext)
   - [`createElement`](#createelement)
@@ -75,6 +75,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`useInterval`](#useinterval)
   - [`usePromise`](#usepromise)
   - [`useResolved`](#useresolved)
+  - [`useResource`](#useresource)
   - [`useRoot`](#useroot)
   - [`useTimeout`](#usetimeout)
 - [**Extras**](#extras)
@@ -82,28 +83,37 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
 
 ## Usage
 
+This framework is just a view layer built on top of the Observable library [oby](https://github.com/fabiospampinato/oby), knowing how that works is necessary to understand how this works.
+
 The following is going to be a very shallow documentation of the API. As I mentioned this isn't production-grade software, it may become that in the future though, are you interested?
-
-### Observable
-
-First of all this framework is just a UI layer built on top of the Observable library [oby](https://github.com/fabiospampinato/oby), knowing how that works is necessary to understand how this works.
-
-Everything that `oby` provides is used internally and it's simply re-exported by `voby`.
-
-Generally whenever you can use a raw value you can also use an observable, for example if you pass a plain string as the value of an attribute it will never change, it you use an observable instead it will change whenever the value inside the observable changes, automatically.
-
-[Read upstream documentation](https://github.com/fabiospampinato/oby#usage).
-
-```tsx
-import {$, $$} from 'voby';
-
-$ // => Same as require ( 'oby' )
-$$ // => Same as require ( 'oby' ).get
-```
 
 ### Methods
 
 The following top-level methods are provided.
+
+#### `$`
+
+This function is just the defualt export of `oby`, it can be used to wrap a value in an observable.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#usage).
+
+```tsx
+import {$} from 'voby';
+
+$ // => Same as require ( 'oby' ).default
+```
+
+#### `$$`
+
+This function unwraps recursively a potentially observable value.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#get).
+
+```tsx
+import {$$} from 'voby';
+
+$$ // => Same as require ( 'oby' ).get
+```
 
 #### `batch`
 
@@ -153,7 +163,7 @@ const element = createElement ( 'div', { class: 'foo' }, 'child' ); // => () => 
 
 #### `createObservable`
 
-This function creates a new observable.
+This function creates a new observable. It's just an alias for `$`.
 
 [Read upstream documentation](https://github.com/fabiospampinato/oby#usage).
 
@@ -163,7 +173,7 @@ import {createObservable} from 'voby';
 createObservable // => Same as require ( 'oby' ).default
 ```
 
-### `isObservable`
+#### `isObservable`
 
 This function tells you if a variable is an observable or not.
 
@@ -317,13 +327,13 @@ const Table = () => {
 
 The following components are provided.
 
-Crucially some components are provided for control flow, since regular control flow primitives wouldn't be reactive.
+Crucially some components are provided for control flow, since regular JavaScript control flow primitives are not reactive.
 
 #### `Component`
 
 This is the base class for your class-based components, if you are into that.
 
-The nice thing about class-based components is that you get ref forwarding for free, the eventual ref passed to a class component will automatically receive the class instance corresponding to the component.
+The nice thing about class-based components is that you get ref forwarding and assignment for free, the eventual ref passed to a class component will automatically receive the class instance corresponding to the component.
 
 ```tsx
 import {Component} from 'voby';
@@ -502,9 +512,9 @@ const App = () => {
 
 The following hooks are provided.
 
-Many of these are just functions that `oby` provides, re-exported as `use*` functions.
+Many of these are just functions that `oby` provides, re-exported as `use*` functions, the rest are largely alternatives to built-ins that can accept observables as arguments and can dispose of themselves when the parent computation is disposed.
 
-Hooks are just regular functions, if their name starts with `use` then we call them hooks.
+Hooks are just regular functions, if their name starts with `use` then we call them hooks just because.
 
 #### `useAbortController`
 
@@ -518,7 +528,7 @@ const controller = useAbortController ();
 
 #### `useAbortSignal`
 
-This hook is just a convenient alternative to `useAbortController`, if you are only interested in the signal, which is automatically aborted when the parent computation is disposed.
+This hook is just a convenient alternative to `useAbortController`, if you are only interested in its signal, which is automatically aborted when the parent computation is disposed.
 
 ```tsx
 import {useAbortSignal} from 'voby';
@@ -560,7 +570,7 @@ useCleanup // => Same as require ( 'oby' ).cleanup
 
 #### `useComputed`
 
-This hook is the crucial other ingredients that we need, other than observables themselves, to have a powerful reactive system that can track dependencies and re-execute computations when needed.
+This hook is the crucial other ingredient that we need, other than observables themselves, to have a powerful reactive system that can track dependencies and re-execute computations when needed.
 
 This hook registers a function to be called when any of its dependencies change, and the return of that function is wrapped in a read-only observable and returned.
 
@@ -709,7 +719,7 @@ const App = () => {
 };
 ```
 
-### `useResolved`
+#### `useResolved`
 
 This hook receives a value potentially wrapped in functions and/or observables, and unwraps it recursively.
 
@@ -733,7 +743,21 @@ useResolved ( $($(123)), value => 321 ); // => 321
 useResolved ( () => () => 123, value => 321 ); // => 321
 ```
 
-### `useRoot`
+#### `useResource`
+
+This hook wraps the result of a function call with an observable, handling the cases where the function throws, the result is an observable, the result is a promise or an observale that resolves to a promise, and the promise rejects, so that you don't have to worry about these issues.
+
+This basically provides a unified way to handle sync and async results, observable and non observable results, and functions that throw and don't throw.
+
+```tsx
+import {useResource} from 'voby';
+
+const fetcher = () => fetch ( 'https://my.api' );
+
+const resource = useResource ( fetcher );
+```
+
+#### `useRoot`
 
 This hook creates a new computation root, detached from any parent computation.
 
@@ -755,17 +779,17 @@ import {useTimeout} from 'voby';
 useTimeout ( () => console.log ( 'called' ), 1000 );
 ```
 
-## Extras
+### Extras
 
 The following extra functionalities are provided via submodules.
 
-### `vite`
+#### `vite`
 
 A basic [Vite](https://github.com/vitejs/vite) plugin is provided.
 
 ```js
 // vite.js
-
+const {defineConfig} = require ( 'vite' );
 const voby = require ( 'voby/vite-plugin' );
 
 module.exports = defineConfig ({
