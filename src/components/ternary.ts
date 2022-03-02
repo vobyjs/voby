@@ -14,7 +14,7 @@ const Ternary = ({ when, children }: { when: Resolvable<boolean>, children: [Chi
 
     return useComputed ( () => {
 
-      if ( useResolved ( when ) ) return children[0];
+      if ( useResolved ( when, true ) ) return children[0];
 
       return children[1];
 

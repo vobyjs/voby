@@ -54,7 +54,7 @@
   ],
   "dependencies": {
     "goober": "2.1.8",
-    "oby": "^3.0.0",
+    "oby": "^3.1.1",
     "tiny-diff": "npm:@fabiospampinato/tiny-diff@^1.0.0"
   },
   "devDependencies": {

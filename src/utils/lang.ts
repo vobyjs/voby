@@ -3,6 +3,12 @@
 
 const {assign} = Object;
 
+const castArray = <T> ( value: T[] | T ): T[] => {
+
+  return isArray ( value ) ? value : [value];
+
+};
+
 const castError = ( exception: unknown ): Error => {
 
   if ( isError ( exception ) ) return exception;
@@ -13,25 +19,19 @@ const castError = ( exception: unknown ): Error => {
 
 };
 
-const flatten = (() => {
+const flatten = <T> ( arr: T[] ) => {
 
-  const {isArray} = Array;
+  for ( let i = 0, l = arr.length; i < l; i++ ) {
 
-  return <T> ( arr: T[] ) => {
+    if ( !isArray ( arr[i] ) ) continue;
 
-    for ( let i = 0, l = arr.length; i < l; i++ ) {
+    return arr.flat ( Infinity );
 
-      if ( !isArray ( arr[i] ) ) continue;
+  }
 
-      return arr.flat ( Infinity );
+  return arr;
 
-    }
-
-    return arr;
-
-  };
-
-})();
+};
 
 const indexOf = (() => {
 
@@ -44,6 +44,8 @@ const indexOf = (() => {
   };
 
 })();
+
+const {isArray} = Array;
 
 const isError = ( value: unknown ): value is Error => {
 
@@ -69,18 +71,18 @@ const isNode = ( value: unknown ): value is Node => {
 
 };
 
+const isPromise = ( value: unknown ): value is Promise<unknown> => {
+
+  return value instanceof Promise;
+
+};
+
 const isString = ( value: unknown ): value is string => {
 
   return typeof value === 'string';
 
 };
 
-const isUndefined = ( value: unknown ): value is undefined => {
-
-  return value === undefined;
-
-};
-
 /* EXPORT */
 
-export {assign, castError, flatten, indexOf, isError, isFunction, isNil, isNode, isString, isUndefined};
+export {assign, castArray, castError, flatten, indexOf, isArray, isError, isFunction, isNil, isNode, isPromise, isString};

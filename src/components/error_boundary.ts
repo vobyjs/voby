@@ -1,17 +1,17 @@
 
 /* IMPORT */
 
-import type {Child, Disposer} from '../types';
+import type {Child, Disposer, FN} from '../types';
+import $ from '../$';
 import createElement from '../create_element';
 import useComputed from '../hooks/use_computed';
 import useError from '../hooks/use_error';
-import {$} from '../observable';
 import {castError} from '../utils/lang';
 import {resolveChildDeep} from '../utils/resolvers';
 
 /* MAIN */
 
-const ErrorBoundary = ({ fallback, children }: { fallback: (( props: { error: Error, reset: Disposer } ) => Child), children: Child }): Child => {
+const ErrorBoundary = ({ fallback, children }: { fallback: FN<[{ error: Error, reset: Disposer }], Child>, children: Child }): Child => {
 
   const error = $<Error | null>( null );
 

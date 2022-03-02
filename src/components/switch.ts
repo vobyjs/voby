@@ -19,7 +19,11 @@ const Switch = <T> ({ when, children }: { when: Resolvable<T>, children: Child[]
 
     return useComputed ( () => {
 
-      return child ( useResolved ( when ) );
+      return useResolved ( [when], when => {
+
+        return child ( when );
+
+      }, true );
 
     });
 

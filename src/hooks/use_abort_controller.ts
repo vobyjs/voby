@@ -1,60 +1,29 @@
 
 /* IMPORT */
 
-import {$} from '../observable';
+import type {ArrayMaybe} from '../types';
+import {castArray} from '../utils/lang';
 import useCleanup from './use_cleanup';
-import useEffect from './use_effect';
+import useEventListener from './use_event_listener';
 
 /* MAIN */
 
-const useAbortController = ( signals?: AbortSignal[] ): AbortController => {
+const useAbortController = ( signals: ArrayMaybe<AbortSignal> = [] ): AbortController => {
 
-  const aborted = $(false);
-  const aborter = new AbortController ();
+  const controller = new AbortController ();
+  const abort = controller.abort.bind ( controller );
 
-  const abort = (): void => {
+  for ( const signal of castArray ( signals ) ) { //TODO: This is pretty inefficient if there are any aborted signals
 
-    aborter.abort ();
+    if ( signal.aborted ) abort ();
 
-    aborted ( true );
-
-  };
-
-  if ( signals ) {
-
-    useEffect ( () => {
-
-      if ( aborted () ) return;
-
-      for ( let i = 0, l = signals.length; i < l; i++ ) {
-
-        if ( signals[i].aborted ) return abort ();
-
-      }
-
-      for ( let i = 0, l = signals.length; i < l; i++ ) {
-
-        signals[i].addEventListener ( 'abort', abort );
-
-      }
-
-      return () => {
-
-        for ( let i = 0, l = signals.length; i < l; i++ ) {
-
-          signals[i].removeEventListener ( 'abort', abort );
-
-        }
-
-      };
-
-    });
+    useEventListener ( signal, 'abort', abort );
 
   }
 
   useCleanup ( abort );
 
-  return aborter;
+  return controller;
 
 };
 

@@ -2,23 +2,18 @@
 /* IMPORT */
 
 import type {Disposer, ObservableMaybe} from '../types';
-import {$$} from '../observable';
-import useSchedulerLoop from './use_scheduler_loop';
+import $$ from '../$$';
+import useScheduler from './use_scheduler';
 
 /* MAIN */
 
 const useIdleLoop = ( callback: ObservableMaybe<IdleRequestCallback>, options?: ObservableMaybe<IdleRequestOptions> ): Disposer => {
 
-  return useSchedulerLoop ({
+  return useScheduler ({
+    callback,
+    loop: true,
     cancel: cancelIdleCallback,
-    schedule: loop => {
-      const cb = $$(callback);
-      const opts = $$(options);
-      return requestIdleCallback ( deadline => {
-        loop ();
-        cb ( deadline );
-      }, opts );
-    }
+    schedule: callback => requestIdleCallback ( callback, $$(options) )
   });
 
 };

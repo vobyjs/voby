@@ -2,10 +2,9 @@
 /* IMPORT */
 
 import type {Child, Context} from './types';
+import $ from './$';
 import useComputed from './hooks/use_computed';
-import {$} from './observable';
 import sample from './sample';
-import {isUndefined} from './utils/lang';
 import {resolveChildDeep} from './utils/resolvers';
 
 /* MAIN */
@@ -32,8 +31,7 @@ const createContext = <T> ( defaultValue?: T ): Context<T> => {
 
   const Consumer = ({ children }: { children: (( value?: T ) => Child) }): Child => {
 
-    const valueContext = $.context<T> ( symbol );
-    const value = isUndefined ( valueContext ) ? defaultValue : valueContext;
+    const value = $.context<T> ( symbol ) ?? defaultValue;
 
     return children ( value );
 

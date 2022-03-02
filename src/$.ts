@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import $ from './$';
+import $ from 'oby';
 
 /* EXPORT */
 

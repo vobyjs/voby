@@ -8,7 +8,7 @@ import {Cache, CacheStatic, CacheDynamic} from './for.caches';
 
 /* MAIN */
 
-//TODO: Write and test this much much better
+//TODO: Write and test this much better
 
 const For = <T> ({ Cache, values, children }: { Cache?: ConstructorWith<Cache<T>, [ComponentFunction<T>]>, values: Resolvable<T[]>, children: (( value: T ) => Child) }): ObservableReadonlyWithoutInitial<Child[]> => {
 
@@ -20,7 +20,15 @@ const For = <T> ({ Cache, values, children }: { Cache?: ConstructorWith<Cache<T>
 
     cache.before ();
 
-    const result = useResolved ( values ).map ( value => cache.render ( value ) );
+    const result = useResolved ( [values], values => {
+
+      return values.map ( value => {
+
+        return cache.render ( value );
+
+      });
+
+    }, true );
 
     cache.after ();
 

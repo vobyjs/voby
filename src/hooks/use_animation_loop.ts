@@ -2,22 +2,17 @@
 /* IMPORT */
 
 import type {Disposer, ObservableMaybe} from '../types';
-import {$$} from '../observable';
-import useSchedulerLoop from './use_scheduler_loop';
+import useScheduler from './use_scheduler';
 
 /* MAIN */
 
 const useAnimationLoop = ( callback: ObservableMaybe<FrameRequestCallback> ): Disposer => {
 
-  return useSchedulerLoop ({
+  return useScheduler ({
+    callback,
+    loop: true,
     cancel: cancelAnimationFrame,
-    schedule: loop => {
-      const cb = $$(callback);
-      return requestAnimationFrame ( time => {
-        loop ();
-        cb ( time );
-      });
-    }
+    schedule: requestAnimationFrame
   });
 
 };

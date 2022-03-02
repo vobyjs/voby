@@ -14,7 +14,7 @@ const If = ({ when, children }: { when: Resolvable<boolean>, children: Child }):
 
     return useComputed ( () => {
 
-      if ( useResolved ( when ) ) return children;
+      if ( useResolved ( when, true ) ) return children;
 
     });
 

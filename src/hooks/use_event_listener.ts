@@ -1,13 +1,13 @@
 
 /* IMPORT */
 
+import type {Disposer, ObservableMaybe} from '../types';
 import useEffect from '../hooks/use_effect';
 import useResolved from '../hooks/use_resolved';
-import {Disposer, ObservableMaybe} from '../types';
 
 /* MAIN */
 
-const useEventListener = ({ target, event, handler, options }: { target: ObservableMaybe<Node | Window>, event: ObservableMaybe<string>, handler: ObservableMaybe<EventListener>, options: ObservableMaybe<true | AddEventListenerOptions> }): Disposer => {
+const useEventListener = ( target: ObservableMaybe<EventTarget>, event: ObservableMaybe<string>, handler: ObservableMaybe<EventListener>, options?: ObservableMaybe<true | AddEventListenerOptions> ): Disposer => {
 
   return useEffect ( () => {
 

@@ -2,7 +2,6 @@
 /* IMPORT */
 
 import type {Disposer, ObservableMaybe} from '../types';
-import {$$} from '../observable';
 import useScheduler from './use_scheduler';
 
 /* MAIN */
@@ -10,8 +9,9 @@ import useScheduler from './use_scheduler';
 const useAnimationFrame = ( callback: ObservableMaybe<FrameRequestCallback> ): Disposer => {
 
   return useScheduler ({
+    callback,
     cancel: cancelAnimationFrame,
-    schedule: () => requestAnimationFrame ( $$(callback) )
+    schedule: requestAnimationFrame
   });
 
 };

@@ -2,15 +2,16 @@
 /* IMPORT */
 
 import './jsx/types';
-import type {Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableMaybe, ObservableRecordMaybe, FetchState, PromiseState, Resolvable} from './types';
+import type {Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableMaybe, ObservableRecordMaybe, Resolvable, Resource} from './types';
 import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from './components';
-import {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useEventListener, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useRoot, useTimeout} from './hooks';
+import {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useEventListener, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useResource, useRoot, useTimeout} from './hooks';
+import $ from './$';
+import $$ from './$$';
 import batch from './batch';
 import createContext from './create_context';
 import createElement from './create_element';
 import createObservable from './create_observable';
 import isObservable from './is_observable';
-import {$, $$} from './observable';
 import render from './render';
 import renderToString from './render_to_string';
 import sample from './sample';
@@ -20,7 +21,7 @@ import template from './template';
 
 /* EXPORT */
 
-export type {Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableMaybe, ObservableRecordMaybe, ObservableMaybe as O, ObservableRecordMaybe as OO, FetchState, PromiseState, Resolvable};
+export type {Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableMaybe, ObservableRecordMaybe, ObservableMaybe as O, ObservableRecordMaybe as OO, Resolvable, Resource};
 export {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary};
-export {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useEventListener, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useRoot, useTimeout};
+export {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useEventListener, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useResource, useRoot, useTimeout};
 export {$, $$, batch, createContext, createElement, createObservable, isObservable, render, renderToString, sample, styled, svg, template};

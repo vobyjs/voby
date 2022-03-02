@@ -1,54 +1,26 @@
 
 /* IMPORT */
 
-import type {FetchState, Observable, ObservableMaybe} from '../types';
-import {$, $$} from '../observable';
-import {castError} from '../utils/lang';
+import type {Observable, ObservableMaybe, Resource} from '../types';
+import $$ from '../$$';
 import useAbortController from './use_abort_controller';
-import useDisposed from './use_disposed';
-import useEffect from './use_effect';
+import useResource from './use_resource';
 
 /* MAIN */
 
-const useFetch = ( input: ObservableMaybe<RequestInfo>, init?: ObservableMaybe<RequestInit> ): Observable<FetchState> => {
+const useFetch = ( info: ObservableMaybe<RequestInfo>, init?: ObservableMaybe<RequestInit> ): Observable<Resource<Response>> => {
 
-  const state = $<FetchState>({ loading: true });
+  return useResource ( () => {
 
-  useEffect ( () => {
-
-    const disposed = useDisposed ();
-
-    state ({ loading: true });
-
-    const onResolve = ( response: Response ): void => {
-
-      if ( disposed () ) return;
-
-      state ({ loading: false, response });
-
-    };
-
-    const onReject = ( exception: unknown ): void => {
-
-      if ( disposed () ) return;
-
-      const error = castError ( exception );
-
-      state ({ loading: false, error });
-
-    };
-
-    const request = $$(input);
+    const request = $$(info);
     const options = $$(init) || {};
-    const signal = useAbortController ( options.signal ? [options.signal] : undefined ).signal;
+    const signal = useAbortController ( options.signal || [] ).signal;
 
     options.signal = signal;
 
-    fetch ( request, options ).then ( onResolve, onReject );
+    return fetch ( request, options );
 
   });
-
-  return state;
 
 };
 

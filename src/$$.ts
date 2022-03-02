@@ -5,8 +5,8 @@ import $ from './$';
 
 /* MAIN */
 
-const sample = $.sample;
+const $$ = $.get;
 
 /* EXPORT */
 
-export default sample;
+export default $$;

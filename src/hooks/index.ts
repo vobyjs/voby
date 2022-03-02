@@ -19,9 +19,10 @@ import useIdleLoop from './use_idle_loop';
 import useInterval from './use_interval';
 import usePromise from './use_promise';
 import useResolved from './use_resolved';
+import useResource from './use_resource';
 import useRoot from './use_root';
 import useTimeout from './use_timeout';
 
 /* EXPORT */
 
-export {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useEventListener, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useRoot, useTimeout};
+export {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useEventListener, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useResource, useRoot, useTimeout};

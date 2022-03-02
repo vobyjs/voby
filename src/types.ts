@@ -1,6 +1,8 @@
 
 /* MAIN */
 
+type ArrayMaybe<T = unknown> = T | T[];
+
 type Callback = () => void;
 
 type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child) | ((() => Child) & { metadata: any }) | ({ (): Child, get (): Child, sample (): Child });
@@ -27,55 +29,57 @@ type ContextConsumer<T = unknown> = ( props: { children: (( value?: T ) => Child
 
 type ContextProvider<T = unknown> = ( props: { value: T, children: Child } ) => Child;
 
-type Context<T> = { Consumer: ContextConsumer<T>, Provider: ContextProvider<T> };
+type Context<T = unknown> = { Consumer: ContextConsumer<T>, Provider: ContextProvider<T> };
 
 type Disposer = () => void;
 
 type EventListener = ( event: Event ) => unknown;
 
-type FetchStateLoading = { loading: true, error?: never, response?: never };
+type FN<Arguments extends unknown[], Return extends unknown = unknown> = ( ...args: Arguments ) => Return;
 
-type FetchStateRejected = { loading: false, error: Error, response?: never };
+type FunctionMaybe<T = unknown> = (() => T) | T;
 
-type FetchStateResolved = { loading: false, error?: never, response: Response };
-
-type FetchState = FetchStateLoading | FetchStateRejected | FetchStateResolved;
+type FunctionRecursed<T = unknown> = T extends ({ (): infer U }) ? FunctionRecursed<U> : T;
 
 type FunctionResolver<T = unknown> = ({ (): FunctionResolver<T> }) | T;
 
 type Key = string;
 
-type Observable<T = unknown> = import ( 'oby/dist/types' ).ObservableCallable<T>;
+type Observable<T = unknown> = import ( 'oby' ).Observable<T>;
 
-type ObservableWithoutInitial<T = unknown> = import ( 'oby/dist/types' ).ObservableCallableWithoutInitial<T>;
+type ObservableWithoutInitial<T = unknown> = import ( 'oby' ).ObservableWithoutInitial<T>;
 
-type ObservableReadonly<T = unknown> = import ( 'oby/dist/types' ).ReadonlyObservableCallable<T>;
+type ObservableReadonly<T = unknown> = import ( 'oby' ).ObservableReadonly<T>;
 
-type ObservableReadonlyWithoutInitial<T = unknown> = import ( 'oby/dist/types' ).ReadonlyObservableCallableWithoutInitial<T>;
+type ObservableReadonlyWithoutInitial<T = unknown> = import ( 'oby' ).ObservableReadonlyWithoutInitial<T>;
 
-type ObservableAny<T = unknown> = import ( 'oby/dist/types' ).ObservableAny<T>;
+type ObservableAny<T = unknown> = import ( 'oby' ).ObservableAny<T>;
 
-type ObservableAccessor<T = unknown> = ({ (): T, get (): T, sample (): T });
-
-type ObservableMaybe<T = unknown> = T | Observable<T> | ObservableReadonly<T>;
+type ObservableMaybe<T = unknown> = Observable<T> | ObservableReadonly<T> | T;
 
 type ObservableRecordMaybe<T = {}> = { [P in keyof T]: P extends 'key' | 'ref' | 'children' ? T[P] : ObservableMaybe<T[P]> };
 
-type ObservableResolver<T = unknown> = Observable<T> | ObservableReadonly<T> | ({ (): ObservableResolver<T>, get (): ObservableResolver<T>, sample (): ObservableResolver<T> }) | T;
+type ObservableRecursed<T = unknown> = T extends ({ (): infer U, get (): infer U, sample (): infer U }) ? ObservableRecursed<U> : T;
 
-type PromiseStateLoading = { loading: true, error?: never, value?: never };
+type ObservableResolver<T = unknown> = ({ (): ObservableResolver<T>, get (): ObservableResolver<T>, sample (): ObservableResolver<T> }) | T;
 
-type PromiseStateRejected = { loading: false, error: Error, value?: never };
+type ObservableOptions<T = unknown, TI = unknown> = import ( 'oby' ).ObservableOptions<T, TI>;
 
-type PromiseStateResolved<T = unknown> = { loading: false, error?: never, value: T };
-
-type PromiseState<T = unknown> = PromiseStateLoading | PromiseStateRejected | PromiseStateResolved<T>;
+type PromiseMaybe<T = unknown> = T | Promise<T>;
 
 type Props = Record<string, any>;
 
 type Ref<T = unknown> = ( value: T ) => unknown;
 
-type Resolvable<T = unknown> = FunctionResolver<T>;
+type Resolvable<T = unknown> = (() => () => () => () => T) | (() => () => () => T) | (() => () => T) | (() => T) | T; //TODO: It should be `FunctionResolver<T>`, but it causes too much recursion for TS
+
+type ResourceLoading = { loading: true, error?: never, value?: never };
+
+type ResourceRejected = { loading: false, error: Error, value?: never };
+
+type ResourceResolved<T = unknown> = { loading: false, error?: never, value: T };
+
+type Resource<T = unknown> = ResourceLoading | ResourceRejected | ResourceResolved<T>;
 
 type TemplateActionPath = number[];
 
@@ -87,4 +91,4 @@ type TemplateActionWithPaths = [TemplateActionPath, string, string, TemplateActi
 
 /* EXPORT */
 
-export type {Callback, Child, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, Disposer, EventListener, FetchStateLoading, FetchStateRejected, FetchStateResolved, FetchState, FunctionResolver, Key, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableAccessor, ObservableMaybe, ObservableRecordMaybe, ObservableResolver, PromiseStateLoading, PromiseStateRejected, PromiseStateResolved, PromiseState, Props, Ref, Resolvable, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};
+export type {ArrayMaybe, Callback, Child, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, Disposer, EventListener, FN, FunctionMaybe, FunctionRecursed, FunctionResolver, Key, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableMaybe, ObservableRecordMaybe, ObservableRecursed, ObservableResolver, ObservableOptions, PromiseMaybe, Props, Ref, Resolvable, ResourceLoading, ResourceRejected, ResourceResolved, Resource, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};

@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import type {Callback, Disposer, ObservableMaybe} from '../types';
-import {$$} from '../observable';
+import $$ from '../$$';
 import useScheduler from './use_scheduler';
 
 /* MAIN */
@@ -10,8 +10,9 @@ import useScheduler from './use_scheduler';
 const useTimeout = ( callback: ObservableMaybe<Callback>, ms?: ObservableMaybe<number> ): Disposer => {
 
   return useScheduler ({
+    callback,
     cancel: clearTimeout,
-    schedule: () => setTimeout ( $$(callback), $$(ms) )
+    schedule: callback => setTimeout ( callback, $$(ms) )
   });
 
 };

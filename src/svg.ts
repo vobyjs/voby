@@ -17,7 +17,7 @@ const svg = ( statics: TemplateStringsArray, ...dynamics: Resolvable<null | unde
 
     for ( let i = 1, l = statics.length; i < l; i++ ) {
 
-      html += String ( useResolved ( dynamics[i - 1] ) );
+      html += String ( useResolved ( dynamics[i - 1], true ) );
       html += statics[i];
 
     }
