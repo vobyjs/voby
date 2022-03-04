@@ -17,24 +17,22 @@ interface Object {
 
 /* HELPERS */
 
-type ObservableResolver<T = unknown> = T | ({
-  (): ObservableResolver<T>,
-  get (): ObservableResolver<T>,
-  sample (): ObservableResolver<T>
-});
+type FunctionMaybe<T = unknown> = ({ (): T }) | T;
 
-type FunctionResolver<T = unknown> = ({ (): FunctionResolver<T> }) | T;
+type ObservableAccessor<T> = ({ (): T, get (): T, sample (): T });
+
+type ObservableMaybe<T = unknown> = ObservableAccessor<T> | T;
 
 type AllClassProperties = {
-  [key: string]: FunctionResolver<null | undefined | boolean>
+  [key: string]: FunctionMaybe<null | undefined | boolean>
 };
 
 type AllCSSProperties = {
-  [key: string]: FunctionResolver<string | number | null | undefined>
+  [key: string]: FunctionMaybe<string | number | null | undefined>
 };
 
 type DOMCSSProperties = {
-  [key in keyof Omit<CSSStyleDeclaration, 'item' | 'setProperty' | 'removeProperty' | 'getPropertyValue' | 'getPropertyPriority'>]?: FunctionResolver<string | number | null | undefined>
+  [key in keyof Omit<CSSStyleDeclaration, 'item' | 'setProperty' | 'removeProperty' | 'getPropertyValue' | 'getPropertyPriority'>]?: FunctionMaybe<string | number | null | undefined>
 };
 
 type HTMLAttributeReferrerPolicy = '' | 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url';
@@ -107,251 +105,251 @@ declare namespace JSX {
   }
 
   interface AriaAttributes {
-    ariaActivedescendant?: FunctionResolver<string>,
-    ariaAtomic?: FunctionResolver<boolean | 'true' | 'false'>,
-    ariaAutocomplete?: FunctionResolver<'none' | 'inline' | 'list' | 'both'>,
-    ariaBusy?: FunctionResolver<boolean | 'true' | 'false'>,
-    ariaChecked?: FunctionResolver<boolean | 'false' | 'mixed' | 'true'>,
-    ariaColcount?: FunctionResolver<number>,
-    ariaColindex?: FunctionResolver<number>,
-    ariaColspan?: FunctionResolver<number>,
-    ariaControls?: FunctionResolver<string>,
-    ariaCurrent?: FunctionResolver<boolean | 'false' | 'true' | 'page' | 'step' | 'location' | 'date' | 'time'>,
-    ariaDescribedby?: FunctionResolver<string>,
-    ariaDetails?: FunctionResolver<string>,
-    ariaDisabled?: FunctionResolver<boolean | 'true' | 'false'>,
-    ariaDropeffect?: FunctionResolver<'none' | 'copy' | 'execute' | 'link' | 'move' | 'popup'>,
-    ariaErrormessage?: FunctionResolver<string>,
-    ariaExpanded?: FunctionResolver<boolean | 'true' | 'false'>,
-    ariaFlowto?: FunctionResolver<string>,
-    ariaGrabbed?: FunctionResolver<boolean | 'true' | 'false'>,
-    ariaHaspopup?: FunctionResolver<boolean | 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog'>,
-    ariaHidden?: FunctionResolver<boolean | 'true' | 'false'>,
-    ariaInvalid?: FunctionResolver<boolean | 'false' | 'true' | 'grammar' | 'spelling'>,
-    ariaKeyshortcuts?: FunctionResolver<string>,
-    ariaLabel?: FunctionResolver<string>,
-    ariaLabelledby?: FunctionResolver<string>,
-    ariaLevel?: FunctionResolver<number>,
-    ariaLive?: FunctionResolver<'off' | 'assertive' | 'polite'>,
-    ariaModal?: FunctionResolver<boolean | 'true' | 'false'>,
-    ariaMultiline?: FunctionResolver<boolean | 'true' | 'false'>,
-    ariaMultiselectable?: FunctionResolver<boolean | 'true' | 'false'>,
-    ariaOrientation?: FunctionResolver<'horizontal' | 'vertical'>,
-    ariaOwns?: FunctionResolver<string>,
-    ariaPlaceholder?: FunctionResolver<string>,
-    ariaPosinset?: FunctionResolver<number>,
-    ariaPressed?: FunctionResolver<boolean | 'false' | 'mixed' | 'true'>,
-    ariaReadonly?: FunctionResolver<boolean | 'true' | 'false'>,
-    ariaRelevant?: FunctionResolver<'additions' | 'additions removals' | 'additions text' | 'all' | 'removals' | 'removals additions' | 'removals text' | 'text' | 'text additions' | 'text removals'>,
-    ariaRequired?: FunctionResolver<boolean | 'true' | 'false'>,
-    ariaRoledescription?: FunctionResolver<string>,
-    ariaRowcount?: FunctionResolver<number>,
-    ariaRowindex?: FunctionResolver<number>,
-    ariaRowspan?: FunctionResolver<number>,
-    ariaSelected?: FunctionResolver<boolean | 'true' | 'false'>,
-    ariaSetsize?: FunctionResolver<number>,
-    ariaSort?: FunctionResolver<'none' | 'ascending' | 'descending' | 'other'>,
-    ariaValuemax?: FunctionResolver<number>,
-    ariaValuemin?: FunctionResolver<number>,
-    ariaValuenow?: FunctionResolver<number>,
-    ariaValuetext?: FunctionResolver<string>
+    ariaActivedescendant?: FunctionMaybe<string>,
+    ariaAtomic?: FunctionMaybe<boolean | 'true' | 'false'>,
+    ariaAutocomplete?: FunctionMaybe<'none' | 'inline' | 'list' | 'both'>,
+    ariaBusy?: FunctionMaybe<boolean | 'true' | 'false'>,
+    ariaChecked?: FunctionMaybe<boolean | 'false' | 'mixed' | 'true'>,
+    ariaColcount?: FunctionMaybe<number>,
+    ariaColindex?: FunctionMaybe<number>,
+    ariaColspan?: FunctionMaybe<number>,
+    ariaControls?: FunctionMaybe<string>,
+    ariaCurrent?: FunctionMaybe<boolean | 'false' | 'true' | 'page' | 'step' | 'location' | 'date' | 'time'>,
+    ariaDescribedby?: FunctionMaybe<string>,
+    ariaDetails?: FunctionMaybe<string>,
+    ariaDisabled?: FunctionMaybe<boolean | 'true' | 'false'>,
+    ariaDropeffect?: FunctionMaybe<'none' | 'copy' | 'execute' | 'link' | 'move' | 'popup'>,
+    ariaErrormessage?: FunctionMaybe<string>,
+    ariaExpanded?: FunctionMaybe<boolean | 'true' | 'false'>,
+    ariaFlowto?: FunctionMaybe<string>,
+    ariaGrabbed?: FunctionMaybe<boolean | 'true' | 'false'>,
+    ariaHaspopup?: FunctionMaybe<boolean | 'false' | 'true' | 'menu' | 'listbox' | 'tree' | 'grid' | 'dialog'>,
+    ariaHidden?: FunctionMaybe<boolean | 'true' | 'false'>,
+    ariaInvalid?: FunctionMaybe<boolean | 'false' | 'true' | 'grammar' | 'spelling'>,
+    ariaKeyshortcuts?: FunctionMaybe<string>,
+    ariaLabel?: FunctionMaybe<string>,
+    ariaLabelledby?: FunctionMaybe<string>,
+    ariaLevel?: FunctionMaybe<number>,
+    ariaLive?: FunctionMaybe<'off' | 'assertive' | 'polite'>,
+    ariaModal?: FunctionMaybe<boolean | 'true' | 'false'>,
+    ariaMultiline?: FunctionMaybe<boolean | 'true' | 'false'>,
+    ariaMultiselectable?: FunctionMaybe<boolean | 'true' | 'false'>,
+    ariaOrientation?: FunctionMaybe<'horizontal' | 'vertical'>,
+    ariaOwns?: FunctionMaybe<string>,
+    ariaPlaceholder?: FunctionMaybe<string>,
+    ariaPosinset?: FunctionMaybe<number>,
+    ariaPressed?: FunctionMaybe<boolean | 'false' | 'mixed' | 'true'>,
+    ariaReadonly?: FunctionMaybe<boolean | 'true' | 'false'>,
+    ariaRelevant?: FunctionMaybe<'additions' | 'additions removals' | 'additions text' | 'all' | 'removals' | 'removals additions' | 'removals text' | 'text' | 'text additions' | 'text removals'>,
+    ariaRequired?: FunctionMaybe<boolean | 'true' | 'false'>,
+    ariaRoledescription?: FunctionMaybe<string>,
+    ariaRowcount?: FunctionMaybe<number>,
+    ariaRowindex?: FunctionMaybe<number>,
+    ariaRowspan?: FunctionMaybe<number>,
+    ariaSelected?: FunctionMaybe<boolean | 'true' | 'false'>,
+    ariaSetsize?: FunctionMaybe<number>,
+    ariaSort?: FunctionMaybe<'none' | 'ascending' | 'descending' | 'other'>,
+    ariaValuemax?: FunctionMaybe<number>,
+    ariaValuemin?: FunctionMaybe<number>,
+    ariaValuenow?: FunctionMaybe<number>,
+    ariaValuetext?: FunctionMaybe<string>
   }
 
   interface EventAttributes<T extends EventTarget> {
     /* IMAGE EVENTS */
-    onLoad?: ObservableResolver<GenericEventHandler<T>>,
-    onLoadCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onError?: ObservableResolver<GenericEventHandler<T>>,
-    onErrorCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onLoad?: ObservableMaybe<GenericEventHandler<T>>,
+    onLoadCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onError?: ObservableMaybe<GenericEventHandler<T>>,
+    onErrorCapture?: ObservableMaybe<GenericEventHandler<T>>,
     /* CLIPBOARD EVENTS */
-    onCopy?: ObservableResolver<ClipboardEventHandler<T>>,
-    onCopyCapture?: ObservableResolver<ClipboardEventHandler<T>>,
-    onCut?: ObservableResolver<ClipboardEventHandler<T>>,
-    onCutCapture?: ObservableResolver<ClipboardEventHandler<T>>,
-    onPaste?: ObservableResolver<ClipboardEventHandler<T>>,
-    onPasteCapture?: ObservableResolver<ClipboardEventHandler<T>>,
+    onCopy?: ObservableMaybe<ClipboardEventHandler<T>>,
+    onCopyCapture?: ObservableMaybe<ClipboardEventHandler<T>>,
+    onCut?: ObservableMaybe<ClipboardEventHandler<T>>,
+    onCutCapture?: ObservableMaybe<ClipboardEventHandler<T>>,
+    onPaste?: ObservableMaybe<ClipboardEventHandler<T>>,
+    onPasteCapture?: ObservableMaybe<ClipboardEventHandler<T>>,
     /* COMPOSITION EVENTS */
-    onCompositionEnd?: ObservableResolver<CompositionEventHandler<T>>,
-    onCompositionEndCapture?: ObservableResolver<CompositionEventHandler<T>>,
-    onCompositionStart?: ObservableResolver<CompositionEventHandler<T>>,
-    onCompositionStartCapture?: ObservableResolver<CompositionEventHandler<T>>,
-    onCompositionUpdate?: ObservableResolver<CompositionEventHandler<T>>,
-    onCompositionUpdateCapture?: ObservableResolver<CompositionEventHandler<T>>,
+    onCompositionEnd?: ObservableMaybe<CompositionEventHandler<T>>,
+    onCompositionEndCapture?: ObservableMaybe<CompositionEventHandler<T>>,
+    onCompositionStart?: ObservableMaybe<CompositionEventHandler<T>>,
+    onCompositionStartCapture?: ObservableMaybe<CompositionEventHandler<T>>,
+    onCompositionUpdate?: ObservableMaybe<CompositionEventHandler<T>>,
+    onCompositionUpdateCapture?: ObservableMaybe<CompositionEventHandler<T>>,
     /* DETAILS EVENTS */
-    onToggle?: ObservableResolver<GenericEventHandler<T>>,
+    onToggle?: ObservableMaybe<GenericEventHandler<T>>,
     /* FOCUS EVENTS */
-    onFocus?: ObservableResolver<FocusEventHandler<T>>,
-    onFocusCapture?: ObservableResolver<FocusEventHandler<T>>,
-    onfocusin?: ObservableResolver<FocusEventHandler<T>>,
-    onfocusinCapture?: ObservableResolver<FocusEventHandler<T>>,
-    onfocusout?: ObservableResolver<FocusEventHandler<T>>,
-    onfocusoutCapture?: ObservableResolver<FocusEventHandler<T>>,
-    onBlur?: ObservableResolver<FocusEventHandler<T>>,
-    onBlurCapture?: ObservableResolver<FocusEventHandler<T>>,
+    onFocus?: ObservableMaybe<FocusEventHandler<T>>,
+    onFocusCapture?: ObservableMaybe<FocusEventHandler<T>>,
+    onfocusin?: ObservableMaybe<FocusEventHandler<T>>,
+    onfocusinCapture?: ObservableMaybe<FocusEventHandler<T>>,
+    onfocusout?: ObservableMaybe<FocusEventHandler<T>>,
+    onfocusoutCapture?: ObservableMaybe<FocusEventHandler<T>>,
+    onBlur?: ObservableMaybe<FocusEventHandler<T>>,
+    onBlurCapture?: ObservableMaybe<FocusEventHandler<T>>,
     /* FORM EVENTS */
-    onChange?: ObservableResolver<GenericEventHandler<T>>,
-    onChangeCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onInput?: ObservableResolver<GenericEventHandler<T>>,
-    onInputCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onBeforeInput?: ObservableResolver<GenericEventHandler<T>>,
-    onBeforeInputCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onSearch?: ObservableResolver<GenericEventHandler<T>>,
-    onSearchCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onSubmit?: ObservableResolver<GenericEventHandler<T>>,
-    onSubmitCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onInvalid?: ObservableResolver<GenericEventHandler<T>>,
-    onInvalidCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onReset?: ObservableResolver<GenericEventHandler<T>>,
-    onResetCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onFormData?: ObservableResolver<GenericEventHandler<T>>,
-    onFormDataCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onChange?: ObservableMaybe<GenericEventHandler<T>>,
+    onChangeCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onInput?: ObservableMaybe<GenericEventHandler<T>>,
+    onInputCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onBeforeInput?: ObservableMaybe<GenericEventHandler<T>>,
+    onBeforeInputCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onSearch?: ObservableMaybe<GenericEventHandler<T>>,
+    onSearchCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onSubmit?: ObservableMaybe<GenericEventHandler<T>>,
+    onSubmitCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onInvalid?: ObservableMaybe<GenericEventHandler<T>>,
+    onInvalidCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onReset?: ObservableMaybe<GenericEventHandler<T>>,
+    onResetCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onFormData?: ObservableMaybe<GenericEventHandler<T>>,
+    onFormDataCapture?: ObservableMaybe<GenericEventHandler<T>>,
     /* KEYBOARD EVENTS */
-    onKeyDown?: ObservableResolver<KeyboardEventHandler<T>>,
-    onKeyDownCapture?: ObservableResolver<KeyboardEventHandler<T>>,
-    onKeyPress?: ObservableResolver<KeyboardEventHandler<T>>,
-    onKeyPressCapture?: ObservableResolver<KeyboardEventHandler<T>>,
-    onKeyUp?: ObservableResolver<KeyboardEventHandler<T>>,
-    onKeyUpCapture?: ObservableResolver<KeyboardEventHandler<T>>,
+    onKeyDown?: ObservableMaybe<KeyboardEventHandler<T>>,
+    onKeyDownCapture?: ObservableMaybe<KeyboardEventHandler<T>>,
+    onKeyPress?: ObservableMaybe<KeyboardEventHandler<T>>,
+    onKeyPressCapture?: ObservableMaybe<KeyboardEventHandler<T>>,
+    onKeyUp?: ObservableMaybe<KeyboardEventHandler<T>>,
+    onKeyUpCapture?: ObservableMaybe<KeyboardEventHandler<T>>,
     /* MEDIA EVENTS */
-    onAbort?: ObservableResolver<GenericEventHandler<T>>,
-    onAbortCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onCanPlay?: ObservableResolver<GenericEventHandler<T>>,
-    onCanPlayCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onCanPlayThrough?: ObservableResolver<GenericEventHandler<T>>,
-    onCanPlayThroughCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onDurationChange?: ObservableResolver<GenericEventHandler<T>>,
-    onDurationChangeCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onEmptied?: ObservableResolver<GenericEventHandler<T>>,
-    onEmptiedCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onEncrypted?: ObservableResolver<GenericEventHandler<T>>,
-    onEncryptedCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onEnded?: ObservableResolver<GenericEventHandler<T>>,
-    onEndedCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onLoadedData?: ObservableResolver<GenericEventHandler<T>>,
-    onLoadedDataCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onLoadedMetadata?: ObservableResolver<GenericEventHandler<T>>,
-    onLoadedMetadataCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onLoadStart?: ObservableResolver<GenericEventHandler<T>>,
-    onLoadStartCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onPause?: ObservableResolver<GenericEventHandler<T>>,
-    onPauseCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onPlay?: ObservableResolver<GenericEventHandler<T>>,
-    onPlayCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onPlaying?: ObservableResolver<GenericEventHandler<T>>,
-    onPlayingCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onProgress?: ObservableResolver<GenericEventHandler<T>>,
-    onProgressCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onRateChange?: ObservableResolver<GenericEventHandler<T>>,
-    onRateChangeCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onSeeked?: ObservableResolver<GenericEventHandler<T>>,
-    onSeekedCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onSeeking?: ObservableResolver<GenericEventHandler<T>>,
-    onSeekingCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onStalled?: ObservableResolver<GenericEventHandler<T>>,
-    onStalledCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onSuspend?: ObservableResolver<GenericEventHandler<T>>,
-    onSuspendCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onTimeUpdate?: ObservableResolver<GenericEventHandler<T>>,
-    onTimeUpdateCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onVolumeChange?: ObservableResolver<GenericEventHandler<T>>,
-    onVolumeChangeCapture?: ObservableResolver<GenericEventHandler<T>>,
-    onWaiting?: ObservableResolver<GenericEventHandler<T>>,
-    onWaitingCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onAbort?: ObservableMaybe<GenericEventHandler<T>>,
+    onAbortCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onCanPlay?: ObservableMaybe<GenericEventHandler<T>>,
+    onCanPlayCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onCanPlayThrough?: ObservableMaybe<GenericEventHandler<T>>,
+    onCanPlayThroughCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onDurationChange?: ObservableMaybe<GenericEventHandler<T>>,
+    onDurationChangeCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onEmptied?: ObservableMaybe<GenericEventHandler<T>>,
+    onEmptiedCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onEncrypted?: ObservableMaybe<GenericEventHandler<T>>,
+    onEncryptedCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onEnded?: ObservableMaybe<GenericEventHandler<T>>,
+    onEndedCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onLoadedData?: ObservableMaybe<GenericEventHandler<T>>,
+    onLoadedDataCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onLoadedMetadata?: ObservableMaybe<GenericEventHandler<T>>,
+    onLoadedMetadataCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onLoadStart?: ObservableMaybe<GenericEventHandler<T>>,
+    onLoadStartCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onPause?: ObservableMaybe<GenericEventHandler<T>>,
+    onPauseCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onPlay?: ObservableMaybe<GenericEventHandler<T>>,
+    onPlayCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onPlaying?: ObservableMaybe<GenericEventHandler<T>>,
+    onPlayingCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onProgress?: ObservableMaybe<GenericEventHandler<T>>,
+    onProgressCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onRateChange?: ObservableMaybe<GenericEventHandler<T>>,
+    onRateChangeCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onSeeked?: ObservableMaybe<GenericEventHandler<T>>,
+    onSeekedCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onSeeking?: ObservableMaybe<GenericEventHandler<T>>,
+    onSeekingCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onStalled?: ObservableMaybe<GenericEventHandler<T>>,
+    onStalledCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onSuspend?: ObservableMaybe<GenericEventHandler<T>>,
+    onSuspendCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onTimeUpdate?: ObservableMaybe<GenericEventHandler<T>>,
+    onTimeUpdateCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onVolumeChange?: ObservableMaybe<GenericEventHandler<T>>,
+    onVolumeChangeCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onWaiting?: ObservableMaybe<GenericEventHandler<T>>,
+    onWaitingCapture?: ObservableMaybe<GenericEventHandler<T>>,
     /* MOUSE EVENTS */
-    onClick?: ObservableResolver<MouseEventHandler<T>>,
-    onClickCapture?: ObservableResolver<MouseEventHandler<T>>,
-    onContextMenu?: ObservableResolver<MouseEventHandler<T>>,
-    onContextMenuCapture?: ObservableResolver<MouseEventHandler<T>>,
-    onDblClick?: ObservableResolver<MouseEventHandler<T>>,
-    onDblClickCapture?: ObservableResolver<MouseEventHandler<T>>,
-    onDrag?: ObservableResolver<DragEventHandler<T>>,
-    onDragCapture?: ObservableResolver<DragEventHandler<T>>,
-    onDragEnd?: ObservableResolver<DragEventHandler<T>>,
-    onDragEndCapture?: ObservableResolver<DragEventHandler<T>>,
-    onDragEnter?: ObservableResolver<DragEventHandler<T>>,
-    onDragEnterCapture?: ObservableResolver<DragEventHandler<T>>,
-    onDragExit?: ObservableResolver<DragEventHandler<T>>,
-    onDragExitCapture?: ObservableResolver<DragEventHandler<T>>,
-    onDragLeave?: ObservableResolver<DragEventHandler<T>>,
-    onDragLeaveCapture?: ObservableResolver<DragEventHandler<T>>,
-    onDragOver?: ObservableResolver<DragEventHandler<T>>,
-    onDragOverCapture?: ObservableResolver<DragEventHandler<T>>,
-    onDragStart?: ObservableResolver<DragEventHandler<T>>,
-    onDragStartCapture?: ObservableResolver<DragEventHandler<T>>,
-    onDrop?: ObservableResolver<DragEventHandler<T>>,
-    onDropCapture?: ObservableResolver<DragEventHandler<T>>,
-    onMouseDown?: ObservableResolver<MouseEventHandler<T>>,
-    onMouseDownCapture?: ObservableResolver<MouseEventHandler<T>>,
-    onMouseEnter?: ObservableResolver<MouseEventHandler<T>>,
-    onMouseEnterCapture?: ObservableResolver<MouseEventHandler<T>>,
-    onMouseLeave?: ObservableResolver<MouseEventHandler<T>>,
-    onMouseLeaveCapture?: ObservableResolver<MouseEventHandler<T>>,
-    onMouseMove?: ObservableResolver<MouseEventHandler<T>>,
-    onMouseMoveCapture?: ObservableResolver<MouseEventHandler<T>>,
-    onMouseOut?: ObservableResolver<MouseEventHandler<T>>,
-    onMouseOutCapture?: ObservableResolver<MouseEventHandler<T>>,
-    onMouseOver?: ObservableResolver<MouseEventHandler<T>>,
-    onMouseOverCapture?: ObservableResolver<MouseEventHandler<T>>,
-    onMouseUp?: ObservableResolver<MouseEventHandler<T>>,
-    onMouseUpCapture?: ObservableResolver<MouseEventHandler<T>>,
+    onClick?: ObservableMaybe<MouseEventHandler<T>>,
+    onClickCapture?: ObservableMaybe<MouseEventHandler<T>>,
+    onContextMenu?: ObservableMaybe<MouseEventHandler<T>>,
+    onContextMenuCapture?: ObservableMaybe<MouseEventHandler<T>>,
+    onDblClick?: ObservableMaybe<MouseEventHandler<T>>,
+    onDblClickCapture?: ObservableMaybe<MouseEventHandler<T>>,
+    onDrag?: ObservableMaybe<DragEventHandler<T>>,
+    onDragCapture?: ObservableMaybe<DragEventHandler<T>>,
+    onDragEnd?: ObservableMaybe<DragEventHandler<T>>,
+    onDragEndCapture?: ObservableMaybe<DragEventHandler<T>>,
+    onDragEnter?: ObservableMaybe<DragEventHandler<T>>,
+    onDragEnterCapture?: ObservableMaybe<DragEventHandler<T>>,
+    onDragExit?: ObservableMaybe<DragEventHandler<T>>,
+    onDragExitCapture?: ObservableMaybe<DragEventHandler<T>>,
+    onDragLeave?: ObservableMaybe<DragEventHandler<T>>,
+    onDragLeaveCapture?: ObservableMaybe<DragEventHandler<T>>,
+    onDragOver?: ObservableMaybe<DragEventHandler<T>>,
+    onDragOverCapture?: ObservableMaybe<DragEventHandler<T>>,
+    onDragStart?: ObservableMaybe<DragEventHandler<T>>,
+    onDragStartCapture?: ObservableMaybe<DragEventHandler<T>>,
+    onDrop?: ObservableMaybe<DragEventHandler<T>>,
+    onDropCapture?: ObservableMaybe<DragEventHandler<T>>,
+    onMouseDown?: ObservableMaybe<MouseEventHandler<T>>,
+    onMouseDownCapture?: ObservableMaybe<MouseEventHandler<T>>,
+    onMouseEnter?: ObservableMaybe<MouseEventHandler<T>>,
+    onMouseEnterCapture?: ObservableMaybe<MouseEventHandler<T>>,
+    onMouseLeave?: ObservableMaybe<MouseEventHandler<T>>,
+    onMouseLeaveCapture?: ObservableMaybe<MouseEventHandler<T>>,
+    onMouseMove?: ObservableMaybe<MouseEventHandler<T>>,
+    onMouseMoveCapture?: ObservableMaybe<MouseEventHandler<T>>,
+    onMouseOut?: ObservableMaybe<MouseEventHandler<T>>,
+    onMouseOutCapture?: ObservableMaybe<MouseEventHandler<T>>,
+    onMouseOver?: ObservableMaybe<MouseEventHandler<T>>,
+    onMouseOverCapture?: ObservableMaybe<MouseEventHandler<T>>,
+    onMouseUp?: ObservableMaybe<MouseEventHandler<T>>,
+    onMouseUpCapture?: ObservableMaybe<MouseEventHandler<T>>,
     /* SELECTION EVENTS */
-    onSelect?: ObservableResolver<GenericEventHandler<T>>,
-    onSelectCapture?: ObservableResolver<GenericEventHandler<T>>,
+    onSelect?: ObservableMaybe<GenericEventHandler<T>>,
+    onSelectCapture?: ObservableMaybe<GenericEventHandler<T>>,
     /* TOUCH EVENTS */
-    onTouchCancel?: ObservableResolver<TouchEventHandler<T>>,
-    onTouchCancelCapture?: ObservableResolver<TouchEventHandler<T>>,
-    onTouchEnd?: ObservableResolver<TouchEventHandler<T>>,
-    onTouchEndCapture?: ObservableResolver<TouchEventHandler<T>>,
-    onTouchMove?: ObservableResolver<TouchEventHandler<T>>,
-    onTouchMoveCapture?: ObservableResolver<TouchEventHandler<T>>,
-    onTouchStart?: ObservableResolver<TouchEventHandler<T>>,
-    onTouchStartCapture?: ObservableResolver<TouchEventHandler<T>>,
+    onTouchCancel?: ObservableMaybe<TouchEventHandler<T>>,
+    onTouchCancelCapture?: ObservableMaybe<TouchEventHandler<T>>,
+    onTouchEnd?: ObservableMaybe<TouchEventHandler<T>>,
+    onTouchEndCapture?: ObservableMaybe<TouchEventHandler<T>>,
+    onTouchMove?: ObservableMaybe<TouchEventHandler<T>>,
+    onTouchMoveCapture?: ObservableMaybe<TouchEventHandler<T>>,
+    onTouchStart?: ObservableMaybe<TouchEventHandler<T>>,
+    onTouchStartCapture?: ObservableMaybe<TouchEventHandler<T>>,
     /* POINTER EVENTS */
-    onPointerOver?: ObservableResolver<PointerEventHandler<T>>,
-    onPointerOverCapture?: ObservableResolver<PointerEventHandler<T>>,
-    onPointerEnter?: ObservableResolver<PointerEventHandler<T>>,
-    onPointerEnterCapture?: ObservableResolver<PointerEventHandler<T>>,
-    onPointerDown?: ObservableResolver<PointerEventHandler<T>>,
-    onPointerDownCapture?: ObservableResolver<PointerEventHandler<T>>,
-    onPointerMove?: ObservableResolver<PointerEventHandler<T>>,
-    onPointerMoveCapture?: ObservableResolver<PointerEventHandler<T>>,
-    onPointerUp?: ObservableResolver<PointerEventHandler<T>>,
-    onPointerUpCapture?: ObservableResolver<PointerEventHandler<T>>,
-    onPointerCancel?: ObservableResolver<PointerEventHandler<T>>,
-    onPointerCancelCapture?: ObservableResolver<PointerEventHandler<T>>,
-    onPointerOut?: ObservableResolver<PointerEventHandler<T>>,
-    onPointerOutCapture?: ObservableResolver<PointerEventHandler<T>>,
-    onPointerLeave?: ObservableResolver<PointerEventHandler<T>>,
-    onPointerLeaveCapture?: ObservableResolver<PointerEventHandler<T>>,
-    onGotPointerCapture?: ObservableResolver<PointerEventHandler<T>>,
-    onGotPointerCaptureCapture?: ObservableResolver<PointerEventHandler<T>>,
-    onLostPointerCapture?: ObservableResolver<PointerEventHandler<T>>,
-    onLostPointerCaptureCapture?: ObservableResolver<PointerEventHandler<T>>,
+    onPointerOver?: ObservableMaybe<PointerEventHandler<T>>,
+    onPointerOverCapture?: ObservableMaybe<PointerEventHandler<T>>,
+    onPointerEnter?: ObservableMaybe<PointerEventHandler<T>>,
+    onPointerEnterCapture?: ObservableMaybe<PointerEventHandler<T>>,
+    onPointerDown?: ObservableMaybe<PointerEventHandler<T>>,
+    onPointerDownCapture?: ObservableMaybe<PointerEventHandler<T>>,
+    onPointerMove?: ObservableMaybe<PointerEventHandler<T>>,
+    onPointerMoveCapture?: ObservableMaybe<PointerEventHandler<T>>,
+    onPointerUp?: ObservableMaybe<PointerEventHandler<T>>,
+    onPointerUpCapture?: ObservableMaybe<PointerEventHandler<T>>,
+    onPointerCancel?: ObservableMaybe<PointerEventHandler<T>>,
+    onPointerCancelCapture?: ObservableMaybe<PointerEventHandler<T>>,
+    onPointerOut?: ObservableMaybe<PointerEventHandler<T>>,
+    onPointerOutCapture?: ObservableMaybe<PointerEventHandler<T>>,
+    onPointerLeave?: ObservableMaybe<PointerEventHandler<T>>,
+    onPointerLeaveCapture?: ObservableMaybe<PointerEventHandler<T>>,
+    onGotPointerCapture?: ObservableMaybe<PointerEventHandler<T>>,
+    onGotPointerCaptureCapture?: ObservableMaybe<PointerEventHandler<T>>,
+    onLostPointerCapture?: ObservableMaybe<PointerEventHandler<T>>,
+    onLostPointerCaptureCapture?: ObservableMaybe<PointerEventHandler<T>>,
     /* UI EVENTS */
-    onScroll?: ObservableResolver<UIEventHandler<T>>,
-    onScrollCapture?: ObservableResolver<UIEventHandler<T>>,
+    onScroll?: ObservableMaybe<UIEventHandler<T>>,
+    onScrollCapture?: ObservableMaybe<UIEventHandler<T>>,
     /* WHEEL EVENTS */
-    onWheel?: ObservableResolver<WheelEventHandler<T>>,
-    onWheelCapture?: ObservableResolver<WheelEventHandler<T>>,
+    onWheel?: ObservableMaybe<WheelEventHandler<T>>,
+    onWheelCapture?: ObservableMaybe<WheelEventHandler<T>>,
     /* ANIMATION EVENTS */
-    onAnimationStart?: ObservableResolver<AnimationEventHandler<T>>,
-    onAnimationStartCapture?: ObservableResolver<AnimationEventHandler<T>>,
-    onAnimationEnd?: ObservableResolver<AnimationEventHandler<T>>,
-    onAnimationEndCapture?: ObservableResolver<AnimationEventHandler<T>>,
-    onAnimationIteration?: ObservableResolver<AnimationEventHandler<T>>,
-    onAnimationIterationCapture?: ObservableResolver<AnimationEventHandler<T>>,
+    onAnimationStart?: ObservableMaybe<AnimationEventHandler<T>>,
+    onAnimationStartCapture?: ObservableMaybe<AnimationEventHandler<T>>,
+    onAnimationEnd?: ObservableMaybe<AnimationEventHandler<T>>,
+    onAnimationEndCapture?: ObservableMaybe<AnimationEventHandler<T>>,
+    onAnimationIteration?: ObservableMaybe<AnimationEventHandler<T>>,
+    onAnimationIterationCapture?: ObservableMaybe<AnimationEventHandler<T>>,
     /* TRANSITION EVENTS */
-    onTransitionEnd?: ObservableResolver<TransitionEventHandler<T>>,
-    onTransitionEndCapture?: ObservableResolver<TransitionEventHandler<T>>
+    onTransitionEnd?: ObservableMaybe<TransitionEventHandler<T>>,
+    onTransitionEndCapture?: ObservableMaybe<TransitionEventHandler<T>>
   }
 
   interface ViewAttributes {
     children?: Children,
-    textContent?: FunctionResolver<string>,
-    innerHTML?: FunctionResolver<string>,
-    outerHTML?: FunctionResolver<string>,
-    dangerouslySetInnerHTML?: FunctionResolver<{
-      __html: FunctionResolver<string>
+    textContent?: FunctionMaybe<string>,
+    innerHTML?: FunctionMaybe<string>,
+    outerHTML?: FunctionMaybe<string>,
+    dangerouslySetInnerHTML?: FunctionMaybe<{
+      __html: FunctionMaybe<string>
     }>
   }
 
@@ -361,69 +359,69 @@ declare namespace JSX {
 
   interface HTMLAttributes<T extends EventTarget> extends AriaAttributes, DOMAttributes<T> {
     /* REACT-SPECIFIC ATTRIBUTES */
-    defaultChecked?: FunctionResolver<boolean>,
-    defaultValue?: FunctionResolver<string | number | ReadonlyArray<string>>,
-    suppressContentEditableWarning?: FunctionResolver<boolean>,
-    suppressHydrationWarning?: FunctionResolver<boolean>,
+    defaultChecked?: FunctionMaybe<boolean>,
+    defaultValue?: FunctionMaybe<string | number | ReadonlyArray<string>>,
+    suppressContentEditableWarning?: FunctionMaybe<boolean>,
+    suppressHydrationWarning?: FunctionMaybe<boolean>,
     /* STANDARD HTML ATTRIBUTES */
-    accessKey?: FunctionResolver<string>,
-    class?: FunctionResolver<string | ClassProperties>,
-    className?: FunctionResolver<string>,
-    contentEditable?: FunctionResolver<boolean | 'true' | 'false' | 'inherit'>,
-    contextMenu?: FunctionResolver<string>,
-    dir?: FunctionResolver<string>,
-    draggable?: FunctionResolver<boolean | 'true' | 'false'>,
-    hidden?: FunctionResolver<boolean>,
-    id?: FunctionResolver<string>,
-    lang?: FunctionResolver<string>,
-    placeholder?: FunctionResolver<string>,
-    slot?: FunctionResolver<string>,
-    spellCheck?: FunctionResolver<boolean | 'true' | 'false'>,
-    style?: FunctionResolver<string | StyleProperties>,
-    tabIndex?: FunctionResolver<number>,
-    title?: FunctionResolver<string>,
-    translate?: FunctionResolver<'yes' | 'no'>,
+    accessKey?: FunctionMaybe<string>,
+    class?: FunctionMaybe<string | ClassProperties>,
+    className?: FunctionMaybe<string>,
+    contentEditable?: FunctionMaybe<boolean | 'true' | 'false' | 'inherit'>,
+    contextMenu?: FunctionMaybe<string>,
+    dir?: FunctionMaybe<string>,
+    draggable?: FunctionMaybe<boolean | 'true' | 'false'>,
+    hidden?: FunctionMaybe<boolean>,
+    id?: FunctionMaybe<string>,
+    lang?: FunctionMaybe<string>,
+    placeholder?: FunctionMaybe<string>,
+    slot?: FunctionMaybe<string>,
+    spellCheck?: FunctionMaybe<boolean | 'true' | 'false'>,
+    style?: FunctionMaybe<string | StyleProperties>,
+    tabIndex?: FunctionMaybe<number>,
+    title?: FunctionMaybe<string>,
+    translate?: FunctionMaybe<'yes' | 'no'>,
     /* UNKNOWN */
-    radioGroup?: FunctionResolver<string>,
+    radioGroup?: FunctionMaybe<string>,
     /* WAI-ARIA */
-    role?: FunctionResolver<'alert' | 'alertdialog' | 'application' | 'article' | 'banner' | 'button' | 'cell' | 'checkbox' | 'columnheader' | 'combobox' | 'complementary' | 'contentinfo' | 'definition' | 'dialog' | 'directory' | 'document' | 'feed' | 'figure' | 'form' | 'grid' | 'gridcell' | 'group' | 'heading' | 'img' | 'link' | 'list' | 'listbox' | 'listitem' | 'log' | 'main' | 'marquee' | 'math' | 'menu' | 'menubar' | 'menuitem' | 'menuitemcheckbox' | 'menuitemradio' | 'navigation' | 'none' | 'note' | 'option' | 'presentation' | 'progressbar' | 'radio' | 'radiogroup' | 'region' | 'row' | 'rowgroup' | 'rowheader' | 'scrollbar' | 'search' | 'searchbox' | 'separator' | 'slider' | 'spinbutton' | 'status' | 'switch' | 'tab' | 'table' | 'tablist' | 'tabpanel' | 'term' | 'textbox' | 'timer' | 'toolbar' | 'tooltip' | 'tree' | 'treegrid' | 'treeitem'>,
+    role?: FunctionMaybe<'alert' | 'alertdialog' | 'application' | 'article' | 'banner' | 'button' | 'cell' | 'checkbox' | 'columnheader' | 'combobox' | 'complementary' | 'contentinfo' | 'definition' | 'dialog' | 'directory' | 'document' | 'feed' | 'figure' | 'form' | 'grid' | 'gridcell' | 'group' | 'heading' | 'img' | 'link' | 'list' | 'listbox' | 'listitem' | 'log' | 'main' | 'marquee' | 'math' | 'menu' | 'menubar' | 'menuitem' | 'menuitemcheckbox' | 'menuitemradio' | 'navigation' | 'none' | 'note' | 'option' | 'presentation' | 'progressbar' | 'radio' | 'radiogroup' | 'region' | 'row' | 'rowgroup' | 'rowheader' | 'scrollbar' | 'search' | 'searchbox' | 'separator' | 'slider' | 'spinbutton' | 'status' | 'switch' | 'tab' | 'table' | 'tablist' | 'tabpanel' | 'term' | 'textbox' | 'timer' | 'toolbar' | 'tooltip' | 'tree' | 'treegrid' | 'treeitem'>,
     /* RDFA ATTRIBUTES */
-    about?: FunctionResolver<string>,
-    datatype?: FunctionResolver<string>,
-    inlist?: FunctionResolver<boolean>;
-    prefix?: FunctionResolver<string>,
-    property?: FunctionResolver<string>,
-    resource?: FunctionResolver<string>,
-    typeof?: FunctionResolver<string>,
-    vocab?: FunctionResolver<string>,
+    about?: FunctionMaybe<string>,
+    datatype?: FunctionMaybe<string>,
+    inlist?: FunctionMaybe<boolean>;
+    prefix?: FunctionMaybe<string>,
+    property?: FunctionMaybe<string>,
+    resource?: FunctionMaybe<string>,
+    typeof?: FunctionMaybe<string>,
+    vocab?: FunctionMaybe<string>,
     /* NON-STANDARD ATTRIBUTES */
-    autoCapitalize?: FunctionResolver<string>,
-    autoCorrect?: FunctionResolver<string>,
-    autoSave?: FunctionResolver<string>,
-    color?: FunctionResolver<string>,
-    itemProp?: FunctionResolver<string>,
-    itemScope?: FunctionResolver<boolean>,
-    itemType?: FunctionResolver<string>,
-    itemID?: FunctionResolver<string>,
-    itemRef?: FunctionResolver<string>,
-    results?: FunctionResolver<number>,
-    security?: FunctionResolver<string>,
-    unselectable?: FunctionResolver<'on' | 'off'>,
+    autoCapitalize?: FunctionMaybe<string>,
+    autoCorrect?: FunctionMaybe<string>,
+    autoSave?: FunctionMaybe<string>,
+    color?: FunctionMaybe<string>,
+    itemProp?: FunctionMaybe<string>,
+    itemScope?: FunctionMaybe<boolean>,
+    itemType?: FunctionMaybe<string>,
+    itemID?: FunctionMaybe<string>,
+    itemRef?: FunctionMaybe<string>,
+    results?: FunctionMaybe<number>,
+    security?: FunctionMaybe<string>,
+    unselectable?: FunctionMaybe<'on' | 'off'>,
     /* LIVING STANDARD */
-    inputMode?: FunctionResolver<'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search'>,
-    is?: FunctionResolver<string>
+    inputMode?: FunctionMaybe<'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search'>,
+    is?: FunctionMaybe<string>
   }
 
   interface AnchorHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    download?: FunctionResolver<boolean>,
-    href?: FunctionResolver<string>,
-    hrefLang?: FunctionResolver<string>,
-    media?: FunctionResolver<string>,
-    ping?: FunctionResolver<string>,
-    rel?: FunctionResolver<string>,
-    target?: FunctionResolver<'_self' | '_blank' | '_parent' | '_top'>,
-    type?: FunctionResolver<string>,
-    referrerPolicy?: FunctionResolver<HTMLAttributeReferrerPolicy>
+    download?: FunctionMaybe<boolean>,
+    href?: FunctionMaybe<string>,
+    hrefLang?: FunctionMaybe<string>,
+    media?: FunctionMaybe<string>,
+    ping?: FunctionMaybe<string>,
+    rel?: FunctionMaybe<string>,
+    target?: FunctionMaybe<'_self' | '_blank' | '_parent' | '_top'>,
+    type?: FunctionMaybe<string>,
+    referrerPolicy?: FunctionMaybe<HTMLAttributeReferrerPolicy>
   }
 
   interface AudioHTMLAttributes<T extends EventTarget> extends MediaHTMLAttributes<T> {
@@ -431,439 +429,439 @@ declare namespace JSX {
   }
 
   interface AreaHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    alt?: FunctionResolver<string>,
-    coords?: FunctionResolver<string>,
-    download?: FunctionResolver<boolean>,
-    href?: FunctionResolver<string>,
-    hrefLang?: FunctionResolver<string>,
-    media?: FunctionResolver<string>,
-    referrerPolicy?: FunctionResolver<HTMLAttributeReferrerPolicy>,
-    rel?: FunctionResolver<string>,
-    shape?: FunctionResolver<string>,
-    target?: FunctionResolver<string>
+    alt?: FunctionMaybe<string>,
+    coords?: FunctionMaybe<string>,
+    download?: FunctionMaybe<boolean>,
+    href?: FunctionMaybe<string>,
+    hrefLang?: FunctionMaybe<string>,
+    media?: FunctionMaybe<string>,
+    referrerPolicy?: FunctionMaybe<HTMLAttributeReferrerPolicy>,
+    rel?: FunctionMaybe<string>,
+    shape?: FunctionMaybe<string>,
+    target?: FunctionMaybe<string>
   }
 
   interface BaseHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    href?: FunctionResolver<string>,
-    target?: FunctionResolver<string>
+    href?: FunctionMaybe<string>,
+    target?: FunctionMaybe<string>
   }
 
   interface BlockquoteHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    cite?: FunctionResolver<string>
+    cite?: FunctionMaybe<string>
   }
 
   interface ButtonHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    autoFocus?: FunctionResolver<boolean>,
-    disabled?: FunctionResolver<boolean>,
-    form?: FunctionResolver<string>,
-    formAction?: FunctionResolver<string>,
-    formEncType?: FunctionResolver<string>,
-    formMethod?: FunctionResolver<string>,
-    formNoValidate?: FunctionResolver<boolean>,
-    formTarget?: FunctionResolver<string>,
-    name?: FunctionResolver<string>,
-    type?: FunctionResolver<'submit' | 'reset' | 'button'>,
-    value?: FunctionResolver<string | ReadonlyArray<string> | number>
+    autoFocus?: FunctionMaybe<boolean>,
+    disabled?: FunctionMaybe<boolean>,
+    form?: FunctionMaybe<string>,
+    formAction?: FunctionMaybe<string>,
+    formEncType?: FunctionMaybe<string>,
+    formMethod?: FunctionMaybe<string>,
+    formNoValidate?: FunctionMaybe<boolean>,
+    formTarget?: FunctionMaybe<string>,
+    name?: FunctionMaybe<string>,
+    type?: FunctionMaybe<'submit' | 'reset' | 'button'>,
+    value?: FunctionMaybe<string | ReadonlyArray<string> | number>
   }
 
   interface CanvasHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    height?: FunctionResolver<number | string>,
-    width?: FunctionResolver<number | string>
+    height?: FunctionMaybe<number | string>,
+    width?: FunctionMaybe<number | string>
   }
 
   interface ColHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    span?: FunctionResolver<number>,
-    width?: FunctionResolver<number | string>
+    span?: FunctionMaybe<number>,
+    width?: FunctionMaybe<number | string>
   }
 
   interface ColgroupHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    span?: FunctionResolver<number>
+    span?: FunctionMaybe<number>
   }
 
   interface DataHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    value?: FunctionResolver<string | ReadonlyArray<string> | number>
+    value?: FunctionMaybe<string | ReadonlyArray<string> | number>
   }
 
   interface DetailsHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    open?: FunctionResolver<boolean>,
-    onToggle?: ObservableResolver<GenericEventHandler<T>>
+    open?: FunctionMaybe<boolean>,
+    onToggle?: ObservableMaybe<GenericEventHandler<T>>
   }
 
   interface DelHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    cite?: FunctionResolver<string>,
-    dateTime?: FunctionResolver<string>
+    cite?: FunctionMaybe<string>,
+    dateTime?: FunctionMaybe<string>
   }
 
   interface DialogHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    open?: FunctionResolver<boolean>
+    open?: FunctionMaybe<boolean>
   }
 
   interface EmbedHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    height?: FunctionResolver<number | string>,
-    src?: FunctionResolver<string>,
-    type?: FunctionResolver<string>,
-    width?: FunctionResolver<number | string>
+    height?: FunctionMaybe<number | string>,
+    src?: FunctionMaybe<string>,
+    type?: FunctionMaybe<string>,
+    width?: FunctionMaybe<number | string>
   }
 
   interface FieldsetHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    disabled?: FunctionResolver<boolean>,
-    form?: FunctionResolver<string>,
-    name?: FunctionResolver<string>
+    disabled?: FunctionMaybe<boolean>,
+    form?: FunctionMaybe<string>,
+    name?: FunctionMaybe<string>
   }
 
   interface FormHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    acceptCharset?: FunctionResolver<string>,
-    action?: FunctionResolver<string>,
-    autoComplete?: FunctionResolver<string>,
-    encType?: FunctionResolver<string>,
-    method?: FunctionResolver<string>,
-    name?: FunctionResolver<string>,
-    noValidate?: FunctionResolver<boolean>,
-    target?: FunctionResolver<string>
+    acceptCharset?: FunctionMaybe<string>,
+    action?: FunctionMaybe<string>,
+    autoComplete?: FunctionMaybe<string>,
+    encType?: FunctionMaybe<string>,
+    method?: FunctionMaybe<string>,
+    name?: FunctionMaybe<string>,
+    noValidate?: FunctionMaybe<boolean>,
+    target?: FunctionMaybe<string>
   }
 
   interface HtmlHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    manifest?: FunctionResolver<string>
+    manifest?: FunctionMaybe<string>
   }
 
   interface IframeHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    allow?: FunctionResolver<string>,
-    allowFullScreen?: FunctionResolver<boolean>,
-    allowTransparency?: FunctionResolver<boolean>,
+    allow?: FunctionMaybe<string>,
+    allowFullScreen?: FunctionMaybe<boolean>,
+    allowTransparency?: FunctionMaybe<boolean>,
     /** @deprecated */
-    frameBorder?: FunctionResolver<number | string>,
-    height?: FunctionResolver<number | string>,
-    loading?: FunctionResolver<'eager' | 'lazy'>,
+    frameBorder?: FunctionMaybe<number | string>,
+    height?: FunctionMaybe<number | string>,
+    loading?: FunctionMaybe<'eager' | 'lazy'>,
     /** @deprecated */
-    marginHeight?: FunctionResolver<number>,
+    marginHeight?: FunctionMaybe<number>,
     /** @deprecated */
-    marginWidth?: FunctionResolver<number>,
-    name?: FunctionResolver<string>,
-    referrerPolicy?: FunctionResolver<HTMLAttributeReferrerPolicy>,
-    sandbox?: FunctionResolver<string>,
+    marginWidth?: FunctionMaybe<number>,
+    name?: FunctionMaybe<string>,
+    referrerPolicy?: FunctionMaybe<HTMLAttributeReferrerPolicy>,
+    sandbox?: FunctionMaybe<string>,
     /** @deprecated */
-    scrolling?: FunctionResolver<string>,
-    seamless?: FunctionResolver<boolean>,
-    src?: FunctionResolver<string>,
-    srcDoc?: FunctionResolver<string>,
-    width?: FunctionResolver<number | string>
+    scrolling?: FunctionMaybe<string>,
+    seamless?: FunctionMaybe<boolean>,
+    src?: FunctionMaybe<string>,
+    srcDoc?: FunctionMaybe<string>,
+    width?: FunctionMaybe<number | string>
   }
 
   interface ImgHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    alt?: FunctionResolver<string>,
-    crossOrigin?: FunctionResolver<'anonymous' | 'use-credentials' | ''>,
-    decoding?: FunctionResolver<'async' | 'auto' | 'sync'>,
-    height?: FunctionResolver<number | string>,
-    loading?: FunctionResolver<'eager' | 'lazy'>,
-    referrerPolicy?: FunctionResolver<HTMLAttributeReferrerPolicy>,
-    sizes?: FunctionResolver<string>,
-    src?: FunctionResolver<string>,
-    srcSet?: FunctionResolver<string>,
-    useMap?: FunctionResolver<string>,
-    width?: FunctionResolver<number | string>
+    alt?: FunctionMaybe<string>,
+    crossOrigin?: FunctionMaybe<'anonymous' | 'use-credentials' | ''>,
+    decoding?: FunctionMaybe<'async' | 'auto' | 'sync'>,
+    height?: FunctionMaybe<number | string>,
+    loading?: FunctionMaybe<'eager' | 'lazy'>,
+    referrerPolicy?: FunctionMaybe<HTMLAttributeReferrerPolicy>,
+    sizes?: FunctionMaybe<string>,
+    src?: FunctionMaybe<string>,
+    srcSet?: FunctionMaybe<string>,
+    useMap?: FunctionMaybe<string>,
+    width?: FunctionMaybe<number | string>
   }
 
   interface InsHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    cite?: FunctionResolver<string>,
-    dateTime?: FunctionResolver<string>
+    cite?: FunctionMaybe<string>,
+    dateTime?: FunctionMaybe<string>
   }
 
   interface InputHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    accept?: FunctionResolver<string>,
-    alt?: FunctionResolver<string>,
-    autoComplete?: FunctionResolver<string>,
-    autoFocus?: FunctionResolver<boolean>,
-    capture?: FunctionResolver<boolean | 'user' | 'environment'>,
-    checked?: FunctionResolver<boolean>,
-    crossOrigin?: FunctionResolver<string>,
-    disabled?: FunctionResolver<boolean>,
-    enterKeyHint?: FunctionResolver<'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'>,
-    form?: FunctionResolver<string>,
-    formAction?: FunctionResolver<string>,
-    formEncType?: FunctionResolver<string>,
-    formMethod?: FunctionResolver<string>,
-    formNoValidate?: FunctionResolver<boolean>,
-    formTarget?: FunctionResolver<string>,
-    height?: FunctionResolver<number | string>,
-    list?: FunctionResolver<string>,
-    max?: FunctionResolver<number | string>,
-    maxLength?: FunctionResolver<number>,
-    min?: FunctionResolver<number | string>,
-    minLength?: FunctionResolver<number>,
-    multiple?: FunctionResolver<boolean>,
-    name?: FunctionResolver<string>,
-    pattern?: FunctionResolver<string>,
-    placeholder?: FunctionResolver<string>,
-    readOnly?: FunctionResolver<boolean>,
-    required?: FunctionResolver<boolean>,
-    size?: FunctionResolver<number>,
-    src?: FunctionResolver<string>,
-    step?: FunctionResolver<number | string>,
-    type?: FunctionResolver<'button' | 'checkbox' | 'color' | 'date' | 'datetime-local' | 'email' | 'file' | 'hidden' | 'image' | 'month' | 'number' | 'password' | 'radio' | 'range' | 'reset' | 'search' | 'submit' | 'tel' | 'text' | 'time' | 'url' | 'week'>,
-    value?: FunctionResolver<string | ReadonlyArray<string> | number>,
-    width?: FunctionResolver<number | string>,
-    onChange?: ObservableResolver<KeyboardEventHandler<T>>
+    accept?: FunctionMaybe<string>,
+    alt?: FunctionMaybe<string>,
+    autoComplete?: FunctionMaybe<string>,
+    autoFocus?: FunctionMaybe<boolean>,
+    capture?: FunctionMaybe<boolean | 'user' | 'environment'>,
+    checked?: FunctionMaybe<boolean>,
+    crossOrigin?: FunctionMaybe<string>,
+    disabled?: FunctionMaybe<boolean>,
+    enterKeyHint?: FunctionMaybe<'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send'>,
+    form?: FunctionMaybe<string>,
+    formAction?: FunctionMaybe<string>,
+    formEncType?: FunctionMaybe<string>,
+    formMethod?: FunctionMaybe<string>,
+    formNoValidate?: FunctionMaybe<boolean>,
+    formTarget?: FunctionMaybe<string>,
+    height?: FunctionMaybe<number | string>,
+    list?: FunctionMaybe<string>,
+    max?: FunctionMaybe<number | string>,
+    maxLength?: FunctionMaybe<number>,
+    min?: FunctionMaybe<number | string>,
+    minLength?: FunctionMaybe<number>,
+    multiple?: FunctionMaybe<boolean>,
+    name?: FunctionMaybe<string>,
+    pattern?: FunctionMaybe<string>,
+    placeholder?: FunctionMaybe<string>,
+    readOnly?: FunctionMaybe<boolean>,
+    required?: FunctionMaybe<boolean>,
+    size?: FunctionMaybe<number>,
+    src?: FunctionMaybe<string>,
+    step?: FunctionMaybe<number | string>,
+    type?: FunctionMaybe<'button' | 'checkbox' | 'color' | 'date' | 'datetime-local' | 'email' | 'file' | 'hidden' | 'image' | 'month' | 'number' | 'password' | 'radio' | 'range' | 'reset' | 'search' | 'submit' | 'tel' | 'text' | 'time' | 'url' | 'week'>,
+    value?: FunctionMaybe<string | ReadonlyArray<string> | number>,
+    width?: FunctionMaybe<number | string>,
+    onChange?: ObservableMaybe<KeyboardEventHandler<T>>
   }
 
   interface KeygenHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    autoFocus?: FunctionResolver<boolean>,
-    challenge?: FunctionResolver<string>,
-    disabled?: FunctionResolver<boolean>,
-    form?: FunctionResolver<string>,
-    keyType?: FunctionResolver<string>,
-    keyParams?: FunctionResolver<string>,
-    name?: FunctionResolver<string>
+    autoFocus?: FunctionMaybe<boolean>,
+    challenge?: FunctionMaybe<string>,
+    disabled?: FunctionMaybe<boolean>,
+    form?: FunctionMaybe<string>,
+    keyType?: FunctionMaybe<string>,
+    keyParams?: FunctionMaybe<string>,
+    name?: FunctionMaybe<string>
   }
 
   interface LabelHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    form?: FunctionResolver<string>,
-    htmlFor?: FunctionResolver<string>,
-    for?: FunctionResolver<string>
+    form?: FunctionMaybe<string>,
+    htmlFor?: FunctionMaybe<string>,
+    for?: FunctionMaybe<string>
   }
 
   interface LiHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    value?: FunctionResolver<string | ReadonlyArray<string> | number>
+    value?: FunctionMaybe<string | ReadonlyArray<string> | number>
   }
 
   interface LinkHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    as?: FunctionResolver<string>,
-    crossOrigin?: FunctionResolver<string>,
-    href?: FunctionResolver<string>,
-    hrefLang?: FunctionResolver<string>,
-    integrity?: FunctionResolver<string>,
-    media?: FunctionResolver<string>,
-    imageSrcSet?: FunctionResolver<string>,
-    referrerPolicy?: FunctionResolver<HTMLAttributeReferrerPolicy>,
-    rel?: FunctionResolver<string>,
-    sizes?: FunctionResolver<string>,
-    type?: FunctionResolver<string>,
-    charSet?: FunctionResolver<string>
+    as?: FunctionMaybe<string>,
+    crossOrigin?: FunctionMaybe<string>,
+    href?: FunctionMaybe<string>,
+    hrefLang?: FunctionMaybe<string>,
+    integrity?: FunctionMaybe<string>,
+    media?: FunctionMaybe<string>,
+    imageSrcSet?: FunctionMaybe<string>,
+    referrerPolicy?: FunctionMaybe<HTMLAttributeReferrerPolicy>,
+    rel?: FunctionMaybe<string>,
+    sizes?: FunctionMaybe<string>,
+    type?: FunctionMaybe<string>,
+    charSet?: FunctionMaybe<string>
   }
 
   interface MapHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    name?: FunctionResolver<string>
+    name?: FunctionMaybe<string>
   }
 
   interface MenuHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    type?: FunctionResolver<string>
+    type?: FunctionMaybe<string>
   }
 
   interface MediaHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    autoPlay?: FunctionResolver<boolean>,
-    controls?: FunctionResolver<boolean>,
-    controlsList?: FunctionResolver<string>,
-    crossOrigin?: FunctionResolver<string>,
-    loop?: FunctionResolver<boolean>,
-    mediaGroup?: FunctionResolver<string>,
-    muted?: FunctionResolver<boolean>,
-    playsInline?: FunctionResolver<boolean>,
-    preload?: FunctionResolver<string>,
-    src?: FunctionResolver<string>
+    autoPlay?: FunctionMaybe<boolean>,
+    controls?: FunctionMaybe<boolean>,
+    controlsList?: FunctionMaybe<string>,
+    crossOrigin?: FunctionMaybe<string>,
+    loop?: FunctionMaybe<boolean>,
+    mediaGroup?: FunctionMaybe<string>,
+    muted?: FunctionMaybe<boolean>,
+    playsInline?: FunctionMaybe<boolean>,
+    preload?: FunctionMaybe<string>,
+    src?: FunctionMaybe<string>
   }
 
   interface MetaHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    charSet?: FunctionResolver<string>,
-    content?: FunctionResolver<string>,
-    httpEquiv?: FunctionResolver<string>,
-    name?: FunctionResolver<string>,
-    media?: FunctionResolver<string>
+    charSet?: FunctionMaybe<string>,
+    content?: FunctionMaybe<string>,
+    httpEquiv?: FunctionMaybe<string>,
+    name?: FunctionMaybe<string>,
+    media?: FunctionMaybe<string>
   }
 
   interface MeterHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    form?: FunctionResolver<string>,
-    high?: FunctionResolver<number>,
-    low?: FunctionResolver<number>,
-    max?: FunctionResolver<number | string>,
-    min?: FunctionResolver<number | string>,
-    optimum?: FunctionResolver<number>,
-    value?: FunctionResolver<string | ReadonlyArray<string> | number>
+    form?: FunctionMaybe<string>,
+    high?: FunctionMaybe<number>,
+    low?: FunctionMaybe<number>,
+    max?: FunctionMaybe<number | string>,
+    min?: FunctionMaybe<number | string>,
+    optimum?: FunctionMaybe<number>,
+    value?: FunctionMaybe<string | ReadonlyArray<string> | number>
   }
 
   interface QuoteHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    cite?: FunctionResolver<string>
+    cite?: FunctionMaybe<string>
   }
 
   interface ObjectHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    classID?: FunctionResolver<string>,
-    data?: FunctionResolver<string>,
-    form?: FunctionResolver<string>,
-    height?: FunctionResolver<number | string>,
-    name?: FunctionResolver<string>,
-    type?: FunctionResolver<string>,
-    useMap?: FunctionResolver<string>,
-    width?: FunctionResolver<number | string>,
-    wmode?: FunctionResolver<string>
+    classID?: FunctionMaybe<string>,
+    data?: FunctionMaybe<string>,
+    form?: FunctionMaybe<string>,
+    height?: FunctionMaybe<number | string>,
+    name?: FunctionMaybe<string>,
+    type?: FunctionMaybe<string>,
+    useMap?: FunctionMaybe<string>,
+    width?: FunctionMaybe<number | string>,
+    wmode?: FunctionMaybe<string>
   }
 
   interface OlHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    reversed?: FunctionResolver<boolean>,
-    start?: FunctionResolver<number>,
-    type?: FunctionResolver<'1' | 'a' | 'A' | 'i' | 'I'>
+    reversed?: FunctionMaybe<boolean>,
+    start?: FunctionMaybe<number>,
+    type?: FunctionMaybe<'1' | 'a' | 'A' | 'i' | 'I'>
   }
 
   interface OptgroupHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    disabled?: FunctionResolver<boolean>,
-    label?: FunctionResolver<string>
+    disabled?: FunctionMaybe<boolean>,
+    label?: FunctionMaybe<string>
   }
 
   interface OptionHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    disabled?: FunctionResolver<boolean>,
-    label?: FunctionResolver<string>,
-    selected?: FunctionResolver<boolean>,
-    value?: FunctionResolver<string | ReadonlyArray<string> | number>
+    disabled?: FunctionMaybe<boolean>,
+    label?: FunctionMaybe<string>,
+    selected?: FunctionMaybe<boolean>,
+    value?: FunctionMaybe<string | ReadonlyArray<string> | number>
   }
 
   interface OutputHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    form?: FunctionResolver<string>,
-    htmlFor?: FunctionResolver<string>,
-    for?: FunctionResolver<string>,
-    name?: FunctionResolver<string>
+    form?: FunctionMaybe<string>,
+    htmlFor?: FunctionMaybe<string>,
+    for?: FunctionMaybe<string>,
+    name?: FunctionMaybe<string>
   }
 
   interface ParamHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    name?: FunctionResolver<string>,
-    value?: FunctionResolver<string | ReadonlyArray<string> | number>
+    name?: FunctionMaybe<string>,
+    value?: FunctionMaybe<string | ReadonlyArray<string> | number>
   }
 
   interface ProgressHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    max?: FunctionResolver<number | string>,
-    value?: FunctionResolver<string | ReadonlyArray<string> | number>
+    max?: FunctionMaybe<number | string>,
+    value?: FunctionMaybe<string | ReadonlyArray<string> | number>
   }
 
   interface SlotHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    name?: FunctionResolver<string>
+    name?: FunctionMaybe<string>
   }
 
   interface ScriptHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    async?: FunctionResolver<boolean>,
+    async?: FunctionMaybe<boolean>,
     /** @deprecated */
-    charSet?: FunctionResolver<string>,
-    crossOrigin?: FunctionResolver<string>,
-    defer?: FunctionResolver<boolean>,
-    integrity?: FunctionResolver<string>,
-    noModule?: FunctionResolver<boolean>,
-    nonce?: FunctionResolver<string>,
-    referrerPolicy?: FunctionResolver<HTMLAttributeReferrerPolicy>,
-    src?: FunctionResolver<string>,
-    type?: FunctionResolver<string>
+    charSet?: FunctionMaybe<string>,
+    crossOrigin?: FunctionMaybe<string>,
+    defer?: FunctionMaybe<boolean>,
+    integrity?: FunctionMaybe<string>,
+    noModule?: FunctionMaybe<boolean>,
+    nonce?: FunctionMaybe<string>,
+    referrerPolicy?: FunctionMaybe<HTMLAttributeReferrerPolicy>,
+    src?: FunctionMaybe<string>,
+    type?: FunctionMaybe<string>
   }
 
   interface SelectHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    autoComplete?: FunctionResolver<string>,
-    autoFocus?: FunctionResolver<boolean>,
-    disabled?: FunctionResolver<boolean>,
-    form?: FunctionResolver<string>,
-    multiple?: FunctionResolver<boolean>,
-    name?: FunctionResolver<string>,
-    required?: FunctionResolver<boolean>,
-    size?: FunctionResolver<number>,
-    value?: FunctionResolver<string | ReadonlyArray<string> | number>,
-    onChange?: ObservableResolver<KeyboardEventHandler<T>>
+    autoComplete?: FunctionMaybe<string>,
+    autoFocus?: FunctionMaybe<boolean>,
+    disabled?: FunctionMaybe<boolean>,
+    form?: FunctionMaybe<string>,
+    multiple?: FunctionMaybe<boolean>,
+    name?: FunctionMaybe<string>,
+    required?: FunctionMaybe<boolean>,
+    size?: FunctionMaybe<number>,
+    value?: FunctionMaybe<string | ReadonlyArray<string> | number>,
+    onChange?: ObservableMaybe<KeyboardEventHandler<T>>
   }
 
   interface SourceHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    height?: FunctionResolver<number | string>,
-    media?: FunctionResolver<string>,
-    sizes?: FunctionResolver<string>,
-    src?: FunctionResolver<string>,
-    srcSet?: FunctionResolver<string>,
-    type?: FunctionResolver<string>,
-    width?: FunctionResolver<number | string>
+    height?: FunctionMaybe<number | string>,
+    media?: FunctionMaybe<string>,
+    sizes?: FunctionMaybe<string>,
+    src?: FunctionMaybe<string>,
+    srcSet?: FunctionMaybe<string>,
+    type?: FunctionMaybe<string>,
+    width?: FunctionMaybe<number | string>
   }
 
   interface StyleHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    media?: FunctionResolver<string>,
-    nonce?: FunctionResolver<string>,
-    scoped?: FunctionResolver<boolean>,
-    type?: FunctionResolver<string>
+    media?: FunctionMaybe<string>,
+    nonce?: FunctionMaybe<string>,
+    scoped?: FunctionMaybe<boolean>,
+    type?: FunctionMaybe<string>
   }
 
   interface TableHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    cellPadding?: FunctionResolver<number | string>,
-    cellSpacing?: FunctionResolver<number | string>,
-    summary?: FunctionResolver<string>,
-    width?: FunctionResolver<number | string>
+    cellPadding?: FunctionMaybe<number | string>,
+    cellSpacing?: FunctionMaybe<number | string>,
+    summary?: FunctionMaybe<string>,
+    width?: FunctionMaybe<number | string>
   }
 
   interface TextareaHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    autoComplete?: FunctionResolver<string>,
-    autoFocus?: FunctionResolver<boolean>,
-    cols?: FunctionResolver<number>,
-    dirName?: FunctionResolver<string>,
-    disabled?: FunctionResolver<boolean>,
-    form?: FunctionResolver<string>,
-    maxLength?: FunctionResolver<number>,
-    minLength?: FunctionResolver<number>,
-    name?: FunctionResolver<string>,
-    placeholder?: FunctionResolver<string>,
-    readOnly?: FunctionResolver<boolean>,
-    required?: FunctionResolver<boolean>,
-    rows?: FunctionResolver<number>,
-    value?: FunctionResolver<string | ReadonlyArray<string> | number>,
-    wrap?: FunctionResolver<string>,
-    onChange?: ObservableResolver<KeyboardEventHandler<T>>
+    autoComplete?: FunctionMaybe<string>,
+    autoFocus?: FunctionMaybe<boolean>,
+    cols?: FunctionMaybe<number>,
+    dirName?: FunctionMaybe<string>,
+    disabled?: FunctionMaybe<boolean>,
+    form?: FunctionMaybe<string>,
+    maxLength?: FunctionMaybe<number>,
+    minLength?: FunctionMaybe<number>,
+    name?: FunctionMaybe<string>,
+    placeholder?: FunctionMaybe<string>,
+    readOnly?: FunctionMaybe<boolean>,
+    required?: FunctionMaybe<boolean>,
+    rows?: FunctionMaybe<number>,
+    value?: FunctionMaybe<string | ReadonlyArray<string> | number>,
+    wrap?: FunctionMaybe<string>,
+    onChange?: ObservableMaybe<KeyboardEventHandler<T>>
   }
 
   interface TdHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    align?: FunctionResolver<'left' | 'center' | 'right' | 'justify' | 'char'>,
-    colSpan?: FunctionResolver<number>,
-    headers?: FunctionResolver<string>,
-    rowSpan?: FunctionResolver<number>,
-    scope?: FunctionResolver<string>,
-    abbr?: FunctionResolver<string>,
-    height?: FunctionResolver<number | string>,
-    width?: FunctionResolver<number | string>,
-    valign?: FunctionResolver<'top' | 'middle' | 'bottom' | 'baseline'>
+    align?: FunctionMaybe<'left' | 'center' | 'right' | 'justify' | 'char'>,
+    colSpan?: FunctionMaybe<number>,
+    headers?: FunctionMaybe<string>,
+    rowSpan?: FunctionMaybe<number>,
+    scope?: FunctionMaybe<string>,
+    abbr?: FunctionMaybe<string>,
+    height?: FunctionMaybe<number | string>,
+    width?: FunctionMaybe<number | string>,
+    valign?: FunctionMaybe<'top' | 'middle' | 'bottom' | 'baseline'>
   }
 
   interface ThHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    align?: FunctionResolver<'left' | 'center' | 'right' | 'justify' | 'char'>,
-    colSpan?: FunctionResolver<number>,
-    headers?: FunctionResolver<string>,
-    rowSpan?: FunctionResolver<number>,
-    scope?: FunctionResolver<string>,
-    abbr?: FunctionResolver<string>
+    align?: FunctionMaybe<'left' | 'center' | 'right' | 'justify' | 'char'>,
+    colSpan?: FunctionMaybe<number>,
+    headers?: FunctionMaybe<string>,
+    rowSpan?: FunctionMaybe<number>,
+    scope?: FunctionMaybe<string>,
+    abbr?: FunctionMaybe<string>
   }
 
   interface TimeHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    dateTime?: FunctionResolver<string>
+    dateTime?: FunctionMaybe<string>
   }
 
   interface TrackHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    default?: FunctionResolver<boolean>,
-    kind?: FunctionResolver<string>,
-    label?: FunctionResolver<string>,
-    src?: FunctionResolver<string>,
-    srcLang?: FunctionResolver<string>
+    default?: FunctionMaybe<boolean>,
+    kind?: FunctionMaybe<string>,
+    label?: FunctionMaybe<string>,
+    src?: FunctionMaybe<string>,
+    srcLang?: FunctionMaybe<string>
   }
 
   interface VideoHTMLAttributes<T extends EventTarget> extends MediaHTMLAttributes<T> {
-    height?: FunctionResolver<number | string>,
-    playsInline?: FunctionResolver<boolean>,
-    poster?: FunctionResolver<string>,
-    width?: FunctionResolver<number | string>,
-    disablePictureInPicture?: FunctionResolver<boolean>,
-    disableRemotePlayback?: FunctionResolver<boolean>
+    height?: FunctionMaybe<number | string>,
+    playsInline?: FunctionMaybe<boolean>,
+    poster?: FunctionMaybe<string>,
+    width?: FunctionMaybe<number | string>,
+    disablePictureInPicture?: FunctionMaybe<boolean>,
+    disableRemotePlayback?: FunctionMaybe<boolean>
   }
 
   interface WebViewHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
-    allowFullScreen?: FunctionResolver<boolean>,
-    allowpopups?: FunctionResolver<boolean>,
-    autoFocus?: FunctionResolver<boolean>,
-    autosize?: FunctionResolver<boolean>,
-    blinkfeatures?: FunctionResolver<string>,
-    disableblinkfeatures?: FunctionResolver<string>,
-    disableguestresize?: FunctionResolver<boolean>,
-    disablewebsecurity?: FunctionResolver<boolean>,
-    guestinstance?: FunctionResolver<string>,
-    httpreferrer?: FunctionResolver<string>,
-    nodeintegration?: FunctionResolver<boolean>,
-    partition?: FunctionResolver<string>,
-    plugins?: FunctionResolver<boolean>,
-    preload?: FunctionResolver<string>,
-    src?: FunctionResolver<string>,
-    useragent?: FunctionResolver<string>,
-    webpreferences?: FunctionResolver<string>
+    allowFullScreen?: FunctionMaybe<boolean>,
+    allowpopups?: FunctionMaybe<boolean>,
+    autoFocus?: FunctionMaybe<boolean>,
+    autosize?: FunctionMaybe<boolean>,
+    blinkfeatures?: FunctionMaybe<string>,
+    disableblinkfeatures?: FunctionMaybe<string>,
+    disableguestresize?: FunctionMaybe<boolean>,
+    disablewebsecurity?: FunctionMaybe<boolean>,
+    guestinstance?: FunctionMaybe<string>,
+    httpreferrer?: FunctionMaybe<string>,
+    nodeintegration?: FunctionMaybe<boolean>,
+    partition?: FunctionMaybe<string>,
+    plugins?: FunctionMaybe<boolean>,
+    preload?: FunctionMaybe<string>,
+    src?: FunctionMaybe<string>,
+    useragent?: FunctionMaybe<string>,
+    webpreferences?: FunctionMaybe<string>
   }
 
   interface IntrinsicElementsMap {

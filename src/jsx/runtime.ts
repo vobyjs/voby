@@ -2,13 +2,13 @@
 /* IMPORT */
 
 import './types';
-import type {Child, Component, Props, Key} from '../types';
+import type {Child, Component, Props} from '../types';
 import Fragment from '../components/fragment';
 import createElement from '../create_element';
 
 /* MAIN */
 
-const jsx = ( component: Component, props: Props, key?: Key ): (() => Child) => {
+const jsx = ( component: Component, props: Props, key?: unknown ): (() => Child) => {
 
   return createElement ( component, props );
 
