@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import diff from 'tiny-diff';
-import type {Child, EventListener, FunctionResolver, ObservableResolver, Ref, TemplateActionProxy} from '../types';
+import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '../types';
 import template from '../template';
 import {flatten, isFunction, isNil, isString} from './lang';
 import {resolveChild, resolveFunction, resolveObservable} from './resolvers';
@@ -47,7 +47,7 @@ const setAttributeStatic = ( attributes: NamedNodeMap, key: string, value: null 
 
 };
 
-const setAttribute = ( element: HTMLElement, key: string, value: FunctionResolver<null | undefined | boolean | number | string> ): void => {
+const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean | number | string> ): void => {
 
   const {attributes} = element;
 
@@ -137,7 +137,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
 
     if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
-        return setChildReplacement ( child, childrenPrev[0] );
+      return setChildReplacement ( child, childrenPrev[0] );
 
     }
 
@@ -228,7 +228,7 @@ const setClassStatic = ( classList: DOMTokenList, key: string, value: null | und
 
 };
 
-const setClass = ( classList: DOMTokenList, key: string, value: FunctionResolver<null | undefined | boolean> ): void => {
+const setClass = ( classList: DOMTokenList, key: string, value: FunctionMaybe<null | undefined | boolean> ): void => {
 
   resolveFunction ( value, value => {
 
@@ -238,7 +238,7 @@ const setClass = ( classList: DOMTokenList, key: string, value: FunctionResolver
 
 };
 
-const setClassesStatic = ( element: HTMLElement, classList: DOMTokenList, object: null | undefined | string | Record<string, FunctionResolver<null | undefined | boolean>>, objectPrev?: null | undefined | string | Record<string, FunctionResolver<null | undefined | boolean>> ): void => {
+const setClassesStatic = ( element: HTMLElement, classList: DOMTokenList, object: null | undefined | string | Record<string, FunctionMaybe<null | undefined | boolean>>, objectPrev?: null | undefined | string | Record<string, FunctionMaybe<null | undefined | boolean>> ): void => {
 
   if ( isString ( object ) ) {
 
@@ -284,7 +284,7 @@ const setClassesStatic = ( element: HTMLElement, classList: DOMTokenList, object
 
 };
 
-const setClasses = ( element: HTMLElement, object: FunctionResolver<null | undefined | string | Record<string, FunctionResolver<null | undefined | boolean>>> ): void => {
+const setClasses = ( element: HTMLElement, object: FunctionMaybe<null | undefined | string | Record<string, FunctionMaybe<null | undefined | boolean>>> ): void => {
 
   const {classList} = element;
 
@@ -384,7 +384,7 @@ const setEventStatic = (() => {
 
 })();
 
-const setEvent = ( element: HTMLElement, event: string, value: ObservableResolver<null | undefined | EventListener> ): void => {
+const setEvent = ( element: HTMLElement, event: string, value: ObservableMaybe<null | undefined | EventListener> ): void => {
 
   resolveObservable ( value, value => {
 
@@ -400,7 +400,7 @@ const setHTMLStatic = ( element: HTMLElement, value: null | undefined | number |
 
 };
 
-const setHTML = ( element: HTMLElement, value: FunctionResolver<{ __html: FunctionResolver<null | undefined | number | string> }> ): void => {
+const setHTML = ( element: HTMLElement, value: FunctionMaybe<{ __html: FunctionMaybe<null | undefined | number | string> }> ): void => {
 
   resolveFunction ( value, value => {
 
@@ -438,7 +438,7 @@ const setPropertyStatic = ( element: HTMLElement, key: string, value: null | und
 
 };
 
-const setProperty = ( element: HTMLElement, key: string, value: FunctionResolver<null | undefined | boolean | number | string> ): void => {
+const setProperty = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean | number | string> ): void => {
 
   resolveFunction ( value, value => {
 
@@ -490,7 +490,7 @@ const setStyleStatic = (() => {
 
 })();
 
-const setStyle = ( style: CSSStyleDeclaration, key: string, value: FunctionResolver<null | undefined | number | string> ): void => {
+const setStyle = ( style: CSSStyleDeclaration, key: string, value: FunctionMaybe<null | undefined | number | string> ): void => {
 
   resolveFunction ( value, value => {
 
@@ -500,7 +500,7 @@ const setStyle = ( style: CSSStyleDeclaration, key: string, value: FunctionResol
 
 };
 
-const setStylesStatic = ( style: CSSStyleDeclaration, object: null | undefined | string | Record<string, FunctionResolver<null | undefined | number | string>>, objectPrev?: null | undefined | string | Record<string, FunctionResolver<null | undefined | number | string>> ): void => {
+const setStylesStatic = ( style: CSSStyleDeclaration, object: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>, objectPrev?: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>> ): void => {
 
   if ( isString ( object ) ) {
 
@@ -546,7 +546,7 @@ const setStylesStatic = ( style: CSSStyleDeclaration, object: null | undefined |
 
 };
 
-const setStyles = ( element: HTMLElement, object: FunctionResolver<null | undefined | string | Record<string, FunctionResolver<null | undefined | number | string>>> ): void => {
+const setStyles = ( element: HTMLElement, object: FunctionMaybe<null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>> ): void => {
 
   const {style} = element;
 

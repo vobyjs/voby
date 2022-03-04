@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import type {ObservableReadonly, Resolvable} from './types';
+import type {FunctionMaybe, ObservableReadonly} from './types';
 import useComputed from './hooks/use_computed';
 import useResolved from './hooks/use_resolved';
 
@@ -9,7 +9,7 @@ import useResolved from './hooks/use_resolved';
 
 //TODO: This function is unsafe, and potentially slow, SVG support should be implemented natively
 
-const svg = ( statics: TemplateStringsArray, ...dynamics: Resolvable<null | undefined | boolean | number | bigint | string | symbol>[] ): ObservableReadonly<Node | null | undefined> => {
+const svg = ( statics: TemplateStringsArray, ...dynamics: FunctionMaybe<boolean | number | bigint | string>[] ): ObservableReadonly<Node | null | undefined> => {
 
   return useComputed ( (): Node | null | undefined => {
 

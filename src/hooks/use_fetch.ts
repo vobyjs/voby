@@ -2,23 +2,25 @@
 /* IMPORT */
 
 import type {Observable, ObservableMaybe, Resource} from '../types';
-import $$ from '../$$';
-import useAbortController from './use_abort_controller';
+import useAbortSignal from './use_abort_signal';
+import useResolved from './use_resolved';
 import useResource from './use_resource';
 
 /* MAIN */
 
-const useFetch = ( info: ObservableMaybe<RequestInfo>, init?: ObservableMaybe<RequestInit> ): Observable<Resource<Response>> => {
+const useFetch = ( request: ObservableMaybe<RequestInfo>, init?: ObservableMaybe<RequestInit> ): Observable<Resource<Response>> => {
 
   return useResource ( () => {
 
-    const request = $$(info);
-    const options = $$(init) || {};
-    const signal = useAbortController ( options.signal || [] ).signal;
+    return useResolved ( [request, init], ( request, init = {} ) => {
 
-    options.signal = signal;
+      const signal = useAbortSignal ( init.signal || [] );
 
-    return fetch ( request, options );
+      init.signal = signal;
+
+      return fetch ( request, init );
+
+    });
 
   });
 

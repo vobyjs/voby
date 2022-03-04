@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import type {Child, ChildResolved, FunctionResolver, ObservableResolver} from '../types';
+import type {Child, ChildResolved, FunctionMaybe, ObservableMaybe} from '../types';
 import useEffect from '../hooks/use_effect';
 import isObservable from '../is_observable';
 import sample from '../sample';
@@ -9,7 +9,7 @@ import {isFunction} from './lang';
 
 /* MAIN */
 
-const resolveAbstract = <T> ( value: FunctionResolver<T>, setter: (( value: T, valuePrev?: T ) => void), isResolvable: (( value: FunctionResolver<T> ) => value is (() => FunctionResolver<T>)) ): void => {
+const resolveAbstract = <T> ( value: FunctionMaybe<T>, setter: (( value: T, valuePrev?: T ) => void), isResolvable: (( value: FunctionMaybe<T> ) => value is (() => T)) ): void => {
 
   if ( isResolvable ( value ) ) {
 
@@ -19,17 +19,9 @@ const resolveAbstract = <T> ( value: FunctionResolver<T>, setter: (( value: T, v
 
       const valueNext = value ();
 
-      if ( isResolvable ( valueNext ) ) {
+      setter ( valueNext, valuePrev );
 
-        resolveAbstract ( valueNext, setter, isResolvable );
-
-      } else {
-
-        setter ( valueNext, valuePrev );
-
-        valuePrev = valueNext;
-
-      }
+      valuePrev = valueNext;
 
     });
 
@@ -41,7 +33,7 @@ const resolveAbstract = <T> ( value: FunctionResolver<T>, setter: (( value: T, v
 
 };
 
-const resolveChild = <T> ( value: ObservableResolver<T>, setter: (( value: T ) => void) ): void => {
+const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T ) => void) ): void => {
 
   if ( isObservable ( value ) ) {
 
@@ -99,15 +91,15 @@ const resolveChildDeep = ( child: Child ): ChildResolved => { //TODO: This funct
 
 };
 
-const resolveFunction = <T> ( value: FunctionResolver<T>, setter: (( value: T, valuePrev?: T ) => void) ): void => {
+const resolveFunction = <T> ( value: FunctionMaybe<T>, setter: (( value: T, valuePrev?: T ) => void) ): void => {
 
-  return resolveAbstract ( value, setter, isFunction );
+  resolveAbstract ( value, setter, isFunction );
 
 };
 
-const resolveObservable = <T> ( value: ObservableResolver<T>, setter: (( value?: T, valuePrev?: T ) => void) ): void => {
+const resolveObservable = <T> ( value: ObservableMaybe<T>, setter: (( value?: T, valuePrev?: T ) => void) ): void => {
 
-  return resolveAbstract ( value, setter, isObservable );
+  resolveAbstract ( value, setter, isObservable );
 
 };
 

@@ -1,133 +1,95 @@
 
 /* IMPORT */
 
-import type {FN, FunctionRecursed as FF, ObservableRecursed as OO} from '../types';
+import type {FN, ObservableAny} from '../types';
 import isObservable from '../is_observable';
-import {isArray, isFunction} from '../utils/lang';
+import {isFunction} from '../utils/lang';
 
 /* MAIN */
 
-function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, T9> ( value: [T1, T2, T3, T4, T5, T6, T7, T8, T9], resolveFunctions?: false ): [OO<T1>, OO<T2>, OO<T3>, OO<T4>, OO<T5>, OO<T6>, OO<T7>, OO<T8>, OO<T9>];
-function useResolved<T1, T2, T3, T4, T5, T6, T7, T8> ( value: [T1, T2, T3, T4, T5, T6, T7, T8], resolveFunctions?: false ): [OO<T1>, OO<T2>, OO<T3>, OO<T4>, OO<T5>, OO<T6>, OO<T7>, OO<T8>];
-function useResolved<T1, T2, T3, T4, T5, T6, T7> ( value: [T1, T2, T3, T4, T5, T6, T7], resolveFunctions?: false ): [OO<T1>, OO<T2>, OO<T3>, OO<T4>, OO<T5>, OO<T6>, OO<T7>];
-function useResolved<T1, T2, T3, T4, T5, T6> ( value: [T1, T2, T3, T4, T5, T6], resolveFunctions?: false ): [OO<T1>, OO<T2>, OO<T3>, OO<T4>, OO<T5>, OO<T6>];
-function useResolved<T1, T2, T3, T4, T5> ( value: [T1, T2, T3, T4, T5], resolveFunctions?: false ): [OO<T1>, OO<T2>, OO<T3>, OO<T4>, OO<T5>];
-function useResolved<T1, T2, T3, T4> ( value: [T1, T2, T3, T4], resolveFunctions?: false ): [OO<T1>, OO<T2>, OO<T3>, OO<T4>];
-function useResolved<T1, T2, T3> ( value: [T1, T2, T3], resolveFunctions?: false ): [OO<T1>, OO<T2>, OO<T3>];
-function useResolved<T1, T2> ( value: [T1, T2], resolveFunctions?: false ): [OO<T1>, OO<T2>];
-function useResolved<T1> ( value: [T1], resolveFunctions?: false ): [OO<T1>];
-function useResolved ( value: [], resolveFunctions?: false ): [];
+type F<T> = T extends () => infer U ? U : T;
+type O<T> = T extends ObservableAny<infer U> ? U : T;
 
-function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, T9> ( value: [T1, T2, T3, T4, T5, T6, T7, T8, T9], resolveFunctions: true ): [FF<T1>, FF<T2>, FF<T3>, FF<T4>, FF<T5>, FF<T6>, FF<T7>, FF<T8>, FF<T9>];
-function useResolved<T1, T2, T3, T4, T5, T6, T7, T8> ( value: [T1, T2, T3, T4, T5, T6, T7, T8], resolveFunctions: true ): [FF<T1>, FF<T2>, FF<T3>, FF<T4>, FF<T5>, FF<T6>, FF<T7>, FF<T8>];
-function useResolved<T1, T2, T3, T4, T5, T6, T7> ( value: [T1, T2, T3, T4, T5, T6, T7], resolveFunctions: true ): [FF<T1>, FF<T2>, FF<T3>, FF<T4>, FF<T5>, FF<T6>, FF<T7>];
-function useResolved<T1, T2, T3, T4, T5, T6> ( value: [T1, T2, T3, T4, T5, T6], resolveFunctions: true ): [FF<T1>, FF<T2>, FF<T3>, FF<T4>, FF<T5>, FF<T6>];
-function useResolved<T1, T2, T3, T4, T5> ( value: [T1, T2, T3, T4, T5], resolveFunctions: true ): [FF<T1>, FF<T2>, FF<T3>, FF<T4>, FF<T5>];
-function useResolved<T1, T2, T3, T4> ( value: [T1, T2, T3, T4], resolveFunctions: true ): [FF<T1>, FF<T2>, FF<T3>, FF<T4>];
-function useResolved<T1, T2, T3> ( value: [T1, T2, T3], resolveFunctions: true ): [FF<T1>, FF<T2>, FF<T3>];
-function useResolved<T1, T2> ( value: [T1, T2], resolveFunctions: true ): [FF<T1>, FF<T2>];
-function useResolved<T1> ( value: [T1], resolveFunctions: true ): [FF<T1>];
-function useResolved ( value: [], resolveFunctions: true ): [];
+function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, T9> ( value: [T1, T2, T3, T4, T5, T6, T7, T8, T9], resolveFunction: true ): [F<T1>, F<T2>, F<T3>, F<T4>, F<T5>, F<T6>, F<T7>, F<T8>, F<T9>];
+function useResolved<T1, T2, T3, T4, T5, T6, T7, T8> ( value: [T1, T2, T3, T4, T5, T6, T7, T8], resolveFunction: true ): [F<T1>, F<T2>, F<T3>, F<T4>, F<T5>, F<T6>, F<T7>, F<T8>];
+function useResolved<T1, T2, T3, T4, T5, T6, T7> ( value: [T1, T2, T3, T4, T5, T6, T7], resolveFunction: true ): [F<T1>, F<T2>, F<T3>, F<T4>, F<T5>, F<T6>, F<T7>];
+function useResolved<T1, T2, T3, T4, T5, T6> ( value: [T1, T2, T3, T4, T5, T6], resolveFunction: true ): [F<T1>, F<T2>, F<T3>, F<T4>, F<T5>, F<T6>];
+function useResolved<T1, T2, T3, T4, T5> ( value: [T1, T2, T3, T4, T5], resolveFunction: true ): [F<T1>, F<T2>, F<T3>, F<T4>, F<T5>];
+function useResolved<T1, T2, T3, T4> ( value: [T1, T2, T3, T4], resolveFunction: true ): [F<T1>, F<T2>, F<T3>, F<T4>];
+function useResolved<T1, T2, T3> ( value: [T1, T2, T3], resolveFunction: true ): [F<T1>, F<T2>, F<T3>];
+function useResolved<T1, T2> ( value: [T1, T2], resolveFunction: true ): [F<T1>, F<T2>];
+function useResolved<T1> ( value: [T1], resolveFunction: true ): [F<T1>];
+function useResolved ( value: [], resolveFunction: true ): [];
 
-function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, T9> ( value: [T1, T2, T3, T4, T5, T6, T7, T8, T9], resolveFunctions?: boolean ): [T1, T2, T3, T4, T5, T6, T7, T8, T9];
-function useResolved<T1, T2, T3, T4, T5, T6, T7, T8> ( value: [T1, T2, T3, T4, T5, T6, T7, T8], resolveFunctions?: boolean ): [T1, T2, T3, T4, T5, T6, T7, T8];
-function useResolved<T1, T2, T3, T4, T5, T6, T7> ( value: [T1, T2, T3, T4, T5, T6, T7], resolveFunctions?: boolean ): [T1, T2, T3, T4, T5, T6, T7];
-function useResolved<T1, T2, T3, T4, T5, T6> ( value: [T1, T2, T3, T4, T5, T6], resolveFunctions?: boolean ): [T1, T2, T3, T4, T5, T6];
-function useResolved<T1, T2, T3, T4, T5> ( value: [T1, T2, T3, T4, T5], resolveFunctions?: boolean ): [T1, T2, T3, T4, T5];
-function useResolved<T1, T2, T3, T4> ( value: [T1, T2, T3, T4], resolveFunctions?: boolean ): [T1, T2, T3, T4];
-function useResolved<T1, T2, T3> ( value: [T1, T2, T3], resolveFunctions?: boolean ): [T1, T2, T3];
-function useResolved<T1, T2> ( value: [T1, T2], resolveFunctions?: boolean ): [T1, T2];
-function useResolved<T1> ( value: [T1], resolveFunctions?: boolean ): [T1];
-function useResolved ( value: [], resolveFunctions?: boolean ): [];
+function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, T9> ( value: [T1, T2, T3, T4, T5, T6, T7, T8, T9], resolveFunction?: false ): [O<T1>, O<T2>, O<T3>, O<T4>, O<T5>, O<T6>, O<T7>, O<T8>, O<T9>];
+function useResolved<T1, T2, T3, T4, T5, T6, T7, T8> ( value: [T1, T2, T3, T4, T5, T6, T7, T8], resolveFunction?: false ): [O<T1>, O<T2>, O<T3>, O<T4>, O<T5>, O<T6>, O<T7>, O<T8>];
+function useResolved<T1, T2, T3, T4, T5, T6, T7> ( value: [T1, T2, T3, T4, T5, T6, T7], resolveFunction?: false ): [O<T1>, O<T2>, O<T3>, O<T4>, O<T5>, O<T6>, O<T7>];
+function useResolved<T1, T2, T3, T4, T5, T6> ( value: [T1, T2, T3, T4, T5, T6], resolveFunction?: false ): [O<T1>, O<T2>, O<T3>, O<T4>, O<T5>, O<T6>];
+function useResolved<T1, T2, T3, T4, T5> ( value: [T1, T2, T3, T4, T5], resolveFunction?: false ): [O<T1>, O<T2>, O<T3>, O<T4>, O<T5>];
+function useResolved<T1, T2, T3, T4> ( value: [T1, T2, T3, T4], resolveFunction?: false ): [O<T1>, O<T2>, O<T3>, O<T4>];
+function useResolved<T1, T2, T3> ( value: [T1, T2, T3], resolveFunction?: false ): [O<T1>, O<T2>, O<T3>];
+function useResolved<T1, T2> ( value: [T1, T2], resolveFunction?: false ): [O<T1>, O<T2>];
+function useResolved<T1> ( value: [T1], resolveFunction?: false ): [O<T1>];
+function useResolved ( value: [], resolveFunction?: false ): [];
 
-function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, T9, R> ( value: [T1, T2, T3, T4, T5, T6, T7, T8, T9], callback: FN<[OO<T1>, OO<T2>, OO<T3>, OO<T4>, OO<T5>, OO<T6>, OO<T7>, OO<T8>, OO<T9>], R>, resolveFunctions?: false ): R;
-function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, R> ( value: [T1, T2, T3, T4, T5, T6, T7, T8], callback: FN<[OO<T1>, OO<T2>, OO<T3>, OO<T4>, OO<T5>, OO<T6>, OO<T7>, OO<T8>], R>, resolveFunctions?: false ): R;
-function useResolved<T1, T2, T3, T4, T5, T6, T7, R> ( value: [T1, T2, T3, T4, T5, T6, T7], callback: FN<[OO<T1>, OO<T2>, OO<T3>, OO<T4>, OO<T5>, OO<T6>, OO<T7>], R>, resolveFunctions?: false ): R;
-function useResolved<T1, T2, T3, T4, T5, T6, R> ( value: [T1, T2, T3, T4, T5, T6], callback: FN<[OO<T1>, OO<T2>, OO<T3>, OO<T4>, OO<T5>, OO<T6>], R>, resolveFunctions?: false ): R;
-function useResolved<T1, T2, T3, T4, T5, R> ( value: [T1, T2, T3, T4, T5], callback: FN<[OO<T1>, OO<T2>, OO<T3>, OO<T4>, OO<T5>], R>, resolveFunctions?: false ): R;
-function useResolved<T1, T2, T3, T4, R> ( value: [T1, T2, T3, T4], callback: FN<[OO<T1>, OO<T2>, OO<T3>, OO<T4>], R>, resolveFunctions?: false ): R;
-function useResolved<T1, T2, T3, R> ( value: [T1, T2, T3], callback: FN<[OO<T1>, OO<T2>, OO<T3>], R>, resolveFunctions?: false ): R;
-function useResolved<T1, T2, R> ( value: [T1, T2], callback: FN<[OO<T1>, OO<T2>], R>, resolveFunctions?: false ): R;
-function useResolved<T1, R> ( value: [T1], callback: FN<[OO<T1>], R>, resolveFunctions?: false ): R;
-function useResolved<R> ( value: [], callback: FN<[], R>, resolveFunctions?: false ): R;
+function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, T9, R> ( value: [T1, T2, T3, T4, T5, T6, T7, T8, T9], callback: FN<[F<T1>, F<T2>, F<T3>, F<T4>, F<T5>, F<T6>, F<T7>, F<T8>, F<T9>], R>, resolveFunction: true ): R;
+function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, R> ( value: [T1, T2, T3, T4, T5, T6, T7, T8], callback: FN<[F<T1>, F<T2>, F<T3>, F<T4>, F<T5>, F<T6>, F<T7>, F<T8>], R>, resolveFunction: true ): R;
+function useResolved<T1, T2, T3, T4, T5, T6, T7, R> ( value: [T1, T2, T3, T4, T5, T6, T7], callback: FN<[F<T1>, F<T2>, F<T3>, F<T4>, F<T5>, F<T6>, F<T7>], R>, resolveFunction: true ): R;
+function useResolved<T1, T2, T3, T4, T5, T6, R> ( value: [T1, T2, T3, T4, T5, T6], callback: FN<[F<T1>, F<T2>, F<T3>, F<T4>, F<T5>, F<T6>], R>, resolveFunction: true ): R;
+function useResolved<T1, T2, T3, T4, T5, R> ( value: [T1, T2, T3, T4, T5], callback: FN<[F<T1>, F<T2>, F<T3>, F<T4>, F<T5>], R>, resolveFunction: true ): R;
+function useResolved<T1, T2, T3, T4, R> ( value: [T1, T2, T3, T4], callback: FN<[F<T1>, F<T2>, F<T3>, F<T4>], R>, resolveFunction: true ): R;
+function useResolved<T1, T2, T3, R> ( value: [T1, T2, T3], callback: FN<[F<T1>, F<T2>, F<T3>], R>, resolveFunction: true ): R;
+function useResolved<T1, T2, R> ( value: [T1, T2], callback: FN<[F<T1>, F<T2>], R>, resolveFunction: true ): R;
+function useResolved<T1, R> ( value: [T1], callback: FN<[F<T1>], R>, resolveFunction: true ): R;
+function useResolved<R> ( value: [], callback: FN<[], R>, resolveFunction: true ): R;
 
-function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, T9, R> ( value: [T1, T2, T3, T4, T5, T6, T7, T8, T9], callback: FN<[FF<T1>, FF<T2>, FF<T3>, FF<T4>, FF<T5>, FF<T6>, FF<T7>, FF<T8>, FF<T9>], R>, resolveFunctions: true ): R;
-function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, R> ( value: [T1, T2, T3, T4, T5, T6, T7, T8], callback: FN<[FF<T1>, FF<T2>, FF<T3>, FF<T4>, FF<T5>, FF<T6>, FF<T7>, FF<T8>], R>, resolveFunctions: true ): R;
-function useResolved<T1, T2, T3, T4, T5, T6, T7, R> ( value: [T1, T2, T3, T4, T5, T6, T7], callback: FN<[FF<T1>, FF<T2>, FF<T3>, FF<T4>, FF<T5>, FF<T6>, FF<T7>], R>, resolveFunctions: true ): R;
-function useResolved<T1, T2, T3, T4, T5, T6, R> ( value: [T1, T2, T3, T4, T5, T6], callback: FN<[FF<T1>, FF<T2>, FF<T3>, FF<T4>, FF<T5>, FF<T6>], R>, resolveFunctions: true ): R;
-function useResolved<T1, T2, T3, T4, T5, R> ( value: [T1, T2, T3, T4, T5], callback: FN<[FF<T1>, FF<T2>, FF<T3>, FF<T4>, FF<T5>], R>, resolveFunctions: true ): R;
-function useResolved<T1, T2, T3, T4, R> ( value: [T1, T2, T3, T4], callback: FN<[FF<T1>, FF<T2>, FF<T3>, FF<T4>], R>, resolveFunctions: true ): R;
-function useResolved<T1, T2, T3, R> ( value: [T1, T2, T3], callback: FN<[FF<T1>, FF<T2>, FF<T3>], R>, resolveFunctions: true ): R;
-function useResolved<T1, T2, R> ( value: [T1, T2], callback: FN<[FF<T1>, FF<T2>], R>, resolveFunctions: true ): R;
-function useResolved<T1, R> ( value: [T1], callback: FN<[FF<T1>], R>, resolveFunctions: true ): R;
-function useResolved<R> ( value: [], callback: FN<[], R>, resolveFunctions: true ): R;
+function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, T9, R> ( value: [T1, T2, T3, T4, T5, T6, T7, T8, T9], callback: FN<[O<T1>, O<T2>, O<T3>, O<T4>, O<T5>, O<T6>, O<T7>, O<T8>, O<T9>], R>, resolveFunction?: false ): R;
+function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, R> ( value: [T1, T2, T3, T4, T5, T6, T7, T8], callback: FN<[O<T1>, O<T2>, O<T3>, O<T4>, O<T5>, O<T6>, O<T7>, O<T8>], R>, resolveFunction?: false ): R;
+function useResolved<T1, T2, T3, T4, T5, T6, T7, R> ( value: [T1, T2, T3, T4, T5, T6, T7], callback: FN<[O<T1>, O<T2>, O<T3>, O<T4>, O<T5>, O<T6>, O<T7>], R>, resolveFunction?: false ): R;
+function useResolved<T1, T2, T3, T4, T5, T6, R> ( value: [T1, T2, T3, T4, T5, T6], callback: FN<[O<T1>, O<T2>, O<T3>, O<T4>, O<T5>, O<T6>], R>, resolveFunction?: false ): R;
+function useResolved<T1, T2, T3, T4, T5, R> ( value: [T1, T2, T3, T4, T5], callback: FN<[O<T1>, O<T2>, O<T3>, O<T4>, O<T5>], R>, resolveFunction?: false ): R;
+function useResolved<T1, T2, T3, T4, R> ( value: [T1, T2, T3, T4], callback: FN<[O<T1>, O<T2>, O<T3>, O<T4>], R>, resolveFunction?: false ): R;
+function useResolved<T1, T2, T3, R> ( value: [T1, T2, T3], callback: FN<[O<T1>, O<T2>, O<T3>], R>, resolveFunction?: false ): R;
+function useResolved<T1, T2, R> ( value: [T1, T2], callback: FN<[O<T1>, O<T2>], R>, resolveFunction?: false ): R;
+function useResolved<T1, R> ( value: [T1], callback: FN<[O<T1>], R>, resolveFunction?: false ): R;
+function useResolved<R> ( value: [], callback: FN<[], R>, resolveFunction?: false ): R;
 
-function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, T9, R> ( value: [T1, T2, T3, T4, T5, T6, T7, T8, T9], callback: FN<[T1, T2, T3, T4, T5, T6, T7, T8, T9], R>, resolveFunctions?: boolean ): R;
-function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, R> ( value: [T1, T2, T3, T4, T5, T6, T7, T8], callback: FN<[T1, T2, T3, T4, T5, T6, T7, T8], R>, resolveFunctions?: boolean ): R;
-function useResolved<T1, T2, T3, T4, T5, T6, T7, R> ( value: [T1, T2, T3, T4, T5, T6, T7], callback: FN<[T1, T2, T3, T4, T5, T6, T7], R>, resolveFunctions?: boolean ): R;
-function useResolved<T1, T2, T3, T4, T5, T6, R> ( value: [T1, T2, T3, T4, T5, T6], callback: FN<[T1, T2, T3, T4, T5, T6], R>, resolveFunctions?: boolean ): R;
-function useResolved<T1, T2, T3, T4, T5, R> ( value: [T1, T2, T3, T4, T5], callback: FN<[T1, T2, T3, T4, T5], R>, resolveFunctions?: boolean ): R;
-function useResolved<T1, T2, T3, T4, R> ( value: [T1, T2, T3, T4], callback: FN<[T1, T2, T3, T4], R>, resolveFunctions?: boolean ): R;
-function useResolved<T1, T2, T3, R> ( value: [T1, T2, T3], callback: FN<[T1, T2, T3], R>, resolveFunctions?: boolean ): R;
-function useResolved<T1, T2, R> ( value: [T1, T2], callback: FN<[T1, T2], R>, resolveFunctions?: boolean ): R;
-function useResolved<T1, R> ( value: [T1], callback: FN<[T1], R>, resolveFunctions?: boolean ): R;
-function useResolved<R> ( value: [], callback: FN<[], R>, resolveFunctions?: boolean ): R;
+function useResolved<T> ( value: T, resolveFunction: true ): F<T>;
+function useResolved<T> ( value: T, resolveFunction?: false ): O<T>;
 
-function useResolved<T> ( value: T, resolveFunctions?: false ): OO<T>;
-function useResolved<T> ( value: T, resolveFunctions: true ): FF<T>;
-function useResolved<T> ( value: T, resolveFunctions?: boolean ): T;
+function useResolved<T, R> ( value: T, callback: FN<[F<T>], R>, resolveFunction: true ): R;
+function useResolved<T, R> ( value: T, callback: FN<[O<T>], R>, resolveFunction?: false ): R;
 
-function useResolved<T, R> ( value: T, callback: FN<[OO<T>], R>, resolveFunctions?: false ): R;
-function useResolved<T, R> ( value: T, callback: FN<[FF<T>], R>, resolveFunctions: true ): R;
-function useResolved<T, R> ( value: T, callback: FN<[T], R>, resolveFunctions?: boolean ): R;
+function useResolved ( values, callback, resolveFunction?: boolean ) {
 
-function useResolved ( values, callback, resolveFunctions?: boolean ) {
+  const isResolvable = ( resolveFunction === true || callback === true ) ? isFunction : isObservable;
+  const resolve = value => isResolvable ( value ) ? value () : value;
 
-  const isResolvable = ( resolveFunctions === true || callback === true ) ? isFunction : isObservable;
+  if ( Array.isArray ( values ) ) {
 
-  if ( isArray ( values ) ) {
-
-    const valuesResolved = new Array ( values.length );
-
-    for ( let i = 0, l = values.length; i < l; i++ ) {
-
-      let value = values[i];
-
-      while ( isResolvable ( value ) ) {
-
-        value = value ();
-
-      }
-
-      valuesResolved[i] = value;
-
-    }
+    const resolved = values.map ( resolve );
 
     if ( isFunction ( callback ) ) {
 
-      return callback.apply ( undefined, valuesResolved );
+      return callback.apply ( undefined, resolved );
 
     } else {
 
-      return valuesResolved;
+      return resolved;
 
     }
 
   } else {
 
-    while ( isResolvable ( values ) ) {
-
-      values = values ();
-
-    }
+    const resolved = resolve ( values );
 
     if ( isFunction ( callback ) ) {
 
-      return callback ( values );
+      return callback ( resolved );
 
     } else {
 
-      return values;
+      return resolved;
 
     }
 

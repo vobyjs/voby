@@ -1,7 +1,7 @@
 
 /* MAIN */
 
-type ArrayMaybe<T = unknown> = T | T[];
+type ArrayMaybe<T = unknown> = T[] | T;
 
 type Callback = () => void;
 
@@ -33,17 +33,11 @@ type Context<T = unknown> = { Consumer: ContextConsumer<T>, Provider: ContextPro
 
 type Disposer = () => void;
 
-type EventListener = ( event: Event ) => unknown;
+type EventListener = ( event: Event ) => void;
 
-type FN<Arguments extends unknown[], Return extends unknown = unknown> = ( ...args: Arguments ) => Return;
+type FN<Arguments extends unknown[], Return extends unknown = void> = ( ...args: Arguments ) => Return;
 
 type FunctionMaybe<T = unknown> = (() => T) | T;
-
-type FunctionRecursed<T = unknown> = T extends ({ (): infer U }) ? FunctionRecursed<U> : T;
-
-type FunctionResolver<T = unknown> = ({ (): FunctionResolver<T> }) | T;
-
-type Key = string;
 
 type Observable<T = unknown> = import ( 'oby' ).Observable<T>;
 
@@ -57,21 +51,15 @@ type ObservableAny<T = unknown> = import ( 'oby' ).ObservableAny<T>;
 
 type ObservableMaybe<T = unknown> = Observable<T> | ObservableReadonly<T> | T;
 
-type ObservableRecordMaybe<T = {}> = { [P in keyof T]: P extends 'key' | 'ref' | 'children' ? T[P] : ObservableMaybe<T[P]> };
-
-type ObservableRecursed<T = unknown> = T extends ({ (): infer U, get (): infer U, sample (): infer U }) ? ObservableRecursed<U> : T;
-
-type ObservableResolver<T = unknown> = ({ (): ObservableResolver<T>, get (): ObservableResolver<T>, sample (): ObservableResolver<T> }) | T;
+type ObservableRecordMaybe<T = {}> = { [P in keyof T]: P extends 'ref' | 'children' ? T[P] : ObservableMaybe<T[P]> };
 
 type ObservableOptions<T = unknown, TI = unknown> = import ( 'oby' ).ObservableOptions<T, TI>;
 
-type PromiseMaybe<T = unknown> = T | Promise<T>;
+type PromiseMaybe<T = unknown> = Promise<T> | T;
 
 type Props = Record<string, any>;
 
-type Ref<T = unknown> = ( value: T ) => unknown;
-
-type Resolvable<T = unknown> = (() => () => () => () => T) | (() => () => () => T) | (() => () => T) | (() => T) | T; //TODO: It should be `FunctionResolver<T>`, but it causes too much recursion for TS
+type Ref<T = unknown> = ( value: T ) => void;
 
 type ResourceLoading = { loading: true, error?: never, value?: never };
 
@@ -91,4 +79,4 @@ type TemplateActionWithPaths = [TemplateActionPath, string, string, TemplateActi
 
 /* EXPORT */
 
-export type {ArrayMaybe, Callback, Child, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, Disposer, EventListener, FN, FunctionMaybe, FunctionRecursed, FunctionResolver, Key, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableMaybe, ObservableRecordMaybe, ObservableRecursed, ObservableResolver, ObservableOptions, PromiseMaybe, Props, Ref, Resolvable, ResourceLoading, ResourceRejected, ResourceResolved, Resource, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};
+export type {ArrayMaybe, Callback, Child, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, Disposer, EventListener, FN, FunctionMaybe, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableMaybe, ObservableRecordMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceLoading, ResourceRejected, ResourceResolved, Resource, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths};

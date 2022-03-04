@@ -1,40 +1,42 @@
 
 /* IMPORT */
 
-import type {Child, ComponentFunction, ConstructorWith, ObservableReadonlyWithoutInitial, Resolvable} from '../types';
+import type {Child, ComponentFunction, ConstructorWith, FunctionMaybe, ObservableReadonlyWithoutInitial} from '../types';
 import useComputed from '../hooks/use_computed';
-import useResolved from '../hooks/use_resolved';
+import {isFunction} from '../utils/lang';
 import {Cache, CacheStatic, CacheDynamic} from './for.caches';
 
 /* MAIN */
 
-//TODO: Write and test this much better
+const For = <T> ({ Cache, values, children }: { Cache?: ConstructorWith<Cache<T>, [ComponentFunction<T>]>, values: FunctionMaybe<T[]>, children: (( value: T ) => Child) }): ObservableReadonlyWithoutInitial<Child[]> | Child[] => {
 
-const For = <T> ({ Cache, values, children }: { Cache?: ConstructorWith<Cache<T>, [ComponentFunction<T>]>, values: Resolvable<T[]>, children: (( value: T ) => Child) }): ObservableReadonlyWithoutInitial<Child[]> => {
+  if ( isFunction ( values ) ) {
 
-  Cache = Cache || For.CacheDynamic;
+    Cache = Cache || For.CacheDynamic;
 
-  const cache = new Cache ( children );
+    const cache = new Cache ( children );
 
-  return useComputed ( () => {
+    return useComputed ( () => {
 
-    cache.before ();
+      cache.before ();
 
-    const result = useResolved ( [values], values => {
-
-      return values.map ( value => {
+      const result = values ().map ( value => {
 
         return cache.render ( value );
 
       });
 
-    }, true );
+      cache.after ();
 
-    cache.after ();
+      return result;
 
-    return result;
+    });
 
-  });
+  } else {
+
+    return values.map ( children );
+
+  }
 
 };
 

@@ -10,10 +10,10 @@ const useContext = <T> ( context: Context<T> ): T | undefined => {
   let value: T | undefined;
 
   context.Consumer ({
-    children: ( ctx => {
+    children: ctx => {
       value = ctx;
       return null;
-    })
+    }
   });
 
   return value;

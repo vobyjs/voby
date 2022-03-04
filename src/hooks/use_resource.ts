@@ -50,7 +50,7 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): O
 
         } else {
 
-          onResolve ( value );
+          onResolve ( value as T ); //TSC
 
         }
 

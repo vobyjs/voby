@@ -8,13 +8,13 @@ import useCleanup from './use_cleanup';
 
 /* MAIN */
 
-const useScheduler = <T, U> ({ loop, callback, cancel, schedule }: { loop?: boolean, callback: ObservableMaybe<FN<[U]>>, cancel: FN<[T]>, schedule: (( callback: FN<[U]> ) => T) }) : Disposer => {
+const useScheduler = <T, U> ({ loop, callback, cancel, schedule }: { loop?: ObservableMaybe<boolean>, callback: ObservableMaybe<FN<[U]>>, cancel: FN<[T]>, schedule: (( callback: FN<[U]> ) => T) }) : Disposer => {
 
-  let id: T;
+  let tickId: T;
 
   const work = ( value: U ): void => {
 
-    if ( loop ) tick ();
+    if ( $$(loop) ) tick ();
 
     $$(callback)( value );
 
@@ -22,13 +22,13 @@ const useScheduler = <T, U> ({ loop, callback, cancel, schedule }: { loop?: bool
 
   const tick = (): void => {
 
-    id = sample ( () => schedule ( work ) );
+    tickId = sample ( () => schedule ( work ) );
 
   };
 
   const dispose = (): void => {
 
-    sample ( () => cancel ( id ) );
+    sample ( () => cancel ( tickId ) );
 
   };
 
