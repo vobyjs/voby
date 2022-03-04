@@ -26,7 +26,7 @@
     "prod:triangle": "cd demo/triangle && npm i && npm update && npm run prod",
     "dev": "npm run dev:playground",
     "prod": "npm run prod:playground",
-    "prepublishOnly": "npm run clean && npm run compile"
+    "prepublishOnly": "npm run clean && npm run compile && npm run compile:bundle"
   },
   "bugs": {
     "url": "https://github.com/fabiospampinato/voby/issues"
@@ -52,14 +52,12 @@
     "fine-grained",
     "updates"
   ],
-  "dependencies": {
-    "goober": "2.1.8",
-    "oby": "^3.1.2",
-    "tiny-diff": "npm:@fabiospampinato/tiny-diff@^1.0.0"
-  },
   "devDependencies": {
     "esbuild": "^0.14.25",
+    "goober": "2.1.8",
+    "oby": "^3.1.2",
     "rimraf": "^3.0.2",
+    "tiny-diff": "npm:@fabiospampinato/tiny-diff@^1.0.0",
     "typescript": "^4.6.2"
   }
 }
