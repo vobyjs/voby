@@ -1,10 +1,13 @@
 
 /* IMPORT */
 
+import * as Voby from 'voby';
 import {Observable} from 'voby';
 import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from 'voby';
 import {useComputed, useContext, useEffect, useInterval, usePromise, useTimeout} from 'voby';
 import {$, createContext, render, renderToString, styled, svg, template} from 'voby';
+
+globalThis.Voby = Voby;
 
 /* MAIN */
 
