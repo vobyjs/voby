@@ -95,7 +95,7 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
   if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
-    setChildReplacementText ( child as any, childPrev );
+    setChildReplacementText ( child, childPrev );
 
   } else {
 
@@ -572,11 +572,39 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
     element.insertBefore ( placeholder, null );
 
-    value ( element, 'child', placeholder );
+    value ( element, 'setChildReplacement', undefined, placeholder );
+
+  } else if ( key === 'ref' ) {
+
+    value ( element, 'setRef' );
+
+  } else if ( key === 'style' ) {
+
+    value ( element, 'setStyles' );
+
+  } else if ( key === 'class' ) {
+
+    value ( element, 'setClasses' );
+
+  } else if ( key === 'innerHTML' || key === 'outerHTML' || key === 'textContent' ) {
+
+    // Forbidden props
+
+  } else if ( key === 'dangerouslySetInnerHTML' ) {
+
+    value ( element, 'setHTML' );
+
+  } else if ( key.charCodeAt ( 0 ) === 111 && key.charCodeAt ( 1 ) === 110 ) { // /^on/
+
+    value ( element, 'setEvent', key.toLowerCase () );
+
+  } else if ( key in element ) {
+
+    value ( element, 'setProperty', key );
 
   } else {
 
-    value ( element, key );
+    value ( element, 'setAttribute', key );
 
   }
 

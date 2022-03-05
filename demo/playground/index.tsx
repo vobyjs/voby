@@ -1826,6 +1826,8 @@ const TestTemplateExternal = (): JSX.Element => {
   );
 };
 
+//TODO: Test template with all sorts of supported props
+
 const TestKeyframeStatic = (): JSX.Element => {
   const rotate = styled.keyframes`
     from, to {

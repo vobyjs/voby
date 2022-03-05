@@ -71,11 +71,11 @@ type Resource<T = unknown> = ResourceLoading | ResourceRejected | ResourceResolv
 
 type TemplateActionPath = number[];
 
-type TemplateActionProxy = ( target: Node, prop: string, targetNode?: Node ) => void;
+type TemplateActionProxy = ( target: Node, method: string, key?: string, targetNode?: Node ) => void;
 
-type TemplateActionWithNodes = [Node, string, string, Node?];
+type TemplateActionWithNodes = [Node, string, string, string?, Node?];
 
-type TemplateActionWithPaths = [TemplateActionPath, string, string, TemplateActionPath?];
+type TemplateActionWithPaths = [TemplateActionPath, string, string, string?, TemplateActionPath?];
 
 /* EXPORT */
 
