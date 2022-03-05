@@ -59,37 +59,19 @@ const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<n
 
 };
 
-const setChildReplacement = ( child: Child, childPrev: Node ): Node[] => {
+const setChildReplacementText = ( child: Child, childPrev: Node ): Node => {
 
-  const type = typeof child;
+  const value = String ( child );
 
-  if ( type === 'string' || type === 'number' || type === 'bigint' ) {
+  if ( childPrev.nodeType === 3 ) {
 
-    const value = String ( child );
+    if ( childPrev.nodeValue !== value ) {
 
-    if ( childPrev.nodeType === 3 ) {
-
-      if ( childPrev.nodeValue !== value ) {
-
-        childPrev.nodeValue = value;
-
-      }
-
-      return [childPrev];
-
-    } else {
-
-      const parent = childPrev.parentElement;
-
-      if ( !parent ) throw new Error ( 'Invalid child replacement' );
-
-      const textNode = new Text ( value );
-
-      parent.replaceChild ( textNode, childPrev );
-
-      return [textNode];
+      childPrev.nodeValue = value;
 
     }
+
+    return childPrev;
 
   } else {
 
@@ -97,7 +79,31 @@ const setChildReplacement = ( child: Child, childPrev: Node ): Node[] => {
 
     if ( !parent ) throw new Error ( 'Invalid child replacement' );
 
-    return setChild ( parent, child, [childPrev] );
+    const textNode = new Text ( value );
+
+    parent.replaceChild ( textNode, childPrev );
+
+    return textNode;
+
+  }
+
+};
+
+const setChildReplacement = ( child: Child, childPrev: Node ): void => {
+
+  const type = typeof child;
+
+  if ( type === 'string' || type === 'number' || type === 'bigint' ) {
+
+    setChildReplacementText ( child as any, childPrev );
+
+  } else {
+
+    const parent = childPrev.parentElement;
+
+    if ( !parent ) throw new Error ( 'Invalid child replacement' );
+
+    setChild ( parent, child, [childPrev] );
 
   }
 
@@ -137,7 +143,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
 
     if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
-      return setChildReplacement ( child, childrenPrev[0] );
+      return [setChildReplacementText ( child, childrenPrev[0] )];
 
     }
 
