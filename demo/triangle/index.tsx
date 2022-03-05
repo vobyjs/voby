@@ -107,6 +107,7 @@ const SierpinskiTriangle = (): JSX.Element => {
       <Triangle x={0} y={0} s={1000} seconds={seconds} />
     </div>
   );
+
 };
 
 render ( <SierpinskiTriangle />, document.getElementById ( 'app' ) );

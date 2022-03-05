@@ -33,8 +33,8 @@ const ClockFace = ({ date }: { date: Observable<Date> }): JSX.Element => {
     <svg viewBox="0 0 100 100">
       <g transform=translate(50,50)>
         <circle class=clock-face r=48 />
-        ${mapRange ( 0, 60, 1, i => `<line class=minor y1=42 y2=45 transform=rotate(${(360 * i) / 60}) />` )}
-        ${mapRange ( 0, 12, 1, i => `<line class=major y1=32 y2=45 transform=rotate(${(360 * i) / 12}) />` )}
+        ${mapRange ( 0, 60, 1, i => `<line class=minor y1=42 y2=45 transform=rotate(${(360 * i) / 60}) />` ).join ( '' )}
+        ${mapRange ( 0, 12, 1, i => `<line class=major y1=32 y2=45 transform=rotate(${(360 * i) / 12}) />` ).join ( '' )}
         <line class=hour y1=2 y2=-20 transform=rotate(${() => 30 * date ().getHours () + date ().getMinutes () / 2}) />
         <line class=minute y1=4 y2=-30 transform=rotate(${() => 6 * date ().getMinutes () + date ().getSeconds () / 10}) />
         <g transform=rotate(${() => 6 * date ().getSeconds ()})>

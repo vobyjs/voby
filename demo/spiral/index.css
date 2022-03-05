@@ -58,23 +58,3 @@ html, body {
   height: 24px;
   margin: -13px 0 0 -13px;
 }
-
-.picker {
-  position: fixed;
-  display: inline-block;
-  right: 0;
-  top: 0;
-  padding: 10px;
-  background: #000000;
-  color: #BBBBBB;
-  z-index: 1000;
-}
-
-.picker select {
-  font-size: 100%;
-  margin-left: 5px;
-}
-
-.amount-picker {
-  top: 50px;
-}

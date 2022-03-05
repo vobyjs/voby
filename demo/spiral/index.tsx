@@ -46,28 +46,22 @@ const Spiral = (): JSX.Element => {
   const max = useComputed ( () => COUNT + Math.round ( Math.sin ( counter () / 90 * 2 * Math.PI ) * COUNT * 0.5 ) );
 
   const makeCursor = ( i: number ) => ({
-    x: (): ObservableReadonly<number> => {
-      return useComputed ( () => {
-        const f = i / max () * LOOPS;
-        const θ = f * 2 * Math.PI;
-        const m = 20 + i;
-        return (x.sample () + Math.sin ( θ ) * m) | 0;
-      });
+    x: (): number => {
+      const f = i / max () * LOOPS;
+      const θ = f * 2 * Math.PI;
+      const m = 20 + i;
+      return (x.sample () + Math.sin ( θ ) * m) | 0;
     },
-    y: (): ObservableReadonly<number> => {
-      return useComputed ( () => {
-        const f = i / max () * LOOPS;
-        const θ = f * 2 * Math.PI;
-        const m = 20 + i;
-        return (y.sample () + Math.cos ( θ ) * m) | 0;
-      });
+    y: (): number => {
+      const f = i / max () * LOOPS;
+      const θ = f * 2 * Math.PI;
+      const m = 20 + i;
+      return (y.sample () + Math.cos ( θ ) * m) | 0;
     },
-    color: (): ObservableReadonly<string> => {
-      return useComputed ( () => {
-        const f = i / max () * LOOPS;
-        const hue = (f * 255 + counter.sample () * 10) % 255;
-        return `hsl(${hue},100%,50%)`;
-      });
+    color: (): string => {
+      const f = i / max () * LOOPS;
+      const hue = (f * 255 + counter.sample () * 10) % 255;
+      return `hsl(${hue},100%,50%)`;
     }
   });
 
