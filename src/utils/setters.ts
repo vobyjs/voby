@@ -617,6 +617,8 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
   } else if ( key === 'class' ) {
 
+    element.className = '';
+
     value ( element, 'setClasses' );
 
   } else if ( key === 'innerHTML' || key === 'outerHTML' || key === 'textContent' ) {
@@ -633,9 +635,17 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
   } else if ( key in element ) {
 
+    if ( key === 'className' ) {
+
+      element.className = '';
+
+    }
+
     value ( element, 'setProperty', key );
 
   } else {
+
+    element.setAttribute ( key, '' );
 
     value ( element, 'setAttribute', key );
 
