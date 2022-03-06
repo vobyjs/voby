@@ -229,6 +229,31 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
 
   }
 
+  if ( !childrenNext.length ) { // Fast path for removing all children
+
+    const {childNodes} = parent;
+
+    if ( childNodes.length === childrenPrevLength ) {
+
+      for ( let i = 0, l = childNodes.length; i < l; i++ ) {
+
+        const node = childNodes[i];
+        const recycle = node.recycle;
+
+        if ( !recycle ) continue;
+
+        recycle ( node );
+
+      }
+
+      parent.textContent = '';
+
+      childrenPrev = [];
+
+    }
+
+  }
+
   if ( !childrenNext.length ) { // Placeholder, to keep the right spot in the array of children
 
     childrenNext[0] = new Comment ();
