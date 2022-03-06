@@ -91,7 +91,6 @@ const resolveFunction = <T> ( value: FunctionMaybe<T>, setter: (( value: T, valu
 
 };
 
-
 const resolveObservable = <T> ( value: ObservableMaybe<T>, setter: (( value?: T, valuePrev?: T ) => void) ): void => {
 
   if ( isObservable ( value ) ) {
