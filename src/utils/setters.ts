@@ -229,7 +229,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
 
   }
 
-  if ( !childrenNext.length ) { // Fast path for removing all children
+  if ( !childrenNext.length || ( childrenPrevLength === 1 && childrenPrev[0].nodeType === 8 ) ) { // Fast path for removing all children and/or replacing the placeholder
 
     const {childNodes} = parent;
 
@@ -248,15 +248,29 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
 
       parent.textContent = '';
 
-      childrenPrev = [];
+      if ( !childrenNext.length ) { // Placeholder, to keep the right spot in the array of children
+
+        childrenNext[0] = new Comment ();
+
+      }
+
+      if ( childrenNextSibling ) {
+
+        for ( let i = 0, l = childrenNext.length; i < l; i++ ) {
+
+          parent.insertBefore ( childrenNext[i], childrenNextSibling );
+
+        }
+
+      } else {
+
+        parent.append.apply ( parent, childrenNext );
+
+      }
+
+      return childrenNext;
 
     }
-
-  }
-
-  if ( !childrenNext.length ) { // Placeholder, to keep the right spot in the array of children
-
-    childrenNext[0] = new Comment ();
 
   }
 
