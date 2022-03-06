@@ -3,6 +3,7 @@
 
 import diff from 'tiny-diff';
 import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '../types';
+import useEffect from '../hooks/use_effect';
 import template from '../template';
 import {flatten, isFunction, isNil, isString} from './lang';
 import {resolveChild, resolveFunction, resolveObservable} from './resolvers';
@@ -59,6 +60,24 @@ const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<n
 
 };
 
+const setChildReplacementFunction = ( parent: HTMLElement, child: (() => Child), childPrev: Node[] ): void => {
+
+  useEffect ( () => {
+
+    let value = child ();
+
+    while ( typeof value === 'function' ) {
+
+      value = value ();
+
+    }
+
+    childPrev = setChildStatic ( parent, value, childPrev );
+
+  });
+
+};
+
 const setChildReplacementText = ( child: string, childPrev: Node ): Node => {
 
   if ( childPrev.nodeType === 3 ) {
@@ -105,7 +124,15 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
     if ( !parent ) throw new Error ( 'Invalid child replacement' );
 
-    setChild ( parent, child, [childPrev] );
+    if ( type === 'function' ) {
+
+      setChildReplacementFunction ( parent, child as (() => Child), [childPrev] ); //TSC
+
+    } else {
+
+      setChild ( parent, child, [childPrev] );
+
+    }
 
   }
 
