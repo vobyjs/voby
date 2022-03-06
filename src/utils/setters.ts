@@ -274,6 +274,12 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
 
   }
 
+  if ( !childrenNext.length ) { // Placeholder, to keep the right spot in the array of children
+
+    childrenNext[0] = new Comment ();
+
+  }
+
   diff ( parent, childrenPrev, childrenNext, childrenNextSibling );
 
   return childrenNext;
