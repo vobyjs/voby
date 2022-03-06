@@ -57,7 +57,6 @@
     "goober": "2.1.8",
     "oby": "^3.1.4",
     "rimraf": "^3.0.2",
-    "tiny-diff": "npm:@fabiospampinato/tiny-diff@^1.0.0",
     "typescript": "^4.6.2"
   }
 }

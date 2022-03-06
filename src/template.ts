@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import type {Child, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths} from './types';
+import type {Child, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions} from './types';
 import {indexOf, isFunction, isString} from './utils/lang';
 import {setAttribute, setChildReplacement, setClasses, setEvent, setHTML, setProperty, setRef, setStyles} from './utils/setters';
 
@@ -13,7 +13,7 @@ const SYMBOL_ACCESSOR = Symbol ();
 
 //TODO: Implement predictive pre-rendering, where a bunch of clones are made during idle times before they are needed depending on how many clones are estimated to be needed in the future
 
-const template = <P = {}> ( fn: (( props: P ) => Child) ): (( props: P ) => () => HTMLElement) => {
+const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOptions = {} ): (( props: P ) => () => HTMLElement) => {
 
   const safePropertyRe = /^[a-z0-9-_]+$/i;
 
@@ -176,17 +176,49 @@ const template = <P = {}> ( fn: (( props: P ) => Child) ): (( props: P ) => () =
     const actionsWithPaths = makeActionsWithPaths ( actionsWithNodes );
     const reviver = makeReviver ( actionsWithPaths );
 
-    return ( props: P ): () => HTMLElement => {
+    if ( options.recycle ) {
 
-      return (): HTMLElement => {
+      const clones: HTMLElement[] = [];
 
-        const root = template.cloneNode ( true );
+      const recycle = clones.push.bind ( clones );
 
-        return reviver ( root, props );
+      const clone = (): HTMLElement => {
+
+        if ( clones.length ) return clones.pop ()!; //TSC
+
+        const clone = template.cloneNode ( true );
+
+        clone.recycle = recycle;
+
+        return clone;
 
       };
 
-    };
+      return ( props: P ): () => HTMLElement => {
+
+        return (): HTMLElement => {
+
+          return reviver ( clone (), props );
+
+        };
+
+      };
+
+    } else {
+
+      return ( props: P ): () => HTMLElement => {
+
+        return (): HTMLElement => {
+
+          const clone = template.cloneNode ( true );
+
+          return reviver ( clone, props );
+
+        };
+
+      };
+
+    }
 
   };
 

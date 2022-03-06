@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import diff from 'tiny-diff';
 import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '../types';
 import useEffect from '../hooks/use_effect';
 import template from '../template';
+import diff from './diff';
 import {flatten, isFunction, isNil, isString} from './lang';
 import {resolveChild, resolveFunction, resolveObservable} from './resolvers';
 
@@ -226,14 +226,6 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
   if ( !childrenNext.length && childrenPrevLength === 1 && childrenPrev[0].nodeType === 8 ) { // It's a comment already, no need to replace it
 
     return childrenPrev;
-
-  }
-
-  if ( !childrenNext.length && parent.childNodes.length === childrenPrevLength ) { // Fast path for removing all children
-
-    parent.textContent = '';
-
-    childrenPrev = [];
 
   }
 

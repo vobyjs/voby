@@ -15,6 +15,10 @@ interface Object {
   isPrototypeOf<T extends Object> ( this: T, object: Object ): object is T
 }
 
+interface Node {
+  recycle? ( node: Node ): void
+}
+
 /* HELPERS */
 
 type FunctionMaybe<T = unknown> = ({ (): T }) | T;
