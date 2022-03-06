@@ -11,8 +11,6 @@ const SYMBOL_ACCESSOR = Symbol ();
 
 /* MAIN */
 
-//TODO: Implement predictive pre-rendering, where a bunch of clones are made during idle times before they are needed depending on how many clones are estimated to be needed in the future
-
 const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOptions = {} ): (( props: P ) => () => HTMLElement) => {
 
   const safePropertyRe = /^[a-z0-9-_]+$/i;
@@ -196,11 +194,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
       return ( props: P ): () => HTMLElement => {
 
-        return (): HTMLElement => {
-
-          return reviver ( clone (), props );
-
-        };
+        return reviver.bind ( undefined, clone (), props );
 
       };
 
@@ -208,13 +202,9 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
       return ( props: P ): () => HTMLElement => {
 
-        return (): HTMLElement => {
+        const clone = template.cloneNode ( true );
 
-          const clone = template.cloneNode ( true );
-
-          return reviver ( clone, props );
-
-        };
+        return reviver.bind ( undefined, clone, props );
 
       };
 
