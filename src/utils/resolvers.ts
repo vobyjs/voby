@@ -9,30 +9,6 @@ import {isFunction} from './lang';
 
 /* MAIN */
 
-const resolveAbstract = <T> ( value: FunctionMaybe<T>, setter: (( value: T, valuePrev?: T ) => void), isResolvable: (( value: FunctionMaybe<T> ) => value is (() => T)) ): void => {
-
-  if ( isResolvable ( value ) ) {
-
-    let valuePrev: T | undefined;
-
-    useEffect ( () => {
-
-      const valueNext = value ();
-
-      setter ( valueNext, valuePrev );
-
-      valuePrev = valueNext;
-
-    });
-
-  } else {
-
-    setter ( value );
-
-  }
-
-};
-
 const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T ) => void) ): void => {
 
   if ( isObservable ( value ) ) {
@@ -93,16 +69,53 @@ const resolveChildDeep = ( child: Child ): ChildResolved => { //TODO: This funct
 
 const resolveFunction = <T> ( value: FunctionMaybe<T>, setter: (( value: T, valuePrev?: T ) => void) ): void => {
 
-  resolveAbstract ( value, setter, isFunction );
+  if ( isFunction ( value ) ) {
+
+    let valuePrev: T | undefined;
+
+    useEffect ( () => {
+
+      const valueNext = value ();
+
+      setter ( valueNext, valuePrev );
+
+      valuePrev = valueNext;
+
+    });
+
+  } else {
+
+    setter ( value );
+
+  }
 
 };
 
+
 const resolveObservable = <T> ( value: ObservableMaybe<T>, setter: (( value?: T, valuePrev?: T ) => void) ): void => {
 
-  resolveAbstract ( value, setter, isObservable );
+  if ( isObservable ( value ) ) {
+
+    let valuePrev: T | undefined;
+
+    useEffect ( () => {
+
+      const valueNext = value ();
+
+      setter ( valueNext, valuePrev );
+
+      valuePrev = valueNext;
+
+    });
+
+  } else {
+
+    setter ( value );
+
+  }
 
 };
 
 /* EXPORT */
 
-export {resolveChildDeep, resolveAbstract, resolveChild, resolveFunction, resolveObservable};
+export {resolveChild, resolveChildDeep, resolveFunction, resolveObservable};
