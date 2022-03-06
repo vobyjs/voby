@@ -59,15 +59,13 @@ const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<n
 
 };
 
-const setChildReplacementText = ( child: Child, childPrev: Node ): Node => {
-
-  const value = String ( child );
+const setChildReplacementText = ( child: string, childPrev: Node ): Node => {
 
   if ( childPrev.nodeType === 3 ) {
 
-    if ( childPrev.nodeValue !== value ) {
+    if ( childPrev.nodeValue !== child ) {
 
-      childPrev.nodeValue = value;
+      childPrev.nodeValue = child;
 
     }
 
@@ -79,7 +77,7 @@ const setChildReplacementText = ( child: Child, childPrev: Node ): Node => {
 
     if ( !parent ) throw new Error ( 'Invalid child replacement' );
 
-    const textNode = new Text ( value );
+    const textNode = new Text ( child );
 
     parent.replaceChild ( textNode, childPrev );
 
@@ -93,9 +91,13 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
   const type = typeof child;
 
-  if ( type === 'string' || type === 'number' || type === 'bigint' ) {
+  if ( type === 'string' ) {
 
-    setChildReplacementText ( child, childPrev );
+    setChildReplacementText ( child as string, childPrev ); //TSC
+
+  } else if ( type === 'number' || type === 'bigint' ) {
+
+    setChildReplacementText ( String ( child ), childPrev );
 
   } else {
 
@@ -141,9 +143,13 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
 
     const type = typeof child;
 
-    if ( type === 'string' || type === 'number' || type === 'bigint' ) {
+    if ( type === 'string' ) {
 
-      return [setChildReplacementText ( child, childrenPrev[0] )];
+      return [setChildReplacementText ( child as string, childrenPrev[0] )]; //TSC
+
+    } else if ( type === 'number' || type === 'bigint' ) {
+
+      return [setChildReplacementText ( String ( child ), childrenPrev[0] )];
 
     }
 
