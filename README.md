@@ -181,7 +181,7 @@ This function tells you if a variable is an observable or not.
 import {$, isObservable} from 'voby';
 
 isObservable ( 123 ); // => false
-isObservable ( $(123) ); // => false
+isObservable ( $(123) ); // => true
 ```
 
 #### `render`
@@ -541,9 +541,9 @@ const signal = useAbortSignal ();
 This hook is just an alternative to `requestAnimationFrame` that automatically clears itself when the parent computation is disposed.
 
 ```tsx
-import {useAnimationFrme} from 'voby';
+import {useAnimationFrame} from 'voby';
 
-useAnimationFrme ( () => console.log ( 'called' ) );
+useAnimationFrame ( () => console.log ( 'called' ) );
 ```
 
 #### `useAnimationLoop`
@@ -721,7 +721,7 @@ const App = () => {
 
 #### `useResolved`
 
-This hook receives a value potentially wrapped in functions and/or observables, and unwraps it recursively.
+This hook receives a value, or an array of values, potentially wrapped in functions and/or observables, and unwraps it/them.
 
 If no callback is used then it returns the unwrapped value, otherwise it returns whatever the callback returns.
 
@@ -732,15 +732,15 @@ import {$, useResolved} from 'voby';
 
 useResolved ( 123 ); // => 123
 
-useResolved ( $($(123)) ); // => 123
+useResolved ( $(123) ); // => 123
 
-useResolved ( () => () => 123 ); // => 123
+useResolved ( () => 123 ); // => () => 123
 
-useResolved ( 123, value => 321 ); // => 321
+useResolved ( () => 123, true ); // => 123
 
-useResolved ( $($(123)), value => 321 ); // => 321
+useResolved ( $(123), value => 321 ); // => 321
 
-useResolved ( () => () => 123, value => 321 ); // => 321
+useResolved ( [$(123), () => 123], ( a, b ) => 321, true ); // => 321
 ```
 
 #### `useResource`
