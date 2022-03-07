@@ -5,7 +5,7 @@ import * as Voby from 'voby';
 import {Observable} from 'voby';
 import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from 'voby';
 import {useComputed, useContext, useEffect, useInterval, usePromise, useTimeout} from 'voby';
-import {$, createContext, render, renderToString, styled, svg, template} from 'voby';
+import {$, batch, createContext, render, renderToString, styled, svg, template} from 'voby';
 
 globalThis.Voby = Voby;
 
@@ -1265,6 +1265,28 @@ const TestIfFunction = (): JSX.Element => {
   );
 };
 
+const TestIfRace = () => {
+  const data = $({ deep: 'hi' });
+  const visible = $(true);
+  setTimeout ( () => {
+    batch(() => {
+      data(null);
+      visible(false);
+    })
+  });
+  const content = useComputed ( () => {
+    return data ().deep;
+  });
+  return (
+    <>
+      <h1>If - Race</h1>
+      <If when={visible}>
+        <div>{content}</div>
+      </If>
+    </>
+  );
+};
+
 const TestTernaryStatic = (): JSX.Element => {
   return (
     <>
@@ -2188,6 +2210,7 @@ const Test = (): JSX.Element => {
       <TestIfStatic />
       <TestIfObservable />
       <TestIfFunction />
+      {/* <TestIfRace /> */}
       <TestTernaryStatic />
       <TestTernaryStaticInline />
       <TestTernaryObservable />
