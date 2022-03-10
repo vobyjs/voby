@@ -1689,8 +1689,8 @@ const TestErrorBoundary = (): JSX.Element => {
     const o = $( true );
     const toggle = () => o.update ( prev => !prev );
     useTimeout ( toggle, TEST_INTERVAL );
-    return o.on ( value => {
-      if ( value ) return <p>content</p>;
+    return useComputed ( () => {
+      if ( o () ) return <p>content</p>;
       throw new Error ( 'Custom error' );
     });
   };
@@ -1752,15 +1752,15 @@ const TestPromise = (): JSX.Element => {
   return (
     <>
       <h3>Promise</h3>
-      {resolved.on ( state => {
-        if ( state.loading ) return <p>loading...</p>;
-        if ( state.error ) return <p>{state.error.message}</p>;
-        return <p>{state.value}</p>
+      {useComputed ( () => {
+        if ( resolved ().loading ) return <p>loading...</p>;
+        if ( resolved ().error ) return <p>{resolved ().error.message}</p>;
+        return <p>{resolved ().value}</p>
       })}
-      {rejected.on ( state => {
-        if ( state.loading ) return <p>loading...</p>;
-        if ( state.error ) return <p>{state.error.message}</p>;
-        return <p>{state.value}</p>
+      {useComputed ( () => {
+        if ( rejected ().loading ) return <p>loading...</p>;
+        if ( rejected ().error ) return <p>{rejected ().error.message}</p>;
+        return <p>{rejected ().value}</p>
       })}
     </>
   );
@@ -1805,11 +1805,11 @@ const TestSVGObservableWrapper = (): JSX.Element => {
   return (
     <>
       <h3>SVG - Observable Wrapper</h3>
-      {color.on ( color => svg`
-        <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke="${color}" stroke-width="3" fill="white">
+      {svg`
+        <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke="${() => color ()}" stroke-width="3" fill="white">
           <circle cx="25" cy="25" r="20" />
         </svg>
-      `)}
+      `}
     </>
   );
 };

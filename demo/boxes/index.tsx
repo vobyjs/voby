@@ -173,7 +173,7 @@ const Rotations = ({ rotations }: { rotations: Observable<Rotation[]> }): JSX.El
 
   const camera = ThreePerspectiveCamera ([ 0, 0, 3.2 ]);
   const light = ThreeDirectionalLight ([ -5, 0, -10 ]);
-  const meshes = rotations.on ( rotations => rotations.map ( ThreeMesh ) );
+  const meshes = useComputed ( () => rotations ().map ( ThreeMesh ) );
   const scene = ThreeScene ( camera, light, meshes );
 
   return (
