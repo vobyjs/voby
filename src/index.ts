@@ -12,6 +12,7 @@ import batch from './batch';
 import createContext from './create_context';
 import createElement from './create_element';
 import createObservable from './create_observable';
+import isElement from './is_element';
 import isObservable from './is_observable';
 import render from './render';
 import renderToString from './render_to_string';
@@ -26,4 +27,4 @@ export type {Observable, ObservableWithoutInitial, ObservableReadonly, Observabl
 export {jsx, jsxDEV, jsxs};
 export {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary};
 export {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useEventListener, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useResource, useRoot, useTimeout};
-export {$, $$, batch, createContext, createElement, createObservable, isObservable, render, renderToString, sample, styled, svg, template};
+export {$, $$, batch, createContext, createElement, createObservable, isElement, isObservable, render, renderToString, sample, styled, svg, template};
