@@ -321,7 +321,7 @@ const TestStringObservableStatic = (): JSX.Element => {
 
 const TestStringObservableDeepStatic = (): JSX.Element => {
   return useComputed ( () => {
-    return (): JSX.Element => {
+    const Deep = (): JSX.Element => {
       const o = $( String ( Math.random () ) );
       const randomize = () => o ( String ( Math.random () ) );
       useInterval ( randomize, TEST_INTERVAL );
@@ -332,6 +332,7 @@ const TestStringObservableDeepStatic = (): JSX.Element => {
         </>
       );
     };
+    return <Deep />;
   });
 };
 
@@ -1797,23 +1798,6 @@ const TestSVGObservable = (): JSX.Element => {
   );
 };
 
-const TestSVGObservableWrapper = (): JSX.Element => {
-  const getColor = () => `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
-  const color = $(getColor ());
-  const update = () => color ( getColor () );
-  useInterval ( update, TEST_INTERVAL / 2 );
-  return (
-    <>
-      <h3>SVG - Observable Wrapper</h3>
-      {svg`
-        <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke="${() => color ()}" stroke-width="3" fill="white">
-          <circle cx="25" cy="25" r="20" />
-        </svg>
-      `}
-    </>
-  );
-};
-
 const TestSVGFunction = (): JSX.Element => {
   const getColor = () => `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
   const color = $(getColor ());
@@ -1821,7 +1805,7 @@ const TestSVGFunction = (): JSX.Element => {
   useInterval ( update, TEST_INTERVAL / 2 );
   return (
     <>
-      <h3>SVG - Observable</h3>
+      <h3>SVG - Function</h3>
       {svg`
         <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke="${() => color ()}" stroke-width="3" fill="white">
           <circle cx="25" cy="25" r="20" />
@@ -2237,7 +2221,6 @@ const Test = (): JSX.Element => {
       <TestRef />
       <TestSVGStatic />
       <TestSVGObservable />
-      <TestSVGObservableWrapper />
       <TestSVGFunction />
       <TestTemplateExternal />
       <TestPromise />

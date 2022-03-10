@@ -2,6 +2,7 @@
 /* IMPORT */
 
 import type {Child, ChildResolved, FunctionMaybe, ObservableMaybe} from '../types';
+import {SYMBOL_ELEMENT} from '../constants';
 import useEffect from '../hooks/use_effect';
 import isObservable from '../is_observable';
 import sample from '../sample';
@@ -11,27 +12,21 @@ import {isFunction} from './lang';
 
 const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T ) => void) ): void => {
 
-  if ( isObservable ( value ) ) {
+  if ( isFunction ( value ) ) {
 
-    useEffect ( () => {
+    if ( !!value[SYMBOL_ELEMENT] ) {
 
-      const valueNext = value ();
+      resolveChild ( sample ( value ), setter );
 
-      if ( isFunction ( valueNext ) ) {
+    } else {
 
-        resolveChild ( valueNext, setter );
+      useEffect ( () => {
 
-      } else {
+        resolveChild ( value (), setter );
 
-        setter ( valueNext );
+      });
 
-      }
-
-    });
-
-  } else if ( isFunction ( value ) ) {
-
-    resolveChild ( sample ( value ), setter );
+    }
 
   } else {
 
