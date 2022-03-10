@@ -1275,14 +1275,11 @@ const TestIfRace = () => {
       visible(false);
     })
   });
-  const content = useComputed ( () => {
-    return data ().deep;
-  });
   return (
     <>
       <h1>If - Race</h1>
       <If when={visible}>
-        <div>{content}</div>
+        <div>{() => data ().deep}</div>
       </If>
     </>
   );
@@ -1753,16 +1750,16 @@ const TestPromise = (): JSX.Element => {
   return (
     <>
       <h3>Promise</h3>
-      {useComputed ( () => {
+      {() => {
         if ( resolved ().loading ) return <p>loading...</p>;
         if ( resolved ().error ) return <p>{resolved ().error.message}</p>;
         return <p>{resolved ().value}</p>
-      })}
-      {useComputed ( () => {
+      }}
+      {() => {
         if ( rejected ().loading ) return <p>loading...</p>;
         if ( rejected ().error ) return <p>{rejected ().error.message}</p>;
         return <p>{rejected ().value}</p>
-      })}
+      }}
     </>
   );
 };
