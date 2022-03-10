@@ -37,7 +37,7 @@ const buildData = (() => {
       const label = $(`${adjective} ${color} ${noun}`);
       const selected = $(false);
       const className = $('');
-      const datum = $( { id, label, selected, className } );
+      const datum = $({ id, label, selected, className });
       data[i] = datum;
     };
     return data;
@@ -69,15 +69,14 @@ const Model = (() => {
   };
 
   const add = (): void => {
-    $data ( [...$data (), ...buildData ( 1000 )] );
+    $data ( $data ().concat ( buildData ( 1000 ) ) );
   };
 
   const update = (): void => {
     const data = $data ();
     for ( let i = 0, l = data.length; i < l; i += 10 ) {
-      const $datum = data[i];
-      const datum = $datum ();
-      datum.label ( datum.label () + ' !!!' );
+      const {label} = data[i]();
+      label ( label () + ' !!!' );
     }
   };
 
@@ -99,7 +98,8 @@ const Model = (() => {
   const remove = ( id: string ): void => {
     const data = $data ();
     const index = data.findIndex ( datum => datum.sample ().id === id );
-    $data ( [...data.slice ( 0, index ), ...data.slice ( index + 1 )] );
+    if ( index === -1 ) return;
+    $data ( data.slice ( 0, index ).concat ( data.slice ( index + 1 ) ) );
   };
 
   const select = ( id: string ): void => {
@@ -107,9 +107,11 @@ const Model = (() => {
       const datum = $selected ();
       datum.selected ( false );
       datum.className ( '' );
+      $selected = null;
     }
     const data = $data ();
-    const $datum = data.find ( datum => datum.sample ().id === id )!;
+    const $datum = data.find ( datum => datum.sample ().id === id );
+    if ( !$datum ) return;
     const datum = $datum ();
     datum.selected ( true );
     datum.className ( 'danger' );
