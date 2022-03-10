@@ -41,6 +41,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`createContext`](#createcontext)
   - [`createElement`](#createelement)
   - [`createObservable`](#createobservable)
+  - [`isElement`](#iselement)
   - [`isObservable`](#isobservable)
   - [`render`](#render)
   - [`renderToString`](#rendertostring)
@@ -172,6 +173,17 @@ This function creates a new observable. It's just an alias for `$`.
 import {createObservable} from 'voby';
 
 createObservable // => Same as require ( 'oby' ).default
+```
+
+#### `isElement`
+
+This function tells you if a variable is a Voby element or not.
+
+```tsx
+import {$, isElement} from 'voby';
+
+isElement ( document.createElement ( 'div' ) ); // => false
+isElement ( <div /> ); // => true
 ```
 
 #### `isObservable`

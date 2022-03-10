@@ -3,6 +3,7 @@
 
 import type {Child, ComponentIntrinsicElement, ComponentNode, Component, Props} from './types';
 import BaseComponent from './components/component';
+import {SYMBOL_ELEMENT} from './constants';
 import {isFunction, isNil, isNode, isString} from './utils/lang';
 import {setProps, setRef} from './utils/setters';
 
@@ -32,7 +33,7 @@ function createElement ( component: Component, props: Props | null, ..._children
 
       if ( !isNil ( children ) ) props.children = children;
 
-      return (): Child => {
+      const element = (): Child => {
 
         const instance = new component ( props );
         const child = instance.render ();
@@ -43,6 +44,10 @@ function createElement ( component: Component, props: Props | null, ..._children
 
       };
 
+      element[SYMBOL_ELEMENT] = true;
+
+      return element;
+
     } else {
 
       const props = rest;
@@ -50,11 +55,15 @@ function createElement ( component: Component, props: Props | null, ..._children
       if ( !isNil ( children ) ) props.children = children;
       if ( !isNil ( ref ) ) props.ref = ref;
 
-      return (): Child => {
+      const element = (): Child => {
 
         return component ( props );
 
       };
+
+      element[SYMBOL_ELEMENT] = true;
+
+      return element;
 
     }
 
@@ -65,7 +74,7 @@ function createElement ( component: Component, props: Props | null, ..._children
     if ( !isNil ( children ) ) props.children = children;
     if ( !isNil ( ref ) ) props.ref = ref;
 
-    return (): Child => {
+    const element = (): Child => {
 
       const child = document.createElement ( component );
 
@@ -75,13 +84,21 @@ function createElement ( component: Component, props: Props | null, ..._children
 
     };
 
+    element[SYMBOL_ELEMENT] = true;
+
+    return element;
+
   } else if ( isNode ( component ) ) {
 
-    return (): Child => {
+    const element = (): Child => {
 
       return component;
 
     };
+
+    element[SYMBOL_ELEMENT] = true;
+
+    return element;
 
   } else {
 
