@@ -9,7 +9,7 @@ import {isFunction} from './utils/lang';
 
 const isElement = ( value: unknown ): value is (() => Child) => {
 
-  return isFunction ( value ) && !!value[SYMBOL_ELEMENT];
+  return isFunction ( value ) && value.hasOwnProperty ( SYMBOL_ELEMENT );
 
 };
 

@@ -2,12 +2,9 @@
 /* IMPORT */
 
 import type {Child, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions} from './types';
+import {SYMBOL_TEMPLATE_ACCESSOR} from './constants';
 import {indexOf, isFunction, isString} from './utils/lang';
 import {setAttribute, setChildReplacement, setClasses, setEvent, setHTML, setProperty, setRef, setStyles} from './utils/setters';
-
-/* HELPERS */
-
-const SYMBOL_ACCESSOR = Symbol ();
 
 /* MAIN */
 
@@ -39,7 +36,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
         };
 
-        accessor[SYMBOL_ACCESSOR] = true;
+        accessor[SYMBOL_TEMPLATE_ACCESSOR] = true;
 
         return accessor;
 
@@ -220,7 +217,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
 template.isAccessor = ( value: unknown ): value is TemplateActionProxy => {
 
-  return isFunction ( value ) && value.hasOwnProperty ( SYMBOL_ACCESSOR );
+  return isFunction ( value ) && value.hasOwnProperty ( SYMBOL_TEMPLATE_ACCESSOR );
 
 };
 
