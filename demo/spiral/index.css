@@ -17,11 +17,6 @@ html, body {
   overflow: hidden;
 }
 
-.stats {
-  top: auto !important;
-  bottom: 0;
-}
-
 .cursor {
   position: absolute;
   left: 0;
