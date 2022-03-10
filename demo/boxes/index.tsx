@@ -9,7 +9,7 @@ import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {Scene} from 'three/src/scenes/Scene';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 
-import {$, render, useAnimationLoop, useComputed, useEffect, Observable} from 'voby';
+import {$, render, useAnimationLoop, useComputed, useEffect, Observable, ObservableReadonly} from 'voby';
 
 /* TYPES */
 
@@ -46,7 +46,7 @@ const useIdleInput = ( callback: (( event: Event ) => void) ) => {
 
 };
 
-const useRotations = ( count: Observable<number> ): Observable<Rotation[]> => {
+const useRotations = ( count: Observable<number> ): ObservableReadonly<Rotation[]> => {
 
   const getRandom = (): number => Math.random () * 360;
   const getRotation = (): Rotation => $([ getRandom (), getRandom (), getRandom () ]);
@@ -68,7 +68,7 @@ const useRotations = ( count: Observable<number> ): Observable<Rotation[]> => {
 
 };
 
-const ThreeScene = ( camera: PerspectiveCamera, light: DirectionalLight, meshes: Observable<Mesh[]> ): HTMLCanvasElement => {
+const ThreeScene = ( camera: PerspectiveCamera, light: DirectionalLight, meshes: ObservableReadonly<Mesh[]> ): HTMLCanvasElement => {
 
   const scene = new Scene ();
 
@@ -169,7 +169,7 @@ const Controls = ({ count, onInput }: { count: Observable<number>, onInput: (( e
 
 };
 
-const Rotations = ({ rotations }: { rotations: Observable<Rotation[]> }): JSX.Element => {
+const Rotations = ({ rotations }: { rotations: ObservableReadonly<Rotation[]> }): JSX.Element => {
 
   const camera = ThreePerspectiveCamera ([ 0, 0, 3.2 ]);
   const light = ThreeDirectionalLight ([ -5, 0, -10 ]);
