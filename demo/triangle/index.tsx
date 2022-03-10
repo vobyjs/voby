@@ -59,14 +59,9 @@ const Dot = ({ x, y, s, text }: { x: number, y: number, s: number, text: Observa
   const background = () => hovering () ? '#ffff00' : '#61dafb';
   const style = { width, height, left, top, borderRadius, lineHeight, background };
 
-  const content = useComputed ( () => {
-    if ( !hovering () ) return text;
-    return `**${text ()}**`;
-  });
-
   return (
     <div class="dot" style={style} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-      {content}
+      {() => hovering () ? `**${text ()}**` : text ()}
     </div>
   );
 
