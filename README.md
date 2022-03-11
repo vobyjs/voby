@@ -51,6 +51,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`template`](#template)
 - [**Components**](#components)
   - [`Component`](#component)
+  - [`Dynamic`](#dynamic)
   - [`ErrorBoundary`](#errorboundary)
   - [`For`](#for)
   - [`Fragment`](#fragment)
@@ -356,6 +357,23 @@ class App extends Component<{ value: number }> {
     return <p>Value: {value}</p>;
   }
 }
+```
+
+#### `Dynamic`
+
+This component is just an alternative to `createElement` that can be used in JSX, it's useful to create a new element dynamically.
+
+```tsx
+import {Dynamic} from 'voby';
+
+const App = () => {
+  const heading = 'h2';
+  return (
+    <Dynamic component={heading}>
+      Some content
+    </For>
+  )
+};
 ```
 
 #### `ErrorBoundary`

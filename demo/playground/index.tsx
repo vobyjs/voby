@@ -3,7 +3,7 @@
 
 import * as Voby from 'voby';
 import {Observable} from 'voby';
-import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from 'voby';
+import {Component, Dynamic, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from 'voby';
 import {useComputed, useContext, useEffect, useInterval, usePromise, useTimeout} from 'voby';
 import {$, batch, createContext, render, renderToString, styled, svg, template} from 'voby';
 
@@ -1228,6 +1228,22 @@ const TestABCD = (): JSX.Element => {
   );
 };
 
+const TestDyanmicHeading = (): JSX.Element => {
+  const level = $(1);
+  const increment = () => level ( ( level () + 1 ) % 7 || 1 );
+  useInterval ( increment, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Dynamic - Heading</h3>
+      {() => (
+        <Dynamic component={`h${level ()}`}>
+          Level: {level}
+        </Dynamic>
+      )}
+    </>
+  );
+};
+
 const TestIfStatic = (): JSX.Element => {
   return (
     <>
@@ -2188,6 +2204,7 @@ const Test = (): JSX.Element => {
       <TestEventClickAndClickCaptureStatic />
       <TestEventEnterAndEnterCaptureStatic />
       <TestABCD />
+      <TestDyanmicHeading />
       <TestIfStatic />
       <TestIfObservable />
       <TestIfFunction />

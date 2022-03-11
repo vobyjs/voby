@@ -4,7 +4,7 @@
 import './jsx/types';
 import type {Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableMaybe, Resource} from './types';
 import {jsx, jsxDEV, jsxs} from './jsx/runtime';
-import {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from './components';
+import {Component, Dynamic, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from './components';
 import {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useEventListener, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useResource, useRoot, useTimeout} from './hooks';
 import $ from './$';
 import $$ from './$$';
@@ -25,6 +25,6 @@ import template from './template';
 
 export type {Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableMaybe, ObservableMaybe as O, Resource};
 export {jsx, jsxDEV, jsxs};
-export {Component, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary};
+export {Component, Dynamic, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary};
 export {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useEventListener, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useResource, useRoot, useTimeout};
 export {$, $$, batch, createContext, createElement, createObservable, isElement, isObservable, render, renderToString, sample, styled, svg, template};
