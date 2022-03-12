@@ -264,7 +264,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
 
       if ( nextSibling ) {
 
-        for ( let i = 0, l = nextLength; i < l; i++ ) {
+        for ( let i = 0, l = next.length; i < l; i++ ) {
 
           parent.insertBefore ( next[i], nextSibling );
 
