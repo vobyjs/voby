@@ -145,8 +145,6 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
   const prev = fragment.children ();
   const prevLength = prev.length;
   const prevFirst = prev[0];
-  const prevLast = prev[prevLength - 1];
-  const prevSibling = prevLast?.nextSibling || null;
 
   if ( prevLength === 0 ) { // Fast path for appending a node the first time
 
@@ -227,6 +225,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
 
   const next = fragmentNext.children ();
   const nextLength = next.length;
+  const nextSibling = prev[prevLength - 1]?.nextSibling || null;
 
   if ( nextLength === 0 && prevLength === 1 && prevFirst.nodeType === 8 ) { // It's a placeholder already, no need to replace it
 
@@ -263,11 +262,11 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
 
       }
 
-      if ( prevSibling ) {
+      if ( nextSibling ) {
 
         for ( let i = 0, l = nextLength; i < l; i++ ) {
 
-          parent.insertBefore ( next[i], prevSibling );
+          parent.insertBefore ( next[i], nextSibling );
 
         }
 
@@ -295,7 +294,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
 
   }
 
-  diff ( parent, prev, next, prevSibling );
+  diff ( parent, prev, next, nextSibling );
 
   fragment.replaceWith ( fragmentNext );
 
