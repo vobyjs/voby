@@ -15,7 +15,7 @@ This works similarly to [Solid](https://www.solidjs.com), but without the need f
 - **No magic**: what you see if what you get, your code is not transformed to actually do something different than what you write, there are no surprises.
 - **No server support**: for the time being this framework is focused on local-first rich applications, no server-related features are implemented: no hydration, no server components, no SSR, no suspense etc.
 - **Observable-based**: observables are at the core of our reactivity system. The way it works is very different from a React-like system, it may be more challenging to learn, but it's well worth the effort.
-- **Work in progress**: this is at best alpha software, I'm working on it because I need something with great performance for [Notable](https://github.com/notable/notable), I'm allergic to third-party dependencies, I'd like something with an API that resonates with me, and I wanted to deeply understand how the more solid [Solid](https://www.solidjs.com), which you should probably use instead, works.
+- **Work in progress**: this is at best beta software, I'm working on it because I need something with great performance for [Notable](https://github.com/notable/notable), I'm allergic to third-party dependencies, I'd like something with an API that resonates with me, and I wanted to deeply understand how the more solid [Solid](https://www.solidjs.com), which you should probably use instead, works.
 
 ## Demo
 
