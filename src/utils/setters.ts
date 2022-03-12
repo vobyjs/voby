@@ -124,7 +124,7 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
     const fragment = new Fragment ();
 
-    fragment.push ( childPrev );
+    fragment.pushNode ( childPrev );
 
     if ( type === 'function' ) {
 
@@ -156,7 +156,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
 
       parent.appendChild ( textNode );
 
-      fragment.set ( [textNode] );
+      fragment.setNode ( textNode );
 
       return;
 
@@ -166,7 +166,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
 
       parent.insertBefore ( node, null );
 
-      fragment.set ( [node] );
+      fragment.setNode ( node );
 
       return;
 
@@ -182,7 +182,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
 
       const node = setChildReplacementText ( String ( child ), prevFirst );
 
-      fragment.set ( [node] );
+      fragment.setNode ( node );
 
       return;
 
@@ -201,17 +201,17 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
 
     if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
-      fragmentNext.push ( createText ( child ) );
+      fragmentNext.pushNode ( createText ( child ) );
 
     } else if ( type === 'object' && child !== null && typeof child.nodeType === 'number' ) {
 
-      fragmentNext.push ( child );
+      fragmentNext.pushNode ( child );
 
     } else if ( type === 'function' ) {
 
       const fragment = new Fragment ();
 
-      fragmentNext.push ( fragment );
+      fragmentNext.pushFragment ( fragment );
 
       resolveChild ( child, child => {
 
@@ -256,9 +256,13 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
 
         const placeholder = createComment ();
 
-        fragmentNext.push ( placeholder );
+        fragmentNext.pushNode ( placeholder );
 
-        next.push ( placeholder );
+        if ( next !== fragmentNext.values ) {
+
+          next.push ( placeholder );
+
+        }
 
       }
 
@@ -276,7 +280,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
 
       }
 
-      fragment.replaceWith ( fragmentNext );
+      fragment.replaceWithFragment ( fragmentNext );
 
       return;
 
@@ -288,15 +292,19 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
 
     const placeholder = createComment ();
 
-    fragmentNext.push ( placeholder );
+    fragmentNext.pushNode ( placeholder );
 
-    next.push ( placeholder );
+    if ( next !== fragmentNext.values ) {
+
+      next.push ( placeholder );
+
+    }
 
   }
 
   diff ( parent, prev, next, nextSibling );
 
-  fragment.replaceWith ( fragmentNext );
+  fragment.replaceWithFragment ( fragmentNext );
 
 };
 

@@ -5,11 +5,12 @@ class Fragment {
 
   /* VARIABLES */
 
-  private values: (Fragment | Node)[] = []; //TODO: Maybe store a single node when possible
+  values: (Fragment | Node)[] = [];
+  fragmented: boolean = false;
 
   /* API */
 
-  children ( children: Node[] = [] ): Node[] {
+  childrenFragmented ( children: Node[] = [] ): Node[] {
 
     const {values} = this;
 
@@ -19,7 +20,7 @@ class Fragment {
 
       if ( value instanceof Fragment ) {
 
-        value.children ( children );
+        value.childrenFragmented ( children );
 
       } else {
 
@@ -33,21 +34,58 @@ class Fragment {
 
   }
 
-  push ( value: Fragment | Node ): void {
+  children (): Node[] {
+
+    if ( this.fragmented ) {
+
+      return this.childrenFragmented ();
+
+    } else {
+
+      return this.values as Node[]; //TSC
+
+    }
+
+  }
+
+  pushFragment ( value: Fragment ): void {
+
+    this.values.push ( value );
+    this.fragmented = true;
+
+  }
+
+  pushNode ( value: Node ): void {
 
     this.values.push ( value );
 
   }
 
-  replaceWith ( fragment: Fragment ): void {
+  replaceWithNode ( node: Node ): void {
 
-    this.values = fragment.values;
+    this.values = [node];
+    this.fragmented = false;
 
   }
 
-  set ( values: (Fragment | Node)[] ): void {
+  replaceWithFragment ( fragment: Fragment ): void {
 
-    this.values = values;
+    this.values = fragment.values;
+    this.fragmented = fragment.fragmented;
+
+  }
+
+  setFragment ( fragment: Fragment ): void {
+
+    this.values = [fragment];
+    this.fragmented = true;
+
+  }
+
+  setNode ( node: Node ): void {
+
+    this.values = [node];
+    this.fragmented = false;
 
   }
 
