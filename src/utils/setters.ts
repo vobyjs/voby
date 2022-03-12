@@ -272,7 +272,11 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
 
       } else {
 
-        parent.append.apply ( parent, next );
+        for ( let i = 0, l = next.length; i < l; i++ ) {
+
+          parent.append ( next[i] );
+
+        }
 
       }
 
