@@ -142,7 +142,7 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
 const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment ): void => {
 
-  const prev = fragment.flat ();
+  const prev = fragment.children ();
   const prevLength = prev.length;
   const prevFirst = prev[0];
   const prevLast = prev[prevLength - 1];
@@ -225,7 +225,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
 
   }
 
-  const next = fragmentNext.flat ();
+  const next = fragmentNext.children ();
   const nextLength = next.length;
 
   if ( nextLength === 0 && prevLength === 1 && prevFirst.nodeType === 8 ) { // It's a placeholder already, no need to replace it
@@ -285,7 +285,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
 
   }
 
-  if ( !next.length ) { // Placeholder, to keep the right spot in the array of children
+  if ( nextLength === 0 ) { // Placeholder, to keep the right spot in the array of children
 
     const placeholder = createComment ();
 
