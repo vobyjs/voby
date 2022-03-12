@@ -11,7 +11,7 @@ class Fragment {
 
   flat (): Node[] { //TODO: Massively optimize this, which is a huge pain point
 
-    return this.current.map ( c => c instanceof Fragment ? c.flat () : c ).flat ();
+    return this.current.flatMap ( c => c instanceof Fragment ? c.flat () : c );
 
   }
 
