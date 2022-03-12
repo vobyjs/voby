@@ -11,7 +11,6 @@ globalThis.Voby = Voby;
 
 /* MAIN */
 
-//TODO: Test mixed observable and static content, there might be problems with rendering that in the right order maybe
 //TODO: Test that error boundaries wrapped around built-in components work
 
 const TEST_INTERVAL = 500; // Lowering this makes it easier to spot some memory leaks
