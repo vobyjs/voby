@@ -8,7 +8,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "compile": "tsc --skipLibCheck",
-    "compile:bundle": "esbuild --bundle --minify --format=cjs --target=es2015 ./src/index.ts > ./dist/index.js",
+    "compile:bundle": "esbuild --bundle --minify --format=cjs --target=es2018 ./src/index.ts > ./dist/index.js",
     "compile:watch": "tsc --skipLibCheck --watch",
     "dev:benchmark": "cd demo/benchmark && npm i && npm update && npm run dev",
     "prod:benchmark": "cd demo/benchmark && npm i && npm update && npm run prod",
