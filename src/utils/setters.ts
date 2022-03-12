@@ -84,11 +84,7 @@ const setChildReplacementText = ( child: string, childPrev: Node ): Node => {
 
   if ( childPrev.nodeType === 3 ) {
 
-    if ( childPrev.nodeValue !== child ) {
-
-      childPrev.nodeValue = child;
-
-    }
+    childPrev.nodeValue = child;
 
     return childPrev;
 
