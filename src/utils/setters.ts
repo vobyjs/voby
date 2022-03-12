@@ -54,11 +54,7 @@ const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<n
 
   const {attributes} = element;
 
-  resolveFunction ( value, value => {
-
-    setAttributeStatic ( attributes, key, value );
-
-  });
+  resolveFunction ( value, setAttributeStatic.bind ( undefined, attributes, key ) );
 
 };
 
@@ -74,7 +70,7 @@ const setChildReplacementFunction = ( parent: HTMLElement, child: (() => Child),
 
     }
 
-    setChildStatic ( parent, value, fragment );
+    setChildStatic ( parent, fragment, value );
 
   });
 
@@ -136,7 +132,7 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
 };
 
-const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment ): void => {
+const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child ): void => {
 
   const prev = fragment.children ();
   const prevLength = prev.length;
@@ -209,11 +205,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
 
       fragmentNext.pushFragment ( fragment );
 
-      resolveChild ( child, child => {
-
-        setChildStatic ( parent, child, fragment );
-
-      });
+      resolveChild ( child, setChildStatic.bind ( undefined, parent, fragment ) );
 
     }
 
@@ -310,11 +302,7 @@ const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment )
 
 const setChild = ( parent: HTMLElement, child: Child, fragment: Fragment = new Fragment () ): void => {
 
-  resolveChild ( child, child => {
-
-    setChildStatic ( parent, child, fragment );
-
-  });
+  resolveChild ( child, setChildStatic.bind ( undefined, parent, fragment ) );
 
 };
 
@@ -326,11 +314,7 @@ const setClassStatic = ( classList: DOMTokenList, key: string, value: null | und
 
 const setClass = ( classList: DOMTokenList, key: string, value: FunctionMaybe<null | undefined | boolean> ): void => {
 
-  resolveFunction ( value, value => {
-
-    setClassStatic ( classList, key, value );
-
-  });
+  resolveFunction ( value, setClassStatic.bind ( undefined, classList, key ) );
 
 };
 
@@ -384,11 +368,7 @@ const setClasses = ( element: HTMLElement, object: FunctionMaybe<null | undefine
 
   const {classList} = element;
 
-  resolveFunction ( object, ( object, objectPrev ) => {
-
-    setClassesStatic ( element, classList, object, objectPrev );
-
-  });
+  resolveFunction ( object, setClassesStatic.bind ( undefined, element, classList ) );
 
 };
 
@@ -482,11 +462,7 @@ const setEventStatic = (() => {
 
 const setEvent = ( element: HTMLElement, event: string, value: ObservableMaybe<null | undefined | EventListener> ): void => {
 
-  resolveObservable ( value, value => {
-
-    setEventStatic ( element, event, value );
-
-  });
+  resolveObservable ( value, setEventStatic.bind ( undefined, element, event ) );
 
 };
 
@@ -500,11 +476,7 @@ const setHTML = ( element: HTMLElement, value: FunctionMaybe<{ __html: FunctionM
 
   resolveFunction ( value, value => {
 
-    resolveFunction ( value.__html, html => {
-
-      setHTMLStatic ( element, html );
-
-    });
+    resolveFunction ( value.__html, setHTMLStatic.bind ( undefined, element ) );
 
   });
 
@@ -536,11 +508,7 @@ const setPropertyStatic = ( element: HTMLElement, key: string, value: null | und
 
 const setProperty = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean | number | string> ): void => {
 
-  resolveFunction ( value, value => {
-
-    setPropertyStatic ( element, key, value );
-
-  });
+  resolveFunction ( value, setPropertyStatic.bind ( undefined, element, key ) );
 
 };
 
@@ -548,11 +516,7 @@ const setRef = <T> ( element: T, value: null | undefined | Ref<T> ): void => {
 
   if ( !isFunction ( value ) ) throw new Error ( 'Invalid ref' );
 
-  queueMicrotask ( () => { // Scheduling a microtask to dramatically increase the probability that the element will get connected to the DOM in the meantime, which would be more convenient
-
-    value ( element );
-
-  });
+  queueMicrotask ( value.bind ( undefined, element ) ); // Scheduling a microtask to dramatically increase the probability that the element will get connected to the DOM in the meantime, which would be more convenient
 
 };
 
@@ -588,11 +552,7 @@ const setStyleStatic = (() => {
 
 const setStyle = ( style: CSSStyleDeclaration, key: string, value: FunctionMaybe<null | undefined | number | string> ): void => {
 
-  resolveFunction ( value, value => {
-
-    setStyleStatic ( style, key, value );
-
-  });
+  resolveFunction ( value, setStyleStatic.bind ( undefined, style, key ) );
 
 };
 
@@ -646,11 +606,7 @@ const setStyles = ( element: HTMLElement, object: FunctionMaybe<null | undefined
 
   const {style} = element;
 
-  resolveFunction ( object, ( object, objectPrev ) => {
-
-    setStylesStatic ( style, object, objectPrev );
-
-  });
+  resolveFunction ( object, setStylesStatic.bind ( undefined, style ) );
 
 };
 
