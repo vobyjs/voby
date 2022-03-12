@@ -4,7 +4,9 @@
 import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '../types';
 import useEffect from '../hooks/use_effect';
 import template from '../template';
+import {createText, createComment} from './creators';
 import diff from './diff';
+import Fragment from './fragment';
 import {flatten, isFunction, isNil, isString} from './lang';
 import {resolveChild, resolveFunction, resolveObservable} from './resolvers';
 
@@ -60,19 +62,19 @@ const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<n
 
 };
 
-const setChildReplacementFunction = ( parent: HTMLElement, child: (() => Child), childPrev: Node[] ): void => {
+const setChildReplacementFunction = ( parent: HTMLElement, child: (() => Child), fragment: Fragment ): void => {
 
   useEffect ( () => {
 
     let value = child ();
 
-    while ( typeof value === 'function' ) {
+    while ( isFunction ( value ) ) {
 
       value = value ();
 
     }
 
-    childPrev = setChildStatic ( parent, value, childPrev );
+    setChildStatic ( parent, value, fragment );
 
   });
 
@@ -96,7 +98,7 @@ const setChildReplacementText = ( child: string, childPrev: Node ): Node => {
 
     if ( !parent ) throw new Error ( 'Invalid child replacement' );
 
-    const textNode = new Text ( child );
+    const textNode = createText ( child );
 
     parent.replaceChild ( textNode, childPrev );
 
@@ -110,11 +112,7 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
   const type = typeof child;
 
-  if ( type === 'string' ) {
-
-    setChildReplacementText ( child as string, childPrev ); //TSC
-
-  } else if ( type === 'number' || type === 'bigint' ) {
+  if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
     setChildReplacementText ( String ( child ), childPrev );
 
@@ -124,13 +122,17 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
     if ( !parent ) throw new Error ( 'Invalid child replacement' );
 
+    const fragment = new Fragment ();
+
+    fragment.push ( childPrev );
+
     if ( type === 'function' ) {
 
-      setChildReplacementFunction ( parent, child as (() => Child), [childPrev] ); //TSC
+      setChildReplacementFunction ( parent, child as (() => Child), fragment ); //TSC
 
     } else {
 
-      setChild ( parent, child, [childPrev] );
+      setChild ( parent, child, fragment );
 
     }
 
@@ -138,21 +140,27 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
 };
 
-const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[] ): Node[] => {
+const setChildStatic = ( parent: HTMLElement, child: Child, fragment: Fragment ): void => {
 
-  const childrenPrevLength = childrenPrev.length;
+  const prev = fragment.flat ();
+  const prevLength = prev.length;
+  const prevFirst = prev[0];
+  const prevLast = prev[prevLength - 1];
+  const prevSibling = prevLast?.nextSibling || null;
 
-  if ( childrenPrevLength === 0 ) { // Fast path for appending a node the first time
+  if ( prevLength === 0 ) { // Fast path for appending a node the first time
 
     const type = typeof child;
 
     if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
-      const textNode = new Text ( String ( child ) );
+      const textNode = createText ( child );
 
       parent.appendChild ( textNode );
 
-      return [textNode];
+      fragment.set ( [textNode] );
+
+      return;
 
     } else if ( type === 'object' && child !== null && typeof ( child as Node ).nodeType === 'number' ) { //TSC
 
@@ -160,30 +168,31 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
 
       parent.insertBefore ( node, null );
 
-      return [node];
+      fragment.set ( [node] );
+
+      return;
 
     }
 
   }
 
-  if ( childrenPrevLength === 1 ) { // Fast path for single text child
+  if ( prevLength === 1 ) { // Fast path for single text child
 
     const type = typeof child;
 
-    if ( type === 'string' ) {
+    if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
-      return [setChildReplacementText ( child as string, childrenPrev[0] )]; //TSC
+      const node = setChildReplacementText ( String ( child ), prevFirst );
 
-    } else if ( type === 'number' || type === 'bigint' ) {
+      fragment.set ( [node] );
 
-      return [setChildReplacementText ( String ( child ), childrenPrev[0] )];
+      return;
 
     }
 
   }
 
-  const childrenNext: Node[] = [];
-  const childrenNextSibling = childrenPrev[childrenPrevLength - 1]?.nextSibling || null;
+  const fragmentNext = new Fragment ();
 
   const children: Node[] = Array.isArray ( child ) ? flatten ( child ) : [child]; //TSC
 
@@ -194,28 +203,21 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
 
     if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
-      childrenNext.push ( new Text ( String ( child ) ) );
+      fragmentNext.push ( createText ( child ) );
 
     } else if ( type === 'object' && child !== null && typeof child.nodeType === 'number' ) {
 
-      childrenNext.push ( child );
+      fragmentNext.push ( child );
 
     } else if ( type === 'function' ) {
 
-      let prev: Node[] = [];
+      const fragment = new Fragment ();
+
+      fragmentNext.push ( fragment );
 
       resolveChild ( child, child => {
 
-        const prevLength = prev.length;
-        const prevStart = prev[0];
-
-        prev = setChildStatic ( parent, child, prev );
-
-        const prevStartIndex = prevStart ? childrenNext.indexOf ( prevStart ) : childrenNext.length;
-
-        // if ( prevStartIndex === -1 ) debugger; // This should never happen, if it does happen we've got a bug
-
-        childrenNext.splice ( prevStartIndex, prevLength, ...prev );
+        setChildStatic ( parent, child, fragment );
 
       });
 
@@ -223,17 +225,20 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
 
   }
 
-  if ( !childrenNext.length && childrenPrevLength === 1 && childrenPrev[0].nodeType === 8 ) { // It's a comment already, no need to replace it
+  const next = fragmentNext.flat ();
+  const nextLength = next.length;
 
-    return childrenPrev;
+  if ( nextLength === 0 && prevLength === 1 && prevFirst.nodeType === 8 ) { // It's a placeholder already, no need to replace it
+
+    return;
 
   }
 
-  if ( !childrenNext.length || ( childrenPrevLength === 1 && childrenPrev[0].nodeType === 8 ) ) { // Fast path for removing all children and/or replacing the placeholder
+  if ( nextLength === 0 || ( prevLength === 1 && prevFirst.nodeType === 8 ) ) { // Fast path for removing all children and/or replacing the placeholder
 
     const {childNodes} = parent;
 
-    if ( childNodes.length === childrenPrevLength ) {
+    if ( childNodes.length === prevLength ) { // Maybe this fragment doesn't handle all children but only a range of them, checking for that here
 
       for ( let i = 0, l = childNodes.length; i < l; i++ ) {
 
@@ -248,53 +253,61 @@ const setChildStatic = ( parent: HTMLElement, child: Child, childrenPrev: Node[]
 
       parent.textContent = '';
 
-      if ( !childrenNext.length ) { // Placeholder, to keep the right spot in the array of children
+      if ( nextLength === 0 ) { // Placeholder, to keep the right spot in the array of children
 
-        childrenNext[0] = new Comment ();
+        const placeholder = createComment ();
+
+        fragmentNext.push ( placeholder );
+
+        next.push ( placeholder );
 
       }
 
-      if ( childrenNextSibling ) {
+      if ( prevSibling ) {
 
-        for ( let i = 0, l = childrenNext.length; i < l; i++ ) {
+        for ( let i = 0, l = nextLength; i < l; i++ ) {
 
-          parent.insertBefore ( childrenNext[i], childrenNextSibling );
+          parent.insertBefore ( next[i], prevSibling );
 
         }
 
       } else {
 
-        parent.append.apply ( parent, childrenNext );
+        parent.append.apply ( parent, next );
 
       }
 
-      return childrenNext;
+      fragment.replaceWith ( fragmentNext );
+
+      return;
 
     }
 
   }
 
-  if ( !childrenNext.length ) { // Placeholder, to keep the right spot in the array of children
+  if ( !next.length ) { // Placeholder, to keep the right spot in the array of children
 
-    childrenNext[0] = new Comment ();
+    const placeholder = createComment ();
+
+    fragmentNext.push ( placeholder );
+
+    next.push ( placeholder );
 
   }
 
-  diff ( parent, childrenPrev, childrenNext, childrenNextSibling );
+  diff ( parent, prev, next, prevSibling );
 
-  return childrenNext;
+  fragment.replaceWith ( fragmentNext );
 
 };
 
-const setChild = ( parent: HTMLElement, child: Child, childPrev: Node[] = [] ): Node[] => {
+const setChild = ( parent: HTMLElement, child: Child, fragment: Fragment = new Fragment () ): void => {
 
   resolveChild ( child, child => {
 
-    childPrev = setChildStatic ( parent, child, childPrev );
+    setChildStatic ( parent, child, fragment );
 
   });
-
-  return childPrev;
 
 };
 
@@ -638,7 +651,7 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
   if ( key === 'children' ) {
 
-    const placeholder = new Text ();
+    const placeholder = createText ( '' ); // Using a Text node rather than a Comment as the former may be what we actually want ultimately
 
     element.insertBefore ( placeholder, null );
 
@@ -654,7 +667,7 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
   } else if ( key === 'class' ) {
 
-    element.className = '';
+    element.className = ''; // Ensuring the attribute is present
 
     value ( element, 'setClasses' );
 
@@ -672,7 +685,7 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
   } else if ( key in element ) {
 
-    if ( key === 'className' ) {
+    if ( key === 'className' ) { // Ensuring the attribute is present
 
       element.className = '';
 
@@ -682,7 +695,7 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
   } else {
 
-    element.setAttribute ( key, '' );
+    element.setAttribute ( key, '' ); // Ensuring the attribute is present
 
     value ( element, 'setAttribute', key );
 
