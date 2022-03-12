@@ -129,6 +129,8 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
   const makeReviverActions = ( actionsWithPaths: TemplateActionWithPaths[] ): string[] => {
 
+    //TODO: caching nodes across actions, so that the template is not fully walked from start to finish for each action, potentially
+
     const actions: string[] = [];
 
     for ( let i = 0, l = actionsWithPaths.length; i < l; i++ ) { //TODO: Write this more cleanly, with a single case
