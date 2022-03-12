@@ -1228,6 +1228,47 @@ const TestABCD = (): JSX.Element => {
   );
 };
 
+const TestCleanupInner = () => {
+  const page = $( true );
+  const togglePage = () => page.update ( prev => !prev );
+  const Page1 = () => {
+    setTimeout ( togglePage, TEST_INTERVAL );
+    return (
+      <>
+        <p>page1</p>
+        <button onClick={togglePage}>Toggle Page</button>
+      </>
+    );
+  };
+  const Page2 = () => {
+    const bool = $( true );
+    const toggle = () => bool.update ( prev => !prev );
+    setTimeout ( toggle, TEST_INTERVAL );
+    setTimeout ( togglePage, TEST_INTERVAL * 2 );
+    return (
+      <>
+        <If when={bool}>
+          <p>page2 - true</p>
+        </If>
+        <If when={() => !bool ()}>
+          <p>page2 - false</p>
+        </If>
+        <button onClick={toggle}>Toggle</button>
+        <button onClick={togglePage}>Toggle Page</button>
+      </>
+    );
+  };
+  return () => {
+    const Page = page () ? Page1 : Page2;
+    return (
+      <>
+        <h3>Cleanup - Inner</h3>
+        <Page />
+      </>
+    );
+  };
+};
+
 const TestDyanmicHeading = (): JSX.Element => {
   const level = $(1);
   const increment = () => level ( ( level () + 1 ) % 7 || 1 );
@@ -2204,6 +2245,7 @@ const Test = (): JSX.Element => {
       <TestEventClickAndClickCaptureStatic />
       <TestEventEnterAndEnterCaptureStatic />
       <TestABCD />
+      <TestCleanupInner />
       <TestDyanmicHeading />
       <TestIfStatic />
       <TestIfObservable />
