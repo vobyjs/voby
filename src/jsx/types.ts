@@ -11,41 +11,39 @@ interface HTMLElement {
   cloneNode ( deep?: boolean ): HTMLElement
 }
 
-interface Object {
-  isPrototypeOf<T extends Object> ( this: T, object: Object ): object is T
-}
-
 interface Node {
   recycle? ( node: Node ): void
 }
 
-/* HELPERS */
+interface Object {
+  isPrototypeOf<T extends Object> ( this: T, object: Object ): object is T
+}
 
-type FunctionMaybe<T = unknown> = ({ (): T }) | T;
-
-type ObservableAccessor<T> = ({ (): T, get (): T, sample (): T });
-
-type ObservableMaybe<T = unknown> = ObservableAccessor<T> | T;
-
-type AllClassProperties = {
-  [key: string]: FunctionMaybe<null | undefined | boolean>
-};
-
-type AllCSSProperties = {
-  [key: string]: FunctionMaybe<string | number | null | undefined>
-};
-
-type DOMCSSProperties = {
-  [key in keyof Omit<CSSStyleDeclaration, 'item' | 'setProperty' | 'removeProperty' | 'getPropertyValue' | 'getPropertyPriority'>]?: FunctionMaybe<string | number | null | undefined>
-};
-
-type HTMLAttributeReferrerPolicy = '' | 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url';
-
-interface HTMLWebViewElement extends HTMLElement {}
-
-/* MAIN */
+/* JSX */
 
 declare namespace JSX {
+
+  /* HELPERS */
+
+  type FunctionMaybe<T = unknown> = ({ (): T }) | T;
+
+  type ObservableMaybe<T = unknown> = ({ (): T, get (): T, sample (): T }) | T;
+
+  type AllClassProperties = {
+    [key: string]: FunctionMaybe<null | undefined | boolean>
+  };
+
+  type AllCSSProperties = {
+    [key: string]: FunctionMaybe<string | number | null | undefined>
+  };
+
+  type DOMCSSProperties = {
+    [key in keyof Omit<CSSStyleDeclaration, 'item' | 'setProperty' | 'removeProperty' | 'getPropertyValue' | 'getPropertyPriority'>]?: FunctionMaybe<string | number | null | undefined>
+  };
+
+  type HTMLAttributeReferrerPolicy = '' | 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url';
+
+  /* MAIN */
 
   type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child) | ((() => Child) & { metadata: any }) | ({ (): Child, get (): Child, sample (): Child });
 
@@ -1105,7 +1103,7 @@ declare namespace JSX {
     var: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
     video: DetailedHTMLProps<VideoHTMLAttributes<HTMLVideoElement>, HTMLVideoElement>,
     wbr: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>,
-    webview: DetailedHTMLProps<WebViewHTMLAttributes<HTMLWebViewElement>, HTMLWebViewElement>
+    webview: DetailedHTMLProps<WebViewHTMLAttributes<HTMLElement>, HTMLElement>
   }
 
 }
