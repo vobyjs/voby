@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import type {Child, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions} from './types';
+import type {Child, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap} from './types';
 import {SYMBOL_TEMPLATE_ACCESSOR} from './constants';
 import {indexOf, isFunction, isString} from './utils/lang';
 import {setAttribute, setChildReplacement, setClasses, setEvent, setHTML, setProperty, setRef, setStyles} from './utils/setters';
@@ -121,15 +121,130 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
   })();
 
-  const makeNodePathProperties = ( path: TemplateActionPath ): string => {
+  const makeNodePathProperties = ( path: TemplateActionPath ): TemplateVariableProperties => {
 
-    return path.slice ().reverse ().map ( index => ( Object.is ( 0, index ) ) ? '.firstChild' : Object.is ( -0, index ) ? '.lastChild' : `.firstChild${'.nextSibling'.repeat ( index )}` ).join ( '' );
+    const properties: TemplateVariableProperties = ['root'];
+
+    const parts = path.slice ().reverse ();
+
+    for ( let i = 0, l = parts.length; i < l; i++ ) {
+
+      const part = parts[i];
+
+      if ( Object.is ( 0, part ) ) {
+
+        properties.push ( 'firstChild' );
+
+      } else if ( Object.is ( -0, part ) ) {
+
+        properties.push ( 'lastChild' );
+
+      } else {
+
+        properties.push ( 'firstChild' );
+
+        for ( let nsi = 0; nsi < part; nsi++ ) {
+
+          properties.push ( 'nextSibling' );
+
+        }
+
+      }
+
+    }
+
+    return properties;
 
   };
 
-  const makeReviverActions = ( actionsWithPaths: TemplateActionWithPaths[] ): string[] => {
+  const makeReviverPaths = ( actionsWithPaths: TemplateActionWithPaths[] ): TemplateActionPath[] => {
 
-    //TODO: caching nodes across actions, so that the template is not fully walked from start to finish for each action, potentially
+    const paths: TemplateActionPath[] = [];
+
+    for ( let i = 0, l = actionsWithPaths.length; i < l; i++ ) {
+
+      const [nodePath, method, prop, key, targetNodePath] = actionsWithPaths[i];
+
+      paths.push ( nodePath );
+
+      if ( targetNodePath ) {
+
+        paths.push ( targetNodePath );
+
+      }
+
+    }
+
+    return paths;
+
+  };
+
+  const makeReviverVariablesData = ( paths: TemplateActionPath[], properties: TemplateVariableProperties[] ): TemplateVariableData[] => {
+
+    const data: TemplateVariableData[] = new Array ( paths.length );
+
+    for ( let i = 0, l = paths.length; i < l; i++ ) {
+
+      data[i] = {
+        path: paths[i],
+        properties: properties[i]
+      };
+
+    }
+
+    return data;
+
+  };
+
+  const makeReviverVariables = ( actionsWithPaths: TemplateActionWithPaths[] ): { assignments: string[], map: Map<TemplateActionPath, string> } => { //TODO: Optimize this further, there's some duplication and unnecessary work being done
+
+    const paths = makeReviverPaths ( actionsWithPaths );
+    const properties = paths.map ( makeNodePathProperties );
+    const data = makeReviverVariablesData ( paths, properties );
+    const assignments: string[] = [];
+    const map: TemplateVariablesMap = new Map ();
+
+    let variableId = 0;
+
+    while ( true ) {
+
+      const datum = data.find ( datum => datum.properties.length > 1 );
+
+      if ( !datum ) break;
+
+      const [current, next] = datum.properties;
+      const variable = `$${variableId++}`;
+      const assignment = `const ${variable} = ${current}.${next};`;
+
+      assignments.push ( assignment );
+
+      for ( let i = 0, l = data.length; i < l; i++ ) {
+
+        const datum = data[i];
+        const [otherCurrent, otherNext] = datum.properties;
+
+        if ( otherCurrent !== current || otherNext !== next ) continue;
+
+        datum.properties[0] = variable;
+        datum.properties.splice ( 1, 1 );
+
+      }
+
+    }
+
+    for ( let i = 0, l = data.length; i < l; i++ ) {
+
+      const datum = data[i];
+
+      map.set ( datum.path, datum.properties[0] );
+
+    }
+
+    return {assignments, map};
+
+  };
+
+  const makeReviverActions = ( actionsWithPaths: TemplateActionWithPaths[], variables: Map<TemplateActionPath, string> ): string[] => {
 
     const actions: string[] = [];
 
@@ -139,15 +254,15 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
       if ( targetNodePath ) {
 
-        actions.push ( `this.${method} ( props["${prop}"], root${makeNodePathProperties ( targetNodePath )} );` );
+        actions.push ( `this.${method} ( props["${prop}"], ${variables.get ( targetNodePath )} );` );
 
       } else if ( key ) {
 
-        actions.push ( `this.${method} ( root${makeNodePathProperties ( nodePath )}, "${key}", props["${prop}"] );` );
+        actions.push ( `this.${method} ( ${variables.get ( nodePath )}, "${key}", props["${prop}"] );` );
 
       } else {
 
-        actions.push ( `this.${method} ( root${makeNodePathProperties ( nodePath )}, props["${prop}"] );` );
+        actions.push ( `this.${method} ( ${variables.get ( nodePath )}, props["${prop}"] );` );
 
       }
 
@@ -159,8 +274,9 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
   const makeReviver = ( actionsWithPaths: TemplateActionWithPaths[] ): (( root: HTMLElement, props: P ) => HTMLElement) => {
 
-    const actions = makeReviverActions ( actionsWithPaths );
-    const fn = new Function ( 'root', 'props', `${actions.join ( '' )}return root;` );
+    const {assignments, map} = makeReviverVariables ( actionsWithPaths );
+    const actions = makeReviverActions ( actionsWithPaths, map );
+    const fn = new Function ( 'root', 'props', `${assignments.join ( '' )}${actions.join ( '' )}return root;` );
     const apis = {setAttribute, setChildReplacement, setClasses, setEvent, setHTML, setProperty, setRef, setStyles};
 
     return fn.bind ( apis );

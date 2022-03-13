@@ -77,6 +77,12 @@ type TemplateActionWithPaths = [TemplateActionPath, string, string, string?, Tem
 
 type TemplateOptions = { recycle?: boolean };
 
+type TemplateVariableProperties = string[];
+
+type TemplateVariableData = ({ path: TemplateActionPath, properties: TemplateVariableProperties });
+
+type TemplateVariablesMap = Map<TemplateActionPath, string>;
+
 /* EXPORT */
 
-export type {ArrayMaybe, Callback, Child, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, Disposer, EventListener, FN, FunctionMaybe, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceLoading, ResourceRejected, ResourceResolved, Resource, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions};
+export type {ArrayMaybe, Callback, Child, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, Disposer, EventListener, FN, FunctionMaybe, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceLoading, ResourceRejected, ResourceResolved, Resource, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap};
