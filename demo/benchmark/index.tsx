@@ -6,7 +6,7 @@ import {$, render, template, For} from 'voby';
 
 /* TYPES */
 
-type IDatum = { id: string, label: Observable<string> };
+type IDatum = { id: number, label: Observable<string> };
 
 type IData = IDatum[];
 
@@ -16,21 +16,15 @@ const rand = ( max: number ): number => {
   return Math.round ( Math.random () * 1000 ) % max;
 };
 
-const uuid = (() => {
-  let counter = 1;
-  return (): string => {
-    return String ( counter++ );
-  };
-})();
-
 const buildData = (() => {
   const adjectives = ['pretty', 'large', 'big', 'small', 'tall', 'short', 'long', 'handsome', 'plain', 'quaint', 'clean', 'elegant', 'easy', 'angry', 'crazy', 'helpful', 'mushy', 'odd', 'unsightly', 'adorable', 'important', 'inexpensive', 'cheap', 'expensive', 'fancy'];
   const colors = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
   const nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger', 'pizza', 'mouse', 'keyboard'];
+  let uuid = 1;
   return ( length: number ): IData => {
     const data: IData = new Array ( length );
     for ( let i = 0; i < length; i++ ) {
-      const id = uuid ();
+      const id = uuid++;
       const adjective = adjectives[rand ( adjectives.length )];
       const color = colors[rand ( colors.length )];
       const noun = nouns[rand ( nouns.length )];
@@ -49,7 +43,7 @@ const Model = (() => {
   /* STATE */
 
   const $data = $<IDatum[]>( [] );
-  const $selected = $( '' );
+  const $selected = $( -1 );
 
   /* API */
 
@@ -94,7 +88,7 @@ const Model = (() => {
     $data ( [] );
   };
 
-  const remove = ( id: string ): void => {
+  const remove = ( id: number ): void => {
     const data = $data ();
     const index = data.findIndex ( datum => datum.id === id );
     if ( index === -1 ) return;
@@ -102,7 +96,7 @@ const Model = (() => {
     $data.emit ();
   };
 
-  const select = ( id: string ): void => {
+  const select = ( id: number ): void => {
     $selected ( id );
   };
 
@@ -112,13 +106,13 @@ const Model = (() => {
 
 /* MAIN */
 
-const Button = ({ id, text, onClick }: { id: string, text: string, onClick: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
+const Button = ({ id, text, onClick }: { id: string | number, text: string, onClick: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
   <div class="col-sm-6 smallpad">
     <button id={id} class="btn btn-primary btn-block" type="button" onClick={onClick}>{text}</button>
   </div>
 );
 
-const RowDynamic = ({ id, label, className, onSelect, onRemove }: { id: FunctionMaybe<string>, label: FunctionMaybe<string>, className: FunctionMaybe<string>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
+const RowDynamic = ({ id, label, className, onSelect, onRemove }: { id: FunctionMaybe<string | number>, label: FunctionMaybe<string>, className: FunctionMaybe<string>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
   <tr className={className}>
     <td class="col-md-1">{id}</td>
     <td class="col-md-4">
