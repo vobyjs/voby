@@ -1,12 +1,12 @@
 
 /* IMPORT */
 
-import {Observable, ObservableMaybe} from 'voby';
+import {FunctionMaybe, Observable, ObservableMaybe} from 'voby';
 import {$, render, template, For} from 'voby';
 
 /* TYPES */
 
-type IDatum = { id: string, label: Observable<string>, selected: Observable<boolean>, className: Observable<string> };
+type IDatum = { id: string, label: Observable<string> };
 
 type IData = IDatum[];
 
@@ -35,9 +35,7 @@ const buildData = (() => {
       const color = colors[rand ( colors.length )];
       const noun = nouns[rand ( nouns.length )];
       const label = $(`${adjective} ${color} ${noun}`);
-      const selected = $(false);
-      const className = $('');
-      const datum: IDatum = { id, label, selected, className };
+      const datum = { id, label };
       data[i] = datum;
     };
     return data;
@@ -51,7 +49,7 @@ const Model = (() => {
   /* STATE */
 
   let $data = $<IDatum[]>( [] );
-  let selected: IDatum | null = null;
+  let $selected = $( '' );
 
   /* API */
 
@@ -103,20 +101,10 @@ const Model = (() => {
   };
 
   const select = ( id: string ): void => {
-    if ( selected ) {
-      selected.selected ( false );
-      selected.className ( '' );
-      selected = null;
-    }
-    const data = $data ();
-    const datum = data.find ( datum => datum.id === id );
-    if ( !datum ) return;
-    datum.selected ( true );
-    datum.className ( 'danger' );
-    selected = datum;
+    $selected ( id );
   };
 
-  return { $data, selected, run, runLots, runWith, add, update, swapRows, clear, remove, select };
+  return { $data, $selected, run, runLots, runWith, add, update, swapRows, clear, remove, select };
 
 })();
 
@@ -128,7 +116,7 @@ const Button = ({ id, text, onClick }: { id: string, text: string, onClick: (( e
   </div>
 );
 
-const RowDynamic = ({ id, label, className, onSelect, onRemove }: { id: ObservableMaybe<string>, label: ObservableMaybe<string>, className: ObservableMaybe<string>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
+const RowDynamic = ({ id, label, className, onSelect, onRemove }: { id: FunctionMaybe<string>, label: FunctionMaybe<string>, className: FunctionMaybe<string>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
   <tr className={className}>
     <td class="col-md-1">{id}</td>
     <td class="col-md-4">
@@ -147,7 +135,7 @@ const RowTemplate = template ( RowDynamic, { recycle: true } );
 
 const App = (): JSX.Element => {
 
-  const {$data, run, runLots, add, update, clear, swapRows, select, remove} = Model;
+  const {$data, $selected, run, runLots, add, update, clear, swapRows, select, remove} = Model;
 
   return (
     <div class="container">
@@ -172,7 +160,8 @@ const App = (): JSX.Element => {
         <tbody>
           <For values={$data}>
             {( datum: IDatum ) => {
-              const {id, label, className} = datum;
+              const {id, label} = datum;
+              const className = () => ( $selected () === id ) ? 'danger' : '';
               const onSelect = select.bind ( undefined, id );
               const onRemove = remove.bind ( undefined, id );
               const props = {id, label, className, onSelect, onRemove};
