@@ -48,8 +48,8 @@ const Model = (() => {
 
   /* STATE */
 
-  let $data = $<IDatum[]>( [] );
-  let $selected = $( '' );
+  const $data = $<IDatum[]>( [] );
+  const $selected = $( '' );
 
   /* API */
 
@@ -67,14 +67,16 @@ const Model = (() => {
   };
 
   const add = (): void => {
-    $data ( $data ().concat ( buildData ( 1000 ) ) );
+    const data = $data ();
+    data.push.apply ( data, buildData ( 1000 ) );
+    $data.emit ();
   };
 
   const update = (): void => {
     const data = $data ();
     for ( let i = 0, l = data.length; i < l; i += 10 ) {
       const {label} = data[i];
-      label ( label () + ' !!!' );
+      label.update ( label => label + ' !!!' );
     }
   };
 
@@ -83,10 +85,9 @@ const Model = (() => {
     if ( data.length <= 998 ) return;
     const datum1 = data[1];
     const datum998 = data[998];
-    const data2 = data.slice ();
-    data2[1] = datum998;
-    data2[998] = datum1;
-    $data ( data2 );
+    data[1] = datum998;
+    data[998] = datum1;
+    $data.emit ();
   };
 
   const clear = (): void => {
@@ -97,7 +98,8 @@ const Model = (() => {
     const data = $data ();
     const index = data.findIndex ( datum => datum.id === id );
     if ( index === -1 ) return;
-    $data ( data.slice ( 0, index ).concat ( data.slice ( index + 1 ) ) );
+    data.splice ( index, 1 );
+    $data.emit ();
   };
 
   const select = ( id: string ): void => {
@@ -110,7 +112,7 @@ const Model = (() => {
 
 /* MAIN */
 
-const Button = ({ id, text, onClick }: { id: string, text: string, onClick: (( event: MouseEvent ) => any) }): JSX.Element => (
+const Button = ({ id, text, onClick }: { id: string, text: string, onClick: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
   <div class="col-sm-6 smallpad">
     <button id={id} class="btn btn-primary btn-block" type="button" onClick={onClick}>{text}</button>
   </div>
