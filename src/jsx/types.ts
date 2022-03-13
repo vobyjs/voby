@@ -374,7 +374,7 @@ declare namespace JSX {
     dir?: FunctionMaybe<string>,
     draggable?: FunctionMaybe<boolean | 'true' | 'false'>,
     hidden?: FunctionMaybe<boolean>,
-    id?: FunctionMaybe<string>,
+    id?: FunctionMaybe<string | number>,
     lang?: FunctionMaybe<string>,
     placeholder?: FunctionMaybe<string>,
     slot?: FunctionMaybe<string>,
