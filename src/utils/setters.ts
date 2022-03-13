@@ -30,11 +30,7 @@ const setAttributeStatic = ( attributes: NamedNodeMap, key: string, value: null 
 
     if ( attribute ) {
 
-      if ( attribute.value !== value ) {
-
-        attribute.value = value;
-
-      }
+      attribute.value = value;
 
     } else {
 
@@ -322,11 +318,7 @@ const setClassesStatic = ( element: HTMLElement, classList: DOMTokenList, object
 
   if ( isString ( object ) ) {
 
-    if ( element.className !== object ) {
-
-      element.className = object;
-
-    }
+    element.className = object;
 
   } else {
 
@@ -486,21 +478,11 @@ const setPropertyStatic = ( element: HTMLElement, key: string, value: null | und
 
   if ( key === 'className' ) {
 
-    const className = String ( value ?? '' );
-
-    if ( element.className !== className ) {
-
-      element.className = className;
-
-    }
+    element.className = String ( value ?? '' );
 
   } else {
 
-    if ( element[key] !== value ) {
-
-      element[key] = value;
-
-    }
+    element[key] = value;
 
   }
 
@@ -536,13 +518,7 @@ const setStyleStatic = (() => {
 
     } else {
 
-      value = ( isString ( value ) || propertyNonDimensionalRe.test ( key ) ? value : `${value}px` );
-
-      if ( style[key] !== value ) {
-
-        style[key] = value;
-
-      }
+      style[key] = ( isString ( value ) || propertyNonDimensionalRe.test ( key ) ? value : `${value}px` );
 
     }
 
@@ -560,11 +536,7 @@ const setStylesStatic = ( style: CSSStyleDeclaration, object: null | undefined |
 
   if ( isString ( object ) ) {
 
-    if ( style.cssText !== object ) {
-
-      style.cssText = object;
-
-    }
+    style.cssText = object;
 
   } else {
 
