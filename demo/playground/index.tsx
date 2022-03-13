@@ -1186,6 +1186,70 @@ const TestEventClickAndClickCaptureStatic = (): JSX.Element => {
   );
 };
 
+const TestEventClickStopPropagation = (): JSX.Element => {
+  const outer = $(0);
+  const inner = $(0);
+  const incrementOuter = () => outer.update ( prev => prev + 1 );
+  const incrementInner = event => {
+    event.stopPropagation ();
+    inner.update ( prev => prev + 1 );
+  };
+  return (
+    <>
+      <h3>Event - Click - Stop Propagation</h3>
+      <p><button onClick={incrementOuter}>{outer}<button onClick={incrementInner}>{inner}</button></button></p>
+    </>
+  );
+};
+
+const TestEventClickStopImmediatePropagation = (): JSX.Element => {
+  const outer = $(0);
+  const inner = $(0);
+  const incrementOuter = () => outer.update ( prev => prev + 1 );
+  const incrementInner = event => {
+    event.stopImmediatePropagation ();
+    inner.update ( prev => prev + 1 );
+  };
+  return (
+    <>
+      <h3>Event - Click - Stop Immediate Propagation</h3>
+      <p><button onClick={incrementOuter}>{outer}<button onClick={incrementInner}>{inner}</button></button></p>
+    </>
+  );
+};
+
+const TestEventEnterStopPropagation = (): JSX.Element => {
+  const outer = $(0);
+  const inner = $(0);
+  const incrementOuter = () => outer.update ( prev => prev + 1 );
+  const incrementInner = event => {
+    event.stopPropagation ();
+    inner.update ( prev => prev + 1 );
+  };
+  return (
+    <>
+      <h3>Event - Enter - Stop Propagation</h3>
+      <p><button onMouseEnter={incrementOuter}>{outer}<button onMouseEnter={incrementInner}>{inner}</button></button></p>
+    </>
+  );
+};
+
+const TestEventEnterStopImmediatePropagation = (): JSX.Element => {
+  const outer = $(0);
+  const inner = $(0);
+  const incrementOuter = () => outer.update ( prev => prev + 1 );
+  const incrementInner = event => {
+    event.stopImmediatePropagation ();
+    inner.update ( prev => prev + 1 );
+  };
+  return (
+    <>
+      <h3>Event - Enter - Stop Immediate Propagation</h3>
+      <p><button onMouseEnter={incrementOuter}>{outer}<button onMouseEnter={incrementInner}>{inner}</button></button></p>
+    </>
+  );
+};
+
 const TestEventEnterAndEnterCaptureStatic = (): JSX.Element => {
   const o = $( 0 );
   const increment = () => o.update ( prev => prev + 1 );
@@ -2242,6 +2306,10 @@ const Test = (): JSX.Element => {
       <TestEventClickCaptureObservable />
       <TestEventClickCaptureRemoval />
       <TestEventClickAndClickCaptureStatic />
+      <TestEventClickStopPropagation />
+      <TestEventClickStopImmediatePropagation />
+      <TestEventEnterStopPropagation />
+      <TestEventEnterStopImmediatePropagation />
       <TestEventEnterAndEnterCaptureStatic />
       <TestABCD />
       <TestCleanupInner />
