@@ -58,7 +58,7 @@ const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<n
 
 };
 
-const setChildReplacementFunction = ( parent: HTMLElement, child: (() => Child), fragment: Fragment ): void => {
+const setChildReplacementFunction = ( parent: HTMLElement, fragment: Fragment, child: (() => Child) ): void => {
 
   useEffect ( () => {
 
@@ -120,7 +120,7 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
     if ( type === 'function' ) {
 
-      setChildReplacementFunction ( parent, child as (() => Child), fragment ); //TSC
+      setChildReplacementFunction ( parent, fragment, child as (() => Child) ); //TSC
 
     } else {
 
