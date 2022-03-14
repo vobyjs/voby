@@ -1332,6 +1332,14 @@ const TestCleanupInner = () => {
   };
 };
 
+const TestCleanupInnerPortal = () => {
+  return (
+    <Portal>
+      <TestCleanupInner />
+    </Portal>
+  );
+};
+
 const TestDyanmicHeading = (): JSX.Element => {
   const level = $(1);
   const increment = () => level ( ( level () + 1 ) % 7 || 1 );
@@ -2313,6 +2321,7 @@ const Test = (): JSX.Element => {
       <TestEventEnterAndEnterCaptureStatic />
       <TestABCD />
       <TestCleanupInner />
+      <TestCleanupInnerPortal />
       <TestDyanmicHeading />
       <TestIfStatic />
       <TestIfObservable />
