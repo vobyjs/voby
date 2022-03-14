@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import './jsx/types';
-import type {FunctionMaybe, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableMaybe, Resource} from './types';
+import type {FunctionMaybe, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableMaybe, Resource} from './types';
 import {jsx, jsxDEV, jsxs} from './jsx/runtime';
 import {Component, Dynamic, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from './components';
 import {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useEventListener, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useResource, useRoot, useTimeout} from './hooks';
@@ -23,7 +23,7 @@ import template from './template';
 
 /* EXPORT */
 
-export type {FunctionMaybe, FunctionMaybe as F, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableMaybe, ObservableMaybe as O, Resource};
+export type {FunctionMaybe, FunctionMaybe as F, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableMaybe, ObservableMaybe as O, Resource};
 export {jsx, jsxDEV, jsxs};
 export {Component, Dynamic, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary};
 export {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useCleanup, useComputed, useContext, useDisposed, useEffect, useError, useEventListener, useFetch, useFrom, useIdleCallback, useIdleLoop, useInterval, usePromise, useResolved, useResource, useRoot, useTimeout};
