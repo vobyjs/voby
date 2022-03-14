@@ -7,7 +7,7 @@ import template from '../template';
 import {createText, createComment} from './creators';
 import diff from './diff';
 import Fragment from './fragment';
-import {flatten, isFunction, isNil, isString} from './lang';
+import {flatten, isFunction, isNil, isPrimitive, isString} from './lang';
 import {resolveChild, resolveFunction, resolveObservable} from './resolvers';
 
 /* MAIN */
@@ -56,17 +56,25 @@ const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<n
 
 const setChildReplacementFunction = ( parent: HTMLElement, fragment: Fragment, child: (() => Child) ): void => {
 
+  let valuePrev: Child | undefined;
+  let valuePrimitive = false;
+
   useEffect ( () => {
 
-    let value = child ();
+    let valueNext = child ();
 
-    while ( isFunction ( value ) ) {
+    while ( isFunction ( valueNext ) ) {
 
-      value = value ();
+      valueNext = valueNext ();
 
     }
 
-    setChildStatic ( parent, fragment, value );
+    if ( valuePrimitive && valuePrev === valueNext ) return; // Nothing actually changed, skipping
+
+    setChildStatic ( parent, fragment, valueNext );
+
+    valuePrev = valueNext;
+    valuePrimitive = isPrimitive ( valueNext );
 
   });
 

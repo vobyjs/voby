@@ -71,6 +71,16 @@ const isNode = ( value: unknown ): value is Node => {
 
 };
 
+const isPrimitive = ( value: unknown ): value is null | undefined | string | number | boolean | symbol | bigint => {
+
+  if ( value === null ) return true;
+
+  const type = typeof value;
+
+  return type !== 'object' && type !== 'function';
+
+};
+
 const isPromise = ( value: unknown ): value is Promise<unknown> => {
 
   return value instanceof Promise;
@@ -85,4 +95,4 @@ const isString = ( value: unknown ): value is string => {
 
 /* EXPORT */
 
-export {assign, castArray, castError, flatten, indexOf, isArray, isError, isFunction, isNil, isNode, isPromise, isString};
+export {assign, castArray, castError, flatten, indexOf, isArray, isError, isFunction, isNil, isNode, isPrimitive, isPromise, isString};
