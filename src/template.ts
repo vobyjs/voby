@@ -163,7 +163,9 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
     for ( let i = 0, l = actionsWithPaths.length; i < l; i++ ) {
 
-      const [nodePath, method, prop, key, targetNodePath] = actionsWithPaths[i];
+      const action = actionsWithPaths[i];
+      const nodePath = action[0];
+      const targetNodePath = action[4];
 
       paths.push ( nodePath );
 

@@ -11,7 +11,7 @@ type ChildResolved = null | undefined | boolean | bigint | number | string | sym
 
 type ChildWithMetadata<T = unknown> = (() => Child) & { metadata: T };
 
-type ComponentClass<P = {}, S = {}> = ConstructorWith<import ( './components/component' ).default<P, S>, [P]>;
+type ComponentClass<P = {}> = ConstructorWith<import ( './components/component' ).default<P>, [P]>;
 
 type ComponentFunction<P = {}> = ( props: P ) => Child;
 

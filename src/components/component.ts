@@ -5,12 +5,11 @@ import type {Child} from '../types';
 
 /* MAIN */
 
-class Component<P = {}, S = {}> {
+class Component<P = {}> {
 
   /* VARIABLES */
 
   props: P;
-  state: S;
 
   /* CONSTRUCTOR */
 

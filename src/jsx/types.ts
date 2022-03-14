@@ -51,7 +51,7 @@ declare namespace JSX {
 
   type Element = Child;
 
-  type ElementClass<P = {}, S = {}> = { render: () => Child };
+  type ElementClass<P = {}> = { render: () => Child };
 
   type Ref<T = unknown> = (( value: T ) => unknown);
 
@@ -983,7 +983,7 @@ declare namespace JSX {
     var: HTMLElement,
     video: HTMLVideoElement,
     wbr: HTMLElement,
-    webview: HTMLWebViewElement
+    webview: HTMLElement
   }
 
   interface IntrinsicElements {
