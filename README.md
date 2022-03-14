@@ -80,6 +80,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`useResolved`](#useresolved)
   - [`useResource`](#useresource)
   - [`useRoot`](#useroot)
+  - [`useSelector`](#useselector)
   - [`useTimeout`](#usetimeout)
 - [**Extras**](#extras)
   - [`vite`](#vite)
@@ -798,6 +799,18 @@ This hook creates a new computation root, detached from any parent computation.
 import {useRoot} from 'voby';
 
 useRoot // => Same as require ( 'oby' ).root
+```
+
+#### `useSelector`
+
+This hook massively optimizes `isSelected` kind of workloads.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#selector).
+
+```tsx
+import {useSelector} from 'voby';
+
+useSelector // => Same as require ( 'oby' ).selector
 ```
 
 #### `useTimeout`
