@@ -5,6 +5,7 @@ import {styled as goober, setup} from 'goober';
 import {prefix} from 'goober/prefixer';
 import type {Child, Component, Props} from '../types';
 import createElement from '../create_element';
+import autoglobal from './autoglobal';
 import cls from './class';
 import css from './css';
 import global from './global';
@@ -24,6 +25,7 @@ const styled = <P extends Props> ( component: Component ): (( strings: TemplateS
 
 /* UTILITIES */
 
+styled.autoglobal = autoglobal;
 styled.class = cls;
 styled.css = css;
 styled.global = global;

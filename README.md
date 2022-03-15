@@ -246,6 +246,12 @@ This is an object providing styled-components-like API, it's based on the awesom
 ```tsx
 import {styled} from 'voby';
 
+styled.autoglobal`
+  :root {
+    --font-size: 24px;
+  }
+`;
+
 const GlobalStyle = styled.global`
   :root {
     --color-bg: tomato;
