@@ -1872,6 +1872,24 @@ const TestRef = (): JSX.Element => {
   );
 };
 
+const TestRefs = (): JSX.Element => {
+  const ref1 = $<HTMLElement>();
+  const ref2 = $<HTMLElement>();
+  useEffect ( () => {
+    if ( !ref1 () ) return;
+    if ( !ref2 () ) return;
+    const content1 = `Got ref1 - Has parent: ${!!ref1 ()?.parentElement} - Is connected: ${!!ref1 ()?.isConnected}`;
+    const content2 = `Got ref2 - Has parent: ${!!ref2 ()?.parentElement} - Is connected: ${!!ref2 ()?.isConnected}`;
+    ref1 ().textContent = `${content1} / ${content2}`;
+  });
+  return (
+    <>
+      <h3>Refs</h3>
+      <p ref={[ref1, ref2]}>content</p>
+    </>
+  );
+};
+
 const TestPromise = (): JSX.Element => {
   const resolved = usePromise<number> ( new Promise ( resolve => setTimeout ( () => resolve ( 123 ), TEST_INTERVAL ) ) );
   const rejected = usePromise<number> ( new Promise ( ( _, reject ) => setTimeout ( () => reject ( 'Custom Error' ), TEST_INTERVAL ) ) );
@@ -2351,6 +2369,7 @@ const Test = (): JSX.Element => {
       <TestErrorBoundary />
       <TestChildren />
       <TestRef />
+      <TestRefs />
       <TestSVGStatic />
       <TestSVGObservable />
       <TestSVGFunction />

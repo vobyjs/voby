@@ -25,6 +25,8 @@ declare namespace JSX {
 
   /* HELPERS */
 
+  type ArrayMaybe<T = unknown> = T[] | T;
+
   type FunctionMaybe<T = unknown> = ({ (): T }) | T;
 
   type ObservableMaybe<T = unknown> = ({ (): T, get (): T, sample (): T }) | T;
@@ -91,7 +93,7 @@ declare namespace JSX {
   type DetailedHTMLProps<Attributes extends HTMLAttributes<T>, T extends EventTarget> = ClassAttributes<T> & Attributes;
 
   interface ClassAttributes<T> {
-    ref?: Ref<T>
+    ref?: ArrayMaybe<Ref<T>>
   }
 
   interface ElementAttributesProperty {

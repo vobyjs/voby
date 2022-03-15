@@ -7,7 +7,7 @@ import template from '../template';
 import {createText, createComment} from './creators';
 import diff from './diff';
 import Fragment from './fragment';
-import {flatten, isFunction, isNil, isPrimitive, isString} from './lang';
+import {flatten, isArray, isFunction, isNil, isPrimitive, isString} from './lang';
 import {resolveChild, resolveFunction, resolveObservable} from './resolvers';
 
 /* MAIN */
@@ -503,11 +503,19 @@ const setProperty = ( element: HTMLElement, key: string, value: FunctionMaybe<nu
 
 };
 
-const setRef = <T> ( element: T, value: null | undefined | Ref<T> ): void => {
+const setRef = <T> ( element: T, value: null | undefined | Ref<T> | Ref<T>[] ): void => { // Scheduling a microtask to dramatically increase the probability that the element will get connected to the DOM in the meantime, which would be more convenient
 
-  if ( !isFunction ( value ) ) throw new Error ( 'Invalid ref' );
+  if ( isNil ( value ) ) return;
 
-  queueMicrotask ( value.bind ( undefined, element ) ); // Scheduling a microtask to dramatically increase the probability that the element will get connected to the DOM in the meantime, which would be more convenient
+  if ( isArray ( value ) ) {
+
+    value.forEach ( value => queueMicrotask ( value.bind ( undefined, element ) ) );
+
+  } else {
+
+    queueMicrotask ( value.bind ( undefined, element ) );
+
+  }
 
 };
 
