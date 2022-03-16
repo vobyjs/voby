@@ -22,16 +22,16 @@ const styled = <P extends Props> ( component: Component ): (( strings: TemplateS
 
   const styled = goober<Component, P> ( component as any ); //TSC
 
-  const classPrev = isFunction ( component ) ? component['className'] || '' : '';
-  const classNew = cls ( 'styled' ).raw;
-  const classNext = classPrev ? `${classPrev} ${classNew}` : classNew;
+  const classNamePrev = isFunction ( component ) ? component['className'] || '' : '';
+  const classNew = cls ( 'styled' );
+  const classNameNext = classNamePrev ? `${classNamePrev} ${classNew.raw}` : classNew.raw;
 
   return function () {
 
     const component: ComponentStyled = styled.apply ( styled, arguments );
 
-    component.className = classNext;
-    component.toString = () => classNext;
+    component.className = classNameNext;
+    component.toString = () => classNew.cooked;
 
     return component;
 
