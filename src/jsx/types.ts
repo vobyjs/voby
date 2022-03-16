@@ -105,7 +105,7 @@ declare namespace JSX {
   }
 
   interface IntrinsicAttributes {
-    key?: string
+    ref?: ArrayMaybe<Ref<any>>
   }
 
   interface AriaAttributes {
