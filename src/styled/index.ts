@@ -3,8 +3,9 @@
 
 import {styled as goober, setup} from 'goober';
 import {prefix} from 'goober/prefixer';
-import type {Child, Component, Props} from '../types';
+import type {ComponentStyled, Component, Props} from '../types';
 import createElement from '../create_element';
+import {isFunction} from '../utils/lang';
 import autoglobal from './autoglobal';
 import cls from './class';
 import css from './css';
@@ -17,9 +18,18 @@ setup ( createElement, prefix );
 
 /* MAIN */
 
-const styled = <P extends Props> ( component: Component ): (( strings: TemplateStringsArray, ...expressions: any[] ) => ( props: P ) => Child) => {
+const styled = <P extends Props> ( component: Component ): ComponentStyled => {
 
-  return goober<Component, P> ( component as any ); //TSC
+  const styled = goober<Component, P> ( component as any ) as ComponentStyled; //TSC
+
+  const classPrev = isFunction ( component ) ? component['className'] || '' : '';
+  const classNew = cls ( 'styled' ).raw;
+  const classNext = classPrev ? `${classPrev} ${classNew}` : classNew;
+
+  styled.className = classNext;
+  styled.toString = () => classNext;
+
+  return styled;
 
 };
 
