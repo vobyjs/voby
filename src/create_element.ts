@@ -16,8 +16,14 @@ function createElement <T extends ComponentNode> ( component: T | (() => T), pro
 function createElement ( component: Component, props: Props | null, ..._children: Child[] ): (() => Child);
 function createElement ( component: Component, props: Props | null, ..._children: Child[] ): (() => Child) {
 
-  const { children: __children, key, ref, ...rest } = props || {};
+  const { children: __children, key, ref, class: cls, ...rest } = props || {};
   const children = ( _children.length === 1 ) ? _children[0] : ( _children.length === 0 ) ? __children : _children;
+
+  if ( !isNil ( cls ) ) {
+
+    rest.class = cls; // Ensuring "class" is always set after "className"
+
+  }
 
   if ( !isNil ( rest.className ) && isString ( rest.class ) ) {
 
