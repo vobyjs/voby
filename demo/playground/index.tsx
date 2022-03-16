@@ -2028,7 +2028,17 @@ const TestStyledStaticError = (): JSX.Element => {
   );
 };
 
-const TestStyledClass = (): JSX.Element => {
+const TestStyledClassStatic = (): JSX.Element => {
+  const P = styled.p``;
+  return (
+    <>
+      <h3>Styled - Class Static</h3>
+      <P class={{ blue: true }}>content</P>
+    </>
+  );
+};
+
+const TestStyledClassObservable = (): JSX.Element => {
   const blue = styled.class ( 'blue' );
   const red = styled.class ( 'red' );
   const P = styled.p`
@@ -2045,7 +2055,7 @@ const TestStyledClass = (): JSX.Element => {
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
-      <h3>Styled - Class</h3>
+      <h3>Styled - Class Observable</h3>
       <P class={{ [blue.raw]: oBlue, [red.raw]: oRed }}>content</P>
     </>
   );
@@ -2378,7 +2388,8 @@ const Test = (): JSX.Element => {
       <TestKeyframeStatic />
       <TestStyledStatic />
       <TestStyledStaticError />
-      <TestStyledClass />
+      <TestStyledClassStatic />
+      <TestStyledClassObservable />
       <TestStyledCSSStatic />
       <TestStyledExtension />
       <TestStyledGlobalStatic />
