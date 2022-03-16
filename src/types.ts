@@ -19,7 +19,7 @@ type ComponentIntrinsicElement = keyof JSX.IntrinsicElements;
 
 type ComponentNode = Node;
 
-type ComponentStyled<P = {}> = ({ ( strings: TemplateStringsArray, ...expressions: any[] ): (( props: P ) => Child), className: string, toString: () => string });
+type ComponentStyled<P = {}> = ({ ( props: P ): Child, className: string, toString: () => string });
 
 type Component<P = {}> = ComponentClass<P> | ComponentFunction<P> | ComponentIntrinsicElement | ComponentNode;
 
