@@ -1,3 +1,8 @@
+
+<p align="center">
+  <img src="./resources/logo/logo.png" alt="Voby Logo" width="640px">
+</p>
+
 # Voby
 
 A high-performance framework with fine-grained observable-based reactivity for building rich applications.
