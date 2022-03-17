@@ -115,7 +115,7 @@ $ // => Same as require ( 'oby' ).default
 
 #### `$$`
 
-This function unwraps recursively a potentially observable value.
+This function unwraps a potentially observable value.
 
 [Read upstream documentation](https://github.com/fabiospampinato/oby#get).
 
