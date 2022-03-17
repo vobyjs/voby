@@ -145,7 +145,7 @@ This function creates a context object, optionally with a default value, which c
 import {createContext} from 'voby';
 
 const App = () => {
-  const ctx = createContext ( 123 );
+  const Context = createContext ( 123 );
   return (
     <>
       <Context.Consumer>
