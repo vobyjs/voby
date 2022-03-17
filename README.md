@@ -24,6 +24,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
 - Playground: https://codesandbox.io/s/voby-playground-7w2pxg
 - Benchmark: https://codesandbox.io/s/voby-demo-benchmark-x0nr40
 - Cellx Benchmark: https://codesandbox.io/s/oby-bench-cellx-s6kusj
+- JS Framework Benchmark: https://krausest.github.io/js-framework-benchmark/current.html
 - Counter: https://codesandbox.io/s/voby-demo-counter-23fv5
 - Clock: https://codesandbox.io/s/voby-demo-clock-w1e7yb
 - Spiral: https://codesandbox.io/s/voby-demo-spiral-ux33p6
