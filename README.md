@@ -309,7 +309,7 @@ const App = () => {
   return (
     <div class="something">
       {svg`
-        <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke="${color}" stroke-width="3" fill="white">
+        <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke="${hex}" stroke-width="3" fill="white">
           <circle cx="25" cy="25" r="20" />
         </svg>
       `}
