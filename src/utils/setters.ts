@@ -232,14 +232,18 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
     if ( childNodes.length === prevLength ) { // Maybe this fragment doesn't handle all children but only a range of them, checking for that here
 
-      for ( let i = 0, l = childNodes.length; i < l; i++ ) {
+      if ( template.HAS_RECYCLABLES ) {
 
-        const node = childNodes[i];
-        const recycle = node.recycle;
+        for ( let i = 0, l = childNodes.length; i < l; i++ ) {
 
-        if ( !recycle ) continue;
+          const node = childNodes[i];
+          const recycle = node.recycle;
 
-        recycle ( node );
+          if ( !recycle ) continue;
+
+          recycle ( node );
+
+        }
 
       }
 

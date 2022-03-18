@@ -46,7 +46,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
   };
 
-  const makeActionsWithNodesAndTemplate = (): { actionsWithNodes: TemplateActionWithNodes[], template: HTMLElement } => {
+  const makeActionsWithNodesAndTemplate = (): { actionsWithNodes: TemplateActionWithNodes[], root: HTMLElement } => {
 
     const actionsWithNodes: TemplateActionWithNodes[] = [];
     const accessor = makeAccessor ( actionsWithNodes );
@@ -54,11 +54,11 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
     if ( isFunction ( component ) ) {
 
-      const template = component ();
+      const root = component ();
 
-      if ( template instanceof HTMLElement ) {
+      if ( root instanceof HTMLElement ) {
 
-        return { actionsWithNodes, template };
+        return { actionsWithNodes, root };
 
       }
 
@@ -287,11 +287,13 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
   const makeComponent = (): (( props: P ) => () => HTMLElement) => {
 
-    const {actionsWithNodes, template} = makeActionsWithNodesAndTemplate ();
+    const {actionsWithNodes, root} = makeActionsWithNodesAndTemplate ();
     const actionsWithPaths = makeActionsWithPaths ( actionsWithNodes );
     const reviver = makeReviver ( actionsWithPaths );
 
     if ( options.recycle ) {
+
+      template.HAS_RECYCLABLES = true;
 
       const clones: HTMLElement[] = [];
 
@@ -301,7 +303,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
         if ( clones.length ) return clones.pop ()!; //TSC
 
-        const clone = template.cloneNode ( true );
+        const clone = root.cloneNode ( true );
 
         clone.recycle = recycle;
 
@@ -319,7 +321,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
       return ( props: P ): () => HTMLElement => {
 
-        const clone = template.cloneNode ( true );
+        const clone = root.cloneNode ( true );
 
         return reviver.bind ( undefined, clone, props );
 
@@ -334,6 +336,8 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 };
 
 /* UTILITIES */
+
+template.HAS_RECYCLABLES = false;
 
 template.isAccessor = ( value: unknown ): value is TemplateActionProxy => {
 
