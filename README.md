@@ -16,6 +16,7 @@ This works similarly to [Solid](https://www.solidjs.com), but without the need f
 - **No rules of hooks**: hooks are just regular functions, which you can nest indefinitely, call conditionally, use outside components, whatever you want.
 - **No dependencies arrays**: the framework is able to detect what depends on what else automatically, no need to specify dependencies manually.
 - **No props diffing**: updates are fine grained, there's no props diffing, whenever an attribute/property/class/handler/etc. should be updated it's updated directly and immediately.
+- **No key prop**: you can just map over arrays, or use the `For` component with an array of unique values, no need to specify keys explicitly.
 - **No Babel**: there's no need to use Babel with this framework, it works with plain old JS (plus JSX if you are into that). As a consequence we have 0 transform function bugs, because we don't have a transform function.
 - **No magic**: what you see if what you get, your code is not transformed to actually do something different than what you write, there are no surprises.
 - **No server support**: for the time being this framework is focused on local-first rich applications, no server-related features are implemented: no hydration, no server components, no SSR, no suspense etc.
