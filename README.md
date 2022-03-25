@@ -52,6 +52,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`isObservable`](#isobservable)
   - [`render`](#render)
   - [`renderToString`](#rendertostring)
+  - [`resolve`](#resolve)
   - [`sample`](#sample)
   - [`styled`](#styled)
   - [`svg`](#svg)
@@ -232,6 +233,20 @@ import {renderToString} from 'voby';
 const App = () => <p>Hello, World!</p>;
 
 const html = await renderToString ( <App /> );
+```
+
+#### `resolve`
+
+This function takes in any valid children and resolves all reactivity it in, basically calling all functions and observables.
+
+This is essential in some cases when you want to make sure that all children are being tracked by the parent reactivity scope.
+
+```tsx
+import {resolve} from 'voby';
+
+const App = () => <p>Hello, World!</p>;
+
+const p = resolve ( <App /> ); // => HTMLParagraphElement
 ```
 
 #### `sample`

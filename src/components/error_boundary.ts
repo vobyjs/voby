@@ -6,8 +6,8 @@ import $ from '../$';
 import createElement from '../create_element';
 import useComputed from '../hooks/use_computed';
 import useError from '../hooks/use_error';
+import resolve from '../resolve';
 import {castError} from '../utils/lang';
-import {resolveChildDeep} from '../utils/resolvers';
 
 /* MAIN */
 
@@ -32,7 +32,7 @@ const ErrorBoundary = ({ fallback, children }: { fallback: FN<[{ error: Error, r
 
       });
 
-      return resolveChildDeep ( children );
+      return resolve ( children );
 
     }
 

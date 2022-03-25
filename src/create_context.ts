@@ -4,8 +4,8 @@
 import type {Child, Context} from './types';
 import $ from './$';
 import useComputed from './hooks/use_computed';
+import resolve from './resolve';
 import sample from './sample';
-import {resolveChildDeep} from './utils/resolvers';
 
 /* MAIN */
 
@@ -21,7 +21,7 @@ const createContext = <T> ( defaultValue?: T ): Context<T> => {
 
       return sample ( () => {
 
-        return resolveChildDeep ( children );
+        return resolve ( children );
 
       });
 

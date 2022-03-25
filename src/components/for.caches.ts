@@ -4,7 +4,7 @@
 import type {Child, ComponentFunction, Disposer} from '../types';
 import useCleanup from '../hooks/use_cleanup';
 import useRoot from '../hooks/use_root';
-import {resolveChildDeep} from '../utils/resolvers';
+import resolve from '../resolve';
 
 /* MAIN */
 
@@ -74,7 +74,7 @@ class CacheStatic<T> extends Cache<T> {
 
       useRoot ( dispose => {
 
-        result = resolveChildDeep ( this.component ( value ) );
+        result = resolve ( this.component ( value ) );
 
         this.cache.set ( value, [result, dispose] );
 
@@ -127,7 +127,7 @@ class CacheDynamic<T> extends CacheStatic<T> {
 
       useRoot ( dispose => {
 
-        result = resolveChildDeep ( this.component ( value ) );
+        result = resolve ( this.component ( value ) );
 
         this.next.set ( value, [result, dispose] );
 
