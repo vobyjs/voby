@@ -54,7 +54,7 @@
   ],
   "dependencies": {
     "goober": "2.1.8",
-    "oby": "^4.4.2"
+    "oby": "^4.4.3"
   },
   "devDependencies": {
     "esbuild": "^0.14.25",
