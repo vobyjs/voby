@@ -3,9 +3,7 @@
 
 const path = require ( 'path' );
 const {defineConfig} = require ( 'vite' );
-// const voby = require ( 'voby/vite-plugin' );
-// const voby = require ( 'voby/vite-plugin' );
-const voby = require ( '../../vite-plugin' );
+const voby = require ( 'voby/vite-plugin' );
 
 /* MAIN */
 
