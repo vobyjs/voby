@@ -11,7 +11,7 @@ const plugin = () => {
     config: () => {
       return {
         esbuild: {
-          jsxInject: `import * as React from 'voby';`
+          jsxInject: `import {Fragment as __Fragment, createElement as __createElement} from 'voby';\nconst React = { Fragment: __Fragment, createElement: __createElement };\n`
         }
       };
     }
