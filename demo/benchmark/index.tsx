@@ -56,7 +56,7 @@ const Model = (() => {
   };
 
   const runWith = ( length: number ): void => {
-    dispose ();
+    clear ();
     $data ( buildData ( length ) );
   };
 
