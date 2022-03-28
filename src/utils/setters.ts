@@ -4,7 +4,7 @@
 import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '../types';
 import {TEMPLATE_STATE} from '../constants';
 import useEffect from '../hooks/use_effect';
-import {createText, createComment} from './creators';
+import {createAttribute, createText, createComment} from './creators';
 import diff from './diff';
 import Fragment from './fragment';
 import {flatten, isArray, isFunction, isNil, isPrimitive, isString, isTemplateAccessor} from './lang';
@@ -34,7 +34,7 @@ const setAttributeStatic = ( attributes: NamedNodeMap, key: string, value: null 
 
     } else {
 
-      const attribute = document.createAttribute ( key );
+      const attribute = createAttribute ( key );
 
       attribute.value = value;
 

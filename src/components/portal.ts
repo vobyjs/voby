@@ -4,6 +4,7 @@
 import type {Child, ChildWithMetadata} from '../types';
 import useCleanup from '../hooks/use_cleanup';
 import render from '../render';
+import {createNode} from '../utils/creators';
 import {assign} from '../utils/lang';
 
 /* MAIN */
@@ -11,7 +12,7 @@ import {assign} from '../utils/lang';
 const Portal = ({ mount, children }: { mount?: Node | null, children: Child }): ChildWithMetadata<{ portal: HTMLDivElement }> => {
 
   const parent = mount || document.body;
-  const portal = document.createElement ( 'div' );
+  const portal = createNode ( 'div' );
 
   parent.insertBefore ( portal, null );
 

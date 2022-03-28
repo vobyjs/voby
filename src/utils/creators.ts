@@ -1,18 +1,18 @@
 
+/* IMPORT */
+
+import {ComponentIntrinsicElement, FN} from '../types';
+
 /* MAIN */
 
-const createComment = (): Comment => {
+const createAttribute: FN<[string], Attr> = document.createAttribute.bind ( document );
 
-  return new Comment ();
+const createComment: FN<[], Comment> = document.createComment.bind ( document, '' );
 
-};
+const createNode: FN<[ComponentIntrinsicElement], HTMLElement> = document.createElement.bind ( document );
 
-const createText = ( value: any ): Text => {
-
-  return new Text ( value );
-
-};
+const createText: FN<[unknown], Text> = document.createTextNode.bind ( document );
 
 /* EXPORT */
 
-export {createComment, createText};
+export {createAttribute, createComment, createNode, createText};

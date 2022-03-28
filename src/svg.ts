@@ -4,6 +4,7 @@
 import type {FunctionMaybe, ObservableReadonly} from './types';
 import useComputed from './hooks/use_computed';
 import useResolved from './hooks/use_resolved';
+import {createNode} from './utils/creators';
 
 /* MAIN */
 
@@ -22,7 +23,7 @@ const svg = ( statics: TemplateStringsArray, ...dynamics: FunctionMaybe<boolean 
 
     }
 
-    const container = document.createElement ( 'div' );
+    const container = createNode ( 'div' );
 
     container.innerHTML = html.trim ();
 

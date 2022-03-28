@@ -4,6 +4,7 @@
 import type {Child, ComponentIntrinsicElement, ComponentNode, Component, Props} from './types';
 import BaseComponent from './components/component';
 import {SYMBOL_ELEMENT} from './constants';
+import {createNode} from './utils/creators';
 import {isFunction, isNil, isNode, isString} from './utils/lang';
 import {setProps, setRef} from './utils/setters';
 
@@ -82,7 +83,7 @@ function createElement ( component: Component, props: Props | null, ..._children
 
     const element = (): Child => {
 
-      const child = document.createElement ( component );
+      const child = createNode ( component );
 
       setProps ( child, props );
 
