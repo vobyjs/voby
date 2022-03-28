@@ -50,6 +50,7 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
   - [`createObservable`](#createobservable)
   - [`isElement`](#iselement)
   - [`isObservable`](#isobservable)
+  - [`owner`](#owner)
   - [`render`](#render)
   - [`renderToString`](#rendertostring)
   - [`resolve`](#resolve)
@@ -205,6 +206,18 @@ import {$, isObservable} from 'voby';
 
 isObservable ( 123 ); // => false
 isObservable ( $(123) ); // => true
+```
+
+#### `owner`
+
+This function returns the current owner, if any.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#owner).
+
+```tsx
+import {owner} from 'voby';
+
+owner // => Same as require ( 'oby' ).owner
 ```
 
 #### `render`

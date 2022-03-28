@@ -57,6 +57,8 @@ type ObservableMaybe<T = unknown> = Observable<T> | ObservableReadonly<T> | T;
 
 type ObservableOptions<T = unknown, TI = unknown> = import ( 'oby' ).ObservableOptions<T, TI>;
 
+type Owner = import ( 'oby' ).Owner;
+
 type PromiseMaybe<T = unknown> = Promise<T> | T;
 
 type Props = Record<string, any>;
@@ -93,4 +95,4 @@ type TemplateVariablesMap = Map<TemplateActionPath, string>;
 
 /* EXPORT */
 
-export type {ArrayMaybe, Callback, Child, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, ComponentStyled, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, Disposer, EventListener, FN, ForCache, FunctionMaybe, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceLoading, ResourceRejected, ResourceResolved, Resource, StyledConstructor, StyledElements, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap};
+export type {ArrayMaybe, Callback, Child, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, ComponentStyled, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, Disposer, EventListener, FN, ForCache, FunctionMaybe, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableMaybe, ObservableOptions, Owner, PromiseMaybe, Props, Ref, ResourceLoading, ResourceRejected, ResourceResolved, Resource, StyledConstructor, StyledElements, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap};
