@@ -102,7 +102,7 @@ const Model = (() => {
     const index = data.findIndex ( datum => datum.id === id );
     if ( index === -1 ) return;
     const datum = data[index];
-    datum.dispose ();
+    datum.label.dispose ();
     data.splice ( index, 1 );
     $data.emit ();
   };
