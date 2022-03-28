@@ -30,25 +30,25 @@ class Cache<T> {
 
     const {cache, bool} = this;
 
-    for ( const root of cache.values () ) {
+    cache.forEach ( root => {
 
-      if ( root['bool'] === bool ) continue;
+      if ( root['bool'] === bool ) return;
 
       root.dispose ();
 
       cache.delete ( root['value'] );
 
-    }
+    });
 
   };
 
   dispose = (): void => {
 
-    for ( const root of this.cache.values () ) {
+    this.cache.forEach ( root => {
 
       root.dispose ();
 
-    }
+    });
 
   };
 
