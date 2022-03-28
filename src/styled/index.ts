@@ -3,7 +3,7 @@
 
 import {styled as goober, setup} from 'goober';
 import {prefix} from 'goober/prefixer';
-import type {Child, ComponentStyled, Component, Props} from '../types';
+import type {Child, ComponentIntrinsicElement, ComponentStyled, Component, Props, StyledElements} from '../types';
 import createElement from '../create_element';
 import {isFunction} from '../utils/lang';
 import autoglobal from './autoglobal';
@@ -18,7 +18,7 @@ setup ( createElement, prefix );
 
 /* MAIN */
 
-const styled = <P extends Props> ( component: Component ): (( strings: TemplateStringsArray, ...expressions: any[] ) => ( props: P ) => Child) => {
+const styled = <P extends Props = {}> ( component: Component ): (( strings: TemplateStringsArray, ...expressions: any[] ) => ( props: P ) => Child) => {
 
   const styled = goober<Component, P> ( component as any ); //TSC
 
@@ -47,121 +47,12 @@ styled.css = css;
 styled.global = global;
 styled.keyframes = keyframes;
 
-styled.a = styled ( 'a' );
-styled.abbr = styled ( 'abbr' );
-styled.address = styled ( 'address' );
-styled.area = styled ( 'area' );
-styled.article = styled ( 'article' );
-styled.aside = styled ( 'aside' );
-styled.audio = styled ( 'audio' );
-styled.b = styled ( 'b' );
-styled.base = styled ( 'base' );
-styled.bdi = styled ( 'bdi' );
-styled.bdo = styled ( 'bdo' );
-styled.big = styled ( 'big' );
-styled.blockquote = styled ( 'blockquote' );
-styled.body = styled ( 'body' );
-styled.br = styled ( 'br' );
-styled.button = styled ( 'button' );
-styled.canvas = styled ( 'canvas' );
-styled.caption = styled ( 'caption' );
-styled.cite = styled ( 'cite' );
-styled.code = styled ( 'code' );
-styled.col = styled ( 'col' );
-styled.colgroup = styled ( 'colgroup' );
-styled.data = styled ( 'data' );
-styled.datalist = styled ( 'datalist' );
-styled.dd = styled ( 'dd' );
-styled.del = styled ( 'del' );
-styled.details = styled ( 'details' );
-styled.dfn = styled ( 'dfn' );
-styled.dialog = styled ( 'dialog' );
-styled.div = styled ( 'div' );
-styled.dl = styled ( 'dl' );
-styled.dt = styled ( 'dt' );
-styled.em = styled ( 'em' );
-styled.embed = styled ( 'embed' );
-styled.fieldset = styled ( 'fieldset' );
-styled.figcaption = styled ( 'figcaption' );
-styled.figure = styled ( 'figure' );
-styled.footer = styled ( 'footer' );
-styled.form = styled ( 'form' );
-styled.h1 = styled ( 'h1' );
-styled.h2 = styled ( 'h2' );
-styled.h3 = styled ( 'h3' );
-styled.h4 = styled ( 'h4' );
-styled.h5 = styled ( 'h5' );
-styled.h6 = styled ( 'h6' );
-styled.head = styled ( 'head' );
-styled.header = styled ( 'header' );
-styled.hgroup = styled ( 'hgroup' );
-styled.hr = styled ( 'hr' );
-styled.html = styled ( 'html' );
-styled.i = styled ( 'i' );
-styled.iframe = styled ( 'iframe' );
-styled.img = styled ( 'img' );
-styled.input = styled ( 'input' );
-styled.ins = styled ( 'ins' );
-styled.kbd = styled ( 'kbd' );
-styled.keygen = styled ( 'keygen' );
-styled.label = styled ( 'label' );
-styled.legend = styled ( 'legend' );
-styled.li = styled ( 'li' );
-styled.link = styled ( 'link' );
-styled.main = styled ( 'main' );
-styled.map = styled ( 'map' );
-styled.mark = styled ( 'mark' );
-styled.menu = styled ( 'menu' );
-styled.menuitem = styled ( 'menuitem' );
-styled.meta = styled ( 'meta' );
-styled.meter = styled ( 'meter' );
-styled.nav = styled ( 'nav' );
-styled.noscript = styled ( 'noscript' );
-styled.object = styled ( 'object' );
-styled.ol = styled ( 'ol' );
-styled.optgroup = styled ( 'optgroup' );
-styled.option = styled ( 'option' );
-styled.output = styled ( 'output' );
-styled.p = styled ( 'p' );
-styled.param = styled ( 'param' );
-styled.picture = styled ( 'picture' );
-styled.pre = styled ( 'pre' );
-styled.progress = styled ( 'progress' );
-styled.q = styled ( 'q' );
-styled.rp = styled ( 'rp' );
-styled.rt = styled ( 'rt' );
-styled.ruby = styled ( 'ruby' );
-styled.s = styled ( 's' );
-styled.samp = styled ( 'samp' );
-styled.script = styled ( 'script' );
-styled.section = styled ( 'section' );
-styled.select = styled ( 'select' );
-styled.slot = styled ( 'slot' );
-styled.small = styled ( 'small' );
-styled.source = styled ( 'source' );
-styled.span = styled ( 'span' );
-styled.strong = styled ( 'strong' );
-styled.style = styled ( 'style' );
-styled.sub = styled ( 'sub' );
-styled.summary = styled ( 'summary' );
-styled.sup = styled ( 'sup' );
-styled.table = styled ( 'table' );
-styled.tbody = styled ( 'tbody' );
-styled.td = styled ( 'td' );
-styled.textarea = styled ( 'textarea' );
-styled.tfoot = styled ( 'tfoot' );
-styled.th = styled ( 'th' );
-styled.thead = styled ( 'thead' );
-styled.time = styled ( 'time' );
-styled.title = styled ( 'title' );
-styled.tr = styled ( 'tr' );
-styled.track = styled ( 'track' );
-styled.u = styled ( 'u' );
-styled.ul = styled ( 'ul' );
-styled.var = styled ( 'var' );
-styled.video = styled ( 'video' );
-styled.wbr = styled ( 'wbr' );
+const styledWithElements = new Proxy ( styled, {
+  get ( target: object, key: ComponentIntrinsicElement ) {
+    return ( key in target ) ? target[key] : styled ( key );
+  }
+}) as (typeof styled & StyledElements); //TSC
 
 /* EXPORT */
 
-export default styled;
+export default styledWithElements;

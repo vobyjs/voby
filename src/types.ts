@@ -69,6 +69,10 @@ type ResourceResolved<T = unknown> = { loading: false, error?: never, value: T }
 
 type Resource<T = unknown> = ResourceLoading | ResourceRejected | ResourceResolved<T>;
 
+type StyledConstructor<P extends Props = {}> = (( component: Component ) => (( strings: TemplateStringsArray, ...expressions: any[] ) => (( props: P ) => Child)));
+
+type StyledElements<P extends Props = {}> = Record<ComponentIntrinsicElement, (( strings: TemplateStringsArray, ...expressions: any[] ) => (( props: P ) => Child))>;
+
 type TemplateActionPath = number[];
 
 type TemplateActionProxy = ( target: Node, method: string, key?: string, targetNode?: Node ) => void;
@@ -87,4 +91,4 @@ type TemplateVariablesMap = Map<TemplateActionPath, string>;
 
 /* EXPORT */
 
-export type {ArrayMaybe, Callback, Child, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, ComponentStyled, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, Disposer, EventListener, FN, FunctionMaybe, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceLoading, ResourceRejected, ResourceResolved, Resource, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap};
+export type {ArrayMaybe, Callback, Child, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, ComponentStyled, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, Disposer, EventListener, FN, FunctionMaybe, Observable, ObservableWithoutInitial, ObservableReadonly, ObservableReadonlyWithoutInitial, ObservableAny, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceLoading, ResourceRejected, ResourceResolved, Resource, StyledConstructor, StyledElements, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap};
