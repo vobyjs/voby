@@ -9,7 +9,7 @@ import {assign} from '../utils/lang';
 
 /* MAIN */
 
-const Portal = ({ mount, children }: { mount?: Node | null, children: Child }): ChildWithMetadata<{ portal: HTMLDivElement }> => {
+const Portal = ({ mount, children }: { mount?: Node | null, children: Child }): ChildWithMetadata<{ portal: HTMLElement }> => {
 
   const parent = mount || document.body;
   const portal = createNode ( 'div' );
