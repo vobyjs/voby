@@ -9,7 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "inlineSourceMap": false,
     "lib": ["dom", "esnext"],
-    "module": "commonjs",
+    "module": "ES6",
     "moduleResolution": "node",
     "newLine": "LF",
     "noFallthroughCasesInSwitch": true,
