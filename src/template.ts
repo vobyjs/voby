@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import type {Child, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap} from './types';
-import {SYMBOL_TEMPLATE_ACCESSOR} from './constants';
+import type {Child, TemplateActionPath, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap} from './types';
+import {SYMBOL_TEMPLATE_ACCESSOR, TEMPLATE_STATE} from './constants';
 import {indexOf, isFunction, isString} from './utils/lang';
 import {setAttribute, setChildReplacement, setClasses, setEvent, setHTML, setProperty, setRef, setStyles} from './utils/setters';
 
@@ -293,7 +293,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
     if ( options.recycle ) {
 
-      template.HAS_RECYCLABLES = true;
+      TEMPLATE_STATE.active = true;
 
       const clones: HTMLElement[] = [];
 
@@ -332,16 +332,6 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
   };
 
   return makeComponent ();
-
-};
-
-/* UTILITIES */
-
-template.HAS_RECYCLABLES = false;
-
-template.isAccessor = ( value: unknown ): value is TemplateActionProxy => {
-
-  return isFunction ( value ) && value.hasOwnProperty ( SYMBOL_TEMPLATE_ACCESSOR );
 
 };
 

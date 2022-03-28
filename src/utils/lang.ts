@@ -1,4 +1,9 @@
 
+/* IMPORT */
+
+import type {TemplateActionProxy} from '../types';
+import {SYMBOL_TEMPLATE_ACCESSOR} from '../constants';
+
 /* MAIN */
 
 const {assign} = Object;
@@ -93,6 +98,12 @@ const isString = ( value: unknown ): value is string => {
 
 };
 
+const isTemplateAccessor = ( value: unknown ): value is TemplateActionProxy => {
+
+  return isFunction ( value ) && value.hasOwnProperty ( SYMBOL_TEMPLATE_ACCESSOR );
+
+};
+
 /* EXPORT */
 
-export {assign, castArray, castError, flatten, indexOf, isArray, isError, isFunction, isNil, isNode, isPrimitive, isPromise, isString};
+export {assign, castArray, castError, flatten, indexOf, isArray, isError, isFunction, isNil, isNode, isPrimitive, isPromise, isString, isTemplateAccessor};

@@ -2,12 +2,12 @@
 /* IMPORT */
 
 import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '../types';
+import {TEMPLATE_STATE} from '../constants';
 import useEffect from '../hooks/use_effect';
-import template from '../template';
 import {createText, createComment} from './creators';
 import diff from './diff';
 import Fragment from './fragment';
-import {flatten, isArray, isFunction, isNil, isPrimitive, isString} from './lang';
+import {flatten, isArray, isFunction, isNil, isPrimitive, isString, isTemplateAccessor} from './lang';
 import {resolveChild, resolveFunction, resolveObservable} from './resolvers';
 
 /* MAIN */
@@ -232,7 +232,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
     if ( childNodes.length === prevLength ) { // Maybe this fragment doesn't handle all children but only a range of them, checking for that here
 
-      if ( template.HAS_RECYCLABLES ) {
+      if ( TEMPLATE_STATE.active ) {
 
         for ( let i = 0, l = childNodes.length; i < l; i++ ) {
 
@@ -661,7 +661,7 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
 const setProp = ( element: HTMLElement, key: string, value: any ): void => {
 
-  if ( template.isAccessor ( value ) ) {
+  if ( isTemplateAccessor ( value ) ) {
 
     setTemplateAccessor ( element, key, value );
 
