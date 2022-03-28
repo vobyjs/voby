@@ -1,22 +1,20 @@
 
 /* IMPORT */
 
-import type {Child, ComponentFunction, Disposer} from '../types';
+import type {Child, ComponentFunction, Owner} from '../types';
 import useRoot from '../hooks/use_root';
+import owner from '../owner';
 import resolve from '../resolve';
 
 /* MAIN */
-
-//TODO: Maybe use a single Map, it could be faster!
-//TODO: Maybe use a different value data structure, it could use less memory!
 
 class Cache<T> {
 
   /* VARIABLES */
 
   private component: ComponentFunction<T>;
-  private current: Map<T, [Child, Disposer]> = new Map ();
-  private next: Map<T, [Child, Disposer]> = new Map ();
+  private cache: Map<T, Owner> = new Map ();
+  private bool = false; // The bool is flipped with each iteration, the roots that don't have the updated one are disposed, it's like a cheap counter
 
   /* CONSTRUCTOR */
 
@@ -28,11 +26,27 @@ class Cache<T> {
 
   /* API */
 
+  cleanup = (): void => {
+
+    const {cache, bool} = this;
+
+    for ( const root of cache.values () ) {
+
+      if ( root['bool'] === bool ) continue;
+
+      root.dispose ();
+
+      cache.delete ( root['value'] );
+
+    }
+
+  };
+
   dispose = (): void => {
 
-    for ( const value of this.current.values () ) {
+    for ( const root of this.cache.values () ) {
 
-      value[1]();
+      root.dispose ();
 
     }
 
@@ -40,40 +54,43 @@ class Cache<T> {
 
   before = (): void => {
 
-    this.next = new Map ();
+    this.bool = !this.bool;
 
   };
 
   after = (): void => {
 
-    this.dispose ();
-
-    this.current = this.next;
+    this.cleanup ();
 
   };
 
   render = ( value: T ): Child => {
 
-    const {current, next} = this;
+    const {cache, bool} = this;
 
-    const cached = current.get ( value );
+    const cached = cache.get ( value );
 
     if ( cached ) {
 
-      current.delete ( value );
-      next.set ( value, cached );
+      cached['bool'] = bool;
 
-      return cached[0];
+      return cached['result'];
 
     } else {
 
       let result: Child;
 
-      useRoot ( dispose => {
+      useRoot ( () => {
+
+        const root = owner ()!;
 
         result = resolve ( this.component ( value ) );
 
-        next.set ( value, [result, dispose] );
+        root['value'] = value;
+        root['result'] = result;
+        root['bool'] = bool;
+
+        cache.set ( value, root );
 
       });
 
