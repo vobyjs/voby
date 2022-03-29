@@ -1,2 +1,2 @@
 
-export {jsx, jsxDEV, jsxs} from '.';
+module.exports = require ( './dist' );

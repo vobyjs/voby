@@ -1,17 +1,10 @@
 {
   "name": "voby",
   "description": "A high-performance framework with fine-grained observable-based reactivity for building rich applications.",
-  "type": "module",
   "version": "0.14.2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "sideEffects": false,
-  "exports": {
-    ".": "./dist/index.js",
-    "./jsx-runtime": "./jsx-runtime.js",
-    "./jsx-dev-runtime": "./jsx-dev-runtime.js",
-    "./vite-plugin": "./vite-plugin.js"
-  },
   "scripts": {
     "clean": "rimraf dist",
     "compile": "tsc --skipLibCheck",
