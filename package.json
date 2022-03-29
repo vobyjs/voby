@@ -54,7 +54,7 @@
   ],
   "dependencies": {
     "goober": "2.1.8",
-    "oby": "^5.1.1"
+    "oby": "^5.2.0"
   },
   "devDependencies": {
     "@types/node": "^17.0.23",
