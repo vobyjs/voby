@@ -22,11 +22,13 @@ const For = <T> ({ Cache, values, children }: { Cache?: ForCache<T>, values: Fun
 
     return useComputed ( () => {
 
-      before ();
+      const array = values ();
 
-      const result = values ().map ( render );
+      before ( array );
 
-      after ();
+      const result = array.map ( render );
+
+      after ( array );
 
       return result;
 

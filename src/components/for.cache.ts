@@ -14,7 +14,9 @@ class Cache<T> {
 
   private component: ComponentFunction<T>;
   private cache: Map<T, Owner> = new Map ();
-  private bool = false; // The bool is flipped with each iteration, the roots that don't have the updated one are disposed, it's like a cheap counter
+  private bool = false; // The bool is flipped with each iteration, the roots that don't have the updated one are disposed, it's like a cheap counter basically
+  private prevCount: number = 0; // Number of previous items
+  private nextCount: number = 0; // Number of next items
 
   /* CONSTRUCTOR */
 
@@ -27,6 +29,10 @@ class Cache<T> {
   /* API */
 
   cleanup = (): void => {
+
+    if ( !this.prevCount ) return; // There was nothing before, no need to cleanup
+
+    if ( !this.nextCount ) return this.dispose (); // There is nothing after, quickly disposing
 
     const {cache, bool} = this;
 
@@ -50,17 +56,24 @@ class Cache<T> {
 
     });
 
+    this.cache.clear ();
+
   };
 
   before = (): void => {
 
     this.bool = !this.bool;
+    this.nextCount = 0;
 
   };
 
-  after = (): void => {
+  after = ( values: T[] ): void => {
+
+    this.nextCount = values.length;
 
     this.cleanup ();
+
+    this.prevCount = this.nextCount;
 
   };
 

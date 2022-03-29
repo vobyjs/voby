@@ -39,7 +39,7 @@ type EventListener = ( event: Event ) => void;
 
 type FN<Arguments extends unknown[], Return extends unknown = void> = ( ...args: Arguments ) => Return;
 
-type ForCache<T = unknown> = ConstructorWith<{ dispose: Callback, before: Callback, after: Callback, render: FN<[T], Child> }, [ComponentFunction<T>]>;
+type ForCache<T = unknown> = ConstructorWith<{ dispose: Callback, before: FN<[T[]], void>, after: FN<[T[]], void>, render: FN<[T], Child> }, [ComponentFunction<T>]>;
 
 type FunctionMaybe<T = unknown> = (() => T) | T;
 
