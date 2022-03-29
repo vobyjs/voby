@@ -1,9 +1,9 @@
 
 /* IMPORT */
 
-const path = require ( 'path' );
-const {defineConfig} = require ( 'vite' );
-const voby = require ( 'voby/vite-plugin' );
+import path from 'path';
+import {defineConfig} from 'vite';
+import voby from 'voby/vite-plugin';
 
 /* MAIN */
 
@@ -20,4 +20,4 @@ const config = defineConfig ({
 
 /* EXPORT */
 
-module.exports = config;
+export default config;
