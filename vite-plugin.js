@@ -21,4 +21,4 @@ const plugin = () => {
 
 /* EXPORT */
 
-module.exports = plugin;
+export default plugin;
