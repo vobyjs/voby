@@ -2,7 +2,7 @@
   "name": "voby",
   "description": "A high-performance framework with fine-grained observable-based reactivity for building rich applications.",
   "type": "module",
-  "version": "0.14.1",
+  "version": "0.14.2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "sideEffects": false,
