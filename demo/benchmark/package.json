@@ -2,8 +2,8 @@
   "private": true,
   "name": "benchmark",
   "scripts": {
-    "dev": "DEV=1 vite --force --config vite.js",
-    "prod": "PROD=1 vite --force --config vite.js"
+    "dev": "DEV=1 vite --force --config vite.ts",
+    "prod": "PROD=1 vite --force --config vite.ts"
   },
   "dependencies": {
     "vite": "^2.8.4",
