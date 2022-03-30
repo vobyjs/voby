@@ -36,9 +36,9 @@ const buildData = (() => {
   };
 })();
 
-/* MODEL */
+/* MODEL FAST */
 
-const Model = (() => {
+const ModelFast = (() => {
 
   /* STATE */
 
@@ -117,6 +117,69 @@ const Model = (() => {
 
 })();
 
+const ModelClean = (() => {
+
+  /* STATE */
+
+  const $data = $<IDatum[]>( [] );
+  const $selected = $( -1 );
+
+  /* API */
+
+  const run = (): void => {
+    runWith ( 1000 );
+  };
+
+  const runLots = (): void => {
+    runWith ( 10000 );
+  };
+
+  const runWith = ( length: number ): void => {
+    $data ( buildData ( length ) );
+  };
+
+  const add = (): void => {
+    $data.update ( data => [...data, ...buildData ( 1000 )] );
+  };
+
+  const update = (): void => {
+    const data = $data ();
+    for ( let i = 0, l = data.length; i < l; i += 10 ) {
+      data[i].label.update ( label => label + ' !!!' );
+    }
+  };
+
+  const swapRows = (): void => {
+    const data = $data ().slice ();
+    if ( data.length <= 998 ) return;
+    const datum1 = data[1];
+    const datum998 = data[998];
+    data[1] = datum998;
+    data[998] = datum1;
+    $data ( data );
+  };
+
+  const clear = (): void => {
+    $data ( [] );
+  };
+
+  const remove = ( id: number ): void  => {
+    $data.update ( data => {
+      const idx = data.findIndex ( datum => datum.id === id );
+      return [...data.slice ( 0, idx ), ...data.slice ( idx + 1 )];
+    });
+  };
+
+  const select = ( id: number ): void => {
+    $selected ( id );
+  };
+
+  const isSelected = useSelector ( $selected );
+
+  return { $data, $selected, run, runLots, runWith, add, update, swapRows, clear, remove, select, isSelected };
+
+})();
+
 /* MAIN */
 
 const Button = ({ id, text, onClick }: { id: string | number, text: string, onClick: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
@@ -142,7 +205,7 @@ const Row = template (({ id, label, className, onSelect, onRemove }: { id: Funct
 
 const App = (): JSX.Element => {
 
-  const {$data, run, runLots, add, update, swapRows, clear, remove, select, isSelected} = Model;
+  const {$data, run, runLots, add, update, swapRows, clear, remove, select, isSelected} = ModelClean;
 
   return (
     <div class="container">
