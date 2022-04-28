@@ -4,7 +4,7 @@
 //TODO: Implement this much better, ensuring the runtime functions are used
 //TODO: Implement an esbuild plugin
 
-const plugin = () => {
+const vite = () => {
 
   return {
     name: 'voby:runtime',
@@ -21,4 +21,4 @@ const plugin = () => {
 
 /* EXPORT */
 
-module.exports = plugin;
+export default vite;

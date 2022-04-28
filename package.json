@@ -1,15 +1,35 @@
 {
   "name": "voby",
+  "repository": "github:fabiospampinato/voby",
   "description": "A high-performance framework with fine-grained observable-based reactivity for building rich applications.",
   "version": "0.16.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
   "sideEffects": false,
+  "main": "dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./jsx-runtime": {
+      "import": "./dist/jsx/runtime.js",
+      "types": "./dist/jsx/runtime.d.ts"
+    },
+    "./jsx-dev-runtime": {
+      "import": "./dist/jsx/runtime.js",
+      "types": "./dist/jsx/runtime.d.ts"
+    },
+    "./vite": {
+      "import": "./dist/plugins/vite.js",
+      "types": "./dist/plugins/vite.d.ts"
+    }
+  },
   "scripts": {
-    "clean": "rimraf dist",
-    "compile": "tsc --skipLibCheck",
+    "clean": "tsex clean",
+    "compile": "tsex compile",
     "compile:bundle": "esbuild --bundle --minify --format=cjs --target=es2018 ./src/index.ts > ./dist/index.js",
-    "compile:watch": "tsc --skipLibCheck --watch",
+    "compile:watch": "tsex compile --watch",
     "dev:benchmark": "cd demo/benchmark && npm i && npm update && npm run dev",
     "prod:benchmark": "cd demo/benchmark && npm i && npm update && npm run prod",
     "dev:boxes": "cd demo/boxes && npm i && npm update && npm run dev",
@@ -28,18 +48,6 @@
     "prod": "npm run prod:playground",
     "prepublishOnly": "npm run clean && npm run compile"
   },
-  "bugs": {
-    "url": "https://github.com/fabiospampinato/voby/issues"
-  },
-  "license": "MIT",
-  "author": {
-    "name": "Fabio Spampinato",
-    "email": "spampinabio@gmail.com"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/fabiospampinato/voby.git"
-  },
   "keywords": [
     "ui",
     "framework",
@@ -53,13 +61,13 @@
     "updates"
   ],
   "dependencies": {
-    "goober": "2.1.8",
+    "goober": "2.1.9",
     "oby": "^5.4.0"
   },
   "devDependencies": {
-    "@types/node": "^17.0.23",
-    "esbuild": "^0.14.28",
-    "rimraf": "^3.0.2",
+    "@types/node": "^17.0.29",
+    "esbuild": "^0.14.38",
+    "tsex": "^1.1.1",
     "typescript": "^4.6.3"
   }
 }
