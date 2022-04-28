@@ -413,7 +413,7 @@ const App = () => {
   return (
     <Dynamic component={heading}>
       Some content
-    </For>
+    </Dynamic>
   )
 };
 ```
@@ -874,10 +874,10 @@ A basic [Vite](https://github.com/vitejs/vite) plugin is provided.
 
 ```js
 // vite.js
-const {defineConfig} = require ( 'vite' );
-const voby = require ( 'voby/vite-plugin' );
+import {defineConfig} from 'vite';
+import voby from 'voby/vite-plugin';
 
-module.exports = defineConfig ({
+export default defineConfig ({
   plugins: [
     voby ()
   ]
