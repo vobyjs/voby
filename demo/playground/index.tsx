@@ -2166,6 +2166,31 @@ const TestRenderToString = async (): Promise<string> => {
   return html;
 };
 
+const TestRenderToStringSuspense = async (): Promise<string> => {
+  const App = (): JSX.Element => {
+    const o = $(0);
+    const Content = () => {
+      useResource ( () => {
+        return new Promise<number> ( resolve => {
+          setTimeout ( () => {
+            resolve ( o ( Math.random () ) );
+          }, TEST_INTERVAL );
+        });
+      });
+      return <p>{o}</p>;
+    };
+    return (
+      <div>
+        <h3>renderToString - Suspense</h3>
+        <Content />
+      </div>
+    );
+  };
+  const html = await renderToString ( <App /> );
+  console.log ( { html } );
+  return html;
+};
+
 const TestPortalStatic = (): JSX.Element => {
   return (
     <>
@@ -2304,6 +2329,7 @@ const TestSuspenseObservable = (): JSX.Element => {
 
 const Test = (): JSX.Element => {
   TestRenderToString ();
+  TestRenderToStringSuspense ();
   return (
     <>
       <TestNullStatic />

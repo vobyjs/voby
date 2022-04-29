@@ -17,7 +17,7 @@ const SuspenseContext = {
     const count = $(0);
     const active = useComputed ( () => !!count () );
     const increment = () => { parent?.increment (); count ( prev => prev + 1 ); };
-    const decrement = () => { parent?.decrement (); count ( prev => prev - 1 ); };
+    const decrement = () => queueMicrotask ( () => { parent?.decrement (); count ( prev => prev - 1 ); } );
     const data = { active, increment, decrement };
 
     return data;
