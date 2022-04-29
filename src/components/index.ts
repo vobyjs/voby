@@ -8,9 +8,10 @@ import For from '~/components/for';
 import Fragment from '~/components/fragment';
 import If from '~/components/if';
 import Portal from '~/components/portal';
+import Suspense from '~/components/suspense';
 import Switch from '~/components/switch';
 import Ternary from '~/components/ternary';
 
 /* EXPORT */
 
-export {Component, Dynamic, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary};
+export {Component, Dynamic, ErrorBoundary, For, Fragment, If, Portal, Suspense, Switch, Ternary};

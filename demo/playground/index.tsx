@@ -3,9 +3,9 @@
 
 import * as Voby from 'voby';
 import {Observable} from 'voby';
-import {Component, Dynamic, ErrorBoundary, For, Fragment, If, Portal, Switch, Ternary} from 'voby';
 import {useComputed, useContext, useEffect, useInterval, usePromise, useTimeout} from 'voby';
 import {$, batch, createContext, render, renderToString, styled, svg, template} from 'voby';
+import {Component, Dynamic, ErrorBoundary, For, Fragment, If, Portal, Suspense, Switch, Ternary} from 'voby';
 
 globalThis.Voby = Voby;
 
@@ -2237,6 +2237,71 @@ const TestPortalRemoval = (): JSX.Element => {
   );
 };
 
+const TestSuspenseAlways = (): JSX.Element => {
+  const Fallback = () => {
+    return <p>Loading...</p>;
+  };
+  const Content = () => {
+    useResource ( () => {
+      return new Promise ( () => {} );
+    });
+    return <p>Content!</p>;
+  };
+  return (
+    <>
+      <h3>Suspense - Always</h3>
+      <Suspense fallback={Fallback}>
+        <Content />
+      </Suspense>
+    </>
+  );
+};
+
+const TestSuspenseNever = (): JSX.Element => {
+  const Fallback = () => {
+    return <p>Loading...</p>;
+  };
+  const Content = () => {
+    return <p>Content!</p>;
+  };
+  return (
+    <>
+      <h3>Suspense - Never</h3>
+      <Suspense fallback={Fallback}>
+        <Content />
+      </Suspense>
+    </>
+  );
+};
+
+const TestSuspenseObservable = (): JSX.Element => {
+  const Fallback = () => {
+    return <p>Loading...</p>;
+  };
+  const Content = () => {
+    const o = $(0);
+    useResource ( () => {
+      o ();
+      return new Promise<void> ( resolve => {
+        setTimeout ( () => {
+          resolve ();
+        }, TEST_INTERVAL / 2 );
+      });
+    });
+    const refetch = () => o ( prev => prev + 1 );
+    useInterval ( refetch, TEST_INTERVAL );
+    return <p>Content!</p>;
+  };
+  return (
+    <>
+      <h3>Suspense - Observable</h3>
+      <Suspense fallback={Fallback}>
+        <Content />
+      </Suspense>
+    </>
+  );
+};
+
 const Test = (): JSX.Element => {
   TestRenderToString ();
   return (
@@ -2398,6 +2463,9 @@ const Test = (): JSX.Element => {
       <TestPortalStatic />
       <TestPortalObservable />
       <TestPortalRemoval />
+      <TestSuspenseAlways />
+      <TestSuspenseNever />
+      <TestSuspenseObservable />
       <hr />
     </>
   );

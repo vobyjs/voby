@@ -1,6 +1,7 @@
 
 /* IMPORT */
 
+import SuspenseContext from '~/components/suspense.context';
 import useDisposed from '~/hooks/use_disposed';
 import useEffect from '~/hooks/use_effect';
 import $ from '~/methods/S';
@@ -17,6 +18,7 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): O
   useEffect ( () => {
 
     const disposed = useDisposed ();
+    const suspense = SuspenseContext.get ();
 
     resource ({ loading: true });
 
@@ -25,6 +27,8 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): O
       if ( disposed () ) return;
 
       resource ({ loading: false, value });
+
+      suspense?.decrement ();
 
     };
 
@@ -36,11 +40,15 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): O
 
       resource ({ loading: false, error });
 
+      suspense?.decrement ();
+
     };
 
     const fetch = (): void => {
 
       try {
+
+        suspense?.increment ();
 
         const value = $$(fetcher ());
 

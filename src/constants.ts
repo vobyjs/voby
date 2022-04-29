@@ -5,10 +5,12 @@ const SVG_ELEMENTS = new Set ([ 'altGlyph', 'altGlyphDef', 'altGlyphItem', 'anim
 
 const SYMBOL_ELEMENT = Symbol ( 'Element' );
 
+const SYMBOL_SUSPENSE = Symbol ( 'Suspense' );
+
 const SYMBOL_TEMPLATE_ACCESSOR = Symbol ( 'Template Accessor' );
 
 const TEMPLATE_STATE = { active: false };
 
 /* EXPORT */
 
-export {SVG_ELEMENTS, SYMBOL_ELEMENT, SYMBOL_TEMPLATE_ACCESSOR, TEMPLATE_STATE};
+export {SVG_ELEMENTS, SYMBOL_ELEMENT, SYMBOL_SUSPENSE, SYMBOL_TEMPLATE_ACCESSOR, TEMPLATE_STATE};

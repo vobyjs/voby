@@ -61,6 +61,8 @@ type ResourceResolved<T = unknown> = { loading: false, error?: never, value: T }
 
 type Resource<T = unknown> = ResourceLoading | ResourceRejected | ResourceResolved<T>;
 
+type SuspenseData = { active: Observable<boolean>, increment: Callback, decrement: Callback };
+
 type TemplateActionPath = number[];
 
 type TemplateActionProxy = ( target: Node, method: string, key?: string, targetNode?: Node ) => void;
