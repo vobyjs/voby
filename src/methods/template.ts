@@ -8,7 +8,7 @@ import type {Child, TemplateActionPath, TemplateActionWithNodes, TemplateActionW
 
 /* MAIN */
 
-const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOptions = {} ): (( props: P ) => () => HTMLElement) => {
+const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOptions = {} ): (( props: P ) => () => Element) => {
 
   const safePropertyRe = /^[a-z0-9-_]+$/i;
 
@@ -46,7 +46,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
   };
 
-  const makeActionsWithNodesAndTemplate = (): { actionsWithNodes: TemplateActionWithNodes[], root: HTMLElement } => {
+  const makeActionsWithNodesAndTemplate = (): { actionsWithNodes: TemplateActionWithNodes[], root: Element } => {
 
     const actionsWithNodes: TemplateActionWithNodes[] = [];
     const accessor = makeAccessor ( actionsWithNodes );
@@ -56,7 +56,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
       const root = component ();
 
-      if ( root instanceof HTMLElement ) {
+      if ( root instanceof Element ) {
 
         return { actionsWithNodes, root };
 
@@ -64,7 +64,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
     }
 
-    throw new Error ( 'Invalid template, it must return a function that returns an HTMLElement' );
+    throw new Error ( 'Invalid template, it must return a function that returns an Element' );
 
   };
 
@@ -274,7 +274,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
   };
 
-  const makeReviver = ( actionsWithPaths: TemplateActionWithPaths[] ): (( root: HTMLElement, props: P ) => HTMLElement) => {
+  const makeReviver = ( actionsWithPaths: TemplateActionWithPaths[] ): (( root: Element, props: P ) => Element) => {
 
     const {assignments, map} = makeReviverVariables ( actionsWithPaths );
     const actions = makeReviverActions ( actionsWithPaths, map );
@@ -285,7 +285,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
   };
 
-  const makeComponent = (): (( props: P ) => () => HTMLElement) => {
+  const makeComponent = (): (( props: P ) => () => Element) => {
 
     const {actionsWithNodes, root} = makeActionsWithNodesAndTemplate ();
     const actionsWithPaths = makeActionsWithPaths ( actionsWithNodes );
@@ -295,11 +295,11 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
       TEMPLATE_STATE.active = true;
 
-      const clones: HTMLElement[] = [];
+      const clones: Element[] = [];
 
       const recycle = clones.push.bind ( clones );
 
-      const clone = (): HTMLElement => {
+      const clone = (): Element => {
 
         if ( clones.length ) return clones.pop ()!; //TSC
 
@@ -311,7 +311,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
       };
 
-      return ( props: P ): () => HTMLElement => {
+      return ( props: P ): () => Element => {
 
         return reviver.bind ( undefined, clone (), props );
 
@@ -319,7 +319,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
     } else {
 
-      return ( props: P ): () => HTMLElement => {
+      return ( props: P ): () => Element => {
 
         const clone = root.cloneNode ( true );
 

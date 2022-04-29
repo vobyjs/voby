@@ -622,7 +622,7 @@ const setStyles = ( element: HTMLElement, object: FunctionMaybe<null | undefined
 
 };
 
-const setTemplateAccessor = ( element: HTMLElement, key: string, value: TemplateActionProxy ): void => {
+const setTemplateAccessor = ( element: HTMLElement, key: string, value: TemplateActionProxy, isSVG: boolean ): void => {
 
   if ( key === 'children' ) {
 
@@ -658,7 +658,7 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
     value ( element, 'setEvent', key.toLowerCase () );
 
-  } else if ( key in element ) {
+  } else if ( key in element && !isSVG ) {
 
     if ( key === 'className' ) { // Ensuring the attribute is present
 
@@ -672,7 +672,7 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
     element.setAttribute ( key, '' ); // Ensuring the attribute is present
 
-    value ( element, 'setAttribute', key );
+    value ( element, 'setAttribute', key ); //TODO: Pass isSVG
 
   }
 
@@ -682,7 +682,7 @@ const setProp = ( element: HTMLElement, key: string, value: any, isSVG: boolean 
 
   if ( isTemplateAccessor ( value ) ) {
 
-    setTemplateAccessor ( element, key, value );
+    setTemplateAccessor ( element, key, value, isSVG );
 
   } else if ( key === 'children' ) {
 
