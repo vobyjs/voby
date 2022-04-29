@@ -1,50 +1,16 @@
 
 /* IMPORT */
 
-import type {Child, ForCache, FunctionMaybe, ObservableReadonlyWithoutInitial} from '../types';
-import useCleanup from '../hooks/use_cleanup';
-import useComputed from '../hooks/use_computed';
-import {isFunction} from '../utils/lang';
-import Cache from './for.cache';
+import oby from '~/oby';
+import type {Child, ChildResolved, FunctionMaybe, ObservableReadonly} from '~/types';
 
 /* MAIN */
 
-const For = <T> ({ Cache, values, children }: { Cache?: ForCache<T>, values: FunctionMaybe<T[]>, children: (( value: T ) => Child) }): ObservableReadonlyWithoutInitial<Child[]> | Child[] => {
+const For = <T> ({ values, fallback, children }: { values: FunctionMaybe<T[]>, fallback?: Child, children: (( value: T ) => Child) }): ObservableReadonly<ChildResolved[] | ChildResolved> => {
 
-  if ( isFunction ( values ) ) {
-
-    Cache = Cache || For.Cache;
-
-    const cache = new Cache ( children );
-    const {dispose, before, after, render} = cache;
-
-    useCleanup ( dispose );
-
-    return useComputed ( () => {
-
-      const array = values ();
-
-      before ( array );
-
-      const result = array.map ( render );
-
-      after ( array );
-
-      return result;
-
-    });
-
-  } else {
-
-    return values.map ( children );
-
-  }
+  return oby.for ( values, children, fallback );
 
 };
-
-/* UTILITIES */
-
-For.Cache = Cache;
 
 /* EXPORT */
 

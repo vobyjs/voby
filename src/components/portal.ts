@@ -1,11 +1,11 @@
 
 /* IMPORT */
 
-import type {Child, ChildWithMetadata} from '../types';
-import useCleanup from '../hooks/use_cleanup';
-import render from '../render';
-import {createNode} from '../utils/creators';
-import {assign} from '../utils/lang';
+import useCleanup from '~/hooks/use_cleanup';
+import render from '~/methods/render';
+import {createNode} from '~/utils/creators';
+import {assign} from '~/utils/lang';
+import type {Child, ChildWithMetadata} from '~/types';
 
 /* MAIN */
 

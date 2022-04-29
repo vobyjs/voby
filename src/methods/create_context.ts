@@ -1,11 +1,11 @@
 
 /* IMPORT */
 
-import type {Child, Context} from './types';
-import $ from './$';
-import useComputed from './hooks/use_computed';
-import resolve from './resolve';
-import sample from './sample';
+import useComputed from '~/hooks/use_computed';
+import useSample from '~/hooks/use_sample';
+import resolve from '~/methods/resolve';
+import oby from '~/oby';
+import type {Child, Context} from '~/types';
 
 /* MAIN */
 
@@ -17,9 +17,9 @@ const createContext = <T> ( defaultValue?: T ): Context<T> => {
 
     return useComputed ( () => {
 
-      $.context ( symbol, value );
+      oby.context ( symbol, value );
 
-      return sample ( () => {
+      return useSample ( () => {
 
         return resolve ( children );
 
@@ -31,7 +31,7 @@ const createContext = <T> ( defaultValue?: T ): Context<T> => {
 
   const Consumer = ({ children }: { children: (( value?: T ) => Child) }): Child => {
 
-    const value = $.context<T> ( symbol ) ?? defaultValue;
+    const value = oby.context<T> ( symbol ) ?? defaultValue;
 
     return children ( value );
 

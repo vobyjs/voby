@@ -1,9 +1,9 @@
 
 /* IMPORT */
 
-import type {Disposer, ObservableMaybe} from '../types';
-import $$ from '../$$';
-import useScheduler from './use_scheduler';
+import useScheduler from '~/hooks/use_scheduler';
+import $$ from '~/methods/SS';
+import type {Disposer, ObservableMaybe} from '~/types';
 
 /* MAIN */
 

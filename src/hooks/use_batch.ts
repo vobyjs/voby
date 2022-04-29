@@ -5,8 +5,8 @@ import oby from '~/oby';
 
 /* MAIN */
 
-const useDisposed = oby.disposed;
+const useBatch = oby.batch;
 
 /* EXPORT */
 
-export default useDisposed;
+export default useBatch;

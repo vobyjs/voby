@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {ComponentIntrinsicElement, FN} from '../types';
+import type {ComponentIntrinsicElement, FN} from '~/types';
 
 /* MAIN */
 
@@ -11,7 +11,7 @@ const createComment: FN<[], Comment> = document.createComment.bind ( document, '
 
 const createNode: FN<[ComponentIntrinsicElement], HTMLElement> = document.createElement.bind ( document );
 
-const createText: FN<[unknown], Text> = document.createTextNode.bind ( document );
+const createText: FN<[any], Text> = document.createTextNode.bind ( document );
 
 /* EXPORT */
 

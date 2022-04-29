@@ -1,46 +1,38 @@
 
 /* IMPORT */
 
-import type {Child, ChildWithMetadata, FunctionMaybe} from '../types';
-import useComputed from '../hooks/use_computed';
-import {assign, isFunction} from '../utils/lang';
+import oby from '~/oby';
+import {assign} from '~/utils/lang';
+import type {Child, ChildResolved, ChildWithMetadata, FunctionMaybe, ObservableReadonly} from '~/types';
 
 /* MAIN */
 
 //TODO: Enforce children of Switch to be of type Switch.Case or Switch.Default
 
-const Switch = <T> ({ when, children }: { when: FunctionMaybe<T>, children: Child[] }): Child => {
+const Switch = <T, R extends Child> ({ when, children }: { when: FunctionMaybe<T>, children: Child[] }): ObservableReadonly<ChildResolved> => {
 
-  const items = ( children as (() => ChildWithMetadata<{ default?: boolean, when?: T }>)[] ).map ( child => child () ); //TSC
-  const child = ( when: T ) => items.find ( item => item.metadata.default || item.metadata.when === when );
+  const childrenWithCases = children as (() => ChildWithMetadata<[T, R] | [R]>)[]; //TSC
+  const cases = childrenWithCases.map ( child => child ().metadata );
 
-  if ( isFunction ( when ) ) {
-
-    return useComputed ( () => {
-
-      return child ( when () );
-
-    });
-
-  } else {
-
-    return child ( when );
-
-  }
+  return oby.switch ( when, cases );
 
 };
 
 /* UTILITIES */
 
-Switch.Case = <T> ({ when, children }: { when: T, children: Child }): ChildWithMetadata<{ when: T }> => {
+Switch.Case = <T> ({ when, children }: { when: T, children: Child }): ChildWithMetadata<[T, Child]> => {
 
-  return assign ( () => children, { metadata: { when } } );
+  const metadata: { metadata: [T, Child] } = { metadata: [when, children] };
+
+  return assign ( () => children, metadata );
 
 };
 
-Switch.Default = ({ children }: { children: Child }): ChildWithMetadata<{ default: boolean }> => {
+Switch.Default = ({ children }: { children: Child }): ChildWithMetadata<[Child]> => {
 
-  return assign ( () => children, { metadata: { default: true } } );
+  const metadata: { metadata: [Child] } = { metadata: [children] };
+
+  return assign ( () => children, metadata );
 
 };
 

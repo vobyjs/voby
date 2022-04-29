@@ -1,15 +1,15 @@
 
 /* IMPORT */
 
-import Component from './component';
-import Dynamic from './dynamic';
-import ErrorBoundary from './error_boundary';
-import For from './for';
-import Fragment from './fragment';
-import If from './if';
-import Portal from './portal';
-import Switch from './switch';
-import Ternary from './ternary';
+import Component from '~/components/component';
+import Dynamic from '~/components/dynamic';
+import ErrorBoundary from '~/components/error_boundary';
+import For from '~/components/for';
+import Fragment from '~/components/fragment';
+import If from '~/components/if';
+import Portal from '~/components/portal';
+import Switch from '~/components/switch';
+import Ternary from '~/components/ternary';
 
 /* EXPORT */
 

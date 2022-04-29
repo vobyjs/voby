@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import type {FunctionMaybe, ObservableReadonly} from './types';
-import useComputed from './hooks/use_computed';
-import useResolved from './hooks/use_resolved';
-import {createNode} from './utils/creators';
+import useComputed from '~/hooks/use_computed';
+import useResolved from '~/hooks/use_resolved';
+import {createNode} from '~/utils/creators';
+import type {FunctionMaybe, ObservableReadonly} from '~/types';
 
 /* MAIN */
 

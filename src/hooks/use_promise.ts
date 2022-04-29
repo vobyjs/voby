@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import type {Observable, ObservableMaybe, Resource} from '../types';
-import useResource from './use_resource';
+import useResource from '~/hooks/use_resource';
+import type {Observable, ObservableMaybe, Resource} from '~/types';
 
 /* MAIN */
 

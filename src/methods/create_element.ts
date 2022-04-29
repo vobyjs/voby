@@ -1,12 +1,12 @@
 
 /* IMPORT */
 
-import type {Child, ComponentIntrinsicElement, ComponentNode, Component, Props} from './types';
-import BaseComponent from './components/component';
-import {SYMBOL_ELEMENT} from './constants';
-import {createNode} from './utils/creators';
-import {isFunction, isNil, isNode, isString} from './utils/lang';
-import {setProps, setRef} from './utils/setters';
+import BaseComponent from '~/components/component';
+import {SYMBOL_ELEMENT} from '~/constants';
+import {createNode} from '~/utils/creators';
+import {isFunction, isNil, isNode, isString} from '~/utils/lang';
+import {setProps, setRef} from '~/utils/setters';
+import type {Child, ComponentIntrinsicElement, ComponentNode, Component, Props} from '~/types';
 
 /* MAIN */
 

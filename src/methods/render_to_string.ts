@@ -1,9 +1,9 @@
 
 /* IMPORT */
 
-import type {Child} from './types';
-import Portal from './components/portal';
-import useRoot from './hooks/use_root';
+import Portal from '~/components/portal';
+import useRoot from '~/hooks/use_root';
+import type {Child} from '~/types';
 
 /* MAIN */
 

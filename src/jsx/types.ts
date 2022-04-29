@@ -29,7 +29,7 @@ declare namespace JSX {
 
   type FunctionMaybe<T = unknown> = ({ (): T }) | T;
 
-  type ObservableMaybe<T = unknown> = ({ (): T, get (): T, sample (): T }) | T;
+  type ObservableMaybe<T = unknown> = ({ (): T }) | T;
 
   type AllClassProperties = {
     [key: string]: FunctionMaybe<null | undefined | boolean>
@@ -47,7 +47,7 @@ declare namespace JSX {
 
   /* MAIN */
 
-  type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child) | ((() => Child) & { metadata: any }) | ({ (): Child, get (): Child, sample (): Child });
+  type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child) | ((() => Child) & { metadata: any });
 
   type Children = Child;
 

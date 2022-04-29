@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import type {ArrayMaybe} from '../types';
-import useAbortController from './use_abort_controller';
+import useAbortController from '~/hooks/use_abort_controller';
+import type {ArrayMaybe} from '~/types';
 
 /* MAIN */
 

@@ -1,14 +1,14 @@
 
 /* IMPORT */
 
-import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '../types';
-import {TEMPLATE_STATE} from '../constants';
-import useEffect from '../hooks/use_effect';
-import {createAttribute, createText, createComment} from './creators';
-import diff from './diff';
-import Fragment from './fragment';
-import {flatten, isArray, isFunction, isNil, isPrimitive, isString, isTemplateAccessor} from './lang';
-import {resolveChild, resolveFunction, resolveObservable} from './resolvers';
+import {TEMPLATE_STATE} from '~/constants';
+import useEffect from '~/hooks/use_effect';
+import {createAttribute, createText, createComment} from '~/utils/creators';
+import diff from '~/utils/diff';
+import Fragment from '~/utils/fragment';
+import {flatten, isArray, isFunction, isNil, isPrimitive, isString, isTemplateAccessor} from '~/utils/lang';
+import {resolveChild, resolveFunction, resolveObservable} from '~/utils/resolvers';
+import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 
 /* MAIN */
 

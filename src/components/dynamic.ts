@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import type {Child, Component} from '../types';
-import createElement from '../create_element';
+import createElement from '~/methods/create_element';
+import type {Child, Component} from '~/types';
 
 /* MAIN */
 

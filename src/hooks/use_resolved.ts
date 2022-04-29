@@ -1,14 +1,16 @@
 
 /* IMPORT */
 
-import type {FN, ObservableAny} from '../types';
-import isObservable from '../is_observable';
-import {isFunction} from '../utils/lang';
+import isObservable from '~/methods/is_observable';
+import {isFunction} from '~/utils/lang';
+import type {FN, ObservableReadonly} from '~/types';
 
-/* MAIN */
+/* HELPERS */
 
 type F<T> = T extends () => infer U ? U : T;
-type O<T> = T extends ObservableAny<infer U> ? U : T;
+type O<T> = T extends ObservableReadonly<infer U> ? U : T;
+
+/* MAIN */
 
 function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, T9> ( value: [T1, T2, T3, T4, T5, T6, T7, T8, T9], resolveFunction: true ): [F<T1>, F<T2>, F<T3>, F<T4>, F<T5>, F<T6>, F<T7>, F<T8>, F<T9>];
 function useResolved<T1, T2, T3, T4, T5, T6, T7, T8> ( value: [T1, T2, T3, T4, T5, T6, T7, T8], resolveFunction: true ): [F<T1>, F<T2>, F<T3>, F<T4>, F<T5>, F<T6>, F<T7>, F<T8>];
@@ -60,10 +62,10 @@ function useResolved<T> ( value: T, resolveFunction?: false ): O<T>;
 function useResolved<T, R> ( value: T, callback: FN<[F<T>], R>, resolveFunction: true ): R;
 function useResolved<T, R> ( value: T, callback: FN<[O<T>], R>, resolveFunction?: false ): R;
 
-function useResolved ( values, callback, resolveFunction?: boolean ) {
+function useResolved ( values: any, callback: any, resolveFunction?: boolean ) {
 
   const isResolvable = ( resolveFunction === true || callback === true ) ? isFunction : isObservable;
-  const resolve = value => isResolvable ( value ) ? value () : value;
+  const resolve = ( value: any ) => isResolvable ( value ) ? value () : value;
 
   if ( Array.isArray ( values ) ) {
 

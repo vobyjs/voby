@@ -1,11 +1,11 @@
 
 /* IMPORT */
 
-import $ from '../$';
+import oby from '~/oby';
 
 /* MAIN */
 
-const useEffect = $.effect;
+const useEffect = oby.effect;
 
 /* EXPORT */
 

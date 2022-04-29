@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import type {ArrayMaybe} from '../types';
-import {castArray} from '../utils/lang';
-import useCleanup from './use_cleanup';
-import useEventListener from './use_event_listener';
+import useCleanup from '~/hooks/use_cleanup';
+import useEventListener from '~/hooks/use_event_listener';
+import {castArray} from '~/utils/lang';
+import type {ArrayMaybe} from '~/types';
 
 /* MAIN */
 

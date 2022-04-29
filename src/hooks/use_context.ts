@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import type {Context} from '../types';
+import type {Context} from '~/types';
 
 /* MAIN */
 

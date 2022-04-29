@@ -1,11 +1,11 @@
 
 /* IMPORT */
 
-import $ from '../$';
+import oby from '~/oby';
 
 /* MAIN */
 
-const useSelector = $.selector;
+const useSelector = oby.selector;
 
 /* EXPORT */
 

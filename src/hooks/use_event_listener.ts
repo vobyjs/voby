@@ -1,9 +1,9 @@
 
 /* IMPORT */
 
-import type {Disposer, ObservableMaybe} from '../types';
-import useEffect from '../hooks/use_effect';
-import useResolved from '../hooks/use_resolved';
+import useEffect from '~/hooks/use_effect';
+import useResolved from '~/hooks/use_resolved';
+import type {Disposer, ObservableMaybe} from '~/types';
 
 /* MAIN */
 

@@ -1,3 +1,6 @@
 {
-  "extends": "tsex/tsconfig.json"
+  "extends": "tsex/tsconfig.json",
+  "compilerOptions": {
+    "isolatedModules": false
+  }
 }

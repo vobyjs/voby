@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import type {Disposer, FN, ObservableMaybe} from '../types';
-import $$ from '../$$';
-import sample from '../sample';
-import useCleanup from './use_cleanup';
+import useCleanup from '~/hooks/use_cleanup';
+import useSample from '~/hooks/use_sample';
+import $$ from '~/methods/SS';
+import type {Disposer, FN, ObservableMaybe} from '~/types';
 
 /* MAIN */
 
@@ -22,13 +22,13 @@ const useScheduler = <T, U> ({ loop, callback, cancel, schedule }: { loop?: Obse
 
   const tick = (): void => {
 
-    tickId = sample ( () => schedule ( work ) );
+    tickId = useSample ( () => schedule ( work ) );
 
   };
 
   const dispose = (): void => {
 
-    sample ( () => cancel ( tickId ) );
+    useSample ( () => cancel ( tickId ) );
 
   };
 

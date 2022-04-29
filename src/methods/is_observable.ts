@@ -1,11 +1,11 @@
 
 /* IMPORT */
 
-import $ from './$';
+import oby from '~/oby';
 
 /* MAIN */
 
-const isObservable = $.is;
+const isObservable = oby.is;
 
 /* EXPORT */
 

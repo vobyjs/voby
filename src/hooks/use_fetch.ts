@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import type {Observable, ObservableMaybe, Resource} from '../types';
-import useAbortSignal from './use_abort_signal';
-import useResolved from './use_resolved';
-import useResource from './use_resource';
+import useAbortSignal from '~/hooks/use_abort_signal';
+import useResolved from '~/hooks/use_resolved';
+import useResource from '~/hooks/use_resource';
+import type {Observable, ObservableMaybe, Resource} from '~/types';
 
 /* MAIN */
 

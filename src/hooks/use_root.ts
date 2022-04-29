@@ -1,11 +1,11 @@
 
 /* IMPORT */
 
-import $ from '../$';
+import oby from '~/oby';
 
 /* MAIN */
 
-const useRoot = $.root;
+const useRoot = oby.root;
 
 /* EXPORT */
 

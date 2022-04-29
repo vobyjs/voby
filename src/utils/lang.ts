@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import type {TemplateActionProxy} from '../types';
-import {SYMBOL_TEMPLATE_ACCESSOR} from '../constants';
+import {SYMBOL_TEMPLATE_ACCESSOR} from '~/constants';
+import type {TemplateActionProxy} from '~/types';
 
 /* MAIN */
 
@@ -100,7 +100,7 @@ const isString = ( value: unknown ): value is string => {
 
 const isTemplateAccessor = ( value: unknown ): value is TemplateActionProxy => {
 
-  return isFunction ( value ) && value.hasOwnProperty ( SYMBOL_TEMPLATE_ACCESSOR );
+  return isFunction ( value ) && ( SYMBOL_TEMPLATE_ACCESSOR in value );
 
 };
 

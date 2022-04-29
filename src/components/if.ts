@@ -1,27 +1,14 @@
 
 /* IMPORT */
 
-import type {Child, FunctionMaybe} from '../types';
-import useComputed from '../hooks/use_computed';
-import {isFunction} from '../utils/lang';
+import oby from '~/oby';
+import type {Child, ChildResolved, FunctionMaybe, ObservableReadonly} from '~/types';
 
 /* MAIN */
 
-const If = ({ when, children }: { when: FunctionMaybe<boolean>, children: Child }): Child => {
+const If = ({ when, fallback, children }: { when: FunctionMaybe<unknown>, fallback?: Child, children: Child }): ObservableReadonly<ChildResolved> => {
 
-  if ( isFunction ( when ) ) {
-
-    return useComputed ( () => {
-
-      if ( when () ) return children;
-
-    });
-
-  } else {
-
-    if ( when ) return children;
-
-  }
+  return oby.if ( when, children, fallback );
 
 };
 

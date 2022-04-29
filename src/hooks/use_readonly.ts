@@ -5,8 +5,8 @@ import oby from '~/oby';
 
 /* MAIN */
 
-const useDisposed = oby.disposed;
+const useReadonly = oby.readonly;
 
 /* EXPORT */
 
-export default useDisposed;
+export default useReadonly;

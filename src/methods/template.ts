@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import type {Child, TemplateActionPath, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap} from './types';
-import {SYMBOL_TEMPLATE_ACCESSOR, TEMPLATE_STATE} from './constants';
-import {indexOf, isFunction, isString} from './utils/lang';
-import {setAttribute, setChildReplacement, setClasses, setEvent, setHTML, setProperty, setRef, setStyles} from './utils/setters';
+import {SYMBOL_TEMPLATE_ACCESSOR, TEMPLATE_STATE} from '~/constants';
+import {assign, indexOf, isFunction, isString} from '~/utils/lang';
+import {setAttribute, setChildReplacement, setClasses, setEvent, setHTML, setProperty, setRef, setStyles} from '~/utils/setters';
+import type {Child, TemplateActionPath, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap} from '~/types';
 
 /* MAIN */
 
@@ -36,9 +36,9 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
         };
 
-        accessor[SYMBOL_TEMPLATE_ACCESSOR] = true;
+        const metadata = { [SYMBOL_TEMPLATE_ACCESSOR]: true };
 
-        return accessor;
+        return assign ( accessor, metadata );
 
       }
 

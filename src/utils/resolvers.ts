@@ -1,12 +1,12 @@
 
 /* IMPORT */
 
-import type {FunctionMaybe, ObservableMaybe} from '../types';
-import {SYMBOL_ELEMENT} from '../constants';
-import useEffect from '../hooks/use_effect';
-import isObservable from '../is_observable';
-import sample from '../sample';
-import {isFunction, isPrimitive} from './lang';
+import {SYMBOL_ELEMENT} from '~/constants';
+import useEffect from '~/hooks/use_effect';
+import useSample from '~/hooks/use_sample';
+import isObservable from '~//methods/is_observable';
+import {isFunction, isPrimitive} from '~/utils/lang';
+import type {FunctionMaybe, ObservableMaybe} from '~/types';
 
 /* MAIN */
 
@@ -14,9 +14,9 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T ) => v
 
   if ( isFunction ( value ) ) {
 
-    if ( !!value[SYMBOL_ELEMENT] ) {
+    if ( SYMBOL_ELEMENT in value ) {
 
-      resolveChild ( sample ( value ), setter );
+      resolveChild ( useSample ( value ), setter );
 
     } else {
 

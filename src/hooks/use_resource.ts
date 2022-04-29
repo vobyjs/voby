@@ -1,12 +1,12 @@
 
 /* IMPORT */
 
-import type {Observable, ObservableMaybe, PromiseMaybe, Resource} from '../types';
-import $ from '../$';
-import $$ from '../$$';
-import {castError, isPromise} from '../utils/lang';
-import useDisposed from './use_disposed';
-import useEffect from './use_effect';
+import useDisposed from '~/hooks/use_disposed';
+import useEffect from '~/hooks/use_effect';
+import $ from '~/methods/S';
+import $$ from '~/methods/SS';
+import {castError, isPromise} from '~/utils/lang';
+import type {Observable, ObservableMaybe, PromiseMaybe, Resource} from '~/types';
 
 /* MAIN */
 

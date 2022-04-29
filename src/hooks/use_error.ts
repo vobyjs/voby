@@ -1,11 +1,11 @@
 
 /* IMPORT */
 
-import $ from '../$';
+import oby from '~/oby';
 
 /* MAIN */
 
-const useError = $.error;
+const useError = oby.error;
 
 /* EXPORT */
 

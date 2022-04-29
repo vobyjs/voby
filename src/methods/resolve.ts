@@ -5,8 +5,8 @@ import oby from '~/oby';
 
 /* MAIN */
 
-const useDisposed = oby.disposed;
+const resolve = oby.resolve;
 
 /* EXPORT */
 
-export default useDisposed;
+export default resolve;
