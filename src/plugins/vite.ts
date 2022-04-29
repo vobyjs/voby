@@ -9,11 +9,15 @@ const vite = () => {
   return {
     name: 'voby:runtime',
     config: () => {
+
       return {
         esbuild: {
-          jsxInject: `import {Fragment as __Fragment, createElement as __createElement} from 'voby';\nconst React = { Fragment: __Fragment, createElement: __createElement };\n`
+          jsxInject: `import {h as $$h, Fragment as $$f} from 'voby';\n`,
+          jsxFactory: '$$h',
+          jsxFragment: '$$f'
         }
       };
+
     }
   };
 
