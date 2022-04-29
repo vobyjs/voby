@@ -1890,6 +1890,30 @@ const TestRefs = (): JSX.Element => {
   );
 };
 
+const TestRefUnmounting = (): JSX.Element => {
+  const message = $('');
+  const mounted = $( true );
+  const ref = $<HTMLElement>();
+  const toggle = () => mounted ( prev => !prev );
+  useInterval ( toggle, TEST_INTERVAL );
+  useEffect ( () => {
+    if ( ref () ) {
+      message ( `Got ref - Has parent: ${!!ref ().parentElement} - Is connected: ${ref ().isConnected}` );
+    } else {
+      message ( `No ref` );
+    }
+  });
+  return (
+    <>
+      <h3>Ref - Unmounting</h3>
+      <p>{message}</p>
+      <If when={mounted}>
+        <p ref={ref}>content</p>
+      </If>
+    </>
+  );
+};
+
 const TestPromise = (): JSX.Element => {
   const resolved = usePromise<number> ( new Promise ( resolve => setTimeout ( () => resolve ( 123 ), TEST_INTERVAL ) ) );
   const rejected = usePromise<number> ( new Promise ( ( _, reject ) => setTimeout ( () => reject ( 'Custom Error' ), TEST_INTERVAL ) ) );
@@ -2471,6 +2495,7 @@ const Test = (): JSX.Element => {
       <TestChildren />
       <TestRef />
       <TestRefs />
+      <TestRefUnmounting />
       <TestSVGStatic />
       <TestSVGObservable />
       <TestSVGFunction />
