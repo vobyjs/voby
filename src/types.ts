@@ -51,7 +51,7 @@ type PromiseMaybe<T = unknown> = Promise<T> | T;
 
 type Props = Record<string, any>;
 
-type Ref<T = unknown> = ( value: T ) => void;
+type Ref<T = unknown> = ( value: T | undefined ) => void;
 
 type ResourceLoading = { loading: true, error?: never, value?: never };
 

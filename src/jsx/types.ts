@@ -55,7 +55,7 @@ declare namespace JSX {
 
   type ElementClass<P = {}> = { render: () => Child };
 
-  type Ref<T = unknown> = (( value: T ) => unknown);
+  type Ref<T = unknown> = (( value: T | undefined ) => unknown);
 
   interface ClassProperties extends AllClassProperties {}
 

@@ -2,6 +2,7 @@
 /* IMPORT */
 
 import {TEMPLATE_STATE} from '~/constants';
+import useCleanup from '~/hooks/use_cleanup';
 import useEffect from '~/hooks/use_effect';
 import {createAttribute, createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
@@ -527,9 +528,13 @@ const setRef = <T> ( element: T, value: null | undefined | Ref<T> | Ref<T>[] ): 
 
     value.forEach ( value => queueMicrotask ( value.bind ( undefined, element ) ) );
 
+    useCleanup ( () => value.forEach ( value => queueMicrotask ( value.bind ( undefined, undefined ) ) ) );
+
   } else {
 
     queueMicrotask ( value.bind ( undefined, element ) );
+
+    useCleanup ( value.bind ( undefined, undefined ) );
 
   }
 
