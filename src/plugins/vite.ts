@@ -1,9 +1,6 @@
 
 /* MAIN */
 
-//TODO: Implement this much better, ensuring the runtime functions are used
-//TODO: Implement an esbuild plugin
-
 const vite = () => {
 
   return {

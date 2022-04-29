@@ -384,6 +384,8 @@ const setClassesStatic = ( element: HTMLElement, classList: DOMTokenList, object
 
 const setClasses = ( element: HTMLElement, object: FunctionMaybe<null | undefined | string | Record<string, FunctionMaybe<null | undefined | boolean>>> ): void => {
 
+  //TODO: Maybe support an array of classes
+
   const {classList} = element;
 
   resolveFunction ( object, setClassesStatic.bind ( undefined, element, classList ) );
