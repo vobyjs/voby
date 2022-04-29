@@ -12,7 +12,7 @@ import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, Template
 
 /* MAIN */
 
-const setAttributeStatic = ( attributes: NamedNodeMap, key: string, value: null | undefined | boolean | number | string ): void => {
+const setAttributeStaticItem = ( attributes: NamedNodeMap, key: string, value: null | undefined | boolean | number | string ): void => {
 
   const attribute = attributes.getNamedItem ( key );
 
@@ -46,11 +46,23 @@ const setAttributeStatic = ( attributes: NamedNodeMap, key: string, value: null 
 
 };
 
-const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean | number | string> ): void => {
+const setAttributeStaticMethod = ( element: HTMLElement, key: string, value: null | undefined | boolean | number | string ): void => {
 
-  const {attributes} = element;
+  element.setAttribute ( key, String ( value ) );
 
-  resolveFunction ( value, setAttributeStatic.bind ( undefined, attributes, key ) );
+};
+
+const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean | number | string>, isSVG: boolean ): void => {
+
+  if ( isSVG ) {
+
+    resolveFunction ( value, setAttributeStaticMethod.bind ( undefined, element, key ) );
+
+  } else {
+
+    resolveFunction ( value, setAttributeStaticItem.bind ( undefined, element.attributes, key ) );
+
+  }
 
 };
 
@@ -659,7 +671,7 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
 };
 
-const setProp = ( element: HTMLElement, key: string, value: any ): void => {
+const setProp = ( element: HTMLElement, key: string, value: any, isSVG: boolean ): void => {
 
   if ( isTemplateAccessor ( value ) ) {
 
@@ -693,23 +705,23 @@ const setProp = ( element: HTMLElement, key: string, value: any ): void => {
 
     setEvent ( element, key.toLowerCase (), value );
 
-  } else if ( key in element ) {
+  } else if ( key in element && !isSVG ) {
 
     setProperty ( element, key, value );
 
   } else {
 
-    setAttribute ( element, key, value );
+    setAttribute ( element, key, value, isSVG );
 
   }
 
 };
 
-const setProps = ( element: HTMLElement, object: Record<string, unknown> ): void => {
+const setProps = ( element: HTMLElement, object: Record<string, unknown>, isSVG: boolean ): void => {
 
   for ( const key in object ) {
 
-    setProp ( element, key, object[key] );
+    setProp ( element, key, object[key], isSVG );
 
   }
 
@@ -717,4 +729,4 @@ const setProps = ( element: HTMLElement, object: Record<string, unknown> ): void
 
 /* EXPORT */
 
-export {setAttributeStatic, setAttribute, setChildReplacementFunction, setChildReplacementText, setChildReplacement, setChildStatic, setChild, setClassStatic, setClass, setClassesStatic, setClasses, setEventStatic, setEvent, setHTMLStatic, setHTML, setPropertyStatic, setProperty, setRef, setStyleStatic, setStyle, setStylesStatic, setStyles, setTemplateAccessor, setProp, setProps};
+export {setAttributeStaticItem, setAttributeStaticMethod, setAttribute, setChildReplacementFunction, setChildReplacementText, setChildReplacement, setChildStatic, setChild, setClassStatic, setClass, setClassesStatic, setClasses, setEventStatic, setEvent, setHTMLStatic, setHTML, setPropertyStatic, setProperty, setRef, setStyleStatic, setStyle, setStylesStatic, setStyles, setTemplateAccessor, setProp, setProps};

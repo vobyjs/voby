@@ -3,7 +3,7 @@
 
 import useCleanup from '~/hooks/use_cleanup';
 import render from '~/methods/render';
-import {createNode} from '~/utils/creators';
+import {createHTMLNode} from '~/utils/creators';
 import {assign} from '~/utils/lang';
 import type {Child, ChildWithMetadata} from '~/types';
 
@@ -12,7 +12,7 @@ import type {Child, ChildWithMetadata} from '~/types';
 const Portal = ({ mount, children }: { mount?: Node | null, children: Child }): ChildWithMetadata<{ portal: HTMLElement }> => {
 
   const parent = mount || document.body;
-  const portal = createNode ( 'div' );
+  const portal = createHTMLNode ( 'div' );
 
   parent.insertBefore ( portal, null );
 

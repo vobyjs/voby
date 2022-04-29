@@ -2,8 +2,8 @@
 /* IMPORT */
 
 import BaseComponent from '~/components/component';
-import {SYMBOL_ELEMENT} from '~/constants';
-import {createNode} from '~/utils/creators';
+import {SVG_ELEMENTS, SYMBOL_ELEMENT} from '~/constants';
+import {createHTMLNode, createSVGNode} from '~/utils/creators';
 import {isFunction, isNil, isNode, isString} from '~/utils/lang';
 import {setProps, setRef} from '~/utils/setters';
 import type {Child, ComponentIntrinsicElement, ComponentNode, Component, Props} from '~/types';
@@ -77,6 +77,8 @@ function createElement ( component: Component, props: Props | null, ..._children
   } else if ( isString ( component ) ) {
 
     const props = rest;
+    const isSVG = SVG_ELEMENTS.has ( component );
+    const createNode = isSVG ? createSVGNode : createHTMLNode;
 
     if ( !isNil ( children ) ) props.children = children;
     if ( !isNil ( ref ) ) props.ref = ref;
@@ -85,7 +87,7 @@ function createElement ( component: Component, props: Props | null, ..._children
 
       const child = createNode ( component );
 
-      setProps ( child, props );
+      setProps ( child, props, isSVG );
 
       return child;
 

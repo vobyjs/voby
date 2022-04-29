@@ -11,9 +11,8 @@ import isObservable from '~/methods/is_observable';
 import render from '~/methods/render';
 import renderToString from '~/methods/render_to_string';
 import resolve from '~/methods/resolve';
-import svg from '~/methods/svg';
 import template from '~/methods/template';
 
 /* EXPORT */
 
-export {$, $$, createContext, createElement, h, isElement, isObservable, render, renderToString, resolve, svg, template};
+export {$, $$, createContext, createElement, h, isElement, isObservable, render, renderToString, resolve, template};
