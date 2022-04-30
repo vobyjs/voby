@@ -3,9 +3,9 @@
 
 import * as Voby from 'voby';
 import {Observable} from 'voby';
-import {useComputed, useContext, useEffect, useInterval, usePromise, useTimeout} from 'voby';
-import {$, batch, createContext, render, renderToString, styled, svg, template} from 'voby';
 import {Component, Dynamic, ErrorBoundary, For, Fragment, If, Portal, Suspense, Switch, Ternary} from 'voby';
+import {useBatch, useComputed, useContext, useEffect, useInterval, usePromise, useResource, useTimeout} from 'voby';
+import {$, createContext, render, renderToString, template} from 'voby';
 
 globalThis.Voby = Voby;
 
@@ -26,7 +26,7 @@ const TestNullStatic = (): JSX.Element => {
 
 const TestNullObservable = (): JSX.Element => {
   const o = $<string>( null );
-  const toggle = () => o.update ( prev => ( prev === null ) ? '' : null );
+  const toggle = () => o ( prev => ( prev === null ) ? '' : null );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -38,7 +38,7 @@ const TestNullObservable = (): JSX.Element => {
 
 const TestNullFunction = (): JSX.Element => {
   const o = $<string>( null );
-  const toggle = () => o.update ( prev => ( prev === null ) ? '' : null );
+  const toggle = () => o ( prev => ( prev === null ) ? '' : null );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -50,7 +50,7 @@ const TestNullFunction = (): JSX.Element => {
 
 const TestNullRemoval = (): JSX.Element => {
   const o = $<string>( null );
-  const toggle = () => o.update ( prev => ( prev === null ) ? '' : null );
+  const toggle = () => o ( prev => ( prev === null ) ? '' : null );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -71,7 +71,7 @@ const TestUndefinedStatic = (): JSX.Element => {
 
 const TestUndefinedObservable = (): JSX.Element => {
   const o = $<string>( undefined );
-  const toggle = () => o.update ( prev => ( prev === undefined ) ? '' : undefined );
+  const toggle = () => o ( prev => ( prev === undefined ) ? '' : undefined );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -83,7 +83,7 @@ const TestUndefinedObservable = (): JSX.Element => {
 
 const TestUndefinedFunction = (): JSX.Element => {
   const o = $<string>( undefined );
-  const toggle = () => o.update ( prev => ( prev === undefined ) ? '' : undefined );
+  const toggle = () => o ( prev => ( prev === undefined ) ? '' : undefined );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -95,7 +95,7 @@ const TestUndefinedFunction = (): JSX.Element => {
 
 const TestUndefinedRemoval = (): JSX.Element => {
   const o = $<string>( undefined );
-  const toggle = () => o.update ( prev => ( prev === undefined ) ? '' : undefined );
+  const toggle = () => o ( prev => ( prev === undefined ) ? '' : undefined );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -116,7 +116,7 @@ const TestBooleanStatic = (): JSX.Element => {
 
 const TestBooleanObservable = (): JSX.Element => {
   const o = $( true );
-  const toggle = () => o.update ( prev => !prev );
+  const toggle = () => o ( prev => !prev );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -128,7 +128,7 @@ const TestBooleanObservable = (): JSX.Element => {
 
 const TestBooleanFunction = (): JSX.Element => {
   const o = $( true );
-  const toggle = () => o.update ( prev => !prev );
+  const toggle = () => o ( prev => !prev );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -140,7 +140,7 @@ const TestBooleanFunction = (): JSX.Element => {
 
 const TestBooleanRemoval = (): JSX.Element => {
   const o = $( true );
-  const toggle = () => o.update ( prev => prev ? null : true );
+  const toggle = () => o ( prev => prev ? null : true );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -185,7 +185,7 @@ const TestSymbolFunction = (): JSX.Element => {
 
 const TestSymbolRemoval = (): JSX.Element => {
   const o = $( Symbol () );
-  const randomize = () => o.update ( prev => prev ? null : Symbol () );
+  const randomize = () => o ( prev => prev ? null : Symbol () );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -230,7 +230,7 @@ const TestNumberFunction = (): JSX.Element => {
 
 const TestNumberRemoval = (): JSX.Element => {
   const o = $( Math.random () );
-  const randomize = () => o.update ( prev => prev ? null : Math.random () );
+  const randomize = () => o ( prev => prev ? null : Math.random () );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -275,7 +275,7 @@ const TestBigIntFunction = (): JSX.Element => {
 
 const TestBigIntRemoval = (): JSX.Element => {
   const o = $( BigInt ( Math.random () * 100 | 0 ) );
-  const randomize = () => o.update ( prev => prev ? null : BigInt ( Math.random () * 100 | 0 ) );
+  const randomize = () => o ( prev => prev ? null : BigInt ( Math.random () * 100 | 0 ) );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -349,7 +349,7 @@ const TestStringFunction = (): JSX.Element => {
 
 const TestStringRemoval = (): JSX.Element => {
   const o = $( String ( Math.random () ) );
-  const randomize = () => o.update ( prev => prev ? null : String ( Math.random () ) );
+  const randomize = () => o ( prev => prev ? null : String ( Math.random () ) );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -370,7 +370,7 @@ const TestAttributeStatic = (): JSX.Element => {
 
 const TestAttributeObservable = (): JSX.Element => {
   const o = $( 'red' );
-  const toggle = () => o.update ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
+  const toggle = () => o ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -382,7 +382,7 @@ const TestAttributeObservable = (): JSX.Element => {
 
 const TestAttributeObservableBoolean = (): JSX.Element => {
   const o = $( true );
-  const toggle = () => o.update ( prev => !prev );
+  const toggle = () => o ( prev => !prev );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -394,7 +394,7 @@ const TestAttributeObservableBoolean = (): JSX.Element => {
 
 const TestAttributeFunction = (): JSX.Element => {
   const o = $( 'red' );
-  const toggle = () => o.update ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
+  const toggle = () => o ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -406,7 +406,7 @@ const TestAttributeFunction = (): JSX.Element => {
 
 const TestAttributeFunctionBoolean = (): JSX.Element => {
   const o = $( true );
-  const toggle = () => o.update ( prev => !prev );
+  const toggle = () => o ( prev => !prev );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -418,7 +418,7 @@ const TestAttributeFunctionBoolean = (): JSX.Element => {
 
 const TestAttributeRemoval = (): JSX.Element => {
   const o = $( 'red' );
-  const toggle = () => o.update ( prev => ( prev === 'red' ) ? null : 'red' );
+  const toggle = () => o ( prev => ( prev === 'red' ) ? null : 'red' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -439,7 +439,7 @@ const TestPropertyCheckedStatic = (): JSX.Element => {
 
 const TestPropertyCheckedObservable = (): JSX.Element => {
   const o = $( true );
-  const toggle = () => o.update ( prev => !prev );
+  const toggle = () => o ( prev => !prev );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -451,7 +451,7 @@ const TestPropertyCheckedObservable = (): JSX.Element => {
 
 const TestPropertyCheckedFunction = (): JSX.Element => {
   const o = $( true );
-  const toggle = () => o.update ( prev => !prev );
+  const toggle = () => o ( prev => !prev );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -463,7 +463,7 @@ const TestPropertyCheckedFunction = (): JSX.Element => {
 
 const TestPropertyCheckedRemoval = (): JSX.Element => {
   const o = $( true );
-  const toggle = () => o.update ( prev => prev ? null : true );
+  const toggle = () => o ( prev => prev ? null : true );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -508,7 +508,7 @@ const TestPropertyValueFunction = (): JSX.Element => {
 
 const TestPropertyValueRemoval = (): JSX.Element => {
   const o = $( String ( Math.random () ) );
-  const randomize = () => o.update ( prev => prev ? null : String ( Math.random () ) );
+  const randomize = () => o ( prev => prev ? null : String ( Math.random () ) );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -520,7 +520,7 @@ const TestPropertyValueRemoval = (): JSX.Element => {
 
 const TestInputLabelFor = (): JSX.Element => {
   const o = $( String ( Math.random () ) );
-  const randomize = () => o.update ( prev => prev ? null : String ( Math.random () ) );
+  const randomize = () => o ( prev => prev ? null : String ( Math.random () ) );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -543,7 +543,7 @@ const TestClassNameStatic = (): JSX.Element => {
 
 const TestClassNameObservable = (): JSX.Element => {
   const o = $( 'red' );
-  const toggle = () => o.update ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
+  const toggle = () => o ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -555,7 +555,7 @@ const TestClassNameObservable = (): JSX.Element => {
 
 const TestClassNameFunction = (): JSX.Element => {
   const o = $( 'red' );
-  const toggle = () => o.update ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
+  const toggle = () => o ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -567,7 +567,7 @@ const TestClassNameFunction = (): JSX.Element => {
 
 const TestClassNameRemoval = (): JSX.Element => {
   const o = $( 'red' );
-  const toggle = () => o.update ( prev => prev ? null : 'red' );
+  const toggle = () => o ( prev => prev ? null : 'red' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -597,7 +597,7 @@ const TestClassStaticString = (): JSX.Element => {
 
 const TestClassObservable = (): JSX.Element => {
   const o = $( true );
-  const toggle = () => o.update ( prev => !prev );
+  const toggle = () => o ( prev => !prev );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -609,7 +609,7 @@ const TestClassObservable = (): JSX.Element => {
 
 const TestClassObservableString = (): JSX.Element => {
   const o = $( 'red' );
-  const toggle = () => o.update ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
+  const toggle = () => o ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -621,7 +621,7 @@ const TestClassObservableString = (): JSX.Element => {
 
 const TestClassFunction = (): JSX.Element => {
   const o = $( true );
-  const toggle = () => o.update ( prev => !prev );
+  const toggle = () => o ( prev => !prev );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -633,7 +633,7 @@ const TestClassFunction = (): JSX.Element => {
 
 const TestClassFunctionString = (): JSX.Element => {
   const o = $( 'red' );
-  const toggle = () => o.update ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
+  const toggle = () => o ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -645,7 +645,7 @@ const TestClassFunctionString = (): JSX.Element => {
 
 const TestClassRemoval = (): JSX.Element => {
   const o = $( true );
-  const toggle = () => o.update ( prev => prev ? null : true );
+  const toggle = () => o ( prev => prev ? null : true );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -657,7 +657,7 @@ const TestClassRemoval = (): JSX.Element => {
 
 const TestClassRemovalString = (): JSX.Element => {
   const o = $( 'red' );
-  const toggle = () => o.update ( prev => prev ? null : 'red' );
+  const toggle = () => o ( prev => prev ? null : 'red' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -678,7 +678,7 @@ const TestClassesStatic = (): JSX.Element => {
 
 const TestClassesObservable = (): JSX.Element => {
   const o = $({ red: true, blue: false });
-  const toggle = () => o.update ( prev => prev.red ? { red: false, blue: true } : { red: true, blue: false } );
+  const toggle = () => o ( prev => prev.red ? { red: false, blue: true } : { red: true, blue: false } );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -690,7 +690,7 @@ const TestClassesObservable = (): JSX.Element => {
 
 const TestClassesFunction = (): JSX.Element => {
   const o = $({ red: true, blue: false });
-  const toggle = () => o.update ( prev => prev.red ? { red: false, blue: true } : { red: true, blue: false } );
+  const toggle = () => o ( prev => prev.red ? { red: false, blue: true } : { red: true, blue: false } );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -702,7 +702,7 @@ const TestClassesFunction = (): JSX.Element => {
 
 const TestClassesRemoval = (): JSX.Element => {
   const o = $({ red: true, blue: false });
-  const toggle = () => o.update ( prev => prev ? null : { red: true, blue: false } );
+  const toggle = () => o ( prev => prev ? null : { red: true, blue: false } );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -714,7 +714,7 @@ const TestClassesRemoval = (): JSX.Element => {
 
 const TestClassesCleanup = (): JSX.Element => {
   const o = $<JSX.ClassProperties>({ red: true });
-  const toggle = () => o.update ( prev => prev.red ? { blue: true } : { red: true } );
+  const toggle = () => o ( prev => prev.red ? { blue: true } : { red: true } );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -762,7 +762,7 @@ const TestStyleStaticVariable = (): JSX.Element => {
 
 const TestStyleObservable = (): JSX.Element => {
   const o = $( 'green' );
-  const toggle = () => o.update ( prev => ( prev === 'green' ) ? 'orange' : 'green' );
+  const toggle = () => o ( prev => ( prev === 'green' ) ? 'orange' : 'green' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -774,7 +774,7 @@ const TestStyleObservable = (): JSX.Element => {
 
 const TestStyleObservableNumeric = (): JSX.Element => {
   const o = $( { flexGrow: 1, width: 50 } );
-  const toggle = () => o.update ( prev => ( prev.flexGrow === 1 ) ? { flexGrow: 2, width: 100 } : { flexGrow: 1, width: 50 } );
+  const toggle = () => o ( prev => ( prev.flexGrow === 1 ) ? { flexGrow: 2, width: 100 } : { flexGrow: 1, width: 50 } );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -786,7 +786,7 @@ const TestStyleObservableNumeric = (): JSX.Element => {
 
 const TestStyleObservableString = (): JSX.Element => {
   const o = $( 'color: green' );
-  const toggle = () => o.update ( prev => ( prev === 'color: green' ) ? 'color: orange' : 'color: green' );
+  const toggle = () => o ( prev => ( prev === 'color: green' ) ? 'color: orange' : 'color: green' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -798,7 +798,7 @@ const TestStyleObservableString = (): JSX.Element => {
 
 const TestStyleObservableVariable = (): JSX.Element => {
   const o = $( 'green' );
-  const toggle = () => o.update ( prev => ( prev === 'orange' ) ? 'green' : 'orange' );
+  const toggle = () => o ( prev => ( prev === 'orange' ) ? 'green' : 'orange' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -810,7 +810,7 @@ const TestStyleObservableVariable = (): JSX.Element => {
 
 const TestStyleFunction = (): JSX.Element => {
   const o = $( 'green' );
-  const toggle = () => o.update ( prev => ( prev === 'green' ) ? 'orange' : 'green' );
+  const toggle = () => o ( prev => ( prev === 'green' ) ? 'orange' : 'green' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -822,7 +822,7 @@ const TestStyleFunction = (): JSX.Element => {
 
 const TestStyleFunctionNumeric = (): JSX.Element => {
   const o = $( { flexGrow: 1, width: 50 } );
-  const toggle = () => o.update ( prev => ( prev.flexGrow === 1 ) ? { flexGrow: 2, width: 100 } : { flexGrow: 1, width: 50 } );
+  const toggle = () => o ( prev => ( prev.flexGrow === 1 ) ? { flexGrow: 2, width: 100 } : { flexGrow: 1, width: 50 } );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -834,7 +834,7 @@ const TestStyleFunctionNumeric = (): JSX.Element => {
 
 const TestStyleFunctionString = (): JSX.Element => {
   const o = $( 'color: green' );
-  const toggle = () => o.update ( prev => ( prev === 'color: green' ) ? 'color: orange' : 'color: green' );
+  const toggle = () => o ( prev => ( prev === 'color: green' ) ? 'color: orange' : 'color: green' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -846,7 +846,7 @@ const TestStyleFunctionString = (): JSX.Element => {
 
 const TestStyleFunctionVariable = (): JSX.Element => {
   const o = $( 'green' );
-  const toggle = () => o.update ( prev => ( prev === 'orange' ) ? 'green' : 'orange' );
+  const toggle = () => o ( prev => ( prev === 'orange' ) ? 'green' : 'orange' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -858,7 +858,7 @@ const TestStyleFunctionVariable = (): JSX.Element => {
 
 const TestStyleRemoval = (): JSX.Element => {
   const o = $( 'green' );
-  const toggle = () => o.update ( prev => prev ? null : 'green' );
+  const toggle = () => o ( prev => prev ? null : 'green' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -879,7 +879,7 @@ const TestStylesStatic = (): JSX.Element => {
 
 const TestStylesObservable = (): JSX.Element => {
   const o = $({ color: 'orange', fontWeight: 'normal' });
-  const toggle = () => o.update ( prev => ( prev.color === 'orange' ) ? { color: 'green', fontWeight: 'bold' } : { color: 'orange', fontWeight: 'normal' } );
+  const toggle = () => o ( prev => ( prev.color === 'orange' ) ? { color: 'green', fontWeight: 'bold' } : { color: 'orange', fontWeight: 'normal' } );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -891,7 +891,7 @@ const TestStylesObservable = (): JSX.Element => {
 
 const TestStylesFunction = (): JSX.Element => {
   const o = $({ color: 'orange', fontWeight: 'normal' });
-  const toggle = () => o.update ( prev => ( prev.color === 'orange' ) ? { color: 'green', fontWeight: 'bold' } : { color: 'orange', fontWeight: 'normal' } );
+  const toggle = () => o ( prev => ( prev.color === 'orange' ) ? { color: 'green', fontWeight: 'bold' } : { color: 'orange', fontWeight: 'normal' } );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -903,7 +903,7 @@ const TestStylesFunction = (): JSX.Element => {
 
 const TestStylesRemoval = (): JSX.Element => {
   const o = $({ color: 'orange', fontWeight: 'normal' });
-  const toggle = () => o.update ( prev => prev ? null : { color: 'orange', fontWeight: 'normal' } );
+  const toggle = () => o ( prev => prev ? null : { color: 'orange', fontWeight: 'normal' } );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -915,7 +915,7 @@ const TestStylesRemoval = (): JSX.Element => {
 
 const TestStylesCleanup = (): JSX.Element => {
   const o = $<JSX.StyleProperties>({ color: 'orange', fontWeight: 'bold' });
-  const toggle = () => o.update ( prev => ( prev.color === 'orange' ) ? { fontStyle: 'italic', textDecoration: 'line-through' } : { color: 'orange', fontWeight: 'bold' } );
+  const toggle = () => o ( prev => ( prev.color === 'orange' ) ? { fontStyle: 'italic', textDecoration: 'line-through' } : { color: 'orange', fontWeight: 'bold' } );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -936,7 +936,7 @@ const TestHTMLInnerHTMLStatic = (): JSX.Element => {
 
 const TestHTMLInnerHTMLObservable = (): JSX.Element => {
   const o = $( '<b>danger1</b>' );
-  const toggle = () => o.update ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
+  const toggle = () => o ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -948,7 +948,7 @@ const TestHTMLInnerHTMLObservable = (): JSX.Element => {
 
 const TestHTMLInnerHTMLFunction = (): JSX.Element => {
   const o = $( '<b>danger1</b>' );
-  const toggle = () => o.update ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
+  const toggle = () => o ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -969,7 +969,7 @@ const TestHTMLOuterHTMLStatic = (): JSX.Element => {
 
 const TestHTMLOuterHTMLObservable = (): JSX.Element => {
   const o = $( '<b>danger1</b>' );
-  const toggle = () => o.update ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
+  const toggle = () => o ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -981,7 +981,7 @@ const TestHTMLOuterHTMLObservable = (): JSX.Element => {
 
 const TestHTMLOuterHTMLFunction = (): JSX.Element => {
   const o = $( '<b>danger1</b>' );
-  const toggle = () => o.update ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
+  const toggle = () => o ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -1002,7 +1002,7 @@ const TestHTMLTextContentStatic = (): JSX.Element => {
 
 const TestHTMLTextContentObservable = (): JSX.Element => {
   const o = $( '<b>danger1</b>' );
-  const toggle = () => o.update ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
+  const toggle = () => o ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -1014,7 +1014,7 @@ const TestHTMLTextContentObservable = (): JSX.Element => {
 
 const TestHTMLTextContentFunction = (): JSX.Element => {
   const o = $( '<b>danger1</b>' );
-  const toggle = () => o.update ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
+  const toggle = () => o ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -1035,7 +1035,7 @@ const TestHTMLDangerouslySetInnerHTMLStatic = (): JSX.Element => {
 
 const TestHTMLDangerouslySetInnerHTMLObservable = (): JSX.Element => {
   const o = $( { __html: '<i>danger</i>' } );
-  const toggle = () => o.update ( prev => ( prev.__html === '<i>danger</i>' ) ? { __html: '<b>danger</b>' } : { __html: '<i>danger</i>' } );
+  const toggle = () => o ( prev => ( prev.__html === '<i>danger</i>' ) ? { __html: '<b>danger</b>' } : { __html: '<i>danger</i>' } );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -1047,7 +1047,7 @@ const TestHTMLDangerouslySetInnerHTMLObservable = (): JSX.Element => {
 
 const TestHTMLDangerouslySetInnerHTMLObservableString = (): JSX.Element => {
   const o = $( '<i>danger</i>' );
-  const toggle = () => o.update ( prev => ( prev === '<i>danger</i>' ) ? '<b>danger</b>' : '<i>danger</i>' );
+  const toggle = () => o ( prev => ( prev === '<i>danger</i>' ) ? '<b>danger</b>' : '<i>danger</i>' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -1059,7 +1059,7 @@ const TestHTMLDangerouslySetInnerHTMLObservableString = (): JSX.Element => {
 
 const TestHTMLDangerouslySetInnerHTMLFunction = (): JSX.Element => {
   const o = $( { __html: '<i>danger</i>' } );
-  const toggle = () => o.update ( prev => ( prev.__html === '<i>danger</i>' ) ? { __html: '<b>danger</b>' } : { __html: '<i>danger</i>' } );
+  const toggle = () => o ( prev => ( prev.__html === '<i>danger</i>' ) ? { __html: '<b>danger</b>' } : { __html: '<i>danger</i>' } );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -1071,7 +1071,7 @@ const TestHTMLDangerouslySetInnerHTMLFunction = (): JSX.Element => {
 
 const TestHTMLDangerouslySetInnerHTMLFunctionString = (): JSX.Element => {
   const o = $( '<i>danger</i>' );
-  const toggle = () => o.update ( prev => ( prev === '<i>danger</i>' ) ? '<b>danger</b>' : '<i>danger</i>' );
+  const toggle = () => o ( prev => ( prev === '<i>danger</i>' ) ? '<b>danger</b>' : '<i>danger</i>' );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -1083,7 +1083,7 @@ const TestHTMLDangerouslySetInnerHTMLFunctionString = (): JSX.Element => {
 
 const TestEventClickStatic = (): JSX.Element => {
   const o = $( 0 );
-  const increment = () => o.update ( prev => prev + 1 );
+  const increment = () => o ( prev => prev + 1 );
   return (
     <>
       <h3>Event - Click Static</h3>
@@ -1095,15 +1095,15 @@ const TestEventClickStatic = (): JSX.Element => {
 const TestEventClickObservable = (): JSX.Element => {
   const o = $( 0 );
   const onClick = $( () => {} );
-  const plus2 = () => o.update ( prev => {
-    onClick.set ( minus1 );
+  const plus2 = () => o ( prev => {
+    onClick ( () => minus1 );
     return prev + 2;
   });
-  const minus1 = () => o.update ( prev => {
-    onClick.set ( plus2 );
+  const minus1 = () => o ( prev => {
+    onClick ( () => plus2 );
     return prev - 1;
   });
-  onClick.set ( plus2 );
+  onClick ( () => plus2 );
   return (
     <>
       <h3>Event - Click Observable</h3>
@@ -1115,11 +1115,11 @@ const TestEventClickObservable = (): JSX.Element => {
 const TestEventClickRemoval = (): JSX.Element => {
   const o = $( 0 );
   const onClick = $( () => {} );
-  const increment = () => o.update ( prev => {
-    onClick.set ( null );
+  const increment = () => o ( prev => {
+    onClick ( () => null );
     return prev + 1;
   });
-  onClick.set ( increment );
+  onClick ( () => increment );
   return (
     <>
       <h3>Event - Click Removal</h3>
@@ -1130,7 +1130,7 @@ const TestEventClickRemoval = (): JSX.Element => {
 
 const TestEventClickCaptureStatic = (): JSX.Element => {
   const o = $( 0 );
-  const increment = () => o.update ( prev => prev + 1 );
+  const increment = () => o ( prev => prev + 1 );
   return (
     <>
       <h3>Event - Click Capture Static</h3>
@@ -1142,15 +1142,15 @@ const TestEventClickCaptureStatic = (): JSX.Element => {
 const TestEventClickCaptureObservable = (): JSX.Element => {
   const o = $( 0 );
   const onClick = $( () => {} );
-  const plus2 = () => o.update ( prev => {
-    onClick.set ( minus1 );
+  const plus2 = () => o ( prev => {
+    onClick ( () => minus1 );
     return prev + 2;
   });
-  const minus1 = () => o.update ( prev => {
-    onClick.set ( plus2 );
+  const minus1 = () => o ( prev => {
+    onClick ( () => plus2 );
     return prev - 1;
   });
-  onClick.set ( plus2 );
+  onClick ( () => plus2 );
   return (
     <>
       <h3>Event - Click Capture Observable</h3>
@@ -1162,11 +1162,11 @@ const TestEventClickCaptureObservable = (): JSX.Element => {
 const TestEventClickCaptureRemoval = (): JSX.Element => {
   const o = $( 0 );
   const onClick = $( () => {} );
-  const increment = () => o.update ( prev => {
-    onClick.set ( null );
+  const increment = () => o ( prev => {
+    onClick ( () => null );
     return prev + 1;
   });
-  onClick.set ( increment );
+  onClick ( () => increment );
   return (
     <>
       <h3>Event - Click Capture Removal</h3>
@@ -1177,7 +1177,7 @@ const TestEventClickCaptureRemoval = (): JSX.Element => {
 
 const TestEventClickAndClickCaptureStatic = (): JSX.Element => {
   const o = $( 0 );
-  const increment = () => o.update ( prev => prev + 1 );
+  const increment = () => o ( prev => prev + 1 );
   return (
     <>
       <h3>Event - Click & Click Capture Static</h3>
@@ -1189,10 +1189,10 @@ const TestEventClickAndClickCaptureStatic = (): JSX.Element => {
 const TestEventClickStopPropagation = (): JSX.Element => {
   const outer = $(0);
   const inner = $(0);
-  const incrementOuter = () => outer.update ( prev => prev + 1 );
+  const incrementOuter = () => outer ( prev => prev + 1 );
   const incrementInner = event => {
     event.stopPropagation ();
-    inner.update ( prev => prev + 1 );
+    inner ( prev => prev + 1 );
   };
   return (
     <>
@@ -1205,10 +1205,10 @@ const TestEventClickStopPropagation = (): JSX.Element => {
 const TestEventClickStopImmediatePropagation = (): JSX.Element => {
   const outer = $(0);
   const inner = $(0);
-  const incrementOuter = () => outer.update ( prev => prev + 1 );
+  const incrementOuter = () => outer ( prev => prev + 1 );
   const incrementInner = event => {
     event.stopImmediatePropagation ();
-    inner.update ( prev => prev + 1 );
+    inner ( prev => prev + 1 );
   };
   return (
     <>
@@ -1221,10 +1221,10 @@ const TestEventClickStopImmediatePropagation = (): JSX.Element => {
 const TestEventEnterStopPropagation = (): JSX.Element => {
   const outer = $(0);
   const inner = $(0);
-  const incrementOuter = () => outer.update ( prev => prev + 1 );
+  const incrementOuter = () => outer ( prev => prev + 1 );
   const incrementInner = event => {
     event.stopPropagation ();
-    inner.update ( prev => prev + 1 );
+    inner ( prev => prev + 1 );
   };
   return (
     <>
@@ -1237,10 +1237,10 @@ const TestEventEnterStopPropagation = (): JSX.Element => {
 const TestEventEnterStopImmediatePropagation = (): JSX.Element => {
   const outer = $(0);
   const inner = $(0);
-  const incrementOuter = () => outer.update ( prev => prev + 1 );
+  const incrementOuter = () => outer ( prev => prev + 1 );
   const incrementInner = event => {
     event.stopImmediatePropagation ();
-    inner.update ( prev => prev + 1 );
+    inner ( prev => prev + 1 );
   };
   return (
     <>
@@ -1252,7 +1252,7 @@ const TestEventEnterStopImmediatePropagation = (): JSX.Element => {
 
 const TestEventEnterAndEnterCaptureStatic = (): JSX.Element => {
   const o = $( 0 );
-  const increment = () => o.update ( prev => prev + 1 );
+  const increment = () => o ( prev => prev + 1 );
   return (
     <>
       <h3>Event - Enter & Enter Capture Static</h3>
@@ -1293,7 +1293,7 @@ const TestABCD = (): JSX.Element => {
 
 const TestCleanupInner = () => {
   const page = $( true );
-  const togglePage = () => page.update ( prev => !prev );
+  const togglePage = () => page ( prev => !prev );
   const Page1 = () => {
     setTimeout ( togglePage, TEST_INTERVAL );
     return (
@@ -1305,7 +1305,7 @@ const TestCleanupInner = () => {
   };
   const Page2 = () => {
     const bool = $( true );
-    const toggle = () => bool.update ( prev => !prev );
+    const toggle = () => bool ( prev => !prev );
     setTimeout ( toggle, TEST_INTERVAL );
     setTimeout ( togglePage, TEST_INTERVAL * 2 );
     return (
@@ -1372,7 +1372,7 @@ const TestIfStatic = (): JSX.Element => {
 
 const TestIfObservable = (): JSX.Element => {
   const o = $( true );
-  const toggle = () => o.update ( prev => !prev );
+  const toggle = () => o ( prev => !prev );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -1384,7 +1384,7 @@ const TestIfObservable = (): JSX.Element => {
 
 const TestIfFunction = (): JSX.Element => {
   const o = $( true );
-  const toggle = () => o.update ( prev => !prev );
+  const toggle = () => o ( prev => !prev );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -1398,14 +1398,14 @@ const TestIfRace = () => {
   const data = $({ deep: 'hi' });
   const visible = $(true);
   setTimeout ( () => {
-    batch(() => {
-      data(null);
-      visible(false);
-    })
+    useBatch ( () => {
+      data ( null );
+      visible ( false );
+    });
   });
   return (
     <>
-      <h1>If - Race</h1>
+      <h3>If - Race</h3>
       <If when={visible}>
         <div>{() => data ().deep}</div>
       </If>
@@ -1441,7 +1441,7 @@ const TestTernaryStaticInline = (): JSX.Element => {
 
 const TestTernaryObservable = (): JSX.Element => {
   const o = $( true );
-  const toggle = () => o.update ( prev => !prev );
+  const toggle = () => o ( prev => !prev );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -1472,7 +1472,7 @@ const TestTernaryObservableChildren = (): JSX.Element => {
     return component;
   };
   const o = $( true );
-  const toggle = () => o.update ( prev => !prev );
+  const toggle = () => o ( prev => !prev );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -1487,7 +1487,7 @@ const TestTernaryObservableChildren = (): JSX.Element => {
 
 const TestTernaryFunction = (): JSX.Element => {
   const o = $( true );
-  const toggle = () => o.update ( prev => !prev );
+  const toggle = () => o ( prev => !prev );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -1524,7 +1524,7 @@ const TestSwitchStatic = (): JSX.Element => {
 
 const TestSwitchObservable = (): JSX.Element => {
   const o = $( 0 );
-  const toggle = () => o.update ( prev => ( prev + 1 ) % 4 );
+  const toggle = () => o ( prev => ( prev + 1 ) % 4 );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -1549,11 +1549,11 @@ const TestSwitchObservable = (): JSX.Element => {
 
 const TestSwitchObservableComplex = (): JSX.Element => {
   const o = $( 0 );
-  const toggle = () => o.update ( prev => ( prev + 1 ) % 4 );
+  const toggle = () => o ( prev => ( prev + 1 ) % 4 );
   const o2 = $( 2 );
-  const toggle2 = () => o2.update ( prev => ( prev + 1 ) % 5 );
+  const toggle2 = () => o2 ( prev => ( prev + 1 ) % 5 );
   const o3 = $( 4 );
-  const toggle3 = () => o3.update ( prev => ( prev + 1 ) % 4 );
+  const toggle3 = () => o3 ( prev => ( prev + 1 ) % 4 );
   useInterval ( toggle, TEST_INTERVAL );
   useInterval ( toggle2, TEST_INTERVAL );
   useInterval ( toggle3, TEST_INTERVAL );
@@ -1599,7 +1599,7 @@ const TestSwitchObservableComplex = (): JSX.Element => {
 
 const TestSwitchFunction = (): JSX.Element => {
   const o = $( 0 );
-  const toggle = () => o.update ( prev => ( prev + 1 ) % 4 );
+  const toggle = () => o ( prev => ( prev + 1 ) % 4 );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -1813,7 +1813,7 @@ const TestFragmentStaticDeep = (): JSX.Element => {
 const TestErrorBoundary = (): JSX.Element => {
   const Erroring = (): JSX.Element => {
     const o = $( true );
-    const toggle = () => o.update ( prev => !prev );
+    const toggle = () => o ( prev => !prev );
     useTimeout ( toggle, TEST_INTERVAL );
     return useComputed ( () => {
       if ( o () ) return <p>content</p>;
@@ -1939,11 +1939,9 @@ const TestSVGStatic = (): JSX.Element => {
   return (
     <>
       <h3>SVG</h3>
-      {svg`
-        <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke="${getColor ()}" stroke-width="3" fill="white">
-          <circle cx="25" cy="25" r="20" />
-        </svg>
-      `}
+      <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke={getColor ()} stroke-width="3" fill="white">
+        <circle cx="25" cy="25" r="20" />
+      </svg>
     </>
   );
 };
@@ -1956,11 +1954,9 @@ const TestSVGObservable = (): JSX.Element => {
   return (
     <>
       <h3>SVG - Observable</h3>
-      {svg`
-        <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke="${color}" stroke-width="3" fill="white">
-          <circle cx="25" cy="25" r="20" />
-        </svg>
-      `}
+      <svg viewBox="0 0 50 50" width="50px" stroke={color} stroke-width="3" fill="white">
+        <circle cx="25" cy="25" r="20" />
+      </svg>
     </>
   );
 };
@@ -1973,11 +1969,9 @@ const TestSVGFunction = (): JSX.Element => {
   return (
     <>
       <h3>SVG - Function</h3>
-      {svg`
-        <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke="${() => color ()}" stroke-width="3" fill="white">
-          <circle cx="25" cy="25" r="20" />
-        </svg>
-      `}
+      <svg viewBox="0 0 50 50" width="50px" stroke={() => color ()} stroke-width="3" fill="white">
+        <circle cx="25" cy="25" r="20" />
+      </svg>
     </>
   );
 };
@@ -1999,133 +1993,27 @@ const TestTemplateExternal = (): JSX.Element => {
   );
 };
 
+const TestTemplateSVG = (): JSX.Element => {
+  const getColor = () => `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
+  const color = $(getColor ());
+  const update = () => color ( getColor () );
+  useInterval ( update, TEST_INTERVAL / 2 );
+  const Templated = template<{ color }> ( props => {
+    return (
+      <svg viewBox="0 0 50 50" width="50px" stroke={props.color} stroke-width="3" fill="white">
+        <circle cx="25" cy="25" r="20" />
+      </svg>
+    );
+  });
+  return (
+    <>
+      <h3>Template - SVG</h3>
+      <Templated color={color} />
+    </>
+  );
+};
+
 //TODO: Test template with all sorts of supported props
-
-const TestKeyframeStatic = (): JSX.Element => {
-  const rotate = styled.keyframes`
-    from, to {
-      width: 50px;
-    }
-    50% {
-      width: 150px;
-    }
-  `;
-  const P = styled.p`
-    background: tomato;
-    color: white;
-    animation: ${rotate} 1s ease-in-out infinite;
-  `;
-  return (
-    <>
-      <h3>Keyframes - Static</h3>
-      <P>content</P>
-    </>
-  );
-};
-
-const TestStyledStatic = (): JSX.Element => {
-  const P = styled.p`
-    color: red;
-  `;
-  return (
-    <>
-      <h3>Styled - Static</h3>
-      <P>content</P>
-    </>
-  );
-};
-
-const TestStyledStaticError = (): JSX.Element => {
-  const P = styled.p`
-    color: red;
-  `;
-  const Fallback = ({ error }: { error: Error }) => {
-    return <p>{error.message}</p>;
-  };
-  return (
-    <>
-      <h3>Styled - Static Error</h3>
-      <ErrorBoundary fallback={Fallback}>
-        <P class="blue">content</P>
-      </ErrorBoundary>
-    </>
-  );
-};
-
-const TestStyledClassStatic = (): JSX.Element => {
-  const P = styled.p``;
-  return (
-    <>
-      <h3>Styled - Class Static</h3>
-      <P class={{ blue: true }}>content</P>
-    </>
-  );
-};
-
-const TestStyledClassObservable = (): JSX.Element => {
-  const blue = styled.class ( 'blue' );
-  const red = styled.class ( 'red' );
-  const P = styled.p`
-    &${blue} {
-      color: blue;
-    }
-    &${red} {
-      color: red;
-    }
-  `;
-  const oBlue = $( true );
-  const oRed = $( false );
-  const toggle = () => oBlue () ? ( oBlue ( false ), oRed ( true ) ) : ( oBlue ( true ), oRed ( false ) );
-  useInterval ( toggle, TEST_INTERVAL );
-  return (
-    <>
-      <h3>Styled - Class Observable</h3>
-      <P class={{ [blue.raw]: oBlue, [red.raw]: oRed }}>content</P>
-    </>
-  );
-};
-
-const TestStyledCSSStatic = (): JSX.Element => {
-  const className = styled.css`
-    color: red;
-  `;
-  return (
-    <>
-      <h3>Styled - CSS Static</h3>
-      <p class={className}>content</p>
-    </>
-  );
-};
-
-const TestStyledExtension = (): JSX.Element => {
-  const Button1 = styled.button`
-    color: red;
-  `;
-  const Button2 = styled ( Button1 )`
-    background-color: pink;
-  `;
-  return (
-    <>
-      <h3>Styled - Extension</h3>
-      <Button2>content</Button2>
-    </>
-  );
-};
-
-const TestStyledGlobalStatic = (): JSX.Element => {
-  const Globals = styled.global`
-    :root {
-      --color: red;
-    }
-  `;
-  return (
-    <>
-      <Globals />
-      <h3>Styled - Global Static</h3>
-      <p style={{ color: 'var(--color)' }}>content</p>
-    </>
-  );
-};
 
 const TestContextComponents = (): JSX.Element => {
   const Context = createContext ();
@@ -2274,7 +2162,7 @@ const TestPortalRemoval = (): JSX.Element => {
     );
   };
   const o = $( true );
-  const toggle = () => o.update ( prev => prev ? null : true );
+  const toggle = () => o ( prev => prev ? null : true );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -2500,15 +2388,8 @@ const Test = (): JSX.Element => {
       <TestSVGObservable />
       <TestSVGFunction />
       <TestTemplateExternal />
+      <TestTemplateSVG />
       <TestPromise />
-      <TestKeyframeStatic />
-      <TestStyledStatic />
-      <TestStyledStaticError />
-      <TestStyledClassStatic />
-      <TestStyledClassObservable />
-      <TestStyledCSSStatic />
-      <TestStyledExtension />
-      <TestStyledGlobalStatic />
       <TestContextComponents />
       <TestContextHook />
       <TestPortalStatic />
