@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import useSample from '~/hooks/use_sample';
+import useSampleElement from '~/hooks/use_sample_element';
 import oby from '~/oby';
 import {assign} from '~/utils/lang';
 import type {Child, ChildResolved, ChildWithMetadata, FunctionMaybe, ObservableReadonly} from '~/types';
@@ -10,11 +10,11 @@ import type {Child, ChildResolved, ChildWithMetadata, FunctionMaybe, ObservableR
 
 //TODO: Enforce children of Switch to be of type Switch.Case or Switch.Default
 
-const Switch = <T> ({ when, children }: { when: FunctionMaybe<T>, children: Child[] }): ObservableReadonly<ChildResolved> => {
+const Switch = <T> ({ when, children }: { when: FunctionMaybe<T>, children: Child }): ObservableReadonly<ChildResolved> => {
 
   const childrenWithValues = children as (() => ChildWithMetadata<[T, Child] | [Child]>)[]; //TSC
   const values = childrenWithValues.map ( child => child ().metadata );
-  const valuesWithSample = values.map<[T, Child] | [Child]> ( value => ( value.length === 1 ) ? [() => useSample ( value[0] )] : [value[0], () => useSample ( value[1] )] );
+  const valuesWithSample = values.map<[T, Child] | [Child]> ( value => ( value.length === 1 ) ? [() => useSampleElement ( value[0] )] : [value[0], () => useSampleElement ( value[1] )] );
 
   return oby.switch ( when, valuesWithSample );
 

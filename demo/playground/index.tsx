@@ -1410,6 +1410,22 @@ const TestIfChildrenObservableStatic = (): JSX.Element => {
   );
 };
 
+const TestIfChildrenFunction = (): JSX.Element => {
+  const Content = () => {
+    const o = $( String ( Math.random () ) );
+    const randomize = () => o ( String ( Math.random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return <p>{o ()}</p>
+  };
+  return (
+    <>
+      <h3>If - Children Function</h3>
+      <If when={true}>{Content}</If>
+    </>
+  );
+};
+
 const TestIfFallbackStatic = (): JSX.Element => {
   return (
     <>
@@ -1446,6 +1462,22 @@ const TestIfFallbackObservableStatic = (): JSX.Element => {
     <>
       <h3>If - Fallback Observable Static</h3>
       <If when={false} fallback={<Fallback />}>Children</If>
+    </>
+  );
+};
+
+const TestIfFallbackFunction = (): JSX.Element => {
+  const Fallback = () => {
+    const o = $( String ( Math.random () ) );
+    const randomize = () => o ( String ( Math.random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return <p>Fallback: {o ()}</p>
+  };
+  return (
+    <>
+      <h3>If - Fallback Function</h3>
+      <If when={false} fallback={Fallback}>Children</If>
     </>
   );
 };
@@ -1581,6 +1613,36 @@ const TestTernaryChildrenObservableStatic = (): JSX.Element => {
       <Ternary when={false}>
         <True />
         <False />
+      </Ternary>
+    </>
+  );
+};
+
+const TestTernaryChildrenFunction = (): JSX.Element => {
+  const True = () => {
+    const o = $( String ( Math.random () ) );
+    const randomize = () => o ( String ( Math.random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return <p>True: {o ()}</p>
+  };
+  const False = () => {
+    const o = $( String ( Math.random () ) );
+    const randomize = () => o ( String ( Math.random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return <p>False: {o ()}</p>
+  };
+  return (
+    <>
+      <h3>Ternary - Children Function</h3>
+      <Ternary when={true}>
+        {True}
+        {False}
+      </Ternary>
+      <Ternary when={false}>
+        {True}
+        {False}
       </Ternary>
     </>
   );
@@ -1731,6 +1793,29 @@ const TestSwitchCaseObservableStatic = (): JSX.Element => {
   );
 };
 
+const TestSwitchCaseFunction = (): JSX.Element => {
+  const Case = () => {
+    const o = $( String ( Math.random () ) );
+    const randomize = () => o ( String ( Math.random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return <p>Case: {o ()}</p>
+  };
+  return (
+    <>
+      <h3>Switch - Case Function</h3>
+      <Switch when={0}>
+        <Switch.Case when={0}>
+          {Case}
+        </Switch.Case>
+        <Switch.Default>
+          <p>default</p>
+        </Switch.Default>
+      </Switch>
+    </>
+  );
+};
+
 const TestSwitchDefaultObservableStatic = (): JSX.Element => {
   const Default = () => {
     const o = $( String ( Math.random () ) );
@@ -1748,6 +1833,29 @@ const TestSwitchDefaultObservableStatic = (): JSX.Element => {
         </Switch.Case>
         <Switch.Default>
           <Default />
+        </Switch.Default>
+      </Switch>
+    </>
+  );
+};
+
+const TestSwitchDefaultFunction = (): JSX.Element => {
+  const Default = () => {
+    const o = $( String ( Math.random () ) );
+    const randomize = () => o ( String ( Math.random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return <p>Default: {o ()}</p>
+  };
+  return (
+    <>
+      <h3>Switch - Default Function</h3>
+      <Switch when={-1}>
+        <Switch.Case when={0}>
+          <p>case</p>
+        </Switch.Case>
+        <Switch.Default>
+          {Default}
         </Switch.Default>
       </Switch>
     </>
@@ -1982,6 +2090,30 @@ const TestForFallbackObservableStatic = (): JSX.Element => {
   )
 };
 
+const TestForFallbackFunction = (): JSX.Element => {
+  const Fallback = () => {
+    const o = $( String ( Math.random () ) );
+    const randomize = () => o ( String ( Math.random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return (
+      <>
+        <p>Fallback: {o ()}</p>
+      </>
+    );
+  };
+  return (
+    <>
+      <h3>For - Fallback Function</h3>
+      <For values={[]} fallback={Fallback}>
+        {( value: number ) => {
+          return <p>Value: {value}</p>
+        }}
+      </For>
+    </>
+  )
+};
+
 const TestFragmentStatic = (): JSX.Element => {
   return (
     <>
@@ -2085,8 +2217,29 @@ const TestErrorBoundaryChildrenObservableStatic = (): JSX.Element => {
   return (
     <>
       <h3>Error Boundary - Children Observable Static</h3>
-      <ErrorBoundary fallback={Fallback}>
+      <ErrorBoundary fallback={<Fallback />}>
         <Children />
+      </ErrorBoundary>
+    </>
+  );
+};
+
+const TestErrorBoundaryChildrenFunction = (): JSX.Element => {
+  const Children = (): JSX.Element => {
+    const o = $( String ( Math.random () ) );
+    const randomize = () => o ( String ( Math.random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return <p>Children: {o ()}</p>
+  };
+  const Fallback = (): JSX.Element => {
+    return <p>Fallback!</p>;
+  };
+  return (
+    <>
+      <h3>Error Boundary - Children Function</h3>
+      <ErrorBoundary fallback={<Fallback />}>
+        {Children}
       </ErrorBoundary>
     </>
   );
@@ -2106,6 +2259,27 @@ const TestErrorBoundaryFallbackObservableStatic = (): JSX.Element => {
   return (
     <>
       <h3>Error Boundary - Fallback Observable Static</h3>
+      <ErrorBoundary fallback={<Fallback />}>
+        <Children />
+      </ErrorBoundary>
+    </>
+  );
+};
+
+const TestErrorBoundaryFallbackFunction = (): JSX.Element => {
+  const Children = (): JSX.Element => {
+    throw new Error ();
+  };
+  const Fallback = (): JSX.Element => {
+    const o = $( String ( Math.random () ) );
+    const randomize = () => o ( String ( Math.random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return <p>Fallback: {o ()}</p>
+  };
+  return (
+    <>
+      <h3>Error Boundary - Fallback Function</h3>
       <ErrorBoundary fallback={Fallback}>
         <Children />
       </ErrorBoundary>
@@ -2442,7 +2616,7 @@ const TestSuspenseAlways = (): JSX.Element => {
   return (
     <>
       <h3>Suspense - Always</h3>
-      <Suspense fallback={Fallback}>
+      <Suspense fallback={<Fallback />}>
         <Content />
       </Suspense>
     </>
@@ -2459,7 +2633,7 @@ const TestSuspenseNever = (): JSX.Element => {
   return (
     <>
       <h3>Suspense - Never</h3>
-      <Suspense fallback={Fallback}>
+      <Suspense fallback={<Fallback />}>
         <Content />
       </Suspense>
     </>
@@ -2487,7 +2661,7 @@ const TestSuspenseObservable = (): JSX.Element => {
   return (
     <>
       <h3>Suspense - Observable</h3>
-      <Suspense fallback={Fallback}>
+      <Suspense fallback={<Fallback />}>
         <Content />
       </Suspense>
     </>
@@ -2508,8 +2682,29 @@ const TestSuspenseChildrenObservableStatic = (): JSX.Element => {
   return (
     <>
       <h3>Suspense - Children Observable Static</h3>
-      <Suspense fallback={Fallback}>
+      <Suspense fallback={<Fallback />}>
         <Children />
+      </Suspense>
+    </>
+  );
+};
+
+const TestSuspenseChildrenFunction = (): JSX.Element => {
+  const Children = (): JSX.Element => {
+    const o = $( String ( Math.random () ) );
+    const randomize = () => o ( String ( Math.random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return <p>Children: {o ()}</p>
+  };
+  const Fallback = (): JSX.Element => {
+    return <p>Fallback!</p>;
+  };
+  return (
+    <>
+      <h3>Suspense - Children Function</h3>
+      <Suspense fallback={<Fallback />}>
+        {Children}
       </Suspense>
     </>
   );
@@ -2532,6 +2727,30 @@ const TestSuspenseFallbackObservableStatic = (): JSX.Element => {
   return (
     <>
       <h3>Suspense - Fallback Observable Static</h3>
+      <Suspense fallback={<Fallback />}>
+        <Children />
+      </Suspense>
+    </>
+  );
+};
+
+const TestSuspenseFallbackFunction = (): JSX.Element => {
+  const Children = (): JSX.Element => {
+    useResource ( () => {
+      return new Promise ( () => {} );
+    });
+    return <p>children</p>;
+  };
+  const Fallback = (): JSX.Element => {
+    const o = $( String ( Math.random () ) );
+    const randomize = () => o ( String ( Math.random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return <p>Fallback: {o ()}</p>
+  };
+  return (
+    <>
+      <h3>Suspense - Fallback Function</h3>
       <Suspense fallback={Fallback}>
         <Children />
       </Suspense>
@@ -2658,9 +2877,11 @@ const Test = (): JSX.Element => {
       <TestIfObservable />
       <TestIfFunction />
       <TestIfChildrenObservableStatic />
+      <TestIfChildrenFunction />
       <TestIfFallbackStatic />
       <TestIfFallbackObservable />
       <TestIfFallbackObservableStatic />
+      <TestIfFallbackFunction />
       {/* <TestIfRace /> */}
       <TestTernaryStatic />
       <TestTernaryStaticInline />
@@ -2668,12 +2889,15 @@ const Test = (): JSX.Element => {
       <TestTernaryObservableChildren />
       <TestTernaryFunction />
       <TestTernaryChildrenObservableStatic />
+      <TestTernaryChildrenFunction />
       <TestSwitchStatic />
       <TestSwitchObservable />
       <TestSwitchObservableComplex />
       <TestSwitchFunction />
       <TestSwitchCaseObservableStatic />
+      <TestSwitchCaseFunction />
       <TestSwitchDefaultObservableStatic />
+      <TestSwitchDefaultFunction />
       <TestComponentStatic />
       <TestComponentStaticProps value={123} />
       <TestComponentObservable />
@@ -2687,12 +2911,15 @@ const Test = (): JSX.Element => {
       <TestForFallbackStatic />
       <TestForFallbackObservable />
       <TestForFallbackObservableStatic />
+      <TestForFallbackFunction />
       <TestFragmentStatic />
       <TestFragmentStaticComponent />
       <TestFragmentStaticDeep />
       <TestErrorBoundary />
       <TestErrorBoundaryChildrenObservableStatic />
+      <TestErrorBoundaryChildrenFunction />
       <TestErrorBoundaryFallbackObservableStatic />
+      <TestErrorBoundaryFallbackFunction />
       <TestChildren />
       <TestRef />
       <TestRefs />
@@ -2712,7 +2939,9 @@ const Test = (): JSX.Element => {
       <TestSuspenseNever />
       <TestSuspenseObservable />
       <TestSuspenseChildrenObservableStatic />
+      <TestSuspenseChildrenFunction />
       <TestSuspenseFallbackObservableStatic />
+      <TestSuspenseFallbackFunction />
       <hr />
     </>
   );

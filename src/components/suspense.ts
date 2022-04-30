@@ -5,7 +5,7 @@ import SuspenseContext from '~/components/suspense.context';
 import useCleanup from '~/hooks/use_cleanup';
 import useComputed from '~/hooks/use_computed';
 import useRoot from '~/hooks/use_root';
-import useSample from '~/hooks/use_sample';
+import useSampleElement from '~/hooks/use_sample_element';
 import resolve from '~/methods/resolve';
 import type {Child, ChildResolved, ObservableReadonly} from '~/types';
 
@@ -19,13 +19,13 @@ const Suspense = ({ fallback, children }: { fallback?: Child, children: Child })
 
     const resultFallback = useComputed ( () => {
 
-      return resolve ( useSample ( fallback ) );
+      return resolve ( useSampleElement ( fallback ) );
 
     });
 
     const resultChildren = useComputed ( () => {
 
-      return resolve ( useSample ( children ) );
+      return resolve ( useSampleElement ( children ) );
 
     });
 

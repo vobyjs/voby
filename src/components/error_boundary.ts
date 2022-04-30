@@ -3,13 +3,15 @@
 
 import oby from '~/oby';
 import useSample from '~/hooks/use_sample';
+import useSampleElement from '~/hooks/use_sample_element';
+import {isFunction} from '~/utils/lang';
 import type {Child, ChildResolved, Disposer, FN, ObservableReadonly} from '~/types';
 
 /* MAIN */
 
-const ErrorBoundary = ({ fallback, children }: { fallback: FN<[{ error: Error, reset: Disposer }], Child>, children: Child }): ObservableReadonly<ChildResolved> => {
+const ErrorBoundary = ({ fallback, children }: { fallback: Child | FN<[{ error: Error, reset: Disposer }], Child>, children: Child }): ObservableReadonly<ChildResolved> => {
 
-  return oby.tryCatch ( () => useSample ( children ), props => useSample ( () => fallback ( props ) ) );
+  return oby.tryCatch ( () => useSampleElement ( children ), props => useSample ( () => isFunction ( fallback ) ? fallback ( props ) : fallback ) );
 
 };
 
