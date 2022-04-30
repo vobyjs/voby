@@ -1266,7 +1266,7 @@ const TestABCD = (): JSX.Element => {
     const a = <i>a</i>;
     const b = <u>b</u>;
     const component = $( a );
-    const toggle = () => component ( ( component () === a ) ? b : a );
+    const toggle = () => component ( () => ( component () === a ) ? b : a );
     useInterval ( toggle, TEST_INTERVAL / 2 );
     return component;
   };
@@ -1274,14 +1274,14 @@ const TestABCD = (): JSX.Element => {
     const c = <b>c</b>;
     const d = <span>d</span>;
     const component = $( c );
-    const toggle = () => component ( ( component () === c ) ? d : c );
+    const toggle = () => component ( () => ( component () === c ) ? d : c );
     useInterval ( toggle, TEST_INTERVAL / 2 );
     return component;
   };
   const ab = <AB />;
   const cd = <CD />;
   const component = $( ab );
-  const toggle = () => component ( ( component () === ab ) ? cd : ab );
+  const toggle = () => component ( () => ( component () === ab ) ? cd : ab );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
@@ -1547,7 +1547,7 @@ const TestTernaryObservableChildren = (): JSX.Element => {
     const a = <i>a</i>;
     const b = <u>b</u>;
     const component = $( a );
-    const toggle = () => component ( ( component () === a ) ? b : a );
+    const toggle = () => component ( () => ( component () === a ) ? b : a );
     useInterval ( toggle, TEST_INTERVAL / 2 );
     return component;
   };
@@ -1555,7 +1555,7 @@ const TestTernaryObservableChildren = (): JSX.Element => {
     const c = <b>c</b>;
     const d = <span>d</span>;
     const component = $( c );
-    const toggle = () => component ( ( component () === c ) ? d : c );
+    const toggle = () => component ( () => ( component () === c ) ? d : c );
     useInterval ( toggle, TEST_INTERVAL / 2 );
     return component;
   };
@@ -2548,7 +2548,7 @@ const TestPortalObservable = (): JSX.Element => {
     const a = <i>a</i>;
     const b = <u>b</u>;
     const component = $( a );
-    const toggle = () => component ( ( component () === a ) ? b : a );
+    const toggle = () => component ( () => ( component () === a ) ? b : a );
     useInterval ( toggle, TEST_INTERVAL / 2 );
     return component;
   };
@@ -2556,14 +2556,14 @@ const TestPortalObservable = (): JSX.Element => {
     const c = <b>c</b>;
     const d = <span>d</span>;
     const component = $( c );
-    const toggle = () => component ( ( component () === c ) ? d : c );
+    const toggle = () => component ( () => ( component () === c ) ? d : c );
     useInterval ( toggle, TEST_INTERVAL / 2 );
     return component;
   };
   const ab = <AB />;
   const cd = <CD />;
   const component = $( ab );
-  const toggle = () => component ( ( component () === ab ) ? cd : ab );
+  const toggle = () => component ( () => ( component () === ab ) ? cd : ab );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
