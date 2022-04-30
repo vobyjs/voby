@@ -98,6 +98,12 @@ const isString = ( value: unknown ): value is string => {
 
 };
 
+const isSVG = ( value: Element ): value is SVGAElement => {
+
+  return !!value['isSVG'];
+
+};
+
 const isTemplateAccessor = ( value: unknown ): value is TemplateActionProxy => {
 
   return isFunction ( value ) && ( SYMBOL_TEMPLATE_ACCESSOR in value );
@@ -106,4 +112,4 @@ const isTemplateAccessor = ( value: unknown ): value is TemplateActionProxy => {
 
 /* EXPORT */
 
-export {assign, castArray, castError, flatten, indexOf, isArray, isError, isFunction, isNil, isNode, isPrimitive, isPromise, isString, isTemplateAccessor};
+export {assign, castArray, castError, flatten, indexOf, isArray, isError, isFunction, isNil, isNode, isPrimitive, isPromise, isString, isSVG, isTemplateAccessor};

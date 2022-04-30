@@ -7,39 +7,49 @@ import useEffect from '~/hooks/use_effect';
 import {createAttribute, createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import Fragment from '~/utils/fragment';
-import {flatten, isArray, isFunction, isNil, isPrimitive, isString, isTemplateAccessor} from '~/utils/lang';
+import {flatten, isArray, isFunction, isNil, isPrimitive, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
 import {resolveChild, resolveFunction, resolveObservable} from '~/utils/resolvers';
 import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 
 /* MAIN */
 
-const setAttributeStaticItem = ( attributes: NamedNodeMap, key: string, value: null | undefined | boolean | number | string ): void => {
+const setAttributeStatic = ( element: HTMLElement, attributes: NamedNodeMap, key: string, value: null | undefined | boolean | number | string ): void => {
 
-  const attribute = attributes.getNamedItem ( key );
+  if ( isSVG ( element ) ) {
 
-  if ( isNil ( value ) || value === false ) {
+    key = ( key === 'className' ) ? 'class' : key;
 
-    if ( attribute ) {
-
-      attributes.removeNamedItem ( key );
-
-    }
+    element.setAttribute ( key, String ( value ) );
 
   } else {
 
-    value = ( value === true ) ? '' : String ( value );
+    const attribute = attributes.getNamedItem ( key );
 
-    if ( attribute ) {
+    if ( isNil ( value ) || value === false ) {
 
-      attribute.value = value;
+      if ( attribute ) {
+
+        attributes.removeNamedItem ( key );
+
+      }
 
     } else {
 
-      const attribute = createAttribute ( key );
+      value = ( value === true ) ? '' : String ( value );
 
-      attribute.value = value;
+      if ( attribute ) {
 
-      attributes.setNamedItem ( attribute );
+        attribute.value = value;
+
+      } else {
+
+        const attribute = createAttribute ( key );
+
+        attribute.value = value;
+
+        attributes.setNamedItem ( attribute );
+
+      }
 
     }
 
@@ -47,23 +57,9 @@ const setAttributeStaticItem = ( attributes: NamedNodeMap, key: string, value: n
 
 };
 
-const setAttributeStaticMethod = ( element: HTMLElement, key: string, value: null | undefined | boolean | number | string ): void => {
+const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean | number | string> ): void => {
 
-  element.setAttribute ( key, String ( value ) );
-
-};
-
-const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean | number | string>, isSVG: boolean ): void => {
-
-  if ( isSVG ) {
-
-    resolveFunction ( value, setAttributeStaticMethod.bind ( undefined, element, key ) );
-
-  } else {
-
-    resolveFunction ( value, setAttributeStaticItem.bind ( undefined, element.attributes, key ) );
-
-  }
+  resolveFunction ( value, setAttributeStatic.bind ( undefined, element, element.attributes, key ) );
 
 };
 
@@ -344,7 +340,16 @@ const setClassesStatic = ( element: HTMLElement, classList: DOMTokenList, object
 
   if ( isString ( object ) ) {
 
-    element.className = object;
+    if ( isSVG ( element ) ) {
+
+      element.setAttribute ( 'class', object );
+
+    } else {
+
+      element.className = object;
+
+    }
+
 
   } else {
 
@@ -354,7 +359,15 @@ const setClassesStatic = ( element: HTMLElement, classList: DOMTokenList, object
 
         if ( objectPrev ) {
 
-          element.className = '';
+          if ( isSVG ( element ) ) {
+
+            element.setAttribute ( 'class', '' );
+
+          } else {
+
+            element.className = '';
+
+          }
 
         }
 
@@ -622,7 +635,7 @@ const setStyles = ( element: HTMLElement, object: FunctionMaybe<null | undefined
 
 };
 
-const setTemplateAccessor = ( element: HTMLElement, key: string, value: TemplateActionProxy, isSVG: boolean ): void => {
+const setTemplateAccessor = ( element: HTMLElement, key: string, value: TemplateActionProxy ): void => {
 
   if ( key === 'children' ) {
 
@@ -642,7 +655,11 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
   } else if ( key === 'class' ) {
 
-    element.className = ''; // Ensuring the attribute is present
+    if ( !isSVG ( element ) ) {
+
+      element.className = ''; // Ensuring the attribute is present
+
+    }
 
     value ( element, 'setClasses' );
 
@@ -658,7 +675,7 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
     value ( element, 'setEvent', key.toLowerCase () );
 
-  } else if ( key in element && !isSVG ) {
+  } else if ( key in element && !isSVG ( element ) ) {
 
     if ( key === 'className' ) { // Ensuring the attribute is present
 
@@ -672,17 +689,17 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
     element.setAttribute ( key, '' ); // Ensuring the attribute is present
 
-    value ( element, 'setAttribute', key ); //TODO: Pass isSVG too
+    value ( element, 'setAttribute', key );
 
   }
 
 };
 
-const setProp = ( element: HTMLElement, key: string, value: any, isSVG: boolean ): void => {
+const setProp = ( element: HTMLElement, key: string, value: any ): void => {
 
   if ( isTemplateAccessor ( value ) ) {
 
-    setTemplateAccessor ( element, key, value, isSVG );
+    setTemplateAccessor ( element, key, value );
 
   } else if ( key === 'children' ) {
 
@@ -712,23 +729,23 @@ const setProp = ( element: HTMLElement, key: string, value: any, isSVG: boolean 
 
     setEvent ( element, key.toLowerCase (), value );
 
-  } else if ( key in element && !isSVG ) {
+  } else if ( key in element && !isSVG ( element ) ) {
 
     setProperty ( element, key, value );
 
   } else {
 
-    setAttribute ( element, key, value, isSVG );
+    setAttribute ( element, key, value );
 
   }
 
 };
 
-const setProps = ( element: HTMLElement, object: Record<string, unknown>, isSVG: boolean ): void => {
+const setProps = ( element: HTMLElement, object: Record<string, unknown> ): void => {
 
   for ( const key in object ) {
 
-    setProp ( element, key, object[key], isSVG );
+    setProp ( element, key, object[key] );
 
   }
 
@@ -736,4 +753,4 @@ const setProps = ( element: HTMLElement, object: Record<string, unknown>, isSVG:
 
 /* EXPORT */
 
-export {setAttributeStaticItem, setAttributeStaticMethod, setAttribute, setChildReplacementFunction, setChildReplacementText, setChildReplacement, setChildStatic, setChild, setClassStatic, setClass, setClassesStatic, setClasses, setEventStatic, setEvent, setHTMLStatic, setHTML, setPropertyStatic, setProperty, setRef, setStyleStatic, setStyle, setStylesStatic, setStyles, setTemplateAccessor, setProp, setProps};
+export {setAttributeStatic, setAttribute, setChildReplacementFunction, setChildReplacementText, setChildReplacement, setChildStatic, setChild, setClassStatic, setClass, setClassesStatic, setClasses, setEventStatic, setEvent, setHTMLStatic, setHTML, setPropertyStatic, setProperty, setRef, setStyleStatic, setStyle, setStylesStatic, setStyles, setTemplateAccessor, setProp, setProps};

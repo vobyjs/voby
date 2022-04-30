@@ -2367,7 +2367,7 @@ const TestSVGStatic = (): JSX.Element => {
   const getColor = () => `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
   return (
     <>
-      <h3>SVG</h3>
+      <h3>SVG - Static</h3>
       <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke={getColor ()} stroke-width="3" fill="white">
         <circle cx="25" cy="25" r="20" />
       </svg>
@@ -2399,6 +2399,61 @@ const TestSVGFunction = (): JSX.Element => {
     <>
       <h3>SVG - Function</h3>
       <svg viewBox="0 0 50 50" width="50px" stroke={() => color ()} stroke-width="3" fill="white">
+        <circle cx="25" cy="25" r="20" />
+      </svg>
+    </>
+  );
+};
+
+const TestSVGStyleObject = (): JSX.Element => {
+  return (
+    <>
+      <h3>SVG - Style Object</h3>
+      <svg style={{ stroke: 'red', fill: 'pink' }} viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke-width="3" fill="white">
+        <circle cx="25" cy="25" r="20" />
+      </svg>
+    </>
+  );
+};
+
+const TestSVGStyleString = (): JSX.Element => {
+  return (
+    <>
+      <h3>SVG - Style String</h3>
+      <svg style="stroke: red; fill: pink;" viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke-width="3" fill="white">
+        <circle cx="25" cy="25" r="20" />
+      </svg>
+    </>
+  );
+};
+
+const TestSVGClassObject = (): JSX.Element => {
+  return (
+    <>
+      <h3>SVG - Class Object</h3>
+      <svg class={{ red: true }} viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke-width="3" fill="white">
+        <circle cx="25" cy="25" r="20" />
+      </svg>
+    </>
+  );
+};
+
+const TestSVGClassString = (): JSX.Element => {
+  return (
+    <>
+      <h3>SVG - Class String</h3>
+      <svg class="red" viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke-width="3" fill="white">
+        <circle cx="25" cy="25" r="20" />
+      </svg>
+    </>
+  );
+};
+
+const TestSVGClassNameString = (): JSX.Element => {
+  return (
+    <>
+      <h3>SVG - ClassName String</h3>
+      <svg className="red" viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke-width="3" fill="white">
         <circle cx="25" cy="25" r="20" />
       </svg>
     </>
@@ -2927,6 +2982,11 @@ const Test = (): JSX.Element => {
       <TestSVGStatic />
       <TestSVGObservable />
       <TestSVGFunction />
+      <TestSVGStyleObject />
+      <TestSVGStyleString />
+      <TestSVGClassObject />
+      <TestSVGClassString />
+      <TestSVGClassNameString />
       <TestTemplateExternal />
       <TestTemplateSVG />
       <TestPromise />
