@@ -11,7 +11,7 @@ import type {Child, ChildResolved, ObservableReadonly} from '~/types';
 
 /* MAIN */
 
-const Suspense = ({ fallback, children }: { fallback?: Child, children: Child }): ObservableReadonly<ChildResolved> => {
+const Suspense = ({ fallback, children }: { fallback?: Child, children: Child }): ObservableReadonly<ObservableReadonly<ChildResolved>> => {
 
   const [dispose, result] = useRoot ( dispose => {
 
@@ -31,9 +31,9 @@ const Suspense = ({ fallback, children }: { fallback?: Child, children: Child })
 
     const result = useComputed ( () => {
 
-      if ( suspense.active () ) return resultFallback ();
+      if ( suspense.active () ) return resultFallback;
 
-      return resultChildren ();
+      return resultChildren;
 
     });
 
