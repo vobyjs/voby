@@ -14,9 +14,8 @@ const Switch = <T> ({ when, children }: { when: FunctionMaybe<T>, children: Chil
 
   const childrenWithValues = children as (() => ChildWithMetadata<[T, Child] | [Child]>)[]; //TSC
   const values = childrenWithValues.map ( child => child ().metadata );
-  const valuesWithSample = values.map<[T, Child] | [Child]> ( value => ( value.length === 1 ) ? [() => useSampleElement ( value[0] )] : [value[0], () => useSampleElement ( value[1] )] );
 
-  return oby.switch ( when, valuesWithSample );
+  return oby.switch ( when, values );
 
 };
 
@@ -24,7 +23,7 @@ const Switch = <T> ({ when, children }: { when: FunctionMaybe<T>, children: Chil
 
 Switch.Case = <T> ({ when, children }: { when: T, children: Child }): ChildWithMetadata<[T, Child]> => {
 
-  const metadata: { metadata: [T, Child] } = { metadata: [when, children] };
+  const metadata: { metadata: [T, Child] } = { metadata: [when, () => useSampleElement ( children )] };
 
   return assign ( () => children, metadata );
 
@@ -32,7 +31,7 @@ Switch.Case = <T> ({ when, children }: { when: T, children: Child }): ChildWithM
 
 Switch.Default = ({ children }: { children: Child }): ChildWithMetadata<[Child]> => {
 
-  const metadata: { metadata: [Child] } = { metadata: [children] };
+  const metadata: { metadata: [Child] } = { metadata: [() => useSampleElement ( children )] };
 
   return assign ( () => children, metadata );
 

@@ -4,11 +4,11 @@
 import './types';
 import Fragment from '~/components/fragment';
 import createElement from '~/methods/create_element';
-import type {Child, Component, Props} from '~/types';
+import type {Child, Component, Element, Props} from '~/types';
 
 /* MAIN */
 
-const jsx = ( component: Component, props: Props ): (() => Child) => {
+const jsx = ( component: Component, props: Props ): Element => {
 
   return createElement ( component, props );
 

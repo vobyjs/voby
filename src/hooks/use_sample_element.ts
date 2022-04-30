@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import isElement from '~/methods/is_element';
 import useSample from '~/hooks/use_sample';
+import isElement from '~/methods/is_element';
 import type {Child} from '~/types';
 
 /* MAIN */

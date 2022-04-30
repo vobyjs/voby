@@ -1,4 +1,8 @@
 
+/* HELPERS */
+
+declare const ElementSymbol: unique symbol;
+
 /* MAIN */
 
 type ArrayMaybe<T = unknown> = T[] | T;
@@ -32,6 +36,8 @@ type ContextProvider<T = unknown> = ( props: { value: T, children: Child } ) => 
 type Context<T = unknown> = { Consumer: ContextConsumer<T>, Provider: ContextProvider<T> };
 
 type Disposer = () => void;
+
+type Element<T = Child> = { (): T, readonly [ElementSymbol]: true };
 
 type EventListener = ( event: Event ) => void;
 
@@ -81,4 +87,4 @@ type TemplateVariablesMap = Map<TemplateActionPath, string>;
 
 /* EXPORT */
 
-export type {ArrayMaybe, Callback, Child, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, Disposer, EventListener, FN, FunctionMaybe, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceLoading, ResourceRejected, ResourceResolved, Resource, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap};
+export type {ArrayMaybe, Callback, Child, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, Disposer, Element, EventListener, FN, FunctionMaybe, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceLoading, ResourceRejected, ResourceResolved, Resource, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap};
