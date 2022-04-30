@@ -19,21 +19,21 @@ const Suspense = ({ fallback, children }: { fallback?: Child, children: Child })
 
     const resultFallback = useComputed ( () => {
 
-      return resolve ( fallback );
+      return resolve ( useSample ( fallback ) );
 
     });
 
     const resultChildren = useComputed ( () => {
 
-      return resolve ( children );
+      return resolve ( useSample ( children ) );
 
     });
 
     const result = useComputed ( () => {
 
-      if ( suspense.active () ) return useSample ( resultFallback );
+      if ( suspense.active () ) return resultFallback ();
 
-      return useSample ( resultChildren );
+      return resultChildren ();
 
     });
 

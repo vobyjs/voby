@@ -1,14 +1,14 @@
 
 /* IMPORT */
 
-import oby from '~/oby';
+import Ternary from '~/components/ternary';
 import type {Child, ChildResolved, FunctionMaybe, ObservableReadonly} from '~/types';
 
 /* MAIN */
 
 const If = ({ when, fallback, children }: { when: FunctionMaybe<unknown>, fallback?: Child, children: Child }): ObservableReadonly<ChildResolved> => {
 
-  return oby.if ( when, children, fallback );
+  return Ternary ({ when, children: [children, fallback] });
 
 };
 

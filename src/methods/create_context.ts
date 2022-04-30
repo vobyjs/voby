@@ -19,11 +19,7 @@ const createContext = <T> ( defaultValue?: T ): Context<T> => {
 
       oby.context ( symbol, value );
 
-      return useSample ( () => {
-
-        return resolve ( children );
-
-      });
+      return resolve ( useSample ( children ) );
 
     });
 

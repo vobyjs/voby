@@ -1,6 +1,7 @@
 
 /* IMPORT */
 
+import useSample from '~/hooks/use_sample';
 import oby from '~/oby';
 import {assign} from '~/utils/lang';
 import type {Child, ChildResolved, ChildWithMetadata, FunctionMaybe, ObservableReadonly} from '~/types';
@@ -11,10 +12,11 @@ import type {Child, ChildResolved, ChildWithMetadata, FunctionMaybe, ObservableR
 
 const Switch = <T> ({ when, children }: { when: FunctionMaybe<T>, children: Child[] }): ObservableReadonly<ChildResolved> => {
 
-  const childrenWithCases = children as (() => ChildWithMetadata<[T, Child] | [Child]>)[]; //TSC
-  const cases = childrenWithCases.map ( child => child ().metadata );
+  const childrenWithValues = children as (() => ChildWithMetadata<[T, Child] | [Child]>)[]; //TSC
+  const values = childrenWithValues.map ( child => child ().metadata );
+  const valuesWithSample = values.map<[T, Child] | [Child]> ( value => ( value.length === 1 ) ? [() => useSample ( value[0] )] : [value[0], () => useSample ( value[1] )] );
 
-  return oby.switch ( when, cases );
+  return oby.switch ( when, valuesWithSample );
 
 };
 
