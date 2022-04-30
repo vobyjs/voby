@@ -16,14 +16,23 @@ const Suspense = ({ fallback, children }: { fallback: Child, children: Child }):
 
     SuspenseContext.set ( suspense );
 
-    const branchFallback = resolve ( fallback );
-    const branchChildren = resolve ( children );
+    const resolvedFallback = useComputed ( () => {
+
+      return resolve ( fallback );
+
+    });
+
+    const resolvedChildren = useComputed ( () => {
+
+      return resolve ( children );
+
+    });
 
     return useComputed ( () => {
 
-      if ( suspense.active () ) return branchFallback;
+      if ( suspense.active () ) return resolvedFallback;
 
-      return branchChildren;
+      return resolvedChildren;
 
     });
 
