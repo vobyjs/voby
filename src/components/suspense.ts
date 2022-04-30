@@ -2,41 +2,48 @@
 /* IMPORT */
 
 import SuspenseContext from '~/components/suspense.context';
+import useCleanup from '~/hooks/use_cleanup';
 import useComputed from '~/hooks/use_computed';
+import useRoot from '~/hooks/use_root';
+import useSample from '~/hooks/use_sample';
 import resolve from '~/methods/resolve';
-import type {Child, ObservableReadonly} from '~/types';
+import type {Child, ChildResolved, ObservableReadonly} from '~/types';
 
 /* MAIN */
 
-const Suspense = ({ fallback, children }: { fallback: Child, children: Child }): ObservableReadonly<Child> => { //TODO: Should return ChildResolved
+const Suspense = ({ fallback, children }: { fallback?: Child, children: Child }): ObservableReadonly<ChildResolved> => {
 
-  const suspense = SuspenseContext.make ();
+  const [dispose, result] = useRoot ( dispose => {
 
-  return useComputed ( () => {
+    const suspense = SuspenseContext.new ();
 
-    SuspenseContext.set ( suspense );
-
-    const resolvedFallback = useComputed ( () => {
+    const resultFallback = useComputed ( () => {
 
       return resolve ( fallback );
 
     });
 
-    const resolvedChildren = useComputed ( () => {
+    const resultChildren = useComputed ( () => {
 
       return resolve ( children );
 
     });
 
-    return useComputed ( () => {
+    const result = useComputed ( () => {
 
-      if ( suspense.active () ) return resolvedFallback;
+      if ( suspense.active () ) return useSample ( resultFallback );
 
-      return resolvedChildren;
+      return useSample ( resultChildren );
 
     });
 
+    return [dispose, result];
+
   });
+
+  useCleanup ( dispose );
+
+  return result;
 
 };
 

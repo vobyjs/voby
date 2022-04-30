@@ -13,11 +13,19 @@ const useAbortController = ( signals: ArrayMaybe<AbortSignal> = [] ): AbortContr
   const controller = new AbortController ();
   const abort = controller.abort.bind ( controller );
 
-  for ( const signal of castArray ( signals ) ) { //TODO: This is pretty inefficient if there are any aborted signals
+  for ( const signal of castArray ( signals ) ) {
 
-    if ( signal.aborted ) abort ();
+    if ( signal.aborted ) {
 
-    useEventListener ( signal, 'abort', abort );
+      abort ();
+
+      break;
+
+    } else {
+
+      useEventListener ( signal, 'abort', abort );
+
+    }
 
   }
 

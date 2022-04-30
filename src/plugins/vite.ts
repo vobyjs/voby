@@ -4,7 +4,7 @@
 const vite = () => {
 
   return {
-    name: 'voby:runtime',
+    name: 'voby',
     config: () => {
 
       return {

@@ -7,8 +7,16 @@ interface Document {
   onfocusout: (( this: GlobalEventHandlers, event: FocusEvent ) => any) | null
 }
 
+interface Element {
+  cloneNode ( deep?: boolean ): Element
+}
+
 interface HTMLElement {
   cloneNode ( deep?: boolean ): HTMLElement
+}
+
+interface SVGElement {
+  cloneNode ( deep?: boolean ): SVGElement
 }
 
 interface Node {
@@ -191,8 +199,8 @@ declare namespace JSX {
     onBlur?: ObservableMaybe<FocusEventHandler<T>>,
     onBlurCapture?: ObservableMaybe<FocusEventHandler<T>>,
     /* FORM EVENTS */
-    onChange?: ObservableMaybe<GenericEventHandler<T>>,
-    onChangeCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onChange?: ObservableMaybe<KeyboardEventHandler<T>>,
+    onChangeCapture?: ObservableMaybe<KeyboardEventHandler<T>>,
     onInput?: ObservableMaybe<GenericEventHandler<T>>,
     onInputCapture?: ObservableMaybe<GenericEventHandler<T>>,
     onBeforeInput?: ObservableMaybe<GenericEventHandler<T>>,

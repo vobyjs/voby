@@ -85,7 +85,7 @@ function createElement ( component: Component, props: Props | null, ..._children
 
     const element = (): Child => {
 
-      const child = createNode ( component );
+      const child = createNode ( component ) as HTMLElement; //TSC
 
       setProps ( child, props, isSVG );
 

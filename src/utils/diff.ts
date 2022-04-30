@@ -16,6 +16,8 @@
  * PERFORMANCE OF THIS SOFTWARE.
  */
 
+/* MAIN */
+
 // This is just a slightly customized version of udomdiff: with types, no accessor function and recycling support
 
 const diff = ( parent: Node, before: Node[], after: Node[], nextSibling: Node | null ): void => {
@@ -157,5 +159,7 @@ const diff = ( parent: Node, before: Node[], after: Node[], nextSibling: Node | 
     }
   }
 };
+
+/* EXPORT */
 
 export default diff;

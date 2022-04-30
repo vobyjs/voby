@@ -18,11 +18,9 @@ const renderToString = ( child: Child ): Promise<string> => {
 
     useRoot ( dispose => {
 
-      const suspense = SuspenseContext.make ();
+      const suspense = SuspenseContext.new ();
 
-      SuspenseContext.set ( suspense );
-
-      const {portal} = Portal ({ children: Suspense ({ fallback: null, children: child }) }).metadata;
+      const {portal} = Portal ({ children: Suspense ({ children: child }) }).metadata;
 
       useEffect ( () => {
 

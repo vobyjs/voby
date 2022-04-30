@@ -1,6 +1,9 @@
 {
   "extends": "tsex/tsconfig.json",
   "compilerOptions": {
-    "isolatedModules": false
+    "isolatedModules": false,
+    "noImplicitAny": false,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUnusedParameters": false
   }
 }

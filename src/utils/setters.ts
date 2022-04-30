@@ -482,7 +482,7 @@ const setEventStatic = (() => {
 
 const setEvent = ( element: HTMLElement, event: string, value: ObservableMaybe<null | undefined | EventListener> ): void => {
 
-  resolveObservable ( value, setEventStatic.bind ( undefined, element, event ) );
+  resolveObservable<EventListener | null | undefined> ( value, setEventStatic.bind ( undefined, element, event ) ); //TSC
 
 };
 
@@ -672,7 +672,7 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
     element.setAttribute ( key, '' ); // Ensuring the attribute is present
 
-    value ( element, 'setAttribute', key ); //TODO: Pass isSVG
+    value ( element, 'setAttribute', key ); //TODO: Pass isSVG too
 
   }
 

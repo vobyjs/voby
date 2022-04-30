@@ -11,7 +11,17 @@ import type {SuspenseData} from '~/types';
 
 const SuspenseContext = {
 
-  make: (): SuspenseData => {
+  new: (): SuspenseData => {
+
+    const data = SuspenseContext.create ();
+
+    SuspenseContext.set ( data );
+
+    return data;
+
+  },
+
+  create: (): SuspenseData => {
 
     const parent = SuspenseContext.get ();
     const count = $(0);

@@ -9,9 +9,9 @@ import type {Child, ChildResolved, ChildWithMetadata, FunctionMaybe, ObservableR
 
 //TODO: Enforce children of Switch to be of type Switch.Case or Switch.Default
 
-const Switch = <T, R extends Child> ({ when, children }: { when: FunctionMaybe<T>, children: Child[] }): ObservableReadonly<ChildResolved> => {
+const Switch = <T> ({ when, children }: { when: FunctionMaybe<T>, children: Child[] }): ObservableReadonly<ChildResolved> => {
 
-  const childrenWithCases = children as (() => ChildWithMetadata<[T, R] | [R]>)[]; //TSC
+  const childrenWithCases = children as (() => ChildWithMetadata<[T, Child] | [Child]>)[]; //TSC
   const cases = childrenWithCases.map ( child => child ().metadata );
 
   return oby.switch ( when, cases );
