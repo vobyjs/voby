@@ -43,7 +43,7 @@ function createElement ( component: Component, props: Props | null, ..._children
       const element = (): Child => {
 
         const instance = new component ( props );
-        const child = instance.render ();
+        const child = instance.render ( instance.props );
 
         if ( !isNil ( ref ) ) setRef ( instance, ref );
 

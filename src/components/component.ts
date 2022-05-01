@@ -21,7 +21,7 @@ class Component<P = {}> {
 
   /* API */
 
-  render (): Child {
+  render ( props: P ): Child {
 
     throw new Error ( 'Missing render function' );
 
