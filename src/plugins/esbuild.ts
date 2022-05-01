@@ -8,9 +8,9 @@ import path from 'node:path';
 
 const esbuild = () => {
 
-  const jsxInject = `import {createElement as $$h, Fragment as $$f} from 'voby';\n`;
-  const jsxFactory = '$$h';
-  const jsxFragment = '$$f';
+  const jsxInject = `import {createElement, Fragment} from 'voby';\n`;
+  const jsxFactory = 'createElement';
+  const jsxFragment = 'Fragment';
 
   return {
     name: 'voby',
