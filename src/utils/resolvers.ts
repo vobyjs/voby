@@ -1,7 +1,6 @@
 
 /* IMPORT */
 
-import {SYMBOL_ELEMENT} from '~/constants';
 import useEffect from '~/hooks/use_effect';
 import isObservable from '~//methods/is_observable';
 import {isArray, isFunction, isPrimitive} from '~/utils/lang';
@@ -13,29 +12,21 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T ) => v
 
   if ( isFunction ( value ) ) {
 
-    if ( SYMBOL_ELEMENT in value ) {
+    let valuePrev: T | undefined;
+    let valuePrimitive = false;
 
-      resolveChild ( value (), setter );
+    useEffect ( () => {
 
-    } else {
+      const valueNext = value ();
 
-      let valuePrev: T | undefined;
-      let valuePrimitive = false;
+      if ( valuePrimitive && valuePrev === valueNext ) return; // Nothing actually changed, skipping
 
-      useEffect ( () => {
+      resolveChild ( valueNext, setter );
 
-        const valueNext = value ();
+      valuePrev = valueNext;
+      valuePrimitive = isPrimitive ( valueNext );
 
-        if ( valuePrimitive && valuePrev === valueNext ) return; // Nothing actually changed, skipping
-
-        resolveChild ( valueNext, setter );
-
-        valuePrev = valueNext;
-        valuePrimitive = isPrimitive ( valueNext );
-
-      });
-
-    }
+    });
 
   } else if ( isArray ( value ) ) {
 

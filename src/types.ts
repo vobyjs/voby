@@ -1,8 +1,4 @@
 
-/* HELPERS */
-
-declare const ElementSymbol: unique symbol;
-
 /* MAIN */
 
 type ArrayMaybe<T = unknown> = T[] | T;
@@ -37,7 +33,7 @@ type Context<T = unknown> = { Consumer: ContextConsumer<T>, Provider: ContextPro
 
 type Disposer = () => void;
 
-type Element<T = Child> = { (): T, readonly [ElementSymbol]: true };
+type Element<T = Child> = () => T;
 
 type EventListener = ( event: Event ) => void;
 
