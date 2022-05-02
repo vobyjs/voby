@@ -1884,6 +1884,17 @@ class TestComponentStaticProps extends Component<{ value: number }> {
   }
 }
 
+class TestComponentStaticRenderProps extends Component<{ value: number }> {
+  render (props): JSX.Element {
+    return (
+      <>
+        <h3>Component - Static Render Props</h3>
+        <p>{props.value}</p>
+      </>
+    );
+  }
+}
+
 class TestComponentObservable extends Component<{}> {
   getRandom (): number {
     return Math.random ();
@@ -1977,17 +1988,21 @@ const TestForObservableObservables = (): JSX.Element => {
   const v1 = $(1);
   const v2 = $(2);
   const v3 = $(3);
-  const values = $([v1, v2, v3]);
+  const v4 = $(4);
+  const v5 = $(5);
+  const values = $([v1, v2, v3, v4, v5]);
   useInterval ( () => v1 ( v1 () + 1 ), TEST_INTERVAL );
   useInterval ( () => v2 ( v2 () + 1 ), TEST_INTERVAL );
   useInterval ( () => v3 ( v3 () + 1 ), TEST_INTERVAL );
+  useInterval ( () => v4 ( v4 () + 1 ), TEST_INTERVAL );
+  useInterval ( () => v5 ( v5 () + 1 ), TEST_INTERVAL );
   useInterval ( () => values ( values ().slice ().sort ( () => .5 - Math.random () ) ), TEST_INTERVAL );
   return (
     <>
       <h3>For - Observable Observables</h3>
       <For values={values}>
         {( value: Observable<number> ) => {
-          return <p>Value: {value}</p>
+          return <p>Value: {value}</p>;
         }}
       </For>
     </>
@@ -2813,6 +2828,40 @@ const TestSuspenseFallbackFunction = (): JSX.Element => {
   );
 };
 
+const TestSuspenseCleanup = (): JSX.Element => {
+  const ChildrenLoop = () => {
+    useResource ( () => {
+      return new Promise ( () => {} );
+    });
+    return <p>Loop!</p>;
+  };
+  const ChildrenPlain = () => {
+    return <p>Loaded!</p>;
+  };
+  const Children = (): JSX.Element => {
+    const o = $(true);
+    const toggle = () => o ( prev => !prev );
+    setTimeout ( toggle, TEST_INTERVAL );
+    return (
+      <Ternary when={o}>
+        <ChildrenLoop />
+        <ChildrenPlain />
+      </Ternary>
+    );
+  };
+  const Fallback = (): JSX.Element => {
+    return <p>Loading...</p>
+  };
+  return (
+    <>
+      <h3>Suspense - Cleanup</h3>
+      <Suspense fallback={<Fallback />}>
+        <Children />
+      </Suspense>
+    </>
+  );
+};
+
 const Test = (): JSX.Element => {
   TestRenderToString ();
   TestRenderToStringSuspense ();
@@ -2955,6 +3004,7 @@ const Test = (): JSX.Element => {
       <TestSwitchDefaultFunction />
       <TestComponentStatic />
       <TestComponentStaticProps value={123} />
+      <TestComponentStaticRenderProps value={123} />
       <TestComponentObservable />
       <TestComponentFunction />
       <TestForStatic />
@@ -3002,6 +3052,7 @@ const Test = (): JSX.Element => {
       <TestSuspenseChildrenFunction />
       <TestSuspenseFallbackObservableStatic />
       <TestSuspenseFallbackFunction />
+      <TestSuspenseCleanup />
       <hr />
     </>
   );
