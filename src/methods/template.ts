@@ -301,7 +301,9 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
       const clone = (): Element => {
 
-        if ( clones.length ) return clones.pop ()!; //TSC
+        const recycled = clones.pop ();
+
+        if ( recycled ) return recycled;
 
         const clone = root.cloneNode ( true );
 

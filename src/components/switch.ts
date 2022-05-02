@@ -14,7 +14,7 @@ const Switch = <T> ({ when, children }: { when: FunctionMaybe<T>, children: Chil
   const childrenWithValues = children as (() => ChildWithMetadata<[T, Child] | [Child]>)[]; //TSC
   const values = childrenWithValues.map ( child => child ().metadata );
 
-  return oby.switch ( when, values );
+  return oby.switch ( when, values as any ); //TSC
 
 };
 

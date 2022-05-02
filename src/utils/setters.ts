@@ -424,9 +424,11 @@ const setEventStatic = (() => {
 
   const delegatedEventsListening: Record<string, boolean> = {};
 
-  const delegate = ( event: keyof typeof delegatedEvents ): void => {
+  const delegate = ( event: string ): void => {
 
-    const key = delegatedEvents[event];
+    const key: string | undefined = delegatedEvents[event];
+
+    if ( !key ) return;
 
     document[event] = ( event: Event ): void => {
 
@@ -477,7 +479,7 @@ const setEventStatic = (() => {
 
         delegatedEventsListening[event] = true;
 
-        delegate ( event as any ); //TSC
+        delegate ( event );
 
       }
 
