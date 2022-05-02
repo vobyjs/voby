@@ -1,10 +1,10 @@
 
 html, body {
   height: 100%;
-  background: #222;
+  background: #222222;
   font: 100%/1.21 'Helvetica Neue',helvetica,sans-serif;
   text-rendering: optimizeSpeed;
-  color: #888;
+  color: #888888;
   overflow: hidden;
 }
 
@@ -24,7 +24,7 @@ html, body {
   width: 8px;
   height: 8px;
   margin: -5px 0 0 -5px;
-  border: 2px solid #F00;
+  border: 2px solid #FF0000;
   border-radius: 50%;
   transform-origin: 50% 50%;
   transition: all 250ms ease;

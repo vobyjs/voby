@@ -17,32 +17,41 @@
 
 .clock-face {
   stroke: #333333;
-  fill: white;
+  fill: #ffffff;
 }
 
 .minor {
   stroke: #999999;
   stroke-width: 0.5;
+  stroke-linecap: round;
 }
 
 .major {
   stroke: #333333;
-  stroke-width: 1;
+  stroke-width: 0.75;
+  stroke-linecap: round;
 }
 
 .hour {
   stroke: #333333;
+  stroke-width: 1.75;
+  stroke-linecap: round;
 }
 
 .minute {
-  stroke: #666666;
+  stroke: #333333;
+  stroke-width: 1.25;
+  stroke-linecap: round;
 }
 
-.second,
-.second-counterweight {
+.second {
   stroke: #dd0000;
+  stroke-width: 0.75;
+  stroke-linecap: round;
 }
 
-.second-counterweight {
+.millisecond {
+  stroke: #b4bfcc66;
   stroke-width: 3;
+  stroke-linecap: round;
 }

@@ -36,88 +36,9 @@ const buildData = (() => {
   };
 })();
 
-/* MODEL FAST */
+/* MODEL */
 
-const ModelFast = (() => {
-
-  /* STATE */
-
-  const $data = $<IDatum[]>( [] );
-  const $selected = $( -1 );
-
-  /* API */
-
-  const run = (): void => {
-    runWith ( 1000 );
-  };
-
-  const runLots = (): void => {
-    runWith ( 10000 );
-  };
-
-  const runWith = ( length: number ): void => {
-    clear ();
-    $data ( buildData ( length ) );
-  };
-
-  const add = (): void => {
-    const data = $data ();
-    data.push.apply ( data, buildData ( 1000 ) );
-    $data.emit ();
-  };
-
-  const update = (): void => {
-    const data = $data ();
-    for ( let i = 0, l = data.length; i < l; i += 10 ) {
-      const {label} = data[i];
-      label.update ( label => label + ' !!!' );
-    }
-  };
-
-  const swapRows = (): void => {
-    const data = $data ();
-    if ( data.length <= 998 ) return;
-    const datum1 = data[1];
-    const datum998 = data[998];
-    data[1] = datum998;
-    data[998] = datum1;
-    $data.emit ();
-  };
-
-  const dispose = (): void => {
-    const data = $data ();
-    for ( let i = 0, l = data.length; i < l; i++ ) {
-      data[i].label.dispose ();
-    }
-    isSelected.dispose ();
-  };
-
-  const clear = (): void => {
-    dispose ();
-    $data ( [] );
-  };
-
-  const remove = ( id: number ): void => {
-    const data = $data ();
-    const index = data.findIndex ( datum => datum.id === id );
-    if ( index === -1 ) return;
-    const datum = data[index];
-    datum.label.dispose ();
-    data.splice ( index, 1 );
-    $data.emit ();
-  };
-
-  const select = ( id: number ): void => {
-    $selected ( id );
-  };
-
-  const isSelected = useSelector ( $selected );
-
-  return { $data, $selected, run, runLots, runWith, add, update, swapRows, dispose, clear, remove, select, isSelected };
-
-})();
-
-const ModelClean = (() => {
+const Model = (() => {
 
   /* STATE */
 
@@ -139,13 +60,13 @@ const ModelClean = (() => {
   };
 
   const add = (): void => {
-    $data.update ( data => [...data, ...buildData ( 1000 )] );
+    $data ( data => [...data, ...buildData ( 1000 )] );
   };
 
   const update = (): void => {
     const data = $data ();
     for ( let i = 0, l = data.length; i < l; i += 10 ) {
-      data[i].label.update ( label => label + ' !!!' );
+      data[i].label ( label => label + ' !!!' );
     }
   };
 
@@ -164,7 +85,7 @@ const ModelClean = (() => {
   };
 
   const remove = ( id: number ): void  => {
-    $data.update ( data => {
+    $data ( data => {
       const idx = data.findIndex ( datum => datum.id === id );
       return [...data.slice ( 0, idx ), ...data.slice ( idx + 1 )];
     });
@@ -205,7 +126,7 @@ const Row = template (({ id, label, className, onSelect, onRemove }: { id: Funct
 
 const App = (): JSX.Element => {
 
-  const {$data, run, runLots, add, update, swapRows, clear, remove, select, isSelected} = ModelClean;
+  const {$data, run, runLots, add, update, swapRows, clear, remove, select, isSelected} = Model;
 
   return (
     <div class="container">

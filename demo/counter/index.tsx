@@ -9,8 +9,8 @@ const Counter = (): JSX.Element => {
 
   const value = $(0);
 
-  const increment = () => value ( value () + 1 );
-  const decrement = () => value ( value () - 1 );
+  const increment = () => value ( prev => prev + 1 );
+  const decrement = () => value ( prev => prev - 1 );
 
   return (
     <>

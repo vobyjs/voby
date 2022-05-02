@@ -3,7 +3,7 @@
 
 import path from 'path';
 import {defineConfig} from 'vite';
-import voby from 'voby/vite-plugin';
+import voby from 'voby/vite';
 
 /* MAIN */
 
@@ -13,6 +13,7 @@ const config = defineConfig ({
   ],
   resolve: {
     alias: {
+      '~': path.resolve ( __dirname, '../../src' ),
       voby: process.env.DEV ? path.resolve ( __dirname, '../../src' ) : 'voby'
     }
   }

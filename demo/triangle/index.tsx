@@ -4,9 +4,11 @@
 import {Observable, ObservableReadonly} from 'voby';
 import {$, render, useInterval, useAnimationLoop, useComputed} from 'voby';
 
-/* MAIN */
+/* HELPERS */
 
 const RADIUS = 25;
+
+/* MAIN */
 
 const useSeconds = (): Observable<number> => {
 

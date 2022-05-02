@@ -2,19 +2,21 @@
 /* IMPORT */
 
 import {Observable, ObservableReadonly} from 'voby';
-import {$, render, For, If, useAnimationLoop, useComputed} from 'voby';
+import {$, render, For, If, useAnimationLoop, useComputed, useSample} from 'voby';
 
-/* MAIN */
+/* HELPERS */
 
 const COUNT = 400;
 const LOOPS = 6;
+
+/* MAIN */
 
 const Cursor = ({ big, label, x, y, color }: { big: Observable<boolean>, label: boolean, x: ObservableReadonly<number>, y: ObservableReadonly<number>, color?: ObservableReadonly<string> }): JSX.Element => {
 
   return (
     <div class={{ cursor: true, label, big }} style={{ left: x, top: y, borderColor: color }}>
       <If when={label}>
-        <span class="label">${x},${y}</span>
+        <span class="label">{x},{y}</span>
       </If>
     </div>
   );
@@ -50,17 +52,17 @@ const Spiral = (): JSX.Element => {
       const f = i / max () * LOOPS;
       const θ = f * 2 * Math.PI;
       const m = 20 + i;
-      return (x.sample () + Math.sin ( θ ) * m) | 0;
+      return (useSample ( x ) + Math.sin ( θ ) * m) | 0;
     },
     y: (): number => {
       const f = i / max () * LOOPS;
       const θ = f * 2 * Math.PI;
       const m = 20 + i;
-      return (y.sample () + Math.cos ( θ ) * m) | 0;
+      return (useSample ( y ) + Math.cos ( θ ) * m) | 0;
     },
     color: (): string => {
       const f = i / max () * LOOPS;
-      const hue = (f * 255 + counter.sample () * 10) % 255;
+      const hue = (f * 255 + useSample ( counter ) * 10) % 255;
       return `hsl(${hue},100%,50%)`;
     }
   });

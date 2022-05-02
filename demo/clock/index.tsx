@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {$, render, svg, useInterval, Observable} from 'voby';
+import {$, render, useAnimationLoop, Observable} from 'voby';
 
 /* HELPERS */
 
@@ -13,47 +13,64 @@ const mapRange = <T extends unknown> ( start: number, end: number, increment: nu
   return results;
 };
 
-/* MAIN */
+const getMillisecondsSinceMidnight = (): number => {
 
-const useDate = () => {
+  const now = Date.now ();
+  const midnight = new Date ().setHours ( 0, 0, 0, 0 );
 
-  const date = $(new Date ());
-
-  const tick = () => date ( new Date () );
-
-  useInterval ( tick, 1000 );
-
-  return date;
+  return now - midnight;
 
 };
 
-const ClockFace = ({ date }: { date: Observable<Date> }): JSX.Element => {
+/* MAIN */
 
-  return svg`
+const useTime = () => {
+
+  const time = $(getMillisecondsSinceMidnight ());
+
+  const tick = () => time ( getMillisecondsSinceMidnight () );
+
+  useAnimationLoop ( tick );
+
+  return time;
+
+};
+
+const ClockFace = ({ time }: { time: Observable<number> }): JSX.Element => {
+
+  const abstract = ( rotate: number ) => `rotate(${rotate + 90} 0 0)`;
+  const millisecond = () => abstract ( ( time () / 1000 ) * 360 );
+  const second = () => abstract ( ( time () / 1000 % 60 ) * ( 360 / 60 ) );
+  const minute = () => abstract ( ( time () / 1000 / 60 % 60 ) * ( 360 / 60 ) );
+  const hour = () => abstract ( ( time () / 1000 / 60 / 60 % 12 ) * ( 360 / 12 ) );
+
+  return (
     <svg viewBox="0 0 100 100">
-      <g transform=translate(50,50)>
-        <circle class=clock-face r=48 />
-        ${mapRange ( 0, 60, 1, i => `<line class=minor y1=42 y2=45 transform=rotate(${(360 * i) / 60}) />` ).join ( '' )}
-        ${mapRange ( 0, 12, 1, i => `<line class=major y1=32 y2=45 transform=rotate(${(360 * i) / 12}) />` ).join ( '' )}
-        <line class=hour y1=2 y2=-20 transform=rotate(${() => 30 * date ().getHours () + date ().getMinutes () / 2}) />
-        <line class=minute y1=4 y2=-30 transform=rotate(${() => 6 * date ().getMinutes () + date ().getSeconds () / 10}) />
-        <g transform=rotate(${() => 6 * date ().getSeconds ()})>
-          <line class=second y1=10 y2=-38 />
-          <line class=second-counterweight y1=10 y2=2 />
-        </g>
+      <g transform="translate(50, 50)">
+        <circle class="clock-face" r={48} />
+        {mapRange ( 0, 60, 1, i => (
+          <line class="minor" y1={44} y2={45} transform={`rotate(${(360 * i) / 60})`} />
+        ))}
+        {mapRange ( 0, 12, 1, i => (
+          <line class="major" y1={40} y2={45} transform={`rotate(${(360 * i) / 12})`} />
+        ))}
+        <line class="millisecond" x1={0} x2={-44} transform={millisecond} />
+        <line class="second" x1={0} x2={-38} transform={second} />
+        <line class="minute" x1={0} x2={-32} transform={minute} />
+        <line class="hour" x1={0} x2={-22} transform={hour} />
       </g>
     </svg>
-  `;
+  );
 
 };
 
 const Clock = (): JSX.Element => {
 
-  const date = useDate ();
+  const time = useTime ();
 
   return (
     <div class="clock">
-      <ClockFace date={date} />
+      <ClockFace time={time} />
     </div>
   );
 

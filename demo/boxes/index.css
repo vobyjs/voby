@@ -14,10 +14,10 @@ body {
   justify-content: center;
 }
 
-input {
+.controls input {
   flex-grow: 1;
 }
 
-label {
+.controls label {
   padding-left: 10px;
 }

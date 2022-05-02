@@ -9,11 +9,13 @@ import {$, createContext, render, renderToString, template} from 'voby';
 
 globalThis.Voby = Voby;
 
+/* HELPERS */
+
+const TEST_INTERVAL = 500; // Lowering this makes it easier to spot some memory leaks
+
 /* MAIN */
 
 //TODO: Test that error boundaries wrapped around built-in components work
-
-const TEST_INTERVAL = 500; // Lowering this makes it easier to spot some memory leaks
 
 const TestNullStatic = (): JSX.Element => {
   return (
