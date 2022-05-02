@@ -4,7 +4,7 @@
 import './types';
 import Fragment from '~/components/fragment';
 import createElement from '~/methods/create_element';
-import type {Child, Component, Element, Props} from '~/types';
+import type {Component, Element, Props} from '~/types';
 
 /* MAIN */
 

@@ -1,16 +1,15 @@
 
 /* IMPORT */
 
-import useSampleElement from '~/hooks/use_sample_element';
 import oby from '~/oby';
 import {assign} from '~/utils/lang';
-import type {Child, ChildResolved, ChildWithMetadata, FunctionMaybe, ObservableReadonly} from '~/types';
+import type {Child, ChildWithMetadata, FunctionMaybe, ObservableReadonly} from '~/types';
 
 /* MAIN */
 
 //TODO: Enforce children of Switch to be of type Switch.Case or Switch.Default
 
-const Switch = <T> ({ when, children }: { when: FunctionMaybe<T>, children: Child }): ObservableReadonly<ChildResolved> => {
+const Switch = <T> ({ when, children }: { when: FunctionMaybe<T>, children: Child }): ObservableReadonly<Child> => {
 
   const childrenWithValues = children as (() => ChildWithMetadata<[T, Child] | [Child]>)[]; //TSC
   const values = childrenWithValues.map ( child => child ().metadata );
@@ -23,7 +22,7 @@ const Switch = <T> ({ when, children }: { when: FunctionMaybe<T>, children: Chil
 
 Switch.Case = <T> ({ when, children }: { when: T, children: Child }): ChildWithMetadata<[T, Child]> => {
 
-  const metadata: { metadata: [T, Child] } = { metadata: [when, () => useSampleElement ( children )] };
+  const metadata: { metadata: [T, Child] } = { metadata: [when, children] };
 
   return assign ( () => children, metadata );
 
@@ -31,7 +30,7 @@ Switch.Case = <T> ({ when, children }: { when: T, children: Child }): ChildWithM
 
 Switch.Default = ({ children }: { children: Child }): ChildWithMetadata<[Child]> => {
 
-  const metadata: { metadata: [Child] } = { metadata: [() => useSampleElement ( children )] };
+  const metadata: { metadata: [Child] } = { metadata: [children] };
 
   return assign ( () => children, metadata );
 

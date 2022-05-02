@@ -11,7 +11,7 @@ type Callback = () => void;
 
 type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child) | ((() => Child) & { metadata: any });
 
-type ChildResolved = null | undefined | boolean | bigint | number | string | symbol | Node | Array<ChildResolved>;
+type ChildStatic = null | undefined | boolean | bigint | number | string | symbol | Node | Array<ChildStatic>;
 
 type ChildWithMetadata<T = unknown> = (() => Child) & { metadata: T };
 
@@ -87,4 +87,4 @@ type TemplateVariablesMap = Map<TemplateActionPath, string>;
 
 /* EXPORT */
 
-export type {ArrayMaybe, Callback, Child, ChildResolved, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, Disposer, Element, EventListener, FN, FunctionMaybe, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceLoading, ResourceRejected, ResourceResolved, Resource, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap};
+export type {ArrayMaybe, Callback, Child, ChildStatic, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, Disposer, Element, EventListener, FN, FunctionMaybe, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceLoading, ResourceRejected, ResourceResolved, Resource, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap};

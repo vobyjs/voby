@@ -7,7 +7,7 @@ import useEffect from '~/hooks/use_effect';
 import useReadonly from '~/hooks/use_readonly';
 import $ from '~/methods/S';
 import $$ from '~/methods/SS';
-import {castError, isPromise} from '~/utils/lang';
+import {castError, isPromise, noop, once} from '~/utils/lang';
 import type {ObservableReadonly, ObservableMaybe, PromiseMaybe, Resource} from '~/types';
 
 /* MAIN */
@@ -19,15 +19,18 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): O
   useEffect ( () => {
 
     const disposed = useDisposed ();
+
     const suspense = SuspenseContext.get ();
+    const suspenseDecrement = once ( suspense?.decrement || noop );
+    const suspenseIncrement = once ( suspense?.increment || noop );
 
     resource ({ loading: true });
 
     const onResolve = ( value: T ): void => {
 
-      suspense?.decrement ();
-
       if ( disposed () ) return;
+
+      suspenseDecrement ();
 
       resource ({ loading: false, value });
 
@@ -35,9 +38,9 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): O
 
     const onReject = ( exception: unknown ): void => {
 
-      suspense?.decrement ();
-
       if ( disposed () ) return;
+
+      suspenseDecrement ();
 
       const error = castError ( exception );
 
@@ -49,7 +52,7 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): O
 
       try {
 
-        suspense?.increment ();
+        suspenseIncrement ();
 
         const value = $$(fetcher ());
 
@@ -72,6 +75,8 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): O
     };
 
     fetch ();
+
+    return suspenseDecrement;
 
   });
 

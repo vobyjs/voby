@@ -110,6 +110,24 @@ const isTemplateAccessor = ( value: unknown ): value is TemplateActionProxy => {
 
 };
 
+const noop = (): void => {};
+
+const once = ( fn: () => void ): (() => void) => {
+
+  let executed = false;
+
+  return (): void => {
+
+    if ( executed ) return;
+
+    executed = true;
+
+    fn ();
+
+  };
+
+};
+
 /* EXPORT */
 
-export {assign, castArray, castError, flatten, indexOf, isArray, isError, isFunction, isNil, isNode, isPrimitive, isPromise, isString, isSVG, isTemplateAccessor};
+export {assign, castArray, castError, flatten, indexOf, isArray, isError, isFunction, isNil, isNode, isPrimitive, isPromise, isString, isSVG, isTemplateAccessor, noop, once};

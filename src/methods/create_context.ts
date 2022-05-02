@@ -2,7 +2,6 @@
 /* IMPORT */
 
 import useComputed from '~/hooks/use_computed';
-import useSampleElement from '~/hooks/use_sample_element';
 import resolve from '~/methods/resolve';
 import oby from '~/oby';
 import type {Child, Context} from '~/types';
@@ -19,7 +18,7 @@ const createContext = <T> ( defaultValue?: T ): Context<T> => {
 
       oby.context ( symbol, value );
 
-      return resolve ( useSampleElement ( children ) );
+      return resolve ( children );
 
     });
 

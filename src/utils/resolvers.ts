@@ -3,9 +3,8 @@
 
 import {SYMBOL_ELEMENT} from '~/constants';
 import useEffect from '~/hooks/use_effect';
-import useSample from '~/hooks/use_sample';
 import isObservable from '~//methods/is_observable';
-import {isFunction, isPrimitive} from '~/utils/lang';
+import {isArray, isFunction, isPrimitive} from '~/utils/lang';
 import type {FunctionMaybe, ObservableMaybe} from '~/types';
 
 /* MAIN */
@@ -16,7 +15,7 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T ) => v
 
     if ( SYMBOL_ELEMENT in value ) {
 
-      resolveChild ( useSample ( value ), setter );
+      resolveChild ( value (), setter );
 
     } else {
 
@@ -37,6 +36,14 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T ) => v
       });
 
     }
+
+  } else if ( isArray ( value ) ) {
+
+    useEffect ( () => {
+
+      setter ( resolveResolved ( value ) );
+
+    });
 
   } else {
 
@@ -102,6 +109,26 @@ const resolveObservable = <T> ( value: ObservableMaybe<T>, setter: (( value?: T,
 
 };
 
+const resolveResolved = <T> ( value: T ): any => {
+
+  while ( isObservable<T> ( value ) ) {
+
+    value = value ();
+
+  }
+
+  if ( isArray ( value ) ) {
+
+    return value.map ( resolveResolved );
+
+  } else {
+
+    return value;
+
+  }
+
+}
+
 /* EXPORT */
 
-export {resolveChild, resolveFunction, resolveObservable};
+export {resolveChild, resolveFunction, resolveObservable, resolveResolved};

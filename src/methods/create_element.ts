@@ -3,6 +3,7 @@
 
 import BaseComponent from '~/components/component';
 import {SVG_ELEMENTS, SYMBOL_ELEMENT} from '~/constants';
+import useSample from '~/hooks/use_sample';
 import {createHTMLNode, createSVGNode} from '~/utils/creators';
 import {isFunction, isNil, isNode, isString} from '~/utils/lang';
 import {setProps, setRef} from '~/utils/setters';
@@ -53,7 +54,7 @@ function createElement ( component: Component, props: Props | null, ..._children
 
       element[SYMBOL_ELEMENT] = true;
 
-      return element as Element; //TSC
+      return useSample.bind ( undefined, element ) as Element; //TSC
 
     } else {
 
@@ -70,7 +71,7 @@ function createElement ( component: Component, props: Props | null, ..._children
 
       element[SYMBOL_ELEMENT] = true;
 
-      return element as Element; //TSC
+      return useSample.bind ( undefined, element ) as Element; //TSC
 
     }
 
@@ -97,7 +98,7 @@ function createElement ( component: Component, props: Props | null, ..._children
 
     element[SYMBOL_ELEMENT] = true;
 
-    return element as Element; //TSC
+    return useSample.bind ( undefined, element ) as Element; //TSC
 
   } else if ( isNode ( component ) ) {
 

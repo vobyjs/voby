@@ -2,14 +2,13 @@
 /* IMPORT */
 
 import oby from '~/oby';
-import useSampleElement from '~/hooks/use_sample_element';
-import type {Child, ChildResolved, FunctionMaybe, ObservableReadonly} from '~/types';
+import type {Child, FunctionMaybe, ObservableReadonly} from '~/types';
 
 /* MAIN */
 
-const Ternary = ({ when, children }: { when: FunctionMaybe<unknown>, children: [Child, Child] }): ObservableReadonly<ChildResolved> => {
+const Ternary = ({ when, children }: { when: FunctionMaybe<unknown>, children: [Child, Child] }): ObservableReadonly<Child> => {
 
-  return oby.ternary ( when, () => useSampleElement ( children[0] ), () => useSampleElement ( children[1] ) );
+  return oby.ternary ( when, children[0], children[1] );
 
 };
 
