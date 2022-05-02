@@ -3,7 +3,7 @@
 
 import * as Voby from 'voby';
 import {Observable} from 'voby';
-import {Component, Dynamic, ErrorBoundary, For, Fragment, If, Portal, Suspense, Switch, Ternary} from 'voby';
+import {Component, Dynamic, ErrorBoundary, For, If, Portal, Suspense, Switch, Ternary} from 'voby';
 import {useBatch, useComputed, useContext, useEffect, useInterval, usePromise, useResource, useTimeout} from 'voby';
 import {$, createContext, render, renderToString, template} from 'voby';
 
