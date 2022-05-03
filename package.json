@@ -64,7 +64,7 @@
     "updates"
   ],
   "dependencies": {
-    "oby": "^7.0.1"
+    "oby": "^7.0.2"
   },
   "devDependencies": {
     "@types/node": "^17.0.31",

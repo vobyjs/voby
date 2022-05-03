@@ -795,9 +795,7 @@ This hook registers a function to be called when any of its dependencies change,
 Interface:
 
 ```ts
-function useComputed <T> ( fn: ( valuePrev: T | undefined ) => T ): ObservableReadonly<T>;
-function useComputed <T> ( fn: ( valuePrev: T | undefined ) => T, valueInitial?: undefined, options?: ObservableOptions<T | undefined> ): ObservableReadonly<T>;
-function useComputed <T> ( fn: ( valuePrev: T ) => T, valueInitial: T, options?: ObservableOptions<T> ): ObservableReadonly<T>;
+function useComputed <T> ( fn: () => T, options?: ObservableOptions<T | undefined> ): ObservableReadonly<T>;
 ```
 
 Usage:
