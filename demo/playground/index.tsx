@@ -1342,7 +1342,7 @@ const TestCleanupInnerPortal = () => {
   );
 };
 
-const TestDyanmicHeading = (): JSX.Element => {
+const TestDynamicHeading = (): JSX.Element => {
   const level = $(1);
   const increment = () => level ( ( level () + 1 ) % 7 || 1 );
   useInterval ( increment, TEST_INTERVAL );
@@ -1354,6 +1354,51 @@ const TestDyanmicHeading = (): JSX.Element => {
           Level: {level}
         </Dynamic>
       )}
+    </>
+  );
+};
+
+const TestDynamicObservableComponent = (): JSX.Element => {
+  const level = $(1);
+  const component = useComputed ( () => `h${level ()}` );
+  const increment = () => level ( ( level () + 1 ) % 7 || 1 );
+  useInterval ( increment, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Dynamic - Observable Component</h3>
+      <Dynamic component={component}>
+        Level: {level}
+      </Dynamic>
+    </>
+  );
+};
+
+const TestDynamicObservableProps = (): JSX.Element => {
+  const red = { class: 'red' };
+  const blue = { class: 'blue' };
+  const props = $(red);
+  const toggle = () => props ( prev => prev === red ? blue : red );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Dynamic - Observable Props</h3>
+      <Dynamic component="h5" props={props}>
+        Content
+      </Dynamic>
+    </>
+  );
+};
+
+const TestDynamicObservableChildren = (): JSX.Element => {
+  const o = $(Math.random ());
+  const update = () => o ( Math.random () );
+  useInterval ( update, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Dynamic - Observable Props</h3>
+      <Dynamic component="h5">
+        {o}
+      </Dynamic>
     </>
   );
 };
@@ -2978,7 +3023,10 @@ const Test = (): JSX.Element => {
       <TestABCD />
       <TestCleanupInner />
       <TestCleanupInnerPortal />
-      <TestDyanmicHeading />
+      <TestDynamicHeading />
+      <TestDynamicObservableComponent />
+      <TestDynamicObservableProps />
+      <TestDynamicObservableChildren />
       <TestIfStatic />
       <TestIfObservable />
       <TestIfFunction />

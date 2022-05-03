@@ -1,14 +1,20 @@
 
 /* IMPORT */
 
+import useComputed from '~/hooks/use_computed';
 import createElement from '~/methods/create_element';
-import type {Child, Component, Element, Props} from '~/types';
+import $$ from '~/methods/SS';
+import type {Child, Component, ObservableMaybe, Props} from '~/types';
 
 /* MAIN */
 
-const Dynamic = ({ component, props, children }: { component: Component, props?: Props | null, children: Child }): Element => {
+const Dynamic = ({ component, props, children }: { component: Component, props?: ObservableMaybe<Props | null>, children: Child }): Child => {
 
-  return createElement ( component, props ?? null, children );
+  return useComputed ( () => {
+
+    return createElement ( $$(component), $$(props ?? null), children );
+
+  });
 
 };
 
