@@ -1,6 +1,12 @@
 
 <p align="center">
-  <img src="./resources/logo/logo.png" alt="Voby Logo" width="640px">
+  <img src="./resources/logo/logo-rounded.png" alt="Voby's Logo" width="640px">
+</p>
+
+<p align="center">
+  <a href="https://discord.gg/E6pK7VpnjC">
+    <img src="./resources/discord/button.png" alt="Join The Discord Chat" width="175px">
+  </a>
 </p>
 
 # Voby
@@ -19,13 +25,13 @@ This works similarly to [Solid](https://www.solidjs.com), but without the need f
 - **No key prop**: you can just map over arrays, or use the `For` component with an array of unique values, no need to specify keys explicitly.
 - **No Babel**: there's no need to use Babel with this framework, it works with plain old JS (plus JSX if you are into that). As a consequence we have 0 transform function bugs, because we don't have a transform function.
 - **No magic**: what you see if what you get, your code is not transformed to actually do something different than what you write, there are no surprises.
-- **No server support**: for the time being this framework is focused on local-first rich applications, no server-related features are implemented: no hydration, no server components, no SSR, no suspense etc.
+- **No server support**: for the time being this framework is focused on local-first rich applications, ~no server-related features are implemented: no hydration, no server components, no SSR, no streaming etc.
 - **Observable-based**: observables are at the core of our reactivity system. The way it works is very different from a React-like system, it may be more challenging to learn, but it's well worth the effort.
-- **Work in progress**: this is at best beta software, I'm working on it because I need something with great performance for [Notable](https://github.com/notable/notable), I'm allergic to third-party dependencies, I'd like something with an API that resonates with me, and I wanted to deeply understand how the more solid [Solid](https://www.solidjs.com), which you should probably use instead, works.
+- **Work in progress**: this is beta software, I'm working on it because I need something with great performance for [Notable](https://github.com/notable/notable), I'm allergic to third-party dependencies, I'd like something with an API that resonates with me, and I wanted to deeply understand how the more solid [Solid](https://www.solidjs.com), which you should probably use instead, works.
 
 ## Demo
 
-You can find some CodeSandbox demos below, more demos are contained inside the repository.
+You can find some demos and benchmarks below, more demos are contained inside the repository.
 
 - Playground: https://codesandbox.io/s/voby-playground-7w2pxg
 - Benchmark: https://codesandbox.io/s/voby-demo-benchmark-x0nr40
@@ -39,76 +45,63 @@ You can find some CodeSandbox demos below, more demos are contained inside the r
 
 ## APIs
 
-<!-- //TODO: List types too -->
-
-- [**Methods**](#methods)
-  - [`$`](#$)
-  - [`$$`](#$$)
-  - [`batch`](#batch)
-  - [`createContext`](#createcontext)
-  - [`createElement`](#createelement)
-  - [`createObservable`](#createobservable)
-  - [`isElement`](#iselement)
-  - [`isObservable`](#isobservable)
-  - [`owner`](#owner)
-  - [`render`](#render)
-  - [`renderToString`](#rendertostring)
-  - [`resolve`](#resolve)
-  - [`sample`](#sample)
-  - [`styled`](#styled)
-  - [`svg`](#svg)
-  - [`template`](#template)
-- [**Components**](#components)
-  - [`Component`](#component)
-  - [`Dynamic`](#dynamic)
-  - [`ErrorBoundary`](#errorboundary)
-  - [`For`](#for)
-  - [`Fragment`](#fragment)
-  - [`If`](#if)
-  - [`Portal`](#portal)
-  - [`Switch`](#switch)
-  - [`Ternary`](#ternary)
-- [**Hooks**](#hooks)
-  - [`useAbortController`](#useabortcontroller)
-  - [`useAbortSignal`](#useabortsignal)
-  - [`useAnimationFrame`](#useanimationframe)
-  - [`useAnimationLoop`](#useanimationloop)
-  - [`useCleanup`](#usecleanup)
-  - [`useComputed`](#usecomputed)
-  - [`useContext`](#usecontext)
-  - [`useDisposed`](#usedisposed)
-  - [`useEffect`](#useeffect)
-  - [`useError`](#useerror)
-  - [`useEventListener`](#useeventlistener)
-  - [`useFetch`](#usefetch)
-  - [`useFrom`](#usefrom)
-  - [`useIdleCallback`](#useidlecallback)
-  - [`useIdleLoop`](#useidleloop)
-  - [`useInterval`](#useinterval)
-  - [`usePromise`](#usepromise)
-  - [`useResolved`](#useresolved)
-  - [`useResource`](#useresource)
-  - [`useRoot`](#useroot)
-  - [`useSelector`](#useselector)
-  - [`useTimeout`](#usetimeout)
-- [**Extras**](#extras)
-  - [`vite`](#vite)
+| [Methods](#methods)                 | [Components](#components)         | [Hooks](#hooks)                             | [Types](#types)                             | [Extras](#extras)           |
+| ----------------------------------- | --------------------------------- | ------------------------------------------- | ------------------------------------------- | --------------------------- |
+| [`$`](#methods)                     | [`Component`](#component)         | [`useAbortController`](#useabortcontroller) | [`FunctionMaybe`](#functionmaybe)           | [`Esbuild`](#esbuild)       |
+| [`$$`](#methods)                    | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`Observable`](#observable)                 | [`JSX`](#jsx)               |
+| [`createContext`](#createcontext)   | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`ObservableReadonly`](#observablereadonly) | [`TypeScript`](#typescript) |
+| [`createElement`](#createelement)   | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableMaybe`](#observablemaybe)       | [`Vite`](#vite)             |
+| [`h`](#h)                           | [`Fragment`](#fragment)           | [`useBatch`](#usebatch)                     | [`ObservableOptions`](#observableoptions)   |                             |
+| [`isObservable`](#isobservable)     | [`If`](#if)                       | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                             |
+| [`render`](#render)                 | [`Portal`](#portal)               | [`useComputed`](#usecomputed)               | [`F`](#f)                                   |                             |
+| [`renderToString`](#rendertostring) | [`Suspense`](#suspense)           | [`useContext`](#usecontext)                 | [`O`](#o)                                   |                             |
+| [`resolve`](#resolve)               | [`Switch`](#switch)               | [`useDisposed`](#usedisposed)               |                                             |                             |
+| [`template`](#template)             | [`Ternary`](#ternary)             | [`useEffect`](#useeffect)                   |                                             |                             |
+|                                     |                                   | [`useError`](#useerror)                     |                                             |                             |
+|                                     |                                   | [`useEventListener`](#useeventlistener)     |                                             |                             |
+|                                     |                                   | [`useFetch`](#usefetch)                     |                                             |                             |
+|                                     |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                             |
+|                                     |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                             |
+|                                     |                                   | [`useInterval`](#useinterval)               |                                             |                             |
+|                                     |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                             |
+|                                     |                                   | [`usePromise`](#usepromise)                 |                                             |                             |
+|                                     |                                   | [`useReadonly`](#usereadonly)               |                                             |                             |
+|                                     |                                   | [`useResolved`](#useresolved)               |                                             |                             |
+|                                     |                                   | [`useResource`](#useresource)               |                                             |                             |
+|                                     |                                   | [`useRoot`](#useroot)                       |                                             |                             |
+|                                     |                                   | [`useSample`](#usesample)                   |                                             |                             |
+|                                     |                                   | [`useSelector`](#useselector)               |                                             |                             |
+|                                     |                                   | [`useTimeout`](#usetimeout)                 |                                             |                             |
 
 ## Usage
 
-This framework is just a view layer built on top of the Observable library [oby](https://github.com/fabiospampinato/oby), knowing how that works is necessary to understand how this works.
+This framework is simply a view layer built on top of the Observable library [`oby`](https://github.com/fabiospampinato/oby), knowing how that works is necessary to understand how this works.
 
-The following is going to be a very shallow documentation of the API. As I mentioned this isn't production-grade software, it may become that in the future though, are you interested?
+This framework basically re-exports everything that `oby` exports, sometimes with a slightly different interface, adjusted for usage as components or hooks, plus some additional functions.
+
+The following is going to be a very shallow documentation of the API. As I mentioned this probably isn't production-grade software, it may become that in the future though, are you interested?
 
 ### Methods
 
-The following top-level methods are provided.
+The following top-level functions are provided.
 
 #### `$`
 
-This function is just the defualt export of `oby`, it can be used to wrap a value in an observable.
+This function is just the default export of `oby`, it can be used to wrap a value in an observable.
 
-[Read upstream documentation](https://github.com/fabiospampinato/oby#usage).
+No additional methods are attached to this function. Everything that `oby` attaches to it is instead exported as components and hooks.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#core).
+
+Interface:
+
+```ts
+function $ <T> (): Observable<T | undefined>;
+function $ <T> ( value: undefined, options?: ObservableOptions<T | undefined> ): Observable<T | undefined>;
+function $ <T> ( value: T, options?: ObservableOptions<T> ): Observable<T>;
+```
+
+Usage:
 
 ```tsx
 import {$} from 'voby';
@@ -122,27 +115,35 @@ This function unwraps a potentially observable value.
 
 [Read upstream documentation](https://github.com/fabiospampinato/oby#get).
 
+Interface:
+
+```ts
+function $$ <T> ( value: T ): (T extends ObservableReadonly<infer U> ? U : T);
+```
+
+Usage:
+
 ```tsx
 import {$$} from 'voby';
 
 $$ // => Same as require ( 'oby' ).get
 ```
 
-#### `batch`
-
-This function holds onto updates within its scope and flushes them out at once once it exits.
-
-[Read upstream documentation](https://github.com/fabiospampinato/oby#batch).
-
-```tsx
-import {batch} from 'voby';
-
-batch // => Same as require ( 'oby' ).batch
-```
-
 #### `createContext`
 
-This function creates a context object, optionally with a default value, which can later be used to provide a new value for the context and to read the current value.
+This function creates a context object, optionally with a default value, which can later be used to provide a new value for the context or to read the current value.
+
+Interface:
+
+```ts
+type ContextConsumer<T> = ( props: { children: (( value?: T ) => JSX.Element) } ) => JSX.Element;
+type ContextProvider<T> = ( props: { value: T, children: JSX.Element } ) => JSX.Element;
+type Context<T> = { Consumer: ContextConsumer<T>, Provider: ContextProvider<T> };
+
+function createContext <T> ( defaultValue?: T ): Context<T>;
+```
+
+Usage:
 
 ```tsx
 import {createContext} from 'voby';
@@ -166,7 +167,17 @@ const App = () => {
 
 #### `createElement`
 
-This is the function that will make DOM nodes and call/instantiate components, it will be called for you automatically via JSX.
+This is the internal function that will make DOM nodes and call/instantiate components, it will be called for you automatically via JSX.
+
+Interface:
+
+```ts
+function createElement <T extends keyof JSX.IntrinsicElementsMap> ( component: T, props: {} | null, ...children: JSX.Element[] ): (() => JSX.IntrinsicElementsMap[T]);
+function createElement <T extends Element> ( component: T | (() => T), props: {} | null, ...children: JSX.Element[] ): (() => T);
+function createElement ( component: Component, props: {} | null, ...children: JSX.Element[] ): (() => JSX.Element);
+```
+
+Usage:
 
 ```tsx
 import {createElement} from 'voby';
@@ -174,32 +185,37 @@ import {createElement} from 'voby';
 const element = createElement ( 'div', { class: 'foo' }, 'child' ); // => () => HTMLDivElement
 ```
 
-#### `createObservable`
+#### `h`
 
-This function creates a new observable. It's just an alias for `$`.
+This function is just an alias for the `createElement` function, it's more convenient to use if you want to use Voby in hyperscript mode just because it has a much shorter name.
 
-[Read upstream documentation](https://github.com/fabiospampinato/oby#usage).
+Interface:
 
-```tsx
-import {createObservable} from 'voby';
-
-createObservable // => Same as require ( 'oby' ).default
+```ts
+function h <T extends keyof JSX.IntrinsicElementsMap> ( component: T, props: {} | null, ...children: JSX.Element[] ): (() => JSX.IntrinsicElementsMap[T]);
+function h <T extends Element> ( component: T | (() => T), props: {} | null, ...children: JSX.Element[] ): (() => T);
+function h ( component: Component, props: {} | null, ...children: JSX.Element[] ): (() => JSX.Element);
 ```
 
-#### `isElement`
-
-This function tells you if a variable is a Voby element or not.
+Usage:
 
 ```tsx
-import {$, isElement} from 'voby';
+import {h} from 'voby';
 
-isElement ( document.createElement ( 'div' ) ); // => false
-isElement ( <div /> ); // => true
+const element = h ( 'div', { class: 'foo' }, 'child' ); // => () => HTMLDivElement
 ```
 
 #### `isObservable`
 
 This function tells you if a variable is an observable or not.
+
+Interface:
+
+```ts
+function isObservable <T = unknown> ( value: unknown ): value is Observable<T> | ObservableReadonly<T>;
+```
+
+Usage:
 
 ```tsx
 import {$, isObservable} from 'voby';
@@ -208,21 +224,17 @@ isObservable ( 123 ); // => false
 isObservable ( $(123) ); // => true
 ```
 
-#### `owner`
-
-This function returns the current owner, if any.
-
-[Read upstream documentation](https://github.com/fabiospampinato/oby#owner).
-
-```tsx
-import {owner} from 'voby';
-
-owner // => Same as require ( 'oby' ).owner
-```
-
 #### `render`
 
-This function mounts a component inside a provided DOM element and returns a disposer function.
+This function mounts a component inside a provided DOM element and returns a disposer function for unmounting it and stopping all reactivity inside it.
+
+Interface:
+
+```ts
+function render ( child: JSX.Element, parent?: HTMLElement | null ): Disposer;
+```
+
+Usage:
 
 ```tsx
 import {render} from 'voby';
@@ -236,9 +248,19 @@ dispose (); // Unmounted and all reactivity inside it stopped
 
 #### `renderToString`
 
-This works just like `render`, but it returns an HTML representation of the rendered component.
+This works just like `render`, but it returns a Promise to the HTML representation of the rendered component.
 
-This is currently implemented in a way that works only inside a browser environement, so you'll need to use [JSDOM](https://github.com/jsdom/jsdom) or similar for this to work server-side.
+This is currently implemented in a way that works only inside a browser-like environement, so you'll need to use [JSDOM](https://github.com/jsdom/jsdom) or similar for this to work server-side, but it can work server-side too potentially.
+
+This function automatically waits for all `Suspense` boundaries to resolve before returning.
+
+Interface:
+
+```ts
+function renderToString ( child: JSX.Element ): Promise<string>;
+```
+
+Usage:
 
 ```tsx
 import {renderToString} from 'voby';
@@ -250,113 +272,54 @@ const html = await renderToString ( <App /> );
 
 #### `resolve`
 
-This function takes in any valid children and resolves all reactivity it in, basically calling all functions and observables.
+This function basically resolves any reactivity inside the passed argument, basically replacing every function it finds with a computed to the value of that function.
 
-This is essential in some cases when you want to make sure that all children are being tracked by the parent reactivity scope.
+You may never need to use this function yourself, but it's necessary internally at times to make sure that a child value is properly tracked by its parent computation.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#resolve).
+
+Interface:
+
+```ts
+type ResolvablePrimitive = null | undefined | boolean | number | bigint | string | symbol;
+type ResolvableArray = Resolvable[];
+type ResolvableObject = { [Key in string | number | symbol]?: Resolvable };
+type ResolvableFunction = () => Resolvable;
+type Resolvable = ResolvablePrimitive | ResolvableObject | ResolvableArray | ResolvableFunction;
+
+function resolve <T> ( value: T ): T extends Resolvable ? T : never;
+```
+
+Usage:
 
 ```tsx
 import {resolve} from 'voby';
 
-const App = () => <p>Hello, World!</p>;
-
-const p = resolve ( <App /> ); // => HTMLParagraphElement
-```
-
-#### `sample`
-
-This function executes the provided function without creating dependencies on observables retrieved inside it.
-
-[Read upstream documentation](https://github.com/fabiospampinato/oby#sample).
-
-```tsx
-import {sample} from 'voby';
-
-sample // => Same as require ( 'oby' ).sample
-```
-
-#### `styled`
-
-This is an object providing styled-components-like API, it's based on the awesome [goober](https://github.com/cristianbote/goober) and it largely just re-exports some of its methods.
-
-```tsx
-import {styled} from 'voby';
-
-styled.autoglobal`
-  :root {
-    --font-size: 24px;
-  }
-`;
-
-const GlobalStyle = styled.global`
-  :root {
-    --color-bg: tomato;
-    --color-fg: white;
-  }
-`;
-
-const rotate = styled.keyframes`
-  from, to {
-    width: 50px;
-  }
-  50% {
-    width: 150px;
-  }
-`;
-
-const disabled = styled.class ( 'disabled' );
-
-const P = styled.p`
-  background-color: var(--color-bg);
-  color: var(--color-fg);
-  animation: ${rotate} 1s ease-in-out infinite;
-
-  &${disabled} {
-    opacity: .5;
-    pointer-events: none;
-  }
-`;
-
-const App = () => {
-  return (
-    <>
-      <GlobalStyle />
-      <P class={{ [disabled.raw]: true }}>content</P>
-    </>
-  );
-};
-```
-
-#### `svg`
-
-This function enables you to embed an SVG relatively cleanly in your page.
-
-_This function internally uses `innerHTML` and must therefor only be used with trusted input_.
-
-```tsx
-const App = () => {
-  const hex = `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
-  return (
-    <div class="something">
-      {svg`
-        <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke="${hex}" stroke-width="3" fill="white">
-          <circle cx="25" cy="25" r="20" />
-        </svg>
-      `}
-    </div>
-  );
-};
+resolve // => Same as require ( 'oby' ).resolve
 ```
 
 #### `template`
 
 This function enables constructing elements with [Solid](https://www.solidjs.com)-level performance without using the Babel transform, but also without the convenience of that.
 
-It basically works like [sinuous](https://github.com/luwes/sinuous/tree/master)'s template function, but with a slightly cleaner API, since you don't have to access your props any differently inside the template here.
+It basically works like [sinuous](https://github.com/luwes/sinuous/tree/master)'s template function, but with a cleaner API, since you don't have to access your props any differently inside the template here.
+
+Basically you can use this to wrap a component that doesn't directly create any observables or call any hooks to significanly improve performance when instantiating that component.
+
+Interface:
+
+```ts
+type TemplateOptions = { recycle?: boolean };
+
+function template <P = {}> ( fn: (( props: P ) => JSX.Element), options: TemplateOptions = {} ): (( props: P ) => () => Element);
+```
+
+Usage:
 
 ```tsx
 import {template} from 'voby';
 
-const Row = template ( ({ id, cls, label, onSelect, onRemove }) => {
+const Row = template ( ({ id, cls, label, onSelect, onRemove }) => { // Now Row is super fast to instantiate
   return (
     <tr class={cls}>
       <td class="col-md-1">{id}</td>
@@ -383,13 +346,24 @@ const Table = () => {
 
 The following components are provided.
 
-Crucially some components are provided for control flow, since regular JavaScript control flow primitives are not reactive.
+Crucially some components are provided for control flow, since regular JavaScript control flow primitives are not reactive, and we need to have reactive alternative to them to have great performance.
 
 #### `Component`
 
 This is the base class for your class-based components, if you are into that.
 
-The nice thing about class-based components is that you get ref forwarding and assignment for free, the eventual ref passed to a class component will automatically receive the class instance corresponding to the component.
+The nice thing about class-based components is that you get ref assignment for free, the eventual ref passed to a class component will automatically receive the class instance corresponding to the component. The class component itself doesn't even need to know about this, but automatically it is able to provide access to its public API to however asks for it.
+
+Interface:
+
+```ts
+class Component<P = {}> {
+  props: P;
+  render ( props: P ): JSX.Element;
+}
+```
+
+Usage:
 
 ```tsx
 import {Component} from 'voby';
@@ -398,12 +372,20 @@ class App extends Component<{ value: number }> {
   render ( ({ value }) ): JSX.Element {
     return <p>Value: {value}</p>;
   }
-}
+};
 ```
 
 #### `Dynamic`
 
 This component is just an alternative to `createElement` that can be used in JSX, it's useful to create a new element dynamically.
+
+Interface:
+
+```ts
+function Dynamic ( props: { component: string | Node | Function, props?: {} | null, children: JSX.Element }): JSX. Element;
+```
+
+Usage:
 
 ```tsx
 import {Dynamic} from 'voby';
@@ -414,13 +396,21 @@ const App = () => {
     <Dynamic component={heading}>
       Some content
     </Dynamic>
-  )
+  );
 };
 ```
 
 #### `ErrorBoundary`
 
-The error boundary catches errors happening while synchronously mounting its children, and renders a fallback compontent when that happens.
+The error boundary catches errors thrown inside it, and renders a fallback component when that happens.
+
+Interface:
+
+```ts
+function ErrorBoundary ( props: { fallback: JSX.Element | (( props: { error: Error, reset: Disposer } ) => JSX.Element), children: JSX.Element }): ObservableReadonly<JSX.Element>;
+```
+
+Usage:
 
 ```tsx
 import {ErrorBoundary} from 'voby';
@@ -443,13 +433,23 @@ const App = () => {
     <ErrorBoundary fallback={Fallback}>
       <SomeComponentThatThrows />
     </ErrorBoundary>
-  )
+  );
 };
 ```
 
 #### `For`
 
 This component is the reactive alternative to natively mapping over an array.
+
+It must be called with an array, or a function that returns an array, of _unique_ values, and each of them are passed to the child function to render something.
+
+Interface:
+
+```ts
+function For <T> ( props: { values: FunctionMaybe<T[]>, fallback?: JSX.Element, children: (( value: T ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
+```
+
+Usage:
 
 ```tsx
 import {For} from 'voby';
@@ -462,13 +462,21 @@ const App = () => {
         return <p>Value: {value}</p>
       }}
     </For>
-  )
+  );
 };
 ```
 
 #### `Fragment`
 
 This is just the internal component used for rendering fragments: `<></>`, you probably would never use this directly even if you are not using JSX, since you can return plain arrays from your components anyway.
+
+Interface:
+
+```ts
+function Fragment ( props: { children: JSX.Element }): JSX.Element;
+```
+
+Usage:
 
 ```tsx
 import {Fragment} from 'voby';
@@ -479,13 +487,21 @@ const App = () => {
       <p>child 1</p>
       <p>child 2</p>
     </Fragment>
-  )
-}
+  );
+};
 ```
 
 #### `If`
 
 This component is the reactive alternative to the native `if`.
+
+Interface:
+
+```ts
+function If ( props: { when: FunctionMaybe<unknown>, fallback?: JSX.Element, children: JSX.Element }): ObservableReadonly<JSX.Element>;
+```
+
+Usage:
 
 ```tsx
 import {If} from 'voby';
@@ -500,7 +516,7 @@ const App = () => {
         <p>Hello!</p>
       </If>
     </>
-  )
+  );
 };
 ```
 
@@ -508,7 +524,15 @@ const App = () => {
 
 This component mounts its children inside a provided DOM element, or inside `document.body` otherwise.
 
-Events will propagate natively according to the resulting DOM hierarchy, not the components hierarchy.
+Events will propagate natively, according to the resulting DOM hierarchy, not the components hierarchy.
+
+Interface:
+
+```ts
+function Portal ( props: { mount?: HTMLElement | null, children: JSX.Element }): (() => null) & ({ metadata: { portal: HTMLDivElement } });
+```
+
+Usage:
 
 ```tsx
 import Portal from 'voby';
@@ -526,9 +550,59 @@ const App = () => {
 };
 ```
 
+#### `Suspense`
+
+This component is like `If`, the reactive alternative to the native `if`, but both branches are kept alive under the hood at the same time, and the fallback branch is shown automatically while there are some resources loading in the main branch.
+
+So this can be used to show some fallback content while the actual content is loading in the background.
+
+This component relies on `useResource` to understand if there's a resource loading or not.
+
+Interface:
+
+```ts
+function Suspense ( props: { fallback?: JSX.Element, children: JSX.Element }): ObservableReadonly<JSX.Element>;
+```
+
+Usage:
+
+```tsx
+import {Suspense} from 'voby';
+
+const App = () => {
+  const Content = () => {
+    const resource = useResource ( () => makeSomePromise () );
+    return (
+      <Show when={() => !resource ().loading && !resource ().error}>
+        {resource ().value}
+      </Show>
+    );
+  };
+  const Spinner = () => {
+    return <p>Loading...</p>;
+  };
+  return (
+    <Suspense fallback={<Spinner />}>
+      <Content />
+    </Suspense>
+  );
+};
+```
+
 #### `Switch`
 
 This component is the reactive alternative to the native `switch`.
+
+Interface:
+
+```ts
+function Switch <T> ( props: { when: FunctionMaybe<T>, children: JSX.Element }): ObservableReadonly<JSX.Element>;
+
+Switch.Case = function <T> ( props: { when: T, children: JSX.Element } ): (() => JSX.Element) & ({ metadata: [T, JSX.Element] });
+Switch.Default = function ( props: { children: JSX.Element } ): (() => JSX.Element) & ({ metadata: [JSX.Element] });
+```
+
+Usage:
 
 ```tsx
 import {Switch} from 'voby';
@@ -553,7 +627,7 @@ const App = () => {
       <button onClick={increment}>+</button>
       <button onClick={decrement}>-</button>
     </>
-  )
+  );
 };
 ```
 
@@ -561,7 +635,15 @@ const App = () => {
 
 This component is the reactive alternative to the native ternary operator.
 
-The first child will be rendered when the condition is `true`, otherwise the second child will be rendered.
+The first child will be rendered when the condition is truthy, otherwise the second child will be rendered.
+
+Interface:
+
+```ts
+function Ternary ( props: { when: FunctionMaybe<unknown>, children: [JSX.Element, JSX.Element] } ): ObservableReadonly<JSX.Element>;
+```
+
+Usage:
 
 ```tsx
 import {Ternary} from 'voby';
@@ -577,7 +659,7 @@ const App = () => {
         <p>Invisible :(</p>
       </Ternary>
     </>
-  )
+  );
 };
 ```
 
@@ -585,13 +667,21 @@ const App = () => {
 
 The following hooks are provided.
 
-Many of these are just functions that `oby` provides, re-exported as `use*` functions, the rest are largely alternatives to built-ins that can accept observables as arguments and can dispose of themselves when the parent computation is disposed.
+Many of these are just functions that `oby` provides, re-exported as `use*` functions, the rest are largely just alternatives to web built-ins that can also accept observables as arguments and can dispose of themselves automatically when the parent computation is disposed.
 
 Hooks are just regular functions, if their name starts with `use` then we call them hooks just because.
 
 #### `useAbortController`
 
 This hook is just an alternative to `new AbortController ()` that automatically aborts itself when the parent computation is disposed.
+
+Interface:
+
+```ts
+function useAbortController ( signals?: ArrayMaybe<AbortSignal> ): AbortController;
+```
+
+Usage:
 
 ```tsx
 import {useAbortController} from 'voby';
@@ -603,6 +693,14 @@ const controller = useAbortController ();
 
 This hook is just a convenient alternative to `useAbortController`, if you are only interested in its signal, which is automatically aborted when the parent computation is disposed.
 
+Interface:
+
+```ts
+function useAbortSignal ( signals?: ArrayMaybe<AbortSignal> ): AbortSignal;
+```
+
+Usage:
+
 ```tsx
 import {useAbortSignal} from 'voby';
 
@@ -613,6 +711,14 @@ const signal = useAbortSignal ();
 
 This hook is just an alternative to `requestAnimationFrame` that automatically clears itself when the parent computation is disposed.
 
+Interface:
+
+```ts
+function useAnimationFrame ( callback: ObservableMaybe<FrameRequestCallback> ): Disposer;
+```
+
+Usage:
+
 ```tsx
 import {useAnimationFrame} from 'voby';
 
@@ -621,7 +727,15 @@ useAnimationFrame ( () => console.log ( 'called' ) );
 
 #### `useAnimationLoop`
 
-This hook is just a version of `useAnimationFrame` that loops.
+This hook is just a version of `useAnimationFrame` that loops until the parent computation is disposed.
+
+Interface:
+
+```ts
+function useAnimationLoop ( callback: ObservableMaybe<FrameRequestCallback> ): Disposer;
+```
+
+Usage:
 
 ```tsx
 import {useAnimationLoop} from 'voby';
@@ -629,11 +743,40 @@ import {useAnimationLoop} from 'voby';
 useAnimationLoop ( () => console.log ( 'called' ) );
 ```
 
+#### `useBatch`
+
+This hook holds onto updates within its scope and flushes them out at once once it exits.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#batch).
+
+Interface:
+
+```ts
+function useBatch <T> ( fn: () => T ): T;
+function useBatch <T> ( value: T ): T;
+```
+
+Usage:
+
+```tsx
+import {useBatch} from 'voby';
+
+useBatch // => Same as require ( 'oby' ).batch
+```
+
 #### `useCleanup`
 
 This hook registers a function to be called when the parent computation is disposed.
 
 [Read upstream documentation](https://github.com/fabiospampinato/oby#cleanup).
+
+Interface:
+
+```ts
+function useCleanup ( fn: () => void ): void;
+```
+
+Usage:
 
 ```tsx
 import {useCleanup} from 'voby';
@@ -649,6 +792,16 @@ This hook registers a function to be called when any of its dependencies change,
 
 [Read upstream documentation](https://github.com/fabiospampinato/oby#computed).
 
+Interface:
+
+```ts
+function useComputed <T> ( fn: ( valuePrev: T | undefined ) => T ): ObservableReadonly<T>;
+function useComputed <T> ( fn: ( valuePrev: T | undefined ) => T, valueInitial?: undefined, options?: ObservableOptions<T | undefined> ): ObservableReadonly<T>;
+function useComputed <T> ( fn: ( valuePrev: T ) => T, valueInitial: T, options?: ObservableOptions<T> ): ObservableReadonly<T>;
+```
+
+Usage:
+
 ```tsx
 import {useComputed} from 'voby';
 
@@ -657,7 +810,15 @@ useComputed // => Same as require ( 'oby' ).computed
 
 #### `useContext`
 
-This hook retrieves the value of a context object.
+This hook retrieves the value out of a context object.
+
+Interface:
+
+```ts
+function useContext <T> ( context: Context<T> ): T | undefined;
+```
+
+Usage:
 
 ```tsx
 import {createContext, useContext} from 'voby';
@@ -675,6 +836,14 @@ This hook returns a boolean read-only observable that is set to `true` when the 
 
 [Read upstream documentation](https://github.com/fabiospampinato/oby#disposed).
 
+Interface:
+
+```ts
+function useDisposed (): ObservableReadonly<boolean>;
+```
+
+Usage:
+
 ```tsx
 import {useDisposed} from 'voby';
 
@@ -686,6 +855,14 @@ useDisposed // => Same as require ( 'oby' ).disposed
 This hook registers a function to be called when any of its dependencies change. If a function is returned it's automatically registered as a cleanup function.
 
 [Read upstream documentation](https://github.com/fabiospampinato/oby#effect).
+
+Interface:
+
+```ts
+function useEffect ( fn: () => (() => void) | void ): (() => void);
+```
+
+Usage:
 
 ```tsx
 import {useEffect} from 'voby';
@@ -699,6 +876,14 @@ This hook registers a function to be called when the parent computation throws.
 
 [Read upstream documentation](https://github.com/fabiospampinato/oby#error).
 
+Interface:
+
+```ts
+function useError ( fn: ( error: Error ) => void ): void;
+```
+
+Usage:
+
 ```tsx
 import {useError} from 'voby';
 
@@ -709,6 +894,14 @@ useError // => Same as require ( 'oby' ).error
 
 This hook is just an alternative to `addEventListener` that automatically clears itself when the parent computation is disposed.
 
+Interface:
+
+```ts
+function useEventListener ( target: ObservableMaybe<EventTarget>, event: ObservableMaybe<string>, handler: ObservableMaybe<( event: Event ) => void>, options?: ObservableMaybe<true | AddEventListenerOptions> ): Disposer;
+```
+
+Usage:
+
 ```tsx
 import {useEventListener} from 'voby';
 
@@ -718,6 +911,16 @@ useEventListener ( document, 'click', console.log );
 #### `useFetch`
 
 This hook wraps the output of a fetch request in an observable, so that you can be notified when it resolves or rejects. The request is also aborted automatically when the parent computation gets disposed of.
+
+This hook uses `useResource` internally, so it's significant for `Suspense` too.
+
+Interface:
+
+```ts
+function useFetch ( request: ObservableMaybe<RequestInfo>, init?: ObservableMaybe<RequestInit> ): ObservableReadonly<Resource<Response>>;
+```
+
+Usage:
 
 ```tsx
 import {useFetch} from 'voby';
@@ -732,21 +935,17 @@ const App = () => {
 };
 ```
 
-#### `useFrom`
-
-This hook is useful for encapsulating values that may change over time into an observable.
-
-[Read upstream documentation](https://github.com/fabiospampinato/oby#from).
-
-```tsx
-import {useFrom} from 'voby';
-
-useFrom // => Same as require ( 'oby' ).from
-```
-
 #### `useIdleCallback`
 
 This hook is just an alternative to `requestIdleCallback` that automatically clears itself when the parent computation is disposed.
+
+Interface:
+
+```ts
+function useIdleCallback ( callback: ObservableMaybe<IdleRequestCallback>, options?: ObservableMaybe<IdleRequestOptions> ): Disposer;
+```
+
+Usage:
 
 ```tsx
 import {useIdleCallback} from 'voby';
@@ -756,7 +955,15 @@ useIdleCallback ( () => console.log ( 'called' ) );
 
 #### `useIdleLoop`
 
-This hook is just a version of `useIdleCallback` that loops.
+This hook is just a version of `useIdleCallback` that loops until the parent computation is disposed.
+
+Interface:
+
+```ts
+function useIdleLoop ( callback: ObservableMaybe<IdleRequestCallback>, options?: ObservableMaybe<IdleRequestOptions> ): Disposer;
+```
+
+Usage:
 
 ```tsx
 import {useIdleLoop} from 'voby';
@@ -768,15 +975,51 @@ useIdleLoop ( () => console.log ( 'called' ) );
 
 This hook is just an alternative to `setInterval` that automatically clears itself when the parent computation is disposed.
 
+Interface:
+
+```ts
+function useInterval ( callback: ObservableMaybe<Callback>, ms?: ObservableMaybe<number> ): Disposer;
+```
+
+Usage:
+
 ```tsx
 import {useInterval} from 'voby';
 
 useInterval ( () => console.log ( 'called' ), 1000 );
 ```
 
+#### `useMicrotask`
+
+This hook is just an alternative to `queueMicrotask` that automatically clears itself when the parent computation is disposed, and that ensures things like contexts, error boundaries etc. keep working inside the microtask.
+
+Interface:
+
+```ts
+function useMicrotask ( fn: () => void ): void;
+```
+
+Usage:
+
+```tsx
+import {useMicrotask} from 'voby';
+
+useMicrotask ( () => console.log ( 'called' ) );
+```
+
 #### `usePromise`
 
 This hook wraps a promise in an observable, so that you can be notified when it resolves or rejects.
+
+This hook uses `useResource` internally, so it's significant for `Suspense` too.
+
+Interface:
+
+```ts
+function usePromise <T> ( promise: ObservableMaybe<Promise<T>> ): ObservableReadonly<Resource<T>>;
+```
+
+Usage:
 
 ```tsx
 import {usePromise} from 'voby';
@@ -792,6 +1035,26 @@ const App = () => {
 };
 ```
 
+#### `useReadonly`
+
+This hook creates a read-only observable out of another observable.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#readonly).
+
+Interface:
+
+```ts
+function useReadonly <T> ( observable: Observable<T> | ObservableReadonly<T> ): ObservableReadonly<T>;
+```
+
+Usage:
+
+```tsx
+import {useReadonly} from 'voby';
+
+useReadonly // => Same as require ( 'oby' ).readonly
+```
+
 #### `useResolved`
 
 This hook receives a value, or an array of values, potentially wrapped in functions and/or observables, and unwraps it/them.
@@ -799,6 +1062,14 @@ This hook receives a value, or an array of values, potentially wrapped in functi
 If no callback is used then it returns the unwrapped value, otherwise it returns whatever the callback returns.
 
 This is useful for handling reactive and non reactive values the same way. Usually if the value is a function, or always for convenience, you'd want to wrap the `useResolved` call in a `useComputed`, to maintain reactivity.
+
+This is potentially a more convenient version of `resolve`, made especially for handling nicely arguments passed that your hooks receive that may or may not be observables.
+
+Interface:
+
+> The precise interface for this function is insane, you can find it here: https://github.com/fabiospampinato/voby/blob/master/src/hooks/use_resolved.ts
+
+Usage:
 
 ```tsx
 import {$, useResolved} from 'voby';
@@ -822,6 +1093,16 @@ This hook wraps the result of a function call with an observable, handling the c
 
 This basically provides a unified way to handle sync and async results, observable and non observable results, and functions that throw and don't throw.
 
+This function is also the mechanism through which `Suspense` understands if there are things loading under the hood or not.
+
+Interface:
+
+```ts
+function useResource <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): ObservableReadonly<Resource<T>>;
+```
+
+Usage:
+
 ```tsx
 import {useResource} from 'voby';
 
@@ -836,10 +1117,39 @@ This hook creates a new computation root, detached from any parent computation.
 
 [Read upstream documentation](https://github.com/fabiospampinato/oby#root).
 
+Interface:
+
+```ts
+function useRoot <T> ( fn: ( dispose: () => void ) => T ): T;
+```
+
+Usage:
+
 ```tsx
 import {useRoot} from 'voby';
 
 useRoot // => Same as require ( 'oby' ).root
+```
+
+#### `useSample`
+
+This hook executes the provided function without creating dependencies on observables retrieved inside it.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#sample).
+
+Interface:
+
+```ts
+function useSample <T> ( fn: () => T ): T;
+function useSample <T> ( value: T ): T;
+```
+
+Usage:
+
+```tsx
+import {useSample} from 'voby';
+
+useSample // => Same as require ( 'oby' ).sample
 ```
 
 #### `useSelector`
@@ -847,6 +1157,14 @@ useRoot // => Same as require ( 'oby' ).root
 This hook massively optimizes `isSelected` kind of workloads.
 
 [Read upstream documentation](https://github.com/fabiospampinato/oby#selector).
+
+Interface:
+
+```ts
+function useSelector <T> ( observable: Observable<T> | ObservableReadonly<T> ): (( value: T ) => boolean);
+```
+
+Usage:
 
 ```tsx
 import {useSelector} from 'voby';
@@ -858,37 +1176,286 @@ useSelector // => Same as require ( 'oby' ).selector
 
 This hook is just an alternative to `setTimeout` that automatically clears itself when the parent computation is disposed.
 
+Interface:
+
+```ts
+function useTimeout ( callback: ObservableMaybe<Callback>, ms?: ObservableMaybe<number> ): Disposer;
+```
+
+Usage:
+
 ```tsx
 import {useTimeout} from 'voby';
 
 useTimeout ( () => console.log ( 'called' ), 1000 );
 ```
 
+### Types
+
+#### `FunctionMaybe`
+
+This type says that something can be the value itself or a function that returns that value.
+
+It's useful at times since some components, like `If`, accept `when` condition that's exactly.
+
+Interface:
+
+```ts
+type FunctionMaybe<T> = (() => T) | T;
+```
+
+Usage:
+
+```tsx
+import type {FunctionMaybe} from 'voby';
+
+const SomeConditionalComponent = ( when: FunctionMaybe<boolean>, value: string ): JSX.Element => {
+  return (
+    <If when={when}>
+      {value}
+    </If>
+  );
+};
+```
+
+#### `Observable`
+
+This type says that something is a regular observable, which can be updated via its setter.
+
+Interface:
+
+```ts
+type Observable<T> = {
+  (): T,
+  ( value: T ): T,
+  ( fn: ( value: T ) => T ): T
+};
+```
+
+Usage:
+
+```tsx
+import type {Observable} from 'voby';
+
+const fn = ( value: Observable<boolean> ): void => {
+  value (); // Getting
+  value ( true ); // Setting
+};
+```
+
+#### `ObservableReadonly`
+
+This type says that something is a read-only observable, which can only be read but not updated.
+
+Interface:
+
+```ts
+type ObservableReadonly<T> = {
+  (): T
+};
+```
+
+Usage:
+
+```tsx
+import type {ObservableReadonly} from 'voby';
+
+const fn = ( value: ObservableReadonly<boolean> ): void => {
+  value (); // Getting
+  value ( true ); // This will throw!
+};
+```
+
+#### `ObservableMaybe`
+
+This type says that something can be the value itself or an observable to that value.
+
+This is super useful if you want to write components and hooks that can accept either plain values or observables to those values.
+
+Interface:
+
+```ts
+type ObservableMaybe<T> = Observable<T> | ObservableReadonly<T> | T;
+```
+
+Usage:
+
+```tsx
+import type {ObservableMaybe} from 'voby';
+
+const Button = ({ label }: { label: ObservableMaybe<string> }): JSX.Element => {
+  return <button>{label}</button>;
+};
+```
+
+#### `ObservableOptions`
+
+This type describes the options object that various functions can accept to tweak how the underlying observable works.
+
+Interface:
+
+```ts
+type ObservableOptions<T> = {
+  equals?: (( value: T, valuePrev: T ) => boolean) | false
+};
+```
+
+Usage:
+
+```tsx
+import type {Observable, ObservableOptions} from 'voby';
+import {$} from 'voby';
+
+const createTimestamp = ( options?: ObservableOptions ): Observable<number> => {
+  return $( Date.now (), options );
+};
+```
+
+#### `Resource`
+
+This is the type of object that `useResource`, `usePromise` and `useFetch` will return you.
+
+It's an object that tells if whether the resource is loading or not, whether an error happened or not, if what the eventual resulting value is.
+
+Interface:
+
+```ts
+type ResourceLoading = { loading: true, error?: never, value?: never };
+type ResourceRejected = { loading: false, error: Error, value?: never };
+type ResourceResolved<T> = { loading: false, error?: never, value: T };
+type Resource<T> = ResourceLoading | ResourceRejected | ResourceResolved<T>;
+```
+
+Usage:
+
+```tsx
+import type {ObservableReadonly, Resource} from 'voby';
+
+const resource: ObservableReadonly<Resource> = useResource ( () => fetch ( 'https://my.api' ) );
+
+resource ().loading // => true | false
+resource ().error // => Error | undefined
+resource ().value // => Whatever the resource will resolve to
+```
+
+#### `F`
+
+This type is just a convenient alias for `FunctionMaybe`, because typing `FunctionMaybe` a lot can be annoying.
+
+Interface:
+
+```ts
+type F<T> = FunctionMaybe<T>;
+```
+
+Usage:
+
+```tsx
+import type {F} from 'voby';
+
+const SomeConditionalComponent = ( when: F<boolean>, value: string ): JSX.Element => {
+  return (
+    <If when={when}>
+      {value}
+    </If>
+  );
+};
+```
+
+#### `O`
+
+This type is just a convenient alias for `ObservableMaybe`, because typing `ObservableMaybe` a lot can be annoying.
+
+Interface:
+
+```ts
+type O<T> = ObservableMaybe<T>;
+```
+
+Usage:
+
+```tsx
+import type {O} from 'voby';
+
+const Button = ({ label }: { label: O<string> }): JSX.Element => {
+  return <button>{label}</button>;
+};
+```
+
 ### Extras
 
-The following extra functionalities are provided via submodules.
+Extra features and details.
 
-#### `vite`
+#### `Esbuild`
 
-A basic [Vite](https://github.com/vitejs/vite) plugin is provided.
+An official plugin for esbuild is provided.
 
-```js
-// vite.js
+Usage:
+
+```ts
+import esbuild from 'esbuild';
+import voby from 'voby/esbuild';
+
+esbuild.build ({
+  entryPoints: ['src.js'],
+  outfile: 'dist.js',
+  plugins: [voby ()]
+});
+```
+
+#### `JSX`
+
+JSX is supported out of the box, as a rule of thumb it's very similar to how React's JSX works, but with some differences.
+
+- The value provided to an attribute can always be either just the plain value itself, an observable to that value, or a function to that value. If an observable or a function is provided then that attribute will update itself in a fine-grained manner.
+- There's no "key" attribute because it's unnecessary.
+- Only refs in the function form are supported, so you are incentivized to simply use observables for them too.
+- A ref function attached to a DOM element will also be called with `undefined` when that node is unmounted.
+- The "ref" attribute can also accept an array of functions to call, for convenience.
+- You can simply just use "class" instead of "className".
+- The "class" attribute can also accept an object of classes, for convenience.
+- SVGs are supported out of the box and will also be updated in a fine-grained manner.
+- The "innerHTML", "outerHTML" and "textContent" attributes are forbidden, as they are largely just footguns.
+- A React-like "dangerouslySetInnerHTML" attribute is supported for setting some raw HTML.
+- Numbers set as values for style properties that require a unit to be provided will automatically be suffixed with "px".
+- Using CSS variables in the "style" object is supported out of the box.
+- The following events are delegated, automatically: `beforeinput`, `click`, `dblclick`, `focusin`, `focusout`, `input`, `keydown`, `keyup`, `mousedown`, `mouseup`.
+- Events always bubble according to the natural DOM hierarchy, there's no special bubbling logic for `Portal`.
+
+#### `TypeScript`
+
+There are two main actions needed to make Voby work with TypeScript.
+
+1. Voby is an ESM-only framework, so you _might_ need to mark your package as ESM too in order to use it, you can do that by putting the following in your `package.json`:
+   ```
+   "type": "module"
+   ```
+2. You should instruct TypeScript to load the correct JSX types by putting the following in your `tsconfig.json`:
+   ```
+   "jsxImportSource": "voby"
+   ```
+
+#### `Vite`
+
+An official plugin for Vite is provided.
+
+Usage:
+
+```ts
 import {defineConfig} from 'vite';
-import voby from 'voby/vite-plugin';
+import voby from 'voby/vite';
 
 export default defineConfig ({
-  plugins: [
-    voby ()
-  ]
+  plugins: [voby ()]
 });
 ```
 
 ## Thanks
 
 - **[S](https://github.com/adamhaile/S)**: for paving the way to this awesome reactive way of writing software.
-- **[sinuous/observable](https://github.com/luwes/sinuous/tree/master/packages/sinuous/observable)**: for making me fall in love with Observables.
-- **[Solid](https://www.solidjs.com)**: for being a great sort of reference implementation, popularizing Observable-based reactivity, and having built a great community.
+- **[sinuous/observable](https://github.com/luwes/sinuous/tree/master/packages/sinuous/observable)**: for making me fall in love with Observables and providing a good implementation that this library is based of.
+- **[solid](https://www.solidjs.com)**: for being a great sort of reference implementation, popularizing Signal-based reactivity, and having built a great community.
+- **[trkl](https://github.com/jbreckmckye/trkl)**: for being so inspiringly small.
 
 ## License
 
