@@ -1421,6 +1421,7 @@ JSX is supported out of the box, as a rule of thumb it's very similar to how Rea
 - Using CSS variables in the "style" object is supported out of the box.
 - The following events are delegated, automatically: `beforeinput`, `click`, `dblclick`, `focusin`, `focusout`, `input`, `keydown`, `keyup`, `mousedown`, `mouseup`.
 - Events always bubble according to the natural DOM hierarchy, there's no special bubbling logic for `Portal`.
+- Class components, but with no lifecycle callbacks, are supported too. They got thrown away with the bath water by other frameworks, but organizing internal methods in a class and assigning that class to refs automatically is actually a really nice feature.
 
 #### `TypeScript`
 
