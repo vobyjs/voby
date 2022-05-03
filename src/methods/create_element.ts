@@ -3,7 +3,7 @@
 
 import BaseComponent from '~/components/component';
 import {SVG_ELEMENTS} from '~/constants';
-import useSample from '~/hooks/use_sample';
+import wrapElement from '~/methods/wrap_element';
 import {createHTMLNode, createSVGNode} from '~/utils/creators';
 import {isFunction, isNil, isNode, isString} from '~/utils/lang';
 import {setProps, setRef} from '~/utils/setters';
@@ -41,7 +41,7 @@ function createElement ( component: Component, props: Props | null, ..._children
 
       if ( !isNil ( children ) ) props.children = children;
 
-      return useSample.bind<void, Element, [], Child> ( undefined, (): Child => {
+      return wrapElement.bind ( (): Child => {
 
         const instance = new component ( props );
         const child = instance.render ( instance.props );
@@ -59,7 +59,7 @@ function createElement ( component: Component, props: Props | null, ..._children
       if ( !isNil ( children ) ) props.children = children;
       if ( !isNil ( ref ) ) props.ref = ref;
 
-      return useSample.bind<void, Element, [], Child> ( undefined, component.bind ( undefined, props ) );
+      return wrapElement.bind ( component.bind ( undefined, props ) );
 
     }
 
@@ -72,7 +72,7 @@ function createElement ( component: Component, props: Props | null, ..._children
     if ( !isNil ( children ) ) props.children = children;
     if ( !isNil ( ref ) ) props.ref = ref;
 
-    return (): Child => {
+    return wrapElement.bind ( (): Child => {
 
       const child = createNode ( component ) as HTMLElement; //TSC
 
@@ -82,15 +82,11 @@ function createElement ( component: Component, props: Props | null, ..._children
 
       return child;
 
-    };
+    });
 
   } else if ( isNode ( component ) ) {
 
-    return (): Child => {
-
-      return component;
-
-    };
+    return wrapElement.bind ( component );
 
   } else {
 
