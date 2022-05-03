@@ -28,7 +28,7 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T ) => v
 
     });
 
-  } else if ( isArray ( value ) ) {
+  } else if ( isArray ( value ) && value.some ( isObservable ) ) {
 
     useEffect ( () => {
 
