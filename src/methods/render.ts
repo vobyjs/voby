@@ -13,21 +13,19 @@ const render = ( child: Child, parent?: HTMLElement | null ): Disposer => {
 
   parent.textContent = '';
 
-  const dispose = useRoot ( dispose => {
+  return useRoot ( dispose => {
 
     setChild ( parent, child );
 
-    return dispose;
+    return (): void => {
+
+      dispose ();
+
+      parent.textContent = '';
+
+    };
 
   });
-
-  return (): void => {
-
-    dispose ();
-
-    parent.textContent = '';
-
-  };
 
 };
 

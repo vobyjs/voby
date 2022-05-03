@@ -59,11 +59,7 @@ function createElement ( component: Component, props: Props | null, ..._children
       if ( !isNil ( children ) ) props.children = children;
       if ( !isNil ( ref ) ) props.ref = ref;
 
-      return useSample.bind<void, Element, [], Child> ( undefined, (): Child => {
-
-        return component ( props );
-
-      });
+      return useSample.bind<void, Element, [], Child> ( undefined, component.bind ( undefined, props ) );
 
     }
 
@@ -76,7 +72,7 @@ function createElement ( component: Component, props: Props | null, ..._children
     if ( !isNil ( children ) ) props.children = children;
     if ( !isNil ( ref ) ) props.ref = ref;
 
-    return useSample.bind<void, Element, [], Child> ( undefined, (): Child => {
+    return (): Child => {
 
       const child = createNode ( component ) as HTMLElement; //TSC
 
@@ -86,7 +82,7 @@ function createElement ( component: Component, props: Props | null, ..._children
 
       return child;
 
-    });
+    };
 
   } else if ( isNode ( component ) ) {
 
