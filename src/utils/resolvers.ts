@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import useEffect from '~/hooks/use_effect';
-import isObservable from '~//methods/is_observable';
+import isObservable from '~/methods/is_observable';
 import {isArray, isFunction, isPrimitive} from '~/utils/lang';
 import type {FunctionMaybe, ObservableMaybe} from '~/types';
 
