@@ -110,7 +110,15 @@ const resolveResolved = <T> ( value: T ): any => {
 
   if ( isArray ( value ) ) {
 
-    return value.map ( resolveResolved );
+    const resolved = new Array ( value.length );
+
+    for ( let i = 0, l = resolved.length; i < l; i++ ) {
+
+      resolved[i] = resolveResolved ( value[i] );
+
+    }
+
+    return resolved;
 
   } else {
 
