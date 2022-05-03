@@ -5,7 +5,7 @@ type ArrayMaybe<T = unknown> = T[] | T;
 
 type Callback = () => void;
 
-type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child) | ((() => Child) & { metadata: any });
+type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child);
 
 type ChildWithMetadata<T = unknown> = (() => Child) & { metadata: T };
 

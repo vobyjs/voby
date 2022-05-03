@@ -55,7 +55,7 @@ declare namespace JSX {
 
   /* MAIN */
 
-  type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child) | ((() => Child) & { metadata: any });
+  type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child);
 
   type Children = Child;
 
