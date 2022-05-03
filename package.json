@@ -29,6 +29,14 @@
       "types": "./dist/plugins/vite.d.ts"
     }
   },
+  "typesVersions": {
+    "*": {
+      "esbuild": ["./dist/plugins/esbuild.d.ts"],
+      "jsx-runtime": ["./dist/jsx/runtime.d.ts"],
+      "jsx-dev-runtime": ["./dist/jsx/runtime.d.ts"],
+      "vite": ["./dist/plugins/vite.d.ts"]
+    }
+  },
   "scripts": {
     "clean": "tsex clean",
     "compile": "tsex compile",
