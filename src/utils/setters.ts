@@ -4,7 +4,7 @@
 import {TEMPLATE_STATE} from '~/constants';
 import useCleanup from '~/hooks/use_cleanup';
 import useEffect from '~/hooks/use_effect';
-import {createAttribute, createText, createComment} from '~/utils/creators';
+import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import Fragment from '~/utils/fragment';
 import {flatten, isArray, isFunction, isNil, isPrimitive, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
@@ -13,7 +13,7 @@ import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, Template
 
 /* MAIN */
 
-const setAttributeStatic = ( element: HTMLElement, attributes: NamedNodeMap, key: string, value: null | undefined | boolean | number | string ): void => {
+const setAttributeStatic = ( element: HTMLElement, key: string, value: null | undefined | boolean | number | string ): void => {
 
   if ( isSVG ( element ) ) {
 
@@ -23,33 +23,15 @@ const setAttributeStatic = ( element: HTMLElement, attributes: NamedNodeMap, key
 
   } else {
 
-    const attribute = attributes.getNamedItem ( key );
-
     if ( isNil ( value ) || value === false ) {
 
-      if ( attribute ) {
-
-        attributes.removeNamedItem ( key );
-
-      }
+      element.removeAttribute ( key );
 
     } else {
 
       value = ( value === true ) ? '' : String ( value );
 
-      if ( attribute ) {
-
-        attribute.value = value;
-
-      } else {
-
-        const attribute = createAttribute ( key );
-
-        attribute.value = value;
-
-        attributes.setNamedItem ( attribute );
-
-      }
+      element.setAttribute ( key, value );
 
     }
 
@@ -59,7 +41,7 @@ const setAttributeStatic = ( element: HTMLElement, attributes: NamedNodeMap, key
 
 const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean | number | string> ): void => {
 
-  resolveFunction ( value, setAttributeStatic.bind ( undefined, element, element.attributes, key ) );
+  resolveFunction ( value, setAttributeStatic.bind ( undefined, element, key ) );
 
 };
 
@@ -324,19 +306,19 @@ const setChild = ( parent: HTMLElement, child: Child, fragment: Fragment = new F
 
 };
 
-const setClassStatic = ( classList: DOMTokenList, key: string, value: null | undefined | boolean ): void => {
+const setClassStatic = ( element: HTMLElement, key: string, value: null | undefined | boolean ): void => {
 
-  classList.toggle ( key, !!value );
-
-};
-
-const setClass = ( classList: DOMTokenList, key: string, value: FunctionMaybe<null | undefined | boolean> ): void => {
-
-  resolveFunction ( value, setClassStatic.bind ( undefined, classList, key ) );
+  element.classList.toggle ( key, !!value );
 
 };
 
-const setClassesStatic = ( element: HTMLElement, classList: DOMTokenList, object: null | undefined | string | Record<string, FunctionMaybe<null | undefined | boolean>>, objectPrev?: null | undefined | string | Record<string, FunctionMaybe<null | undefined | boolean>> ): void => {
+const setClass = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean> ): void => {
+
+  resolveFunction ( value, setClassStatic.bind ( undefined, element, key ) );
+
+};
+
+const setClassesStatic = ( element: HTMLElement, object: null | undefined | string | Record<string, FunctionMaybe<null | undefined | boolean>>, objectPrev?: null | undefined | string | Record<string, FunctionMaybe<null | undefined | boolean>> ): void => {
 
   if ( isString ( object ) ) {
 
@@ -349,7 +331,6 @@ const setClassesStatic = ( element: HTMLElement, classList: DOMTokenList, object
       element.className = object;
 
     }
-
 
   } else {
 
@@ -377,7 +358,7 @@ const setClassesStatic = ( element: HTMLElement, classList: DOMTokenList, object
 
           if ( object && key in object ) continue;
 
-          setClass ( classList, key, false );
+          setClass ( element, key, false );
 
         }
 
@@ -387,7 +368,7 @@ const setClassesStatic = ( element: HTMLElement, classList: DOMTokenList, object
 
     for ( const key in object ) {
 
-      setClass ( classList, key, object[key] );
+      setClass ( element, key, object[key] );
 
     }
 
@@ -399,9 +380,7 @@ const setClasses = ( element: HTMLElement, object: FunctionMaybe<null | undefine
 
   //TODO: Maybe support an array of classes
 
-  const {classList} = element;
-
-  resolveFunction ( object, setClassesStatic.bind ( undefined, element, classList ) );
+  resolveFunction ( object, setClassesStatic.bind ( undefined, element ) );
 
 };
 
@@ -561,19 +540,19 @@ const setStyleStatic = (() => {
 
   const propertyNonDimensionalRe = /acit|ex(?:s|g|n|p|$)|rph|grid|ows|mnc|ntw|ine[ch]|zoo|^ord|itera/i;
 
-  return ( style: CSSStyleDeclaration, key: string, value: null | undefined | number | string ): void => {
+  return ( element: HTMLElement, key: string, value: null | undefined | number | string ): void => {
 
     if ( key.charCodeAt ( 0 ) === 45 ) { // /^-/
 
-      style.setProperty ( key, String ( value ) );
+      element.style.setProperty ( key, String ( value ) );
 
     } else if ( isNil ( value ) ) {
 
-      style[key] = null;
+      element.style[key] = null;
 
     } else {
 
-      style[key] = ( isString ( value ) || propertyNonDimensionalRe.test ( key ) ? value : `${value}px` );
+      element.style[key] = ( isString ( value ) || propertyNonDimensionalRe.test ( key ) ? value : `${value}px` );
 
     }
 
@@ -581,17 +560,17 @@ const setStyleStatic = (() => {
 
 })();
 
-const setStyle = ( style: CSSStyleDeclaration, key: string, value: FunctionMaybe<null | undefined | number | string> ): void => {
+const setStyle = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | number | string> ): void => {
 
-  resolveFunction ( value, setStyleStatic.bind ( undefined, style, key ) );
+  resolveFunction ( value, setStyleStatic.bind ( undefined, element, key ) );
 
 };
 
-const setStylesStatic = ( style: CSSStyleDeclaration, object: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>, objectPrev?: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>> ): void => {
+const setStylesStatic = ( element: HTMLElement, object: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>, objectPrev?: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>> ): void => {
 
   if ( isString ( object ) ) {
 
-    style.cssText = object;
+    element.style.cssText = object;
 
   } else {
 
@@ -601,7 +580,7 @@ const setStylesStatic = ( style: CSSStyleDeclaration, object: null | undefined |
 
         if ( objectPrev ) {
 
-          style.cssText = '';
+          element.style.cssText = '';
 
         }
 
@@ -611,7 +590,7 @@ const setStylesStatic = ( style: CSSStyleDeclaration, object: null | undefined |
 
           if ( object && key in object ) continue;
 
-          setStyleStatic ( style, key, null );
+          setStyleStatic ( element, key, null );
 
         }
 
@@ -621,7 +600,7 @@ const setStylesStatic = ( style: CSSStyleDeclaration, object: null | undefined |
 
     for ( const key in object ) {
 
-      setStyle ( style, key, object[key] );
+      setStyle ( element, key, object[key] );
 
     }
 
@@ -631,9 +610,7 @@ const setStylesStatic = ( style: CSSStyleDeclaration, object: null | undefined |
 
 const setStyles = ( element: HTMLElement, object: FunctionMaybe<null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>> ): void => {
 
-  const {style} = element;
-
-  resolveFunction ( object, setStylesStatic.bind ( undefined, style ) );
+  resolveFunction ( object, setStylesStatic.bind ( undefined, element ) );
 
 };
 
