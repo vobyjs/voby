@@ -38,7 +38,7 @@ const useTime = () => {
 
 const ClockFace = ({ time }: { time: Observable<number> }): JSX.Element => {
 
-  const abstract = ( rotate: number ) => `rotate(${(rotate + 90).toFixed(1)} 0 0)`;
+  const abstract = ( rotate: number ) => `rotate(${(rotate + 90).toFixed ( 1 )} 0 0)`;
   const millisecond = () => abstract ( ( time () / 1000 ) * 360 );
   const second = () => abstract ( ( time () / 1000 % 60 ) * ( 360 / 60 ) );
   const minute = () => abstract ( ( time () / 1000 / 60 % 60 ) * ( 360 / 60 ) );
