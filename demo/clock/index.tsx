@@ -55,9 +55,9 @@ const ClockFace = ({ time }: { time: Observable<number> }): JSX.Element => {
           <line class="major" y1={40} y2={45} transform={`rotate(${(360 * i) / 12})`} />
         ))}
         <line class="millisecond" x1={0} x2={-44} transform={millisecond} />
-        <line class="second" x1={0} x2={-38} transform={second} />
-        <line class="minute" x1={0} x2={-32} transform={minute} />
         <line class="hour" x1={0} x2={-22} transform={hour} />
+        <line class="minute" x1={0} x2={-32} transform={minute} />
+        <line class="second" x1={0} x2={-38} transform={second} />
       </g>
     </svg>
   );
