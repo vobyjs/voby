@@ -1433,6 +1433,10 @@ There are two main actions needed to make Voby work with TypeScript.
    ```
    "jsxImportSource": "voby"
    ```
+3. Optionally, if you don't want to use a bundler or if you are using a bundler for which a plugin hasn't been written yet you can just define a "React" variable in scope and just use the JSX transform for React:
+   ```ts
+   import * as React from 'voby';
+   ```
 
 #### `Vite`
 
