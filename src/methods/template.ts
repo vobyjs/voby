@@ -2,13 +2,14 @@
 /* IMPORT */
 
 import {SYMBOL_TEMPLATE_ACCESSOR, TEMPLATE_STATE} from '~/constants';
+import wrapElement from '~/methods/wrap_element';
 import {assign, indexOf, isFunction, isString} from '~/utils/lang';
 import {setAttribute, setChildReplacement, setClasses, setEvent, setHTML, setProperty, setRef, setStyles} from '~/utils/setters';
 import type {Child, TemplateActionPath, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap} from '~/types';
 
 /* MAIN */
 
-const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOptions = {} ): (( props: P ) => () => Element) => {
+const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOptions = {} ): (( props: P ) => () => Child) => {
 
   const safePropertyRe = /^[a-z0-9-_]+$/i;
 
@@ -285,7 +286,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
   };
 
-  const makeComponent = (): (( props: P ) => () => Element) => {
+  const makeComponent = (): (( props: P ) => () => Child) => {
 
     const {actionsWithNodes, root} = makeActionsWithNodesAndTemplate ();
     const actionsWithPaths = makeActionsWithPaths ( actionsWithNodes );
@@ -311,19 +312,19 @@ const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOption
 
       };
 
-      return ( props: P ): () => Element => {
+      return ( props: P ): () => Child => {
 
-        return reviver.bind ( undefined, clone (), props );
+        return wrapElement.bind ( reviver.bind ( undefined, clone (), props ) );
 
       };
 
     } else {
 
-      return ( props: P ): () => Element => {
+      return ( props: P ): () => Child => {
 
         const clone = root.cloneNode ( true );
 
-        return reviver.bind ( undefined, clone, props );
+        return wrapElement.bind ( reviver.bind ( undefined, clone, props ) );
 
       };
 
