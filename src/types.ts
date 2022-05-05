@@ -39,6 +39,12 @@ type FN<Arguments extends unknown[], Return extends unknown = void> = ( ...args:
 
 type FunctionMaybe<T = unknown> = (() => T) | T;
 
+type LazyComponent<P = {}> = ( props: P ) => ObservableReadonly<Child>;
+
+type LazyFetcher<P = {}> = () => Promise<{ default: ComponentClass<P> | ComponentFunction<P> }>;
+
+type LazyResult<P = {}> = LazyComponent<P> & ({ preload: () => Promise<void> });
+
 type Observable<T = unknown> = import ( 'oby' ).Observable<T>;
 
 type ObservableReadonly<T = unknown> = import ( 'oby' ).ObservableReadonly<T>;
@@ -81,4 +87,4 @@ type TemplateVariablesMap = Map<TemplateActionPath, string>;
 
 /* EXPORT */
 
-export type {ArrayMaybe, Callback, Child, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, Disposer, Element, EventListener, FN, FunctionMaybe, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceLoading, ResourceRejected, ResourceResolved, Resource, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap};
+export type {ArrayMaybe, Callback, Child, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, Disposer, Element, EventListener, FN, FunctionMaybe, LazyComponent, LazyFetcher, LazyResult, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceLoading, ResourceRejected, ResourceResolved, Resource, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap};

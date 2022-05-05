@@ -8,9 +8,9 @@ import type {Component, Element, Props} from '~/types';
 
 /* MAIN */
 
-const jsx = ( component: Component, props: Props ): Element => {
+const jsx = <P = {}> ( component: Component<P>, props: Props | null ): Element => {
 
-  return createElement ( component, props );
+  return createElement<P> ( component, props );
 
 };
 

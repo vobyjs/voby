@@ -112,17 +112,21 @@ const isTemplateAccessor = ( value: unknown ): value is TemplateActionProxy => {
 
 const noop = (): void => {};
 
-const once = ( fn: () => void ): (() => void) => {
+const once = <T> ( fn: () => T ): (() => T) => {
 
-  let executed = false;
+  let called = false;
+  let result: T;
 
-  return (): void => {
+  return (): T => {
 
-    if ( executed ) return;
+    if ( !called ) {
 
-    executed = true;
+      called = true;
+      result = fn ();
 
-    fn ();
+    }
+
+    return result;
 
   };
 

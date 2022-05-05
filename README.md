@@ -53,11 +53,11 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`createElement`](#createelement)   | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableMaybe`](#observablemaybe)       | [`Vite`](#vite)             |
 | [`h`](#h)                           | [`Fragment`](#fragment)           | [`useBatch`](#usebatch)                     | [`ObservableOptions`](#observableoptions)   |                             |
 | [`isObservable`](#isobservable)     | [`If`](#if)                       | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                             |
-| [`render`](#render)                 | [`Portal`](#portal)               | [`useComputed`](#usecomputed)               | [`F`](#f)                                   |                             |
-| [`renderToString`](#rendertostring) | [`Suspense`](#suspense)           | [`useContext`](#usecontext)                 | [`O`](#o)                                   |                             |
-| [`resolve`](#resolve)               | [`Switch`](#switch)               | [`useDisposed`](#usedisposed)               |                                             |                             |
-| [`template`](#template)             | [`Ternary`](#ternary)             | [`useEffect`](#useeffect)                   |                                             |                             |
-|                                     |                                   | [`useError`](#useerror)                     |                                             |                             |
+| [`lazy`](#lazy)                     | [`Portal`](#portal)               | [`useComputed`](#usecomputed)               | [`F`](#f)                                   |                             |
+| [`render`](#render)                 | [`Suspense`](#suspense)           | [`useContext`](#usecontext)                 | [`O`](#o)                                   |                             |
+| [`renderToString`](#rendertostring) | [`Switch`](#switch)               | [`useDisposed`](#usedisposed)               |                                             |                             |
+| [`resolve`](#resolve)               | [`Ternary`](#ternary)             | [`useEffect`](#useeffect)                   |                                             |                             |
+| [`template`](#template)             |                                   | [`useError`](#useerror)                     |                                             |                             |
 |                                     |                                   | [`useEventListener`](#useeventlistener)     |                                             |                             |
 |                                     |                                   | [`useFetch`](#usefetch)                     |                                             |                             |
 |                                     |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                             |
@@ -172,9 +172,7 @@ This is the internal function that will make DOM nodes and call/instantiate comp
 Interface:
 
 ```ts
-function createElement <T extends keyof JSX.IntrinsicElementsMap> ( component: T, props: {} | null, ...children: JSX.Element[] ): (() => JSX.IntrinsicElementsMap[T]);
-function createElement <T extends Element> ( component: T | (() => T), props: {} | null, ...children: JSX.Element[] ): (() => T);
-function createElement ( component: Component, props: {} | null, ...children: JSX.Element[] ): (() => JSX.Element);
+function createElement <P = {}> ( component: JSX.Component<P>, props: P | null, ...children: JSX.Element[] ): () => JSX.Element);
 ```
 
 Usage:
@@ -192,9 +190,7 @@ This function is just an alias for the `createElement` function, it's more conve
 Interface:
 
 ```ts
-function h <T extends keyof JSX.IntrinsicElementsMap> ( component: T, props: {} | null, ...children: JSX.Element[] ): (() => JSX.IntrinsicElementsMap[T]);
-function h <T extends Element> ( component: T | (() => T), props: {} | null, ...children: JSX.Element[] ): (() => T);
-function h ( component: Component, props: {} | null, ...children: JSX.Element[] ): (() => JSX.Element);
+function h <P = {}> ( component: JSX.Component<P>, props: P | null, ...children: JSX.Element[] ): () => JSX.Element);
 ```
 
 Usage:
@@ -222,6 +218,30 @@ import {$, isObservable} from 'voby';
 
 isObservable ( 123 ); // => false
 isObservable ( $(123) ); // => true
+```
+
+#### `lazy`
+
+This function creates a lazy component, which is loaded via the provided function only when/if needed.
+
+This function uses `useResource` internally, so it's significant for `Suspense` too.
+
+Interface:
+
+```ts
+type LazyComponent<P = {}> = ( props: P ) => ObservableReadonly<Child>;
+type LazyFetcher<P = {}> = () => Promise<{ default: ComponentClass<P> | ComponentFunction<P> }>;
+type LazyResult<P = {}> = LazyComponent<P> & ({ preload: () => Promise<void> });
+
+function lazy <P = {}> ( fetcher: LazyFetcher<P> ): LazyResult<P>;
+```
+
+Usage:
+
+```ts
+import {lazy} from 'voby';
+
+const LazyComponent = lazy ( () => import ( './Component' ) );
 ```
 
 #### `render`
@@ -382,7 +402,7 @@ This component is just an alternative to `createElement` that can be used in JSX
 Interface:
 
 ```ts
-function Dynamic ( props: { component: ObservableMaybe<string | Node | Function>, props?: ObservableMaybe<{} | null>, children: JSX.Element }): JSX. Element;
+function Dynamic <P = {}> ( props: { component: ObservableMaybe<JSX.Component<P>, props?: ObservableMaybe<P | null>, children: JSX.Element }): JSX. Element;
 ```
 
 Usage:

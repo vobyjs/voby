@@ -5,7 +5,7 @@ import * as Voby from 'voby';
 import {Observable} from 'voby';
 import {Component, Dynamic, ErrorBoundary, For, If, Portal, Suspense, Switch, Ternary} from 'voby';
 import {useBatch, useComputed, useContext, useEffect, useInterval, usePromise, useResource, useTimeout} from 'voby';
-import {$, createContext, render, renderToString, template} from 'voby';
+import {$, createContext, lazy, render, renderToString, template} from 'voby';
 
 globalThis.Voby = Voby;
 
@@ -2909,6 +2909,25 @@ const TestSuspenseCleanup = (): JSX.Element => {
   );
 };
 
+const TestLazy = (): JSX.Element => {
+  const Component = (): JSX.Element => {
+    return <p>Loaded!</p>;
+  }
+  const Fallback = (): JSX.Element => {
+    return <p>Loading...</p>;
+  };
+  const lazyFetcher = () => new Promise ( resolve => setTimeout ( () => resolve ( { default: Component } ), TEST_INTERVAL ) );
+  const LazyComponent = lazy ( lazyFetcher );
+  return (
+    <>
+      <h3>Lazy</h3>
+      <Suspense fallback={<Fallback />}>
+        <LazyComponent />
+      </Suspense>
+    </>
+  );
+};
+
 const Test = (): JSX.Element => {
   TestRenderToString ();
   TestRenderToStringSuspense ();
@@ -3103,6 +3122,7 @@ const Test = (): JSX.Element => {
       <TestSuspenseFallbackObservableStatic />
       <TestSuspenseFallbackFunction />
       <TestSuspenseCleanup />
+      <TestLazy />
       <hr />
     </>
   );

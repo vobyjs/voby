@@ -8,11 +8,11 @@ import type {Child, Component, ObservableMaybe, Props} from '~/types';
 
 /* MAIN */
 
-const Dynamic = ({ component, props, children }: { component: Component, props?: ObservableMaybe<Props | null>, children: Child }): Child => {
+const Dynamic = <P = {}> ({ component, props, children }: { component: Component<P>, props?: ObservableMaybe<Props | null>, children: Child }): Child => {
 
   return useComputed ( () => {
 
-    return createElement ( $$(component), $$(props ?? null), children );
+    return createElement<P> ( $$(component), $$(props ?? null), children );
 
   });
 
