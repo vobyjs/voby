@@ -1455,7 +1455,8 @@ There are two main actions needed to make Voby work with TypeScript.
    ```
 2. You should instruct TypeScript to load the correct JSX types by putting the following in your `tsconfig.json`:
    ```
-   "jsxImportSource": "voby"
+   "jsx": "preserve",
+   "jsxImportSource": "voby",
    ```
 3. Optionally, if you don't want to use a bundler or if you are using a bundler for which a plugin hasn't been written yet you can just define a "React" variable in scope and just use the JSX transform for React:
    ```ts
