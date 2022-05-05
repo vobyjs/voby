@@ -29,7 +29,7 @@ This works similarly to [Solid](https://www.solidjs.com), but without the need f
 - **Observable-based**: observables are at the core of our reactivity system. The way it works is very different from a React-like system, it may be more challenging to learn, but it's well worth the effort.
 - **Work in progress**: this is probably beta software, I'm working on it because I need something with great performance for [Notable](https://github.com/notable/notable), I'm allergic to third-party dependencies, I'd like something with an API that resonates with me, and I wanted to deeply understand how the more solid [Solid](https://www.solidjs.com), which you should also check out, works.
 
-## Demo
+## Demos
 
 You can find some demos and benchmarks below, more demos are contained inside the repository.
 
@@ -45,33 +45,33 @@ You can find some demos and benchmarks below, more demos are contained inside th
 
 ## APIs
 
-| [Methods](#methods)                 | [Components](#components)         | [Hooks](#hooks)                             | [Types](#types)                             | [Extras](#extras)           |
-| ----------------------------------- | --------------------------------- | ------------------------------------------- | ------------------------------------------- | --------------------------- |
-| [`$`](#methods)                     | [`Component`](#component)         | [`useAbortController`](#useabortcontroller) | [`FunctionMaybe`](#functionmaybe)           | [`Esbuild`](#esbuild)       |
-| [`$$`](#methods)                    | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`Observable`](#observable)                 | [`JSX`](#jsx)               |
-| [`createContext`](#createcontext)   | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`ObservableReadonly`](#observablereadonly) | [`TypeScript`](#typescript) |
-| [`createElement`](#createelement)   | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableMaybe`](#observablemaybe)       | [`Vite`](#vite)             |
-| [`h`](#h)                           | [`Fragment`](#fragment)           | [`useBatch`](#usebatch)                     | [`ObservableOptions`](#observableoptions)   |                             |
-| [`isObservable`](#isobservable)     | [`If`](#if)                       | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                             |
-| [`lazy`](#lazy)                     | [`Portal`](#portal)               | [`useComputed`](#usecomputed)               | [`F`](#f)                                   |                             |
-| [`render`](#render)                 | [`Suspense`](#suspense)           | [`useContext`](#usecontext)                 | [`O`](#o)                                   |                             |
-| [`renderToString`](#rendertostring) | [`Switch`](#switch)               | [`useDisposed`](#usedisposed)               |                                             |                             |
-| [`resolve`](#resolve)               | [`Ternary`](#ternary)             | [`useEffect`](#useeffect)                   |                                             |                             |
-| [`template`](#template)             |                                   | [`useError`](#useerror)                     |                                             |                             |
-|                                     |                                   | [`useEventListener`](#useeventlistener)     |                                             |                             |
-|                                     |                                   | [`useFetch`](#usefetch)                     |                                             |                             |
-|                                     |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                             |
-|                                     |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                             |
-|                                     |                                   | [`useInterval`](#useinterval)               |                                             |                             |
-|                                     |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                             |
-|                                     |                                   | [`usePromise`](#usepromise)                 |                                             |                             |
-|                                     |                                   | [`useReadonly`](#usereadonly)               |                                             |                             |
-|                                     |                                   | [`useResolved`](#useresolved)               |                                             |                             |
-|                                     |                                   | [`useResource`](#useresource)               |                                             |                             |
-|                                     |                                   | [`useRoot`](#useroot)                       |                                             |                             |
-|                                     |                                   | [`useSample`](#usesample)                   |                                             |                             |
-|                                     |                                   | [`useSelector`](#useselector)               |                                             |                             |
-|                                     |                                   | [`useTimeout`](#usetimeout)                 |                                             |                             |
+| [Methods](#methods)                 | [Components](#components)         | [Hooks](#hooks)                             | [Types](#types)                             | [Extras](#extras)               |
+| ----------------------------------- | --------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------- |
+| [`$`](#methods)                     | [`Component`](#component)         | [`useAbortController`](#useabortcontroller) | [`FunctionMaybe`](#functionmaybe)           | [`Esbuild`](#esbuild)           |
+| [`$$`](#methods)                    | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`Observable`](#observable)                 | [`JSX`](#jsx)                   |
+| [`createContext`](#createcontext)   | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`ObservableReadonly`](#observablereadonly) | [`Tree Shaking`](#tree-shaking) |
+| [`createElement`](#createelement)   | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableMaybe`](#observablemaybe)       | [`TypeScript`](#typescript)     |
+| [`h`](#h)                           | [`Fragment`](#fragment)           | [`useBatch`](#usebatch)                     | [`ObservableOptions`](#observableoptions)   | [`Vite`](#vite)                 |
+| [`isObservable`](#isobservable)     | [`If`](#if)                       | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                                 |
+| [`lazy`](#lazy)                     | [`Portal`](#portal)               | [`useComputed`](#usecomputed)               | [`F`](#f)                                   |                                 |
+| [`render`](#render)                 | [`Suspense`](#suspense)           | [`useContext`](#usecontext)                 | [`O`](#o)                                   |                                 |
+| [`renderToString`](#rendertostring) | [`Switch`](#switch)               | [`useDisposed`](#usedisposed)               |                                             |                                 |
+| [`resolve`](#resolve)               | [`Ternary`](#ternary)             | [`useEffect`](#useeffect)                   |                                             |                                 |
+| [`template`](#template)             |                                   | [`useError`](#useerror)                     |                                             |                                 |
+|                                     |                                   | [`useEventListener`](#useeventlistener)     |                                             |                                 |
+|                                     |                                   | [`useFetch`](#usefetch)                     |                                             |                                 |
+|                                     |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
+|                                     |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
+|                                     |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
+|                                     |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
+|                                     |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
+|                                     |                                   | [`useReadonly`](#usereadonly)               |                                             |                                 |
+|                                     |                                   | [`useResolved`](#useresolved)               |                                             |                                 |
+|                                     |                                   | [`useResource`](#useresource)               |                                             |                                 |
+|                                     |                                   | [`useRoot`](#useroot)                       |                                             |                                 |
+|                                     |                                   | [`useSample`](#usesample)                   |                                             |                                 |
+|                                     |                                   | [`useSelector`](#useselector)               |                                             |                                 |
+|                                     |                                   | [`useTimeout`](#usetimeout)                 |                                             |                                 |
 
 ## Usage
 
@@ -1440,6 +1440,10 @@ JSX is supported out of the box, as a rule of thumb it's very similar to how Rea
 - The following events are delegated, automatically: `beforeinput`, `click`, `dblclick`, `focusin`, `focusout`, `input`, `keydown`, `keyup`, `mousedown`, `mouseup`.
 - Events always bubble according to the natural DOM hierarchy, there's no special bubbling logic for `Portal`.
 - Class components, but with no lifecycle callbacks, are supported too. They got thrown away with the bath water by other frameworks, but organizing internal methods in a class and assigning that class to refs automatically is actually a really nice feature.
+
+#### `Tree Shaking`
+
+Voby is released as a tree-shakeable ESM module. The functions you don't use simply won't be included in the final bundle.
 
 #### `TypeScript`
 
