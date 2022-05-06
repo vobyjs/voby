@@ -38,6 +38,7 @@ You can find some demos and benchmarks below, more demos are contained inside th
 - Counter: https://codesandbox.io/s/voby-demo-counter-23fv5
 - Clock: https://codesandbox.io/s/voby-demo-clock-w1e7yb
 - HyperScript: https://codesandbox.io/s/voby-demo-hyperscript-h4rf38
+- Single-file HTML: https://codesandbox.io/s/voby-demo-html-dueygt?file=/public/index.html
 - Spiral: https://codesandbox.io/s/voby-demo-spiral-ux33p6
 - Triangle: https://codesandbox.io/s/voby-demo-triangle-l837v0
 - Boxes: https://codesandbox.io/s/voby-demo-boxes-wx6rqb
