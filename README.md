@@ -34,11 +34,10 @@ This works similarly to [Solid](https://www.solidjs.com), but without the need f
 You can find some demos and benchmarks below, more demos are contained inside the repository.
 
 - Playground: https://codesandbox.io/s/voby-playground-7w2pxg
-- Benchmark: https://codesandbox.io/s/voby-demo-benchmark-x0nr40
-- Cellx Benchmark: https://codesandbox.io/s/oby-bench-cellx-s6kusj
-- JS Framework Benchmark: https://krausest.github.io/js-framework-benchmark/current.html
+- Benchmark: https://krausest.github.io/js-framework-benchmark/current.html
 - Counter: https://codesandbox.io/s/voby-demo-counter-23fv5
 - Clock: https://codesandbox.io/s/voby-demo-clock-w1e7yb
+- HyperScript: https://codesandbox.io/s/voby-demo-hyperscript-h4rf38
 - Spiral: https://codesandbox.io/s/voby-demo-spiral-ux33p6
 - Triangle: https://codesandbox.io/s/voby-demo-triangle-l837v0
 - Boxes: https://codesandbox.io/s/voby-demo-boxes-wx6rqb
