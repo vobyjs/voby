@@ -1222,7 +1222,7 @@ useTimeout ( () => console.log ( 'called' ), 1000 );
 
 This type says that something can be the value itself or a function that returns that value.
 
-It's useful at times since some components, like `If`, accept `when` condition that's exactly.
+It's useful at times since some components, like `If`, accept `when` conditions wrapped in `FunctionMaybe`.
 
 Interface:
 
