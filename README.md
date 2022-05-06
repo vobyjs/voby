@@ -1089,7 +1089,7 @@ If no callback is used then it returns the unwrapped value, otherwise it returns
 
 This is useful for handling reactive and non reactive values the same way. Usually if the value is a function, or always for convenience, you'd want to wrap the `useResolved` call in a `useComputed`, to maintain reactivity.
 
-This is potentially a more convenient version of `resolve`, made especially for handling nicely arguments passed that your hooks receive that may or may not be observables.
+This is potentially a more convenient version of `$$`, made especially for handling nicely arguments passed that your hooks receive that may or may not be observables.
 
 Interface:
 
