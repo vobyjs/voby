@@ -47,7 +47,7 @@ You can find some demos and benchmarks below, more demos are contained inside th
 
 The following ecosystem tools and libraries have been written so far.
 
-- [`voby-cli`](https://github.com/MadeByZeAman28/Voby-CLI): A centralized list of Voby project templates in neat lightweight cli-tool wrapped around degit.
+- [`create-voby`](https://github.com/MadeByZeAman28/create-voby): Scaffolding for your first Voby project.
 
 Write something cool and I'll add it to this list!
 
