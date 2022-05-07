@@ -26,9 +26,9 @@ const getMillisecondsSinceMidnight = (): number => {
 
 const useTime = () => {
 
-  const time = $( getMillisecondsSinceMidnight() / 1000 );
+  const time = $( getMillisecondsSinceMidnight () / 1000 );
 
-  const tick = () => time ( getMillisecondsSinceMidnight() / 1000 );
+  const tick = () => time ( getMillisecondsSinceMidnight () / 1000 );
 
   useAnimationLoop ( tick );
 
