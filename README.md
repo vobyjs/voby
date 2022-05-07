@@ -55,11 +55,11 @@ Write something cool and I'll add it to this list!
 
 | [Methods](#methods)                 | [Components](#components)         | [Hooks](#hooks)                             | [Types](#types)                             | [Extras](#extras)               |
 | ----------------------------------- | --------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------- |
-| [`$`](#methods)                     | [`Component`](#component)         | [`useAbortController`](#useabortcontroller) | [`FunctionMaybe`](#functionmaybe)           | [`Esbuild`](#esbuild)           |
-| [`$$`](#methods)                    | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`Observable`](#observable)                 | [`JSX`](#jsx)                   |
-| [`createContext`](#createcontext)   | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`ObservableReadonly`](#observablereadonly) | [`Tree Shaking`](#tree-shaking) |
-| [`createElement`](#createelement)   | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableMaybe`](#observablemaybe)       | [`TypeScript`](#typescript)     |
-| [`h`](#h)                           | [`Fragment`](#fragment)           | [`useBatch`](#usebatch)                     | [`ObservableOptions`](#observableoptions)   | [`Vite`](#vite)                 |
+| [`$`](#methods)                     | [`Component`](#component)         | [`useAbortController`](#useabortcontroller) | [`FunctionMaybe`](#functionmaybe)           | [`JSX`](#jsx)                   |
+| [`$$`](#methods)                    | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`Observable`](#observable)                 | [`Tree Shaking`](#tree-shaking) |
+| [`createContext`](#createcontext)   | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`ObservableReadonly`](#observablereadonly) | [`TypeScript`](#typescript)     |
+| [`createElement`](#createelement)   | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableMaybe`](#observablemaybe)       |                                 |
+| [`h`](#h)                           | [`Fragment`](#fragment)           | [`useBatch`](#usebatch)                     | [`ObservableOptions`](#observableoptions)   |                                 |
 | [`isObservable`](#isobservable)     | [`If`](#if)                       | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                                 |
 | [`lazy`](#lazy)                     | [`Portal`](#portal)               | [`useComputed`](#usecomputed)               | [`F`](#f)                                   |                                 |
 | [`render`](#render)                 | [`Suspense`](#suspense)           | [`useContext`](#usecontext)                 | [`O`](#o)                                   |                                 |
@@ -1412,23 +1412,6 @@ const Button = ({ label }: { label: O<string> }): JSX.Element => {
 
 Extra features and details.
 
-#### `Esbuild`
-
-An official plugin for esbuild is provided.
-
-Usage:
-
-```ts
-import esbuild from 'esbuild';
-import voby from 'voby/esbuild';
-
-esbuild.build ({
-  entryPoints: ['src.js'],
-  outfile: 'dist.js',
-  plugins: [voby ()]
-});
-```
-
 #### `JSX`
 
 JSX is supported out of the box, as a rule of thumb it's very similar to how React's JSX works, but with some differences.
@@ -1470,21 +1453,6 @@ There are two main actions needed to make Voby work with TypeScript.
    ```ts
    import * as React from 'voby';
    ```
-
-#### `Vite`
-
-An official plugin for Vite is provided.
-
-Usage:
-
-```ts
-import {defineConfig} from 'vite';
-import voby from 'voby/vite';
-
-export default defineConfig ({
-  plugins: [voby ()]
-});
-```
 
 ## Thanks
 
