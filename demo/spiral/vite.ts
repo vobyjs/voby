@@ -3,7 +3,7 @@
 
 import path from 'path';
 import {defineConfig} from 'vite';
-import voby from 'voby/vite';
+import voby from 'voby-vite';
 
 /* MAIN */
 
