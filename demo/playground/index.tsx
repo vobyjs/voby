@@ -2437,6 +2437,54 @@ const TestSVGStatic = (): JSX.Element => {
   );
 };
 
+const TestSVGStaticComplex = (): JSX.Element => {
+  return (
+    <>
+      <h3>SVG - Static Complex</h3>
+      <svg xmlns="http://www.w3.org/2000/svg" width="8.838ex" height="2.398ex" role="img" focusable="false" viewBox="0 -966.5 3906.6 1060" xmlns:xlink="http://www.w3.org/1999/xlink" style="vertical-align: -0.212ex;">
+        <defs>
+          <path id="MJX-1-TEX-N-221A" d="M95 178Q89 178 81 186T72 200T103 230T169 280T207 309Q209 311 212 311H213Q219 311 227 294T281 177Q300 134 312 108L397 -77Q398 -77 501 136T707 565T814 786Q820 800 834 800Q841 800 846 794T853 782V776L620 293L385 -193Q381 -200 366 -200Q357 -200 354 -197Q352 -195 256 15L160 225L144 214Q129 202 113 190T95 178Z"></path>
+          <path id="MJX-1-TEX-I-1D44E" d="M33 157Q33 258 109 349T280 441Q331 441 370 392Q386 422 416 422Q429 422 439 414T449 394Q449 381 412 234T374 68Q374 43 381 35T402 26Q411 27 422 35Q443 55 463 131Q469 151 473 152Q475 153 483 153H487Q506 153 506 144Q506 138 501 117T481 63T449 13Q436 0 417 -8Q409 -10 393 -10Q359 -10 336 5T306 36L300 51Q299 52 296 50Q294 48 292 46Q233 -10 172 -10Q117 -10 75 30T33 157ZM351 328Q351 334 346 350T323 385T277 405Q242 405 210 374T160 293Q131 214 119 129Q119 126 119 118T118 106Q118 61 136 44T179 26Q217 26 254 59T298 110Q300 114 325 217T351 328Z"></path>
+          <path id="MJX-1-TEX-N-32" d="M109 429Q82 429 66 447T50 491Q50 562 103 614T235 666Q326 666 387 610T449 465Q449 422 429 383T381 315T301 241Q265 210 201 149L142 93L218 92Q375 92 385 97Q392 99 409 186V189H449V186Q448 183 436 95T421 3V0H50V19V31Q50 38 56 46T86 81Q115 113 136 137Q145 147 170 174T204 211T233 244T261 278T284 308T305 340T320 369T333 401T340 431T343 464Q343 527 309 573T212 619Q179 619 154 602T119 569T109 550Q109 549 114 549Q132 549 151 535T170 489Q170 464 154 447T109 429Z"></path>
+          <path id="MJX-1-TEX-N-2B" d="M56 237T56 250T70 270H369V420L370 570Q380 583 389 583Q402 583 409 568V270H707Q722 262 722 250T707 230H409V-68Q401 -82 391 -82H389H387Q375 -82 369 -68V230H70Q56 237 56 250Z"></path>
+          <path id="MJX-1-TEX-I-1D44F" d="M73 647Q73 657 77 670T89 683Q90 683 161 688T234 694Q246 694 246 685T212 542Q204 508 195 472T180 418L176 399Q176 396 182 402Q231 442 283 442Q345 442 383 396T422 280Q422 169 343 79T173 -11Q123 -11 82 27T40 150V159Q40 180 48 217T97 414Q147 611 147 623T109 637Q104 637 101 637H96Q86 637 83 637T76 640T73 647ZM336 325V331Q336 405 275 405Q258 405 240 397T207 376T181 352T163 330L157 322L136 236Q114 150 114 114Q114 66 138 42Q154 26 178 26Q211 26 245 58Q270 81 285 114T318 219Q336 291 336 325Z"></path>
+        </defs>
+        <g stroke="currentColor" fill="currentColor" stroke-width="0" transform="scale(1,-1)">
+          <g data-mml-node="math">
+            <g data-mml-node="msqrt">
+              <g transform="translate(853,0)">
+                <g data-mml-node="msup">
+                  <g data-mml-node="mi">
+                    <use data-c="1D44E" xlinkHref="#MJX-1-TEX-I-1D44E"></use>
+                  </g>
+                  <g data-mml-node="mn" transform="translate(562,289) scale(0.707)">
+                    <use data-c="32" xlink:href="#MJX-1-TEX-N-32"></use>
+                  </g>
+                </g>
+                <g data-mml-node="mo" transform="translate(1187.8,0)">
+                  <use data-c="2B" xlink:href="#MJX-1-TEX-N-2B"></use>
+                </g>
+                <g data-mml-node="msup" transform="translate(2188,0)">
+                  <g data-mml-node="mi">
+                    <use data-c="1D44F" xlink:href="#MJX-1-TEX-I-1D44F"></use>
+                  </g>
+                  <g data-mml-node="mn" transform="translate(462,289) scale(0.707)">
+                    <use data-c="32" xlink:href="#MJX-1-TEX-N-32"></use>
+                  </g>
+                </g>
+              </g>
+              <g data-mml-node="mo" transform="translate(0,106.5)">
+                <use data-c="221A" xlink:href="#MJX-1-TEX-N-221A"></use>
+              </g>
+              <rect width="3053.6" height="60" x="853" y="846.5"></rect>
+            </g>
+          </g>
+        </g>
+      </svg>
+    </>
+  );
+};
+
 const TestSVGObservable = (): JSX.Element => {
   const getColor = () => `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
   const color = $(getColor ());
@@ -3099,6 +3147,7 @@ const Test = (): JSX.Element => {
       <TestRefs />
       <TestRefUnmounting />
       <TestSVGStatic />
+      <TestSVGStaticComplex />
       <TestSVGObservable />
       <TestSVGFunction />
       <TestSVGStyleObject />

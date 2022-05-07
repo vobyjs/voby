@@ -18,6 +18,7 @@ const setAttributeStatic = ( element: HTMLElement, key: string, value: null | un
   if ( isSVG ( element ) ) {
 
     key = ( key === 'className' ) ? 'class' : key;
+    key = ( key === 'xlinkHref' || key === 'xlink:href' ) ? 'href' : key;
 
     element.setAttribute ( key, String ( value ) );
 
