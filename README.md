@@ -1,11 +1,11 @@
 
 <p align="center">
-  <img src="./resources/logo/logo-rounded.png" alt="Voby's Logo" width="640px">
+  <img src="./resources/banner/svg/banner-light-rounded.svg" alt="Voby's Banne" width="640px" height="320px">
 </p>
 
 <p align="center">
   <a href="https://discord.gg/E6pK7VpnjC">
-    <img src="./resources/discord/button.png" alt="Join The Discord Chat" width="175px">
+    <img src="./resources/discord/button.png" alt="Join The Discord Chat" width="175px" height="56.5px">
   </a>
 </p>
 
