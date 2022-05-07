@@ -1,6 +1,8 @@
 
 <p align="center">
-  <img src="./resources/banner/svg/banner-light-rounded.svg" alt="Voby's Banne" width="640px" height="320px">
+  <a href="https://voby.dev">
+    <img src="./resources/banner/svg/banner-light-rounded.svg" alt="Voby's Banne" width="640px" height="320px">
+  </a>
 </p>
 
 <p align="center">
@@ -9,7 +11,7 @@
   </a>
 </p>
 
-# Voby
+# [Voby](https://voby.dev)
 
 A high-performance framework with fine-grained observable-based reactivity for building rich applications.
 
