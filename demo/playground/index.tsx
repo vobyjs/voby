@@ -2485,6 +2485,18 @@ const TestSVGStaticComplex = (): JSX.Element => {
   );
 };
 
+const TestSVGStaticCamelCase = (): JSX.Element => {
+  const getColor = () => `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
+  return (
+    <>
+      <h3>SVG - Static CamelCase</h3>
+      <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke={getColor ()} strokeWidth="3" fill="white">
+        <circle cx="25" cy="25" r="20" />
+      </svg>
+    </>
+  );
+};
+
 const TestSVGObservable = (): JSX.Element => {
   const getColor = () => `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
   const color = $(getColor ());
@@ -3148,6 +3160,7 @@ const Test = (): JSX.Element => {
       <TestRefUnmounting />
       <TestSVGStatic />
       <TestSVGStaticComplex />
+      <TestSVGStaticCamelCase />
       <TestSVGObservable />
       <TestSVGFunction />
       <TestSVGStyleObject />
