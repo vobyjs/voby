@@ -26,9 +26,9 @@ const getMillisecondsSinceMidnight = (): number => {
 
 const useTime = () => {
 
-  const time = $(getMillisecondsSinceMidnight ());
+  const time = $( getMillisecondsSinceMidnight () / 1000 );
 
-  const tick = () => time ( getMillisecondsSinceMidnight () );
+  const tick = () => time ( getMillisecondsSinceMidnight () / 1000 );
 
   useAnimationLoop ( tick );
 
@@ -38,11 +38,11 @@ const useTime = () => {
 
 const ClockFace = ({ time }: { time: Observable<number> }): JSX.Element => {
 
-  const abstract = ( rotate: number ) => `rotate(${(rotate + 90).toFixed ( 1 )} 0 0)`;
-  const millisecond = () => abstract ( ( time () / 1000 ) * 360 );
-  const second = () => abstract ( ( time () / 1000 % 60 ) * ( 360 / 60 ) );
-  const minute = () => abstract ( ( time () / 1000 / 60 % 60 ) * ( 360 / 60 ) );
-  const hour = () => abstract ( ( time () / 1000 / 60 / 60 % 12 ) * ( 360 / 12 ) );
+  const abstract = ( rotate: number ) => `rotate(${(rotate * 360).toFixed ( 1 )})`;
+  const millisecond = () => abstract ( time () % 1 );
+  const second = () => abstract ( ( time () % 60 ) / 60 );
+  const minute = () => abstract ( ( time () / 60 % 60 ) / 60 );
+  const hour = () => abstract ( ( time () / 60 / 60 % 12 ) / 12 );
 
   return (
     <svg viewBox="0 0 100 100">
@@ -54,10 +54,10 @@ const ClockFace = ({ time }: { time: Observable<number> }): JSX.Element => {
         {mapRange ( 0, 12, 1, i => (
           <line class="major" y1={40} y2={45} transform={`rotate(${(360 * i) / 12})`} />
         ))}
-        <line class="millisecond" x1={0} x2={-44} transform={millisecond} />
-        <line class="hour" x1={0} x2={-22} transform={hour} />
-        <line class="minute" x1={0} x2={-32} transform={minute} />
-        <line class="second" x1={0} x2={-38} transform={second} />
+        <line class="millisecond" y2={-44} transform={millisecond} />
+        <line class="hour" y2={-22} transform={hour} />
+        <line class="minute" y2={-32} transform={minute} />
+        <line class="second" y2={-38} transform={second} />
       </g>
     </svg>
   );
