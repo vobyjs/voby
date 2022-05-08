@@ -17,7 +17,7 @@ A high-performance framework with fine-grained observable-based reactivity for b
 
 ## Features
 
-This works similarly to [Solid](https://www.solidjs.com), but without the need for the Babel transform and with a different API.
+This works similarly to [Solid](https://www.solidjs.com), but without a custom Babel transform and with a different API.
 
 - **No VDOM**: there's no VDOM overhead, the framework deals with raw DOM nodes directly.
 - **No stale closures**: functions are always executed afresh, no need to worry about previous potential executions of the current function, ever.
