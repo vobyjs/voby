@@ -7,7 +7,7 @@ import useEffect from '~/hooks/use_effect';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import Fragment from '~/utils/fragment';
-import {flatten, isArray, isFunction, isNil, isPrimitive, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
+import {flatten, isArray, isBoolean, isFunction, isNil, isPrimitive, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
 import {resolveChild, resolveFunction, resolveObservable} from '~/utils/resolvers';
 import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 
@@ -19,6 +19,14 @@ const setAttributeStatic = ( element: HTMLElement, key: string, value: null | un
 
     key = ( key === 'className' ) ? 'class' : key;
     key = ( key === 'xlinkHref' || key === 'xlink:href' ) ? 'href' : key;
+
+    //FIXME: Some attributes should be kebab-cased, to following is a workaround to get them to work with little code
+
+    if ( !isBoolean ( value ) && key in element.style ) {
+
+      element.style[key] = value;
+
+    }
 
     element.setAttribute ( key, String ( value ) );
 
