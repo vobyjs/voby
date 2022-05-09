@@ -71,7 +71,7 @@
   ],
   "dependencies": {
     "htm": "^3.1.1",
-    "oby": "^7.0.4"
+    "oby": "^7.0.5"
   },
   "devDependencies": {
     "@types/node": "^17.0.31",
