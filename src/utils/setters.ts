@@ -7,7 +7,7 @@ import useEffect from '~/hooks/use_effect';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import Fragment from '~/utils/fragment';
-import {flatten, isArray, isBoolean, isFunction, isNil, isPrimitive, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
+import {flatten, isArray, isFunction, isNil, isPrimitive, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
 import {resolveChild, resolveFunction, resolveObservable} from '~/utils/resolvers';
 import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 

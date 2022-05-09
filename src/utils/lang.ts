@@ -52,12 +52,6 @@ const indexOf = (() => {
 
 const {isArray} = Array;
 
-const isBoolean = ( value: unknown ): value is boolean => {
-
-  return typeof value === 'boolean';
-
-};
-
 const isError = ( value: unknown ): value is Error => {
 
   return value instanceof Error;
@@ -140,4 +134,4 @@ const once = <T> ( fn: () => T ): (() => T) => {
 
 /* EXPORT */
 
-export {assign, castArray, castError, flatten, indexOf, isArray, isBoolean, isError, isFunction, isNil, isNode, isPrimitive, isPromise, isString, isSVG, isTemplateAccessor, noop, once};
+export {assign, castArray, castError, flatten, indexOf, isArray, isError, isFunction, isNil, isNode, isPrimitive, isPromise, isString, isSVG, isTemplateAccessor, noop, once};
