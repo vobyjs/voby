@@ -54,13 +54,13 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`createContext`](#createcontext)   | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`ObservableReadonly`](#observablereadonly) | [`TypeScript`](#typescript)     |
 | [`createElement`](#createelement)   | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableMaybe`](#observablemaybe)       |                                 |
 | [`h`](#h)                           | [`Fragment`](#fragment)           | [`useBatch`](#usebatch)                     | [`ObservableOptions`](#observableoptions)   |                                 |
-| [`isObservable`](#isobservable)     | [`If`](#if)                       | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                                 |
-| [`lazy`](#lazy)                     | [`Portal`](#portal)               | [`useComputed`](#usecomputed)               | [`F`](#f)                                   |                                 |
-| [`render`](#render)                 | [`Suspense`](#suspense)           | [`useContext`](#usecontext)                 | [`O`](#o)                                   |                                 |
-| [`renderToString`](#rendertostring) | [`Switch`](#switch)               | [`useDisposed`](#usedisposed)               |                                             |                                 |
-| [`resolve`](#resolve)               | [`Ternary`](#ternary)             | [`useEffect`](#useeffect)                   |                                             |                                 |
-| [`template`](#template)             |                                   | [`useError`](#useerror)                     |                                             |                                 |
-|                                     |                                   | [`useEventListener`](#useeventlistener)     |                                             |                                 |
+| [`html`](#html)                     | [`If`](#if)                       | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                                 |
+| [`isObservable`](#isobservable)     | [`Portal`](#portal)               | [`useComputed`](#usecomputed)               | [`F`](#f)                                   |                                 |
+| [`lazy`](#lazy)                     | [`Suspense`](#suspense)           | [`useContext`](#usecontext)                 | [`O`](#o)                                   |                                 |
+| [`render`](#render)                 | [`Switch`](#switch)               | [`useDisposed`](#usedisposed)               |                                             |                                 |
+| [`renderToString`](#rendertostring) | [`Ternary`](#ternary)             | [`useEffect`](#useeffect)                   |                                             |                                 |
+| [`resolve`](#resolve)               |                                   | [`useError`](#useerror)                     |                                             |                                 |
+| [`template`](#template)             |                                   | [`useEventListener`](#useeventlistener)     |                                             |                                 |
 |                                     |                                   | [`useFetch`](#usefetch)                     |                                             |                                 |
 |                                     |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
 |                                     |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
@@ -201,6 +201,36 @@ Usage:
 import {h} from 'voby';
 
 const element = h ( 'div', { class: 'foo' }, 'child' ); // => () => HTMLDivElement
+```
+
+#### `html`
+
+This function provides an alternative way to use the framework, without writing JSX or using the `h` function manually, it instead allows you to write your markup as tagged template literals.
+
+[`htm`](https://github.com/developit/htm) is used under the hood, read its documentation.
+
+Interface:
+
+```ts
+function html ( strings: TemplateStringsArray, ...values: any[] ): JSX.Element;
+```
+
+Usage:
+
+```tsx
+import {html} from 'voby';
+
+const Counter = (): JSX.Element => {
+  const value = $(0);
+  const increment = () => value ( prev => prev + 1 );
+  const decrement = () => value ( prev => prev - 1 );
+  return html`
+    <h1>Counter</h1>
+    <p>${value}</p>
+    <button onClick=${increment}>+</button>
+    <button onClick=${decrement}>-</button>
+  `;
+};
 ```
 
 #### `isObservable`

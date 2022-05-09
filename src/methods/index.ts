@@ -6,6 +6,7 @@ import $$ from '~/methods/SS';
 import createContext from '~/methods/create_context';
 import createElement from '~/methods/create_element';
 import h from '~/methods/h';
+import html from '~/methods/html';
 import isObservable from '~/methods/is_observable';
 import lazy from '~/methods/lazy';
 import render from '~/methods/render';
@@ -15,4 +16,4 @@ import template from '~/methods/template';
 
 /* EXPORT */
 
-export {$, $$, createContext, createElement, h, isObservable, lazy, render, renderToString, resolve, template};
+export {$, $$, createContext, createElement, h, html, isObservable, lazy, render, renderToString, resolve, template};
