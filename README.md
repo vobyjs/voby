@@ -50,10 +50,10 @@ You can find some demos and benchmarks below, more demos are contained inside th
 
 | [Methods](#methods)                 | [Components](#components)         | [Hooks](#hooks)                             | [Types](#types)                             | [Extras](#extras)               |
 | ----------------------------------- | --------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------- |
-| [`$`](#methods)                     | [`Component`](#component)         | [`useAbortController`](#useabortcontroller) | [`FunctionMaybe`](#functionmaybe)           | [`JSX`](#jsx)                   |
-| [`$$`](#methods)                    | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`Observable`](#observable)                 | [`Tree Shaking`](#tree-shaking) |
-| [`createContext`](#createcontext)   | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`ObservableReadonly`](#observablereadonly) | [`TypeScript`](#typescript)     |
-| [`createElement`](#createelement)   | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableMaybe`](#observablemaybe)       |                                 |
+| [`$`](#methods)                     | [`Component`](#component)         | [`useAbortController`](#useabortcontroller) | [`FunctionMaybe`](#functionmaybe)           | [`Contributing`](#contributing) |
+| [`$$`](#methods)                    | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`Observable`](#observable)                 | [`JSX`](#jsx)                   |
+| [`createContext`](#createcontext)   | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`ObservableReadonly`](#observablereadonly) | [`Tree Shaking`](#tree-shaking) |
+| [`createElement`](#createelement)   | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableMaybe`](#observablemaybe)       | [`TypeScript`](#typescript)     |
 | [`h`](#h)                           | [`Fragment`](#fragment)           | [`useBatch`](#usebatch)                     | [`ObservableOptions`](#observableoptions)   |                                 |
 | [`html`](#html)                     | [`If`](#if)                       | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                                 |
 | [`isObservable`](#isobservable)     | [`Portal`](#portal)               | [`useComputed`](#usecomputed)               | [`F`](#f)                                   |                                 |
@@ -1436,6 +1436,28 @@ const Button = ({ label }: { label: O<string> }): JSX.Element => {
 ### Extras
 
 Extra features and details.
+
+#### `Contributing`
+
+If you'd like to contribute to this repo you should take the following steps to install Voby locally:
+
+```sh
+git clone https://github.com/vobyjs/voby.git
+cd voby
+npm install
+npm run compile
+```
+
+Then you can run any of the demos locally like this:
+
+```sh
+# Playground
+npm run dev
+# Counter
+npm run dev:counter
+# Benchmark
+npm run dev:benchmark
+```
 
 #### `JSX`
 
