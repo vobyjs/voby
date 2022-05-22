@@ -13,7 +13,7 @@ import type {Child, Component, Element, Props} from '~/types';
 
 // It's important to wrap components, so that they can be executed in the right order, from parent to child, rather than from child to parent in some cases
 
-const createElement = <P = {}> ( component: Component<P>, props: Props | null, ..._children: Child[] ): Element => {
+const createElement = <P = {}> ( component: Component<P>, props?: Props | null, ..._children: Child[] ): Element => {
 
   const { children: __children, key, ref, class: cls, ...rest } = props || {};
   const children = ( _children.length === 1 ) ? _children[0] : ( _children.length === 0 ) ? __children : _children;
