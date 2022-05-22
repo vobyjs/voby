@@ -3,8 +3,8 @@
   "name": "benchmark",
   "type": "module",
   "scripts": {
-    "dev": "DEV=1 vite --force --config vite.ts",
-    "prod": "PROD=1 vite --force --config vite.ts"
+    "dev": "vite --force --config vite.ts --mode dev",
+    "prod": "vite --force --config vite.ts"
   },
   "dependencies": {
     "vite": "^2.9.7",

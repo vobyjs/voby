@@ -14,7 +14,7 @@ const config = defineConfig ({
   resolve: {
     alias: {
       '~': path.resolve ( __dirname, '../../src' ),
-      voby: process.env.DEV ? path.resolve ( __dirname, '../../src' ) : 'voby'
+      voby: process.argv.includes ( 'dev' ) ? path.resolve ( __dirname, '../../src' ) : 'voby'
     }
   }
 });
