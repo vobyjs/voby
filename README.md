@@ -39,6 +39,7 @@ You can find some demos and benchmarks below, more demos are contained inside th
 - Benchmark: https://krausest.github.io/js-framework-benchmark/current.html
 - Counter: https://codesandbox.io/s/voby-demo-counter-23fv5
 - Clock: https://codesandbox.io/s/voby-demo-clock-w1e7yb
+- Emoji Counter: https://codesandbox.io/s/voby-demo-emoji-counter-j91iz2
 - HyperScript: https://codesandbox.io/s/voby-demo-hyperscript-h4rf38
 - HTML Template Literal: https://codesandbox.io/s/voby-demo-html-lvfeyo
 - Single-file HTML: https://codesandbox.io/s/voby-demo-html-dueygt?file=/public/index.html
