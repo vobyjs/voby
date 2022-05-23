@@ -606,7 +606,7 @@ const App = () => {
 
 #### `Suspense`
 
-This component is like `If`, the reactive alternative to the native `if`, but both branches are kept alive under the hood at the same time, and the fallback branch is shown automatically while there are some resources loading in the main branch.
+This component is like `If`, the reactive alternative to the native `if`, but the fallback branch is shown automatically while there are some resources loading in the main branch, and the main branch is kept alive under the hood.
 
 So this can be used to show some fallback content while the actual content is loading in the background.
 

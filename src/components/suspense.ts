@@ -17,7 +17,9 @@ const Suspense = ({ when, fallback, children }: { when?: FunctionMaybe<unknown>,
 
     const condition = useComputed ( () => isFunction ( when ) ? !!when () || suspense.active () : !!when || suspense.active () );
 
-    return oby.suspense ( condition, [[true, fallback], [children]] );
+    const fallbackLazy = useComputed ( () => condition () && fallback ); // Ensuring it's not kept alive when not used
+
+    return oby.suspense ( condition, [[true, fallbackLazy], [children]] );
 
   });
 
