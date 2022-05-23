@@ -2845,6 +2845,26 @@ const TestSuspenseObservable = (): JSX.Element => {
   );
 };
 
+const TestSuspenseWhen = (): JSX.Element => {
+  const Fallback = () => {
+    return <p>Loading...</p>;
+  };
+  const Content = () => {
+    return <p>Content!</p>;
+  };
+  const o = $(true);
+  const toggle = () => o ( prev => !prev );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Suspense - When</h3>
+      <Suspense when={o} fallback={<Fallback />}>
+        <Content />
+      </Suspense>
+    </>
+  );
+};
+
 const TestSuspenseChildrenObservableStatic = (): JSX.Element => {
   const Children = (): JSX.Element => {
     const o = $( String ( Math.random () ) );
@@ -3179,6 +3199,7 @@ const Test = (): JSX.Element => {
       <TestSuspenseAlways />
       <TestSuspenseNever />
       <TestSuspenseObservable />
+      <TestSuspenseWhen />
       <TestSuspenseChildrenObservableStatic />
       <TestSuspenseChildrenFunction />
       <TestSuspenseFallbackObservableStatic />

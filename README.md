@@ -612,10 +612,12 @@ So this can be used to show some fallback content while the actual content is lo
 
 This component relies on `useResource` to understand if there's a resource loading or not.
 
+This component also supports a manual "when" prop for manually deciding whether the fallback branch should be rendered or not.
+
 Interface:
 
 ```ts
-function Suspense ( props: { fallback?: JSX.Element, children: JSX.Element }): ObservableReadonly<JSX.Element>;
+function Suspense ( props: { when?: FunctionMaybe<unknown>, fallback?: JSX.Element, children: JSX.Element }): ObservableReadonly<JSX.Element>;
 ```
 
 Usage:
