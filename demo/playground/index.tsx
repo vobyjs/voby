@@ -100,6 +100,7 @@ const TestSnapshots = ({ Component, props }: { Component: JSX.Component & { test
 //TODO: Test that error boundaries wrapped around built-in components work
 //TODO: Test template with all sorts of supported props
 //TODO: Automate all tests
+//TODO: Enable all tests
 
 const TestNullStatic = (): JSX.Element => {
   return (
