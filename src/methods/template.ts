@@ -9,6 +9,8 @@ import type {Child, TemplateActionPath, TemplateActionWithNodes, TemplateActionW
 
 /* MAIN */
 
+//TODO: avoid using "Function" and "eval", while still keeping similar performance, if possible
+
 const template = <P = {}> ( fn: (( props: P ) => Child), options: TemplateOptions = {} ): (( props: P ) => () => Child) => {
 
   const safePropertyRe = /^[a-z0-9-_]+$/i;

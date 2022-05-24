@@ -12,6 +12,8 @@ import type {ObservableReadonly, ObservableMaybe, PromiseMaybe, Resource} from '
 
 /* MAIN */
 
+//TODO: Option for returning the resource as a store, where also the returned value gets wrapped in a store
+
 const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): ObservableReadonly<Resource<T>> => {
 
   const resource = $<Resource<T>>({ loading: true });
