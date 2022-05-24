@@ -41,7 +41,7 @@ const createElement = <P = {}> ( component: Component<P>, props?: Props | null, 
       return wrapElement.bind ( (): Child => {
 
         const instance = new component ( props );
-        const child = instance.render ( instance.props );
+        const child = instance.render ( instance.props, instance.state );
 
         if ( !isNil ( ref ) ) setRef ( instance, ref );
 

@@ -2929,6 +2929,29 @@ TestComponentStaticRenderProps.test = {
   ]
 };
 
+class TestComponentStaticRenderState extends Component<{ value: number }> {
+  state: { multiplier: number };
+  constructor ( props ) {
+    super ( props );
+    this.state.multiplier = 0;
+  }
+  render ( props, state ): JSX.Element {
+    return (
+      <>
+        <h3>Component - Static Render State</h3>
+        <p>{props.value * state.multiplier}</p>
+      </>
+    );
+  }
+}
+
+TestComponentStaticRenderState.test = {
+  static: true,
+  snapshots: [
+    '<p>0</p>'
+  ]
+};
+
 class TestComponentObservable extends Component<{}> {
   getRandom (): number {
     return random ();
@@ -4547,6 +4570,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestComponentStatic} />
       <TestSnapshots Component={TestComponentStaticProps} props={{ value: random () }} />
       <TestSnapshots Component={TestComponentStaticRenderProps} props={{ value: random () }} />
+      <TestSnapshots Component={TestComponentStaticRenderState} props={{ value: random () }} />
       <TestSnapshots Component={TestComponentObservable} />
       <TestSnapshots Component={TestComponentFunction} />
       <TestSnapshots Component={TestForStatic} />
