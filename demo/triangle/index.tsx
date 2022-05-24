@@ -14,7 +14,15 @@ const useSeconds = (): Observable<number> => {
 
   const seconds = $(0);
 
-  useInterval ( () => seconds ( ( seconds () % 9 ) + 1 ), 1000 );
+  useInterval ( () => {
+
+    // Artificially long blocking delay
+    const future = performance.now () + 0.8;
+    while ( performance.now () < future ) {}
+
+    seconds ( ( seconds () % 9 ) + 1 );
+
+  }, 1000 );
 
   return seconds;
 
