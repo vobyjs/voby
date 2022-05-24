@@ -5,7 +5,7 @@ import * as Voby from 'voby';
 import {Observable} from 'voby';
 import {Component, Dynamic, ErrorBoundary, For, If, Portal, Suspense, Switch, Ternary} from 'voby';
 import {useBatch, useComputed, useContext, useEffect, useInterval, usePromise, useResource, useTimeout} from 'voby';
-import {$, createContext, lazy, render, renderToString, template} from 'voby';
+import {$, createContext, createDirective, lazy, render, renderToString, template} from 'voby';
 
 globalThis.Voby = Voby;
 
@@ -1826,6 +1826,33 @@ TestHTMLDangerouslySetInnerHTMLFunctionString.test = {
   snapshots: [
     '<p><i>danger</i></p>',
     '<p><b>danger</b></p>'
+  ]
+};
+
+const TestDirective = () => {
+  const model = ( ref, arg1, arg2 ) => {
+    useEffect ( () => {
+      if ( !ref () ) return;
+      const value = `${arg1} - ${arg2}`
+      ref ().value = value;
+      ref ().setAttribute ( 'value', value );
+    });
+  };
+  const Model = createDirective ( 'model', model );
+  return (
+    <>
+      <h3>Directive</h3>
+      <Model.Provider>
+        <input value="foo" use:model={['bar', 'baz']} />
+      </Model.Provider>
+    </>
+  );
+};
+
+TestDirective.test = {
+  static: true,
+  snapshots: [
+    '<input value="bar - baz">'
   ]
 };
 
@@ -4523,6 +4550,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestHTMLDangerouslySetInnerHTMLObservableString} />
       <TestSnapshots Component={TestHTMLDangerouslySetInnerHTMLFunction} />
       <TestSnapshots Component={TestHTMLDangerouslySetInnerHTMLFunctionString} />
+      <TestSnapshots Component={TestDirective} />
       <TestEventClickStatic />
       <TestEventClickObservable />
       <TestEventClickRemoval />

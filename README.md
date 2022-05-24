@@ -49,33 +49,33 @@ You can find some demos and benchmarks below, more demos are contained inside th
 
 ## APIs
 
-| [Methods](#methods)                 | [Components](#components)         | [Hooks](#hooks)                             | [Types](#types)                             | [Extras](#extras)               |
-| ----------------------------------- | --------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------- |
-| [`$`](#methods)                     | [`Component`](#component)         | [`useAbortController`](#useabortcontroller) | [`FunctionMaybe`](#functionmaybe)           | [`Contributing`](#contributing) |
-| [`$$`](#methods)                    | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`Observable`](#observable)                 | [`JSX`](#jsx)                   |
-| [`createContext`](#createcontext)   | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`ObservableReadonly`](#observablereadonly) | [`Tree Shaking`](#tree-shaking) |
-| [`createElement`](#createelement)   | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableMaybe`](#observablemaybe)       | [`TypeScript`](#typescript)     |
-| [`h`](#h)                           | [`Fragment`](#fragment)           | [`useBatch`](#usebatch)                     | [`ObservableOptions`](#observableoptions)   |                                 |
-| [`html`](#html)                     | [`If`](#if)                       | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                                 |
-| [`isObservable`](#isobservable)     | [`Portal`](#portal)               | [`useComputed`](#usecomputed)               | [`F`](#f)                                   |                                 |
-| [`lazy`](#lazy)                     | [`Suspense`](#suspense)           | [`useContext`](#usecontext)                 | [`O`](#o)                                   |                                 |
-| [`render`](#render)                 | [`Switch`](#switch)               | [`useDisposed`](#usedisposed)               |                                             |                                 |
-| [`renderToString`](#rendertostring) | [`Ternary`](#ternary)             | [`useEffect`](#useeffect)                   |                                             |                                 |
-| [`resolve`](#resolve)               |                                   | [`useError`](#useerror)                     |                                             |                                 |
-| [`template`](#template)             |                                   | [`useEventListener`](#useeventlistener)     |                                             |                                 |
-|                                     |                                   | [`useFetch`](#usefetch)                     |                                             |                                 |
-|                                     |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
-|                                     |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
-|                                     |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
-|                                     |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
-|                                     |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
-|                                     |                                   | [`useReadonly`](#usereadonly)               |                                             |                                 |
-|                                     |                                   | [`useResolved`](#useresolved)               |                                             |                                 |
-|                                     |                                   | [`useResource`](#useresource)               |                                             |                                 |
-|                                     |                                   | [`useRoot`](#useroot)                       |                                             |                                 |
-|                                     |                                   | [`useSample`](#usesample)                   |                                             |                                 |
-|                                     |                                   | [`useSelector`](#useselector)               |                                             |                                 |
-|                                     |                                   | [`useTimeout`](#usetimeout)                 |                                             |                                 |
+| [Methods](#methods)                   | [Components](#components)         | [Hooks](#hooks)                             | [Types](#types)                             | [Extras](#extras)               |
+| ------------------------------------- | --------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------- |
+| [`$`](#methods)                       | [`Component`](#component)         | [`useAbortController`](#useabortcontroller) | [`FunctionMaybe`](#functionmaybe)           | [`Contributing`](#contributing) |
+| [`$$`](#methods)                      | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`Observable`](#observable)                 | [`JSX`](#jsx)                   |
+| [`createContext`](#createcontext)     | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`ObservableReadonly`](#observablereadonly) | [`Tree Shaking`](#tree-shaking) |
+| [`createDirective`](#createdirective) | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableMaybe`](#observablemaybe)       | [`TypeScript`](#typescript)     |
+| [`createElement`](#createelement)     | [`Fragment`](#fragment)           | [`useBatch`](#usebatch)                     | [`ObservableOptions`](#observableoptions)   |                                 |
+| [`h`](#h)                             | [`If`](#if)                       | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                                 |
+| [`html`](#html)                       | [`Portal`](#portal)               | [`useComputed`](#usecomputed)               | [`F`](#f)                                   |                                 |
+| [`isObservable`](#isobservable)       | [`Suspense`](#suspense)           | [`useContext`](#usecontext)                 | [`O`](#o)                                   |                                 |
+| [`lazy`](#lazy)                       | [`Switch`](#switch)               | [`useDisposed`](#usedisposed)               |                                             |                                 |
+| [`render`](#render)                   | [`Ternary`](#ternary)             | [`useEffect`](#useeffect)                   |                                             |                                 |
+| [`renderToString`](#rendertostring)   |                                   | [`useError`](#useerror)                     |                                             |                                 |
+| [`resolve`](#resolve)                 |                                   | [`useEventListener`](#useeventlistener)     |                                             |                                 |
+| [`template`](#template)               |                                   | [`useFetch`](#usefetch)                     |                                             |                                 |
+|                                       |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
+|                                       |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
+|                                       |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
+|                                       |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
+|                                       |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
+|                                       |                                   | [`useReadonly`](#usereadonly)               |                                             |                                 |
+|                                       |                                   | [`useResolved`](#useresolved)               |                                             |                                 |
+|                                       |                                   | [`useResource`](#useresource)               |                                             |                                 |
+|                                       |                                   | [`useRoot`](#useroot)                       |                                             |                                 |
+|                                       |                                   | [`useSample`](#usesample)                   |                                             |                                 |
+|                                       |                                   | [`useSelector`](#useselector)               |                                             |                                 |
+|                                       |                                   | [`useTimeout`](#usetimeout)                 |                                             |                                 |
 
 ## Usage
 
@@ -165,6 +165,66 @@ const App = () => {
         </Context.Consumer>
       </Context.Provider>
     </>
+  );
+};
+```
+
+#### `createDirective`
+
+This function creates a directive provider, which can be used to register a directive with its children.
+
+A directive is a function that always receives an `ObservableReadonly<Element | undefined>` as its first argument, which is basically a ref to the target element, and arbitrary user-provided arguments after that.
+
+Each directive has a unique name and it can be called by simply writing `use:directivename={[arg1, arg2, ...argN]]}` in the JSX.
+
+Directives internally are registered using context providers, so you can also override directives for a particular scope just by registering another directive with the same name closer to where you are reading it.
+
+Interface:
+
+```ts
+type DirectiveRef = ObservableReadonly<Element | undefined>;
+type DirectiveFunction = ( ref: DirectiveRef, ...T: unknown[] ) => void;
+type DirectiveProvider = ( props: { children: JSX.Element } ) => JSX.Element;
+type Directive = { Provider: DirectiveProvider };
+
+function createDirective ( name: string, fn: DirectiveFunction ): Directive;
+```
+
+Usage:
+
+```tsx
+import {createDirective, useEffect} from 'voby';
+import type {ObservableReadonly} from 'voby';
+
+// First of all if you are using TypeScript you should extend the "JSX.Directives" interface, so that TypeScript will know about your new directive
+
+namespace JSX {
+  interface Directives {
+    tooltip: [title: string] // Mapping the name of the directive to the array of arguments it accepts
+  }
+}
+
+// Then you should create a directive provider
+
+const TooltipDirective = createDirective ( 'tooltip', ( ref, title: string ) => {
+
+  useEffect ( () => {
+
+    if ( !ref () ) return; // The element may not be available yet, or it might have been unmounted
+
+    // Code that implements a tooltip for the given element here...
+
+  });
+
+});
+
+// Then you can use the new "tooltip" directive anywhere inside the "TooltipDirective.Provider"
+
+const App = () => {
+  return (
+    <TooltipDirective.Provider>
+      <input value="Placeholder..." use:tooltip={['This is a tooltip!']} />
+    <TooltipDirective.Provider>
   );
 };
 ```

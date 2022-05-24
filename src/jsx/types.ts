@@ -171,6 +171,14 @@ declare namespace JSX {
     ariaValuetext?: FunctionMaybe<string>
   }
 
+  interface Directives {
+    // name: [arg1: unknown, arg2: unknown, ...argN: unknown]
+  }
+
+  type DirectiveAttributes = {
+    [Directive in keyof Directives as `use:${Directive}`]?: Directives[Directive]
+  };
+
   interface EventAttributes<T extends EventTarget> {
     /* IMAGE EVENTS */
     onLoad?: ObservableMaybe<GenericEventHandler<T>>,
@@ -373,7 +381,7 @@ declare namespace JSX {
 
   }
 
-  interface HTMLAttributes<T extends EventTarget> extends AriaAttributes, DOMAttributes<T> {
+  interface HTMLAttributes<T extends EventTarget> extends AriaAttributes, DOMAttributes<T>, DirectiveAttributes {
     accept?: FunctionMaybe<string>,
     acceptCharset?: FunctionMaybe<FunctionMaybe<string>>,
     accessKey?: FunctionMaybe<FunctionMaybe<string>>,
@@ -548,7 +556,7 @@ declare namespace JSX {
     itemRef?: FunctionMaybe<string>,
 }
 
-  interface SVGAttributes<T extends EventTarget = SVGElement> extends HTMLAttributes<T> {
+  interface SVGAttributes<T extends EventTarget = SVGElement> extends HTMLAttributes<T>, DirectiveAttributes {
     accentHeight?: FunctionMaybe<number | string>,
     accumulate?: FunctionMaybe<'none' | 'sum'>,
     additive?: FunctionMaybe<'replace' | 'sum'>,

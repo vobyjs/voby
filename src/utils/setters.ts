@@ -1,15 +1,18 @@
 
 /* IMPORT */
 
-import {TEMPLATE_STATE} from '~/constants';
+import {SYMBOLS_DIRECTIVES, TEMPLATE_STATE} from '~/constants';
 import useCleanup from '~/hooks/use_cleanup';
 import useEffect from '~/hooks/use_effect';
+import useReadonly from '~/hooks/use_readonly';
+import $ from '~/methods/S';
+import oby from '~/oby';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import Fragment from '~/utils/fragment';
 import {flatten, isArray, isFunction, isNil, isPrimitive, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
 import {resolveChild, resolveFunction, resolveObservable} from '~/utils/resolvers';
-import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
+import type {Child, DirectiveFunction, EventListener, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 
 /* MAIN */
 
@@ -400,6 +403,21 @@ const setClasses = ( element: HTMLElement, object: FunctionMaybe<null | undefine
 
 };
 
+const setDirective = <T extends unknown[]> ( element: HTMLElement, directive: string, args: T ): void => {
+
+  const symbol = SYMBOLS_DIRECTIVES[directive] || Symbol ();
+  const fn = oby.context<DirectiveFunction<T>> ( symbol );
+
+  if ( !symbol || !fn ) throw new Error ( `Directive "${directive}" not found` );
+
+  const ref = $<Element | undefined>();
+
+  setRef ( element, value => ref ( value ) );
+
+  fn ( useReadonly ( ref ), ...args );
+
+};
+
 const setEventStatic = (() => {
 
   //TODO: Maybe delegate more events: [onmousemove, onmouseout, onmouseover, onpointerdown, onpointermove, onpointerout, onpointerover, onpointerup, ontouchend, ontouchmove, ontouchstart]
@@ -668,6 +686,10 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
     value ( element, 'setEvent', key.toLowerCase () );
 
+  } else if ( key.charCodeAt ( 0 ) === 117 && key.charCodeAt ( 3 ) === 58 ) { // /^u..:/
+
+    value ( element, 'setDirective', key.slice ( 4 ) );
+
   } else if ( key in element && !isSVG ( element ) ) {
 
     if ( key === 'className' ) { // Ensuring the attribute is present
@@ -721,6 +743,10 @@ const setProp = ( element: HTMLElement, key: string, value: any ): void => {
   } else if ( key.charCodeAt ( 0 ) === 111 && key.charCodeAt ( 1 ) === 110 ) { // /^on/
 
     setEvent ( element, key.toLowerCase (), value );
+
+  } else if ( key.charCodeAt ( 0 ) === 117 && key.charCodeAt ( 3 ) === 58 ) { // /^u..:/
+
+    setDirective ( element, key.slice ( 4 ), value );
 
   } else if ( key in element && !isSVG ( element ) ) {
 
