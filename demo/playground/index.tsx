@@ -864,6 +864,79 @@ const TestInputLabelFor = (): JSX.Element => {
   );
 };
 
+const TestIdStatic = (): JSX.Element => {
+  return (
+    <>
+      <h3>ID - Static</h3>
+      <p id="foo">content</p>
+    </>
+  );
+};
+
+TestIdStatic.test = {
+  static: true,
+  snapshots: [
+    '<p id="foo">content</p>'
+  ]
+};
+
+const TestIdObservable = (): JSX.Element => {
+  const o = $( 'foo' );
+  const toggle = () => o ( prev => ( prev === 'foo' ) ? 'bar' : 'foo' );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>ID - Observable</h3>
+      <p id={o}>content</p>
+    </>
+  );
+};
+
+TestIdObservable.test = {
+  snapshots: [
+    '<p id="foo">content</p>',
+    '<p id="bar">content</p>'
+  ]
+};
+
+const TestIdFunction = (): JSX.Element => {
+  const o = $( 'foo' );
+  const toggle = () => o ( prev => ( prev === 'foo' ) ? 'bar' : 'foo' );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>ID - Function</h3>
+      <p id={() => o ()}>content</p>
+    </>
+  );
+};
+
+TestIdFunction.test = {
+  snapshots: [
+    '<p id="foo">content</p>',
+    '<p id="bar">content</p>'
+  ]
+};
+
+const TestIdRemoval = (): JSX.Element => {
+  const o = $( 'foo' );
+  const toggle = () => o ( prev => prev ? null : 'foo' );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>ID - Removal</h3>
+      <p id={o}>content</p>
+    </>
+  );
+};
+
+TestIdRemoval.test = {
+  snapshots: [
+    '<p id="foo">content</p>',
+    '<p>content</p>'
+  ]
+};
+
 const TestClassNameStatic = (): JSX.Element => {
   return (
     <>
@@ -933,7 +1006,7 @@ const TestClassNameRemoval = (): JSX.Element => {
 TestClassNameRemoval.test = {
   snapshots: [
     '<p class="red">content</p>',
-    '<p class="">content</p>'
+    '<p>content</p>'
   ]
 };
 
@@ -4374,6 +4447,10 @@ const Test = (): JSX.Element => {
       <TestPropertyValueFunction />
       <TestPropertyValueRemoval />
       <TestInputLabelFor />
+      <TestSnapshots Component={TestIdStatic} />
+      <TestSnapshots Component={TestIdObservable} />
+      <TestSnapshots Component={TestIdFunction} />
+      <TestSnapshots Component={TestIdRemoval} />
       <TestSnapshots Component={TestClassNameStatic} />
       <TestSnapshots Component={TestClassNameObservable} />
       <TestSnapshots Component={TestClassNameFunction} />
