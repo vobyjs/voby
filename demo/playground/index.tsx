@@ -3681,7 +3681,7 @@ const TestSVGStaticCamelCase = (): JSX.Element => {
   return (
     <>
       <h3>SVG - Static CamelCase</h3>
-      <svg viewBox="0 0 50 50" width="50px" stroke={randomColor ()} strokeWidth="3" fill="white">
+      <svg viewBox="0 0 50 50" width="50px" stroke={randomColor ()} strokeWidth="3" edgeMode="foo" fill="white">
         <circle cx="25" cy="25" r="20" />
       </svg>
     </>
@@ -3691,7 +3691,7 @@ const TestSVGStaticCamelCase = (): JSX.Element => {
 TestSVGStaticCamelCase.test = {
   static: true,
   snapshots: [
-    '<svg viewBox="0 0 50 50" width="50px" stroke="{random-color}" stroke-width="3" fill="white"><circle cx="25" cy="25" r="20"></circle></svg>'
+    '<svg viewBox="0 0 50 50" width="50px" stroke="{random-color}" stroke-width="3" edgeMode="foo" fill="white"><circle cx="25" cy="25" r="20"></circle></svg>'
   ]
 };
 

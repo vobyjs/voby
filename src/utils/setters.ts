@@ -13,33 +13,47 @@ import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, Template
 
 /* MAIN */
 
-const setAttributeStatic = ( element: HTMLElement, key: string, value: null | undefined | boolean | number | string ): void => {
+const setAttributeStatic = (() => {
 
-  key = ( key === 'className' ) ? 'class' : key;
+  const attributeCamelCasedRe = /n(el|u)|e(r[HRWr]|[Vawy])|Con|(pe|l)c|s(e($|P)|y)|att|Of|f[XYa]|pr|t[TXYd]|hR|d[Pg]|T[iy]|gt|[UZq]/;
+  const attributesCache: Record<string, string> = {};
+  const uppercaseRe = /[A-Z]/g;
 
-  if ( isSVG ( element ) ) {
+  const normalizeKeySvg = ( key: string ): string => {
 
-    key = ( key === 'xlinkHref' || key === 'xlink:href' ) ? 'href' : key;
+    return attributesCache[key] || ( attributesCache[key] = attributeCamelCasedRe.test ( key ) ? key : key.replace ( uppercaseRe, char => `-${char.toLowerCase ()}` ) );
 
-    element.setAttribute ( key, String ( value ) );
+  };
 
-  } else {
+  return ( element: HTMLElement, key: string, value: null | undefined | boolean | number | string ): void => {
 
-    if ( isNil ( value ) || value === false ) {
+    key = ( key === 'className' ) ? 'class' : key;
 
-      element.removeAttribute ( key );
+    if ( isSVG ( element ) ) {
+
+      key = ( key === 'xlinkHref' || key === 'xlink:href' ) ? 'href' : normalizeKeySvg ( key );
+
+      element.setAttribute ( key, String ( value ) );
 
     } else {
 
-      value = ( value === true ) ? '' : String ( value );
+      if ( isNil ( value ) || value === false ) {
 
-      element.setAttribute ( key, value );
+        element.removeAttribute ( key );
+
+      } else {
+
+        value = ( value === true ) ? '' : String ( value );
+
+        element.setAttribute ( key, value );
+
+      }
 
     }
 
-  }
+  };
 
-};
+})();
 
 const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean | number | string> ): void => {
 
