@@ -15,7 +15,7 @@ import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, Template
 
 const setAttributeStatic = (() => {
 
-  const attributeCamelCasedRe = /n(el|u)|e(r[HRWr]|[Vawy])|Con|(pe|l)c|s(e($|P)|y)|att|Of|f[XYa]|pr|t[TXYd]|hR|d[Pg]|T[iy]|gt|[UZq]/;
+  const attributeCamelCasedRe = /e(r[HRWrv]|[Vawy])|Con|l(e[Tcs]|c)|s(eP|y)|a(t[rt]|u|v)|Of|Ex|f[XYa]|gt|hR|d[Pg]|t[TXYd]|[UZq]/;
   const attributesCache: Record<string, string> = {};
   const uppercaseRe = /[A-Z]/g;
 
