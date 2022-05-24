@@ -13,12 +13,93 @@ globalThis.Voby = Voby;
 
 const TEST_INTERVAL = 500; // Lowering this makes it easier to spot some memory leaks
 
-const random = Math.random;
+const random = (): number => { // It's important for testing that 0, 1 or reused numbers are never returned
+
+  const value = Math.random ();
+
+  if ( value === 0 || value === 1 ) return random ();
+
+  return value;
+
+};
+
+const randomBigInt = (): bigint => {
+
+  return BigInt ( Math.floor ( random () * 100 ) );
+
+};
+
+const randomColor = (): string => {
+
+  return `#${Math.floor ( random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
+
+};
+
+const TestSnapshots = ({ Component, props }: { Component: JSX.Component & { test: { static?: boolean, snapshots: string[] } }, props?: Record<any, any> }): JSX.Element => {
+  const ref = $<HTMLDivElement>(); //TODO: This should be <HTMLDivElement | undefined>
+  let index = -1;
+  let htmlPrev = '';
+  let ticks = 0;
+  const getHTML = (): string => {
+    if ( !ref () ) return '';
+    return ref ().innerHTML;
+  };
+  const getSnapshot = ( html: string ): string => {
+    const htmlWithoutTitle = html.replace ( /<h3>[a-zA-Z0-9 -]*<\/h3>/, '' );
+    const htmlWithRandom = htmlWithoutTitle.replace ( /0\.\d+/g, '{random}' );
+    const htmlWitRandomBigint = htmlWithRandom.replace ( /(?<!\d)(0|[1-9][0-9]?|100)n/g, '{random-bigint}n' );
+    const htmlWithRandomHex = htmlWitRandomBigint.replace ( /#[a-fA-F0-9]{6,8}/g, '{random-color}' );
+    return htmlWithRandomHex;
+  };
+  const tick = (): void => {
+    ticks += 1;
+    index = ( index + 1 ) % Component.test.snapshots.length;
+    const expectedSnapshot = Component.test.snapshots[index];
+    const actualHTML = getHTML ();
+    const actualSnapshot = getSnapshot ( actualHTML );
+    console.assert ( actualSnapshot === expectedSnapshot, `[${Component.name}]: Expected '${actualSnapshot}' to be equal to '${expectedSnapshot}'` );
+    if ( expectedSnapshot.includes ( '{random}' ) ) {
+      console.assert ( actualHTML !== htmlPrev, `[${Component.name}]: Expected to find different {random} values in the HTML` );
+    }
+    if ( expectedSnapshot.includes ( '{random-bigint}' ) ) {
+      console.assert ( actualHTML !== htmlPrev, `[${Component.name}]: Expected to find different {random-bigint} values in the HTML` );
+    }
+    if ( expectedSnapshot.includes ( '{random-color}' ) ) {
+      console.assert ( actualHTML !== htmlPrev, `[${Component.name}]: Expected to find different {random-color} values in the HTML` );
+    }
+    htmlPrev = actualHTML;
+  };
+  const noUpdate = (): void => {
+    console.assert ( false, `[${Component.name}]: Expected no updates to even happen` );
+  };
+  const yesUpdate = (): void => {
+    if ( Component.test.static ) return;
+    if ( ticks > 1 ) return;
+    console.assert ( false, `[${Component.name}]: Expected at least one update` );
+  };
+  useEffect ( () => {
+    const root = ref ();
+    if ( !root ) return;
+    tick ();
+    const timeoutId = setTimeout ( yesUpdate, 1500 );
+    const onMutation = Component.test.static ? noUpdate : tick;
+    const observer = new MutationObserver ( onMutation );
+    const options = { attributes: true, childList: true, characterData: true, subtree: true };
+    observer.observe ( root, options );
+    return () => observer.disconnect ();
+  });
+  return (
+    <div ref={ref}>
+      <Component {...props} />
+    </div>
+  );
+};
 
 /* MAIN */
 
 //TODO: Test that error boundaries wrapped around built-in components work
 //TODO: Test template with all sorts of supported props
+//TODO: Automate all tests
 
 const TestNullStatic = (): JSX.Element => {
   return (
@@ -27,6 +108,13 @@ const TestNullStatic = (): JSX.Element => {
       <p>{null}</p>
     </>
   );
+};
+
+TestNullStatic.test = {
+  static: true,
+  snapshots: [
+    '<p></p>'
+  ]
 };
 
 const TestNullObservable = (): JSX.Element => {
@@ -41,6 +129,13 @@ const TestNullObservable = (): JSX.Element => {
   );
 };
 
+TestNullObservable.test = {
+  snapshots: [
+    '<p><!----></p>',
+    '<p></p>'
+  ]
+};
+
 const TestNullFunction = (): JSX.Element => {
   const o = $<string>( null );
   const toggle = () => o ( prev => ( prev === null ) ? '' : null );
@@ -51,6 +146,13 @@ const TestNullFunction = (): JSX.Element => {
       <p>{() => o ()}</p>
     </>
   );
+};
+
+TestNullFunction.test = {
+  snapshots: [
+    '<p><!----></p>',
+    '<p></p>'
+  ]
 };
 
 const TestNullRemoval = (): JSX.Element => {
@@ -65,6 +167,13 @@ const TestNullRemoval = (): JSX.Element => {
   );
 };
 
+TestNullRemoval.test = {
+  snapshots: [
+    '<p>(<!---->)</p>',
+    '<p>()</p>'
+  ]
+};
+
 const TestUndefinedStatic = (): JSX.Element => {
   return (
     <>
@@ -72,6 +181,13 @@ const TestUndefinedStatic = (): JSX.Element => {
       <p>{undefined}</p>
     </>
   );
+};
+
+TestUndefinedStatic.test = {
+  static: true,
+  snapshots: [
+    '<p></p>'
+  ]
 };
 
 const TestUndefinedObservable = (): JSX.Element => {
@@ -86,6 +202,13 @@ const TestUndefinedObservable = (): JSX.Element => {
   );
 };
 
+TestUndefinedObservable.test = {
+  snapshots: [
+    '<p><!----></p>',
+    '<p></p>'
+  ]
+};
+
 const TestUndefinedFunction = (): JSX.Element => {
   const o = $<string>( undefined );
   const toggle = () => o ( prev => ( prev === undefined ) ? '' : undefined );
@@ -96,6 +219,13 @@ const TestUndefinedFunction = (): JSX.Element => {
       <p>{() => o ()}</p>
     </>
   );
+};
+
+TestUndefinedFunction.test = {
+  snapshots: [
+    '<p><!----></p>',
+    '<p></p>'
+  ]
 };
 
 const TestUndefinedRemoval = (): JSX.Element => {
@@ -110,6 +240,13 @@ const TestUndefinedRemoval = (): JSX.Element => {
   );
 };
 
+TestUndefinedRemoval.test = {
+  snapshots: [
+    '<p>(<!---->)</p>',
+    '<p>()</p>'
+  ]
+};
+
 const TestBooleanStatic = (): JSX.Element => {
   return (
     <>
@@ -117,6 +254,13 @@ const TestBooleanStatic = (): JSX.Element => {
       <p>{true}{false}</p>
     </>
   );
+};
+
+TestBooleanStatic.test = {
+  static: true,
+  snapshots: [
+    '<p><!----></p>'
+  ]
 };
 
 const TestBooleanObservable = (): JSX.Element => {
@@ -131,6 +275,13 @@ const TestBooleanObservable = (): JSX.Element => {
   );
 };
 
+TestBooleanObservable.test = {
+  static: true,
+  snapshots: [
+    '<p><!----></p>'
+  ]
+};
+
 const TestBooleanFunction = (): JSX.Element => {
   const o = $( true );
   const toggle = () => o ( prev => !prev );
@@ -141,6 +292,13 @@ const TestBooleanFunction = (): JSX.Element => {
       <p>{() => o ()}</p>
     </>
   );
+};
+
+TestBooleanFunction.test = {
+  static: true,
+  snapshots: [
+    '<p><!----></p>'
+  ]
 };
 
 const TestBooleanRemoval = (): JSX.Element => {
@@ -155,6 +313,13 @@ const TestBooleanRemoval = (): JSX.Element => {
   );
 };
 
+TestBooleanRemoval.test = {
+  snapshots: [
+    '<p>(<!---->)</p>',
+    '<p>()</p>'
+  ]
+};
+
 const TestSymbolStatic = (): JSX.Element => {
   return (
     <>
@@ -162,6 +327,13 @@ const TestSymbolStatic = (): JSX.Element => {
       <p>{Symbol ()}</p>
     </>
   );
+};
+
+TestSymbolStatic.test = {
+  static: true,
+  snapshots: [
+    '<p></p>'
+  ]
 };
 
 const TestSymbolObservable = (): JSX.Element => {
@@ -176,6 +348,13 @@ const TestSymbolObservable = (): JSX.Element => {
   );
 };
 
+TestSymbolObservable.test = {
+  static: true,
+  snapshots: [
+    '<p><!----></p>'
+  ]
+};
+
 const TestSymbolFunction = (): JSX.Element => {
   const o = $( Symbol () );
   const randomize = () => o ( Symbol () );
@@ -186,6 +365,13 @@ const TestSymbolFunction = (): JSX.Element => {
       <p>{() => o ()}</p>
     </>
   );
+};
+
+TestSymbolFunction.test = {
+  static: true,
+  snapshots: [
+    '<p><!----></p>'
+  ]
 };
 
 const TestSymbolRemoval = (): JSX.Element => {
@@ -200,6 +386,13 @@ const TestSymbolRemoval = (): JSX.Element => {
   );
 };
 
+TestSymbolRemoval.test = {
+  snapshots: [
+    '<p>(<!---->)</p>',
+    '<p>()</p>'
+  ]
+};
+
 const TestNumberStatic = (): JSX.Element => {
   return (
     <>
@@ -207,6 +400,13 @@ const TestNumberStatic = (): JSX.Element => {
       <p>{123}</p>
     </>
   );
+};
+
+TestNumberStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>123</p>'
+  ]
 };
 
 const TestNumberObservable = (): JSX.Element => {
@@ -221,6 +421,12 @@ const TestNumberObservable = (): JSX.Element => {
   );
 };
 
+TestNumberObservable.test = {
+  snapshots: [
+    '<p>{random}</p>'
+  ]
+};
+
 const TestNumberFunction = (): JSX.Element => {
   const o = $( random () );
   const randomize = () => o ( random () );
@@ -231,6 +437,12 @@ const TestNumberFunction = (): JSX.Element => {
       <p>{() => o ()}</p>
     </>
   );
+};
+
+TestNumberFunction.test = {
+  snapshots: [
+    '<p>{random}</p>'
+  ]
 };
 
 const TestNumberRemoval = (): JSX.Element => {
@@ -245,49 +457,82 @@ const TestNumberRemoval = (): JSX.Element => {
   );
 };
 
+TestNumberRemoval.test = {
+  snapshots: [
+    '<p>(<!---->)</p>',
+    '<p>()</p>'
+  ]
+};
+
 const TestBigIntStatic = (): JSX.Element => {
   return (
     <>
       <h3>BigInt - Static</h3>
-      <p>{123n}</p>
+      <p>{123n}n</p>
     </>
   );
 };
 
+TestBigIntStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>123n</p>'
+  ]
+};
+
 const TestBigIntObservable = (): JSX.Element => {
-  const o = $( BigInt ( random () * 100 | 0 ) );
-  const randomize = () => o ( BigInt ( random () * 100 | 0 ) );
+  const o = $( randomBigInt () );
+  const randomize = () => o ( randomBigInt () );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
       <h3>BigInt - Observable</h3>
-      <p>{o}</p>
+      <p>{o}n</p>
     </>
   );
 };
 
+TestBigIntObservable.test = {
+  snapshots: [
+    '<p>{random-bigint}n</p>'
+  ]
+};
+
 const TestBigIntFunction = (): JSX.Element => {
-  const o = $( BigInt ( random () * 100 | 0 ) );
-  const randomize = () => o ( BigInt ( random () * 100 | 0 ) );
+  const o = $( randomBigInt () );
+  const randomize = () => o ( randomBigInt () );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
       <h3>BigInt - Function</h3>
-      <p>{() => o ()}</p>
+      <p>{() => o ()}n</p>
     </>
   );
 };
 
+TestBigIntFunction.test = {
+  snapshots: [
+    '<p>{random-bigint}n</p>'
+  ]
+};
+
 const TestBigIntRemoval = (): JSX.Element => {
-  const o = $( BigInt ( random () * 100 | 0 ) );
-  const randomize = () => o ( prev => prev ? null : BigInt ( random () * 100 | 0 ) );
+  const o = $( randomBigInt () );
+  const randomize = () => o ( prev => prev ? null : randomBigInt () );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
       <h3>BigInt - Removal</h3>
-      <p>({o})</p>
+      <p>({o}n)</p>
     </>
   );
+};
+
+TestBigIntRemoval.test = {
+  snapshots: [
+    '<p>({random-bigint}n)</p>',
+    '<p>(n)</p>'
+  ]
 };
 
 const TestStringStatic = (): JSX.Element => {
@@ -297,6 +542,13 @@ const TestStringStatic = (): JSX.Element => {
       <p>{'string'}</p>
     </>
   );
+};
+
+TestStringStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>string</p>'
+  ]
 };
 
 const TestStringObservable = (): JSX.Element => {
@@ -311,6 +563,12 @@ const TestStringObservable = (): JSX.Element => {
   );
 };
 
+TestStringObservable.test = {
+  snapshots: [
+    '<p>{random}</p>'
+  ]
+};
+
 const TestStringObservableStatic = (): JSX.Element => {
   const o = $( String ( random () ) );
   const randomize = () => o ( String ( random () ) );
@@ -321,6 +579,13 @@ const TestStringObservableStatic = (): JSX.Element => {
       <p>{o ()}</p>
     </>
   );
+};
+
+TestStringObservableStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>{random}</p>'
+  ]
 };
 
 const TestStringObservableDeepStatic = (): JSX.Element => {
@@ -340,6 +605,13 @@ const TestStringObservableDeepStatic = (): JSX.Element => {
   });
 };
 
+TestStringObservableDeepStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>{random}</p>'
+  ]
+};
+
 const TestStringFunction = (): JSX.Element => {
   const o = $( String ( random () ) );
   const randomize = () => o ( String ( random () ) );
@@ -350,6 +622,12 @@ const TestStringFunction = (): JSX.Element => {
       <p>{() => o ()}</p>
     </>
   );
+};
+
+TestStringFunction.test = {
+  snapshots: [
+    '<p>{random}</p>'
+  ]
 };
 
 const TestStringRemoval = (): JSX.Element => {
@@ -364,6 +642,13 @@ const TestStringRemoval = (): JSX.Element => {
   );
 };
 
+TestStringRemoval.test = {
+  snapshots: [
+    '<p>({random})</p>',
+    '<p>()</p>'
+  ]
+};
+
 const TestAttributeStatic = (): JSX.Element => {
   return (
     <>
@@ -371,6 +656,13 @@ const TestAttributeStatic = (): JSX.Element => {
       <p data-color="red">content</p>
     </>
   );
+};
+
+TestAttributeStatic.test = {
+  static: true,
+  snapshots: [
+    '<p data-color="red">content</p>'
+  ]
 };
 
 const TestAttributeObservable = (): JSX.Element => {
@@ -385,6 +677,13 @@ const TestAttributeObservable = (): JSX.Element => {
   );
 };
 
+TestAttributeObservable.test = {
+  snapshots: [
+    '<p data-color="red">content</p>',
+    '<p data-color="blue">content</p>'
+  ]
+};
+
 const TestAttributeObservableBoolean = (): JSX.Element => {
   const o = $( true );
   const toggle = () => o ( prev => !prev );
@@ -395,6 +694,13 @@ const TestAttributeObservableBoolean = (): JSX.Element => {
       <p data-red={o}>content</p>
     </>
   );
+};
+
+TestAttributeObservableBoolean.test = {
+  snapshots: [
+    '<p data-red="">content</p>',
+    '<p>content</p>'
+  ]
 };
 
 const TestAttributeFunction = (): JSX.Element => {
@@ -409,6 +715,13 @@ const TestAttributeFunction = (): JSX.Element => {
   );
 };
 
+TestAttributeFunction.test = {
+  snapshots: [
+    '<p data-color="darkred">content</p>',
+    '<p data-color="darkblue">content</p>'
+  ]
+};
+
 const TestAttributeFunctionBoolean = (): JSX.Element => {
   const o = $( true );
   const toggle = () => o ( prev => !prev );
@@ -421,6 +734,13 @@ const TestAttributeFunctionBoolean = (): JSX.Element => {
   );
 };
 
+TestAttributeFunctionBoolean.test = {
+  snapshots: [
+    '<p>content</p>',
+    '<p data-red="">content</p>'
+  ]
+};
+
 const TestAttributeRemoval = (): JSX.Element => {
   const o = $( 'red' );
   const toggle = () => o ( prev => ( prev === 'red' ) ? null : 'red' );
@@ -431,6 +751,13 @@ const TestAttributeRemoval = (): JSX.Element => {
       <p data-color={o}>content</p>
     </>
   );
+};
+
+TestAttributeRemoval.test = {
+  snapshots: [
+    '<p data-color="red">content</p>',
+    '<p>content</p>'
+  ]
 };
 
 const TestPropertyCheckedStatic = (): JSX.Element => {
@@ -546,6 +873,13 @@ const TestClassNameStatic = (): JSX.Element => {
   );
 };
 
+TestClassNameStatic.test = {
+  static: true,
+  snapshots: [
+    '<p class="red">content</p>'
+  ]
+};
+
 const TestClassNameObservable = (): JSX.Element => {
   const o = $( 'red' );
   const toggle = () => o ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
@@ -556,6 +890,13 @@ const TestClassNameObservable = (): JSX.Element => {
       <p className={o}>content</p>
     </>
   );
+};
+
+TestClassNameObservable.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="blue">content</p>'
+  ]
 };
 
 const TestClassNameFunction = (): JSX.Element => {
@@ -570,6 +911,13 @@ const TestClassNameFunction = (): JSX.Element => {
   );
 };
 
+TestClassNameFunction.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="blue">content</p>'
+  ]
+};
+
 const TestClassNameRemoval = (): JSX.Element => {
   const o = $( 'red' );
   const toggle = () => o ( prev => prev ? null : 'red' );
@@ -582,6 +930,13 @@ const TestClassNameRemoval = (): JSX.Element => {
   );
 };
 
+TestClassNameRemoval.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="">content</p>'
+  ]
+};
+
 const TestClassStatic = (): JSX.Element => {
   return (
     <>
@@ -591,6 +946,13 @@ const TestClassStatic = (): JSX.Element => {
   );
 };
 
+TestClassStatic.test = {
+  static: true,
+  snapshots: [
+    '<p class="red">content</p>'
+  ]
+};
+
 const TestClassStaticString = (): JSX.Element => {
   return (
     <>
@@ -598,6 +960,13 @@ const TestClassStaticString = (): JSX.Element => {
       <p class="red">content</p>
     </>
   );
+};
+
+TestClassStaticString.test = {
+  static: true,
+  snapshots: [
+    '<p class="red">content</p>'
+  ]
 };
 
 const TestClassObservable = (): JSX.Element => {
@@ -612,6 +981,13 @@ const TestClassObservable = (): JSX.Element => {
   );
 };
 
+TestClassObservable.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="">content</p>'
+  ]
+};
+
 const TestClassObservableString = (): JSX.Element => {
   const o = $( 'red' );
   const toggle = () => o ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
@@ -622,6 +998,13 @@ const TestClassObservableString = (): JSX.Element => {
       <p class={o}>content</p>
     </>
   );
+};
+
+TestClassObservableString.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="blue">content</p>'
+  ]
 };
 
 const TestClassFunction = (): JSX.Element => {
@@ -636,6 +1019,13 @@ const TestClassFunction = (): JSX.Element => {
   );
 };
 
+TestClassFunction.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="">content</p>'
+  ]
+};
+
 const TestClassFunctionString = (): JSX.Element => {
   const o = $( 'red' );
   const toggle = () => o ( prev => ( prev === 'red' ) ? 'blue' : 'red' );
@@ -646,6 +1036,13 @@ const TestClassFunctionString = (): JSX.Element => {
       <p class={() => o ()}>content</p>
     </>
   );
+};
+
+TestClassFunctionString.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="blue">content</p>'
+  ]
 };
 
 const TestClassRemoval = (): JSX.Element => {
@@ -660,6 +1057,13 @@ const TestClassRemoval = (): JSX.Element => {
   );
 };
 
+TestClassRemoval.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="">content</p>'
+  ]
+};
+
 const TestClassRemovalString = (): JSX.Element => {
   const o = $( 'red' );
   const toggle = () => o ( prev => prev ? null : 'red' );
@@ -672,6 +1076,13 @@ const TestClassRemovalString = (): JSX.Element => {
   );
 };
 
+TestClassRemovalString.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="">content</p>'
+  ]
+};
+
 const TestClassesStatic = (): JSX.Element => {
   return (
     <>
@@ -679,6 +1090,13 @@ const TestClassesStatic = (): JSX.Element => {
       <p class={{ red: true, blue: false }}>content</p>
     </>
   );
+};
+
+TestClassesStatic.test = {
+  static: true,
+  snapshots: [
+    '<p class="red">content</p>'
+  ]
 };
 
 const TestClassesObservable = (): JSX.Element => {
@@ -693,6 +1111,13 @@ const TestClassesObservable = (): JSX.Element => {
   );
 };
 
+TestClassesObservable.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="blue">content</p>'
+  ]
+};
+
 const TestClassesFunction = (): JSX.Element => {
   const o = $({ red: true, blue: false });
   const toggle = () => o ( prev => prev.red ? { red: false, blue: true } : { red: true, blue: false } );
@@ -703,6 +1128,13 @@ const TestClassesFunction = (): JSX.Element => {
       <p class={() => o ()}>content</p>
     </>
   );
+};
+
+TestClassesFunction.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="blue">content</p>'
+  ]
 };
 
 const TestClassesRemoval = (): JSX.Element => {
@@ -717,6 +1149,13 @@ const TestClassesRemoval = (): JSX.Element => {
   );
 };
 
+TestClassesRemoval.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="">content</p>'
+  ]
+};
+
 const TestClassesCleanup = (): JSX.Element => {
   const o = $<JSX.ClassProperties>({ red: true });
   const toggle = () => o ( prev => prev.red ? { blue: true } : { red: true } );
@@ -729,6 +1168,13 @@ const TestClassesCleanup = (): JSX.Element => {
   );
 };
 
+TestClassesCleanup.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="blue">content</p>'
+  ]
+};
+
 const TestStyleStatic = (): JSX.Element => {
   return (
     <>
@@ -736,6 +1182,13 @@ const TestStyleStatic = (): JSX.Element => {
       <p style={{ color: 'green' }}>content</p>
     </>
   );
+};
+
+TestStyleStatic.test = {
+  static: true,
+  snapshots: [
+    '<p style="color: green;">content</p>'
+  ]
 };
 
 const TestStyleStaticNumeric = (): JSX.Element => {
@@ -747,6 +1200,13 @@ const TestStyleStaticNumeric = (): JSX.Element => {
   );
 };
 
+TestStyleStaticNumeric.test = {
+  static: true,
+  snapshots: [
+    '<p style="flex-grow: 1; height: 50px;">content</p>'
+  ]
+};
+
 const TestStyleStaticString = (): JSX.Element => {
   return (
     <>
@@ -756,6 +1216,13 @@ const TestStyleStaticString = (): JSX.Element => {
   );
 };
 
+TestStyleStaticString.test = {
+  static: true,
+  snapshots: [
+    '<p style="flex-grow: 1; height: 50px;">content</p>'
+  ]
+};
+
 const TestStyleStaticVariable = (): JSX.Element => {
   return (
     <>
@@ -763,6 +1230,13 @@ const TestStyleStaticVariable = (): JSX.Element => {
       <p style={{ color: 'var(--color)', '--color': 'green' }}>content</p>
     </>
   );
+};
+
+TestStyleStaticVariable.test = {
+  static: true,
+  snapshots: [
+    '<p style="color: var(--color); --color:green;">content</p>'
+  ]
 };
 
 const TestStyleObservable = (): JSX.Element => {
@@ -777,6 +1251,13 @@ const TestStyleObservable = (): JSX.Element => {
   );
 };
 
+TestStyleObservable.test = {
+  snapshots: [
+    '<p style="color: green;">content</p>',
+    '<p style="color: orange;">content</p>'
+  ]
+};
+
 const TestStyleObservableNumeric = (): JSX.Element => {
   const o = $( { flexGrow: 1, width: 50 } );
   const toggle = () => o ( prev => ( prev.flexGrow === 1 ) ? { flexGrow: 2, width: 100 } : { flexGrow: 1, width: 50 } );
@@ -787,6 +1268,13 @@ const TestStyleObservableNumeric = (): JSX.Element => {
       <p style={o}>content</p>
     </>
   );
+};
+
+TestStyleObservableNumeric.test = {
+  snapshots: [
+    '<p style="flex-grow: 1; width: 50px;">content</p>',
+    '<p style="flex-grow: 2; width: 100px;">content</p>'
+  ]
 };
 
 const TestStyleObservableString = (): JSX.Element => {
@@ -801,6 +1289,13 @@ const TestStyleObservableString = (): JSX.Element => {
   );
 };
 
+TestStyleObservableString.test = {
+  snapshots: [
+    '<p style="color: green;">content</p>',
+    '<p style="color: orange;">content</p>'
+  ]
+};
+
 const TestStyleObservableVariable = (): JSX.Element => {
   const o = $( 'green' );
   const toggle = () => o ( prev => ( prev === 'orange' ) ? 'green' : 'orange' );
@@ -811,6 +1306,13 @@ const TestStyleObservableVariable = (): JSX.Element => {
       <p style={{ color: 'var(--color)', '--color': o }}>content</p>
     </>
   );
+};
+
+TestStyleObservableVariable.test = {
+  snapshots: [
+    '<p style="color: var(--color); --color:green;">content</p>',
+    '<p style="color: var(--color); --color:orange;">content</p>'
+  ]
 };
 
 const TestStyleFunction = (): JSX.Element => {
@@ -825,6 +1327,13 @@ const TestStyleFunction = (): JSX.Element => {
   );
 };
 
+TestStyleFunction.test = {
+  snapshots: [
+    '<p style="color: green;">content</p>',
+    '<p style="color: orange;">content</p>'
+  ]
+};
+
 const TestStyleFunctionNumeric = (): JSX.Element => {
   const o = $( { flexGrow: 1, width: 50 } );
   const toggle = () => o ( prev => ( prev.flexGrow === 1 ) ? { flexGrow: 2, width: 100 } : { flexGrow: 1, width: 50 } );
@@ -835,6 +1344,13 @@ const TestStyleFunctionNumeric = (): JSX.Element => {
       <p style={() => o ()}>content</p>
     </>
   );
+};
+
+TestStyleFunctionNumeric.test = {
+  snapshots: [
+    '<p style="flex-grow: 1; width: 50px;">content</p>',
+    '<p style="flex-grow: 2; width: 100px;">content</p>'
+  ]
 };
 
 const TestStyleFunctionString = (): JSX.Element => {
@@ -849,6 +1365,13 @@ const TestStyleFunctionString = (): JSX.Element => {
   );
 };
 
+TestStyleFunctionString.test = {
+  snapshots: [
+    '<p style="color: green;">content</p>',
+    '<p style="color: orange;">content</p>'
+  ]
+};
+
 const TestStyleFunctionVariable = (): JSX.Element => {
   const o = $( 'green' );
   const toggle = () => o ( prev => ( prev === 'orange' ) ? 'green' : 'orange' );
@@ -859,6 +1382,13 @@ const TestStyleFunctionVariable = (): JSX.Element => {
       <p style={{ color: 'var(--color)', '--color': () => o () }}>content</p>
     </>
   );
+};
+
+TestStyleFunctionVariable.test = {
+  snapshots: [
+    '<p style="color: var(--color); --color:green;">content</p>',
+    '<p style="color: var(--color); --color:orange;">content</p>'
+  ]
 };
 
 const TestStyleRemoval = (): JSX.Element => {
@@ -873,6 +1403,13 @@ const TestStyleRemoval = (): JSX.Element => {
   );
 };
 
+TestStyleRemoval.test = {
+  snapshots: [
+    '<p style="color: green;">content</p>',
+    '<p style="">content</p>'
+  ]
+};
+
 const TestStylesStatic = (): JSX.Element => {
   return (
     <>
@@ -880,6 +1417,13 @@ const TestStylesStatic = (): JSX.Element => {
       <p style={{ color: 'green' }}>content</p>
     </>
   );
+};
+
+TestStylesStatic.test = {
+  static: true,
+  snapshots: [
+    '<p style="color: green;">content</p>'
+  ]
 };
 
 const TestStylesObservable = (): JSX.Element => {
@@ -894,6 +1438,13 @@ const TestStylesObservable = (): JSX.Element => {
   );
 };
 
+TestStylesObservable.test = {
+  snapshots: [
+    '<p style="color: orange; font-weight: normal;">content</p>',
+    '<p style="color: green; font-weight: bold;">content</p>'
+  ]
+};
+
 const TestStylesFunction = (): JSX.Element => {
   const o = $({ color: 'orange', fontWeight: 'normal' });
   const toggle = () => o ( prev => ( prev.color === 'orange' ) ? { color: 'green', fontWeight: 'bold' } : { color: 'orange', fontWeight: 'normal' } );
@@ -904,6 +1455,13 @@ const TestStylesFunction = (): JSX.Element => {
       <p style={() => o ()}>content</p>
     </>
   );
+};
+
+TestStylesFunction.test = {
+  snapshots: [
+    '<p style="color: orange; font-weight: normal;">content</p>',
+    '<p style="color: green; font-weight: bold;">content</p>'
+  ]
 };
 
 const TestStylesRemoval = (): JSX.Element => {
@@ -918,6 +1476,13 @@ const TestStylesRemoval = (): JSX.Element => {
   );
 };
 
+TestStylesRemoval.test = {
+  snapshots: [
+    '<p style="color: orange; font-weight: normal;">content</p>',
+    '<p style="">content</p>'
+  ]
+};
+
 const TestStylesCleanup = (): JSX.Element => {
   const o = $<JSX.StyleProperties>({ color: 'orange', fontWeight: 'bold' });
   const toggle = () => o ( prev => ( prev.color === 'orange' ) ? { fontStyle: 'italic', textDecoration: 'line-through' } : { color: 'orange', fontWeight: 'bold' } );
@@ -930,6 +1495,13 @@ const TestStylesCleanup = (): JSX.Element => {
   );
 };
 
+TestStylesCleanup.test = {
+  snapshots: [
+    '<p style="color: orange; font-weight: bold;">content</p>',
+    '<p style="font-style: italic; text-decoration: line-through;">content</p>'
+  ]
+};
+
 const TestHTMLInnerHTMLStatic = (): JSX.Element => {
   return (
     <>
@@ -937,6 +1509,13 @@ const TestHTMLInnerHTMLStatic = (): JSX.Element => {
       <p innerHTML="<b>danger</b>" />
     </>
   );
+};
+
+TestHTMLInnerHTMLStatic.test = {
+  static: true,
+  snapshots: [
+    '<p></p>',
+  ]
 };
 
 const TestHTMLInnerHTMLObservable = (): JSX.Element => {
@@ -951,6 +1530,13 @@ const TestHTMLInnerHTMLObservable = (): JSX.Element => {
   );
 };
 
+TestHTMLInnerHTMLObservable.test = {
+  static: true,
+  snapshots: [
+    '<p></p>',
+  ]
+};
+
 const TestHTMLInnerHTMLFunction = (): JSX.Element => {
   const o = $( '<b>danger1</b>' );
   const toggle = () => o ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
@@ -963,6 +1549,13 @@ const TestHTMLInnerHTMLFunction = (): JSX.Element => {
   );
 };
 
+TestHTMLInnerHTMLFunction.test = {
+  static: true,
+  snapshots: [
+    '<p></p>',
+  ]
+};
+
 const TestHTMLOuterHTMLStatic = (): JSX.Element => {
   return (
     <>
@@ -970,6 +1563,13 @@ const TestHTMLOuterHTMLStatic = (): JSX.Element => {
       <p outerHTML="<b>danger</b>" />
     </>
   );
+};
+
+TestHTMLOuterHTMLStatic.test = {
+  static: true,
+  snapshots: [
+    '<p></p>',
+  ]
 };
 
 const TestHTMLOuterHTMLObservable = (): JSX.Element => {
@@ -984,6 +1584,13 @@ const TestHTMLOuterHTMLObservable = (): JSX.Element => {
   );
 };
 
+TestHTMLOuterHTMLObservable.test = {
+  static: true,
+  snapshots: [
+    '<p></p>',
+  ]
+};
+
 const TestHTMLOuterHTMLFunction = (): JSX.Element => {
   const o = $( '<b>danger1</b>' );
   const toggle = () => o ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
@@ -996,6 +1603,13 @@ const TestHTMLOuterHTMLFunction = (): JSX.Element => {
   );
 };
 
+TestHTMLOuterHTMLFunction.test = {
+  static: true,
+  snapshots: [
+    '<p></p>',
+  ]
+};
+
 const TestHTMLTextContentStatic = (): JSX.Element => {
   return (
     <>
@@ -1003,6 +1617,13 @@ const TestHTMLTextContentStatic = (): JSX.Element => {
       <p textContent="<b>danger</b>" />
     </>
   );
+};
+
+TestHTMLTextContentStatic.test = {
+  static: true,
+  snapshots: [
+    '<p></p>',
+  ]
 };
 
 const TestHTMLTextContentObservable = (): JSX.Element => {
@@ -1017,6 +1638,13 @@ const TestHTMLTextContentObservable = (): JSX.Element => {
   );
 };
 
+TestHTMLTextContentObservable.test = {
+  static: true,
+  snapshots: [
+    '<p></p>',
+  ]
+};
+
 const TestHTMLTextContentFunction = (): JSX.Element => {
   const o = $( '<b>danger1</b>' );
   const toggle = () => o ( prev => ( prev === '<b>danger1</b>' ) ? '<b>danger2</b>' : '<b>danger1</b>' );
@@ -1029,6 +1657,13 @@ const TestHTMLTextContentFunction = (): JSX.Element => {
   );
 };
 
+TestHTMLTextContentFunction.test = {
+  static: true,
+  snapshots: [
+    '<p></p>',
+  ]
+};
+
 const TestHTMLDangerouslySetInnerHTMLStatic = (): JSX.Element => {
   return (
     <>
@@ -1036,6 +1671,13 @@ const TestHTMLDangerouslySetInnerHTMLStatic = (): JSX.Element => {
       <p dangerouslySetInnerHTML={{ __html: '<i>danger</i>' }} />
     </>
   );
+};
+
+TestHTMLDangerouslySetInnerHTMLStatic.test = {
+  static: true,
+  snapshots: [
+    '<p><i>danger</i></p>'
+  ]
 };
 
 const TestHTMLDangerouslySetInnerHTMLObservable = (): JSX.Element => {
@@ -1050,6 +1692,13 @@ const TestHTMLDangerouslySetInnerHTMLObservable = (): JSX.Element => {
   );
 };
 
+TestHTMLDangerouslySetInnerHTMLObservable.test = {
+  snapshots: [
+    '<p><i>danger</i></p>',
+    '<p><b>danger</b></p>'
+  ]
+};
+
 const TestHTMLDangerouslySetInnerHTMLObservableString = (): JSX.Element => {
   const o = $( '<i>danger</i>' );
   const toggle = () => o ( prev => ( prev === '<i>danger</i>' ) ? '<b>danger</b>' : '<i>danger</i>' );
@@ -1060,6 +1709,13 @@ const TestHTMLDangerouslySetInnerHTMLObservableString = (): JSX.Element => {
       <p dangerouslySetInnerHTML={{ __html: o }} />
     </>
   );
+};
+
+TestHTMLDangerouslySetInnerHTMLObservableString.test = {
+  snapshots: [
+    '<p><i>danger</i></p>',
+    '<p><b>danger</b></p>'
+  ]
 };
 
 const TestHTMLDangerouslySetInnerHTMLFunction = (): JSX.Element => {
@@ -1074,6 +1730,13 @@ const TestHTMLDangerouslySetInnerHTMLFunction = (): JSX.Element => {
   );
 };
 
+TestHTMLDangerouslySetInnerHTMLFunction.test = {
+  snapshots: [
+    '<p><i>danger</i></p>',
+    '<p><b>danger</b></p>'
+  ]
+};
+
 const TestHTMLDangerouslySetInnerHTMLFunctionString = (): JSX.Element => {
   const o = $( '<i>danger</i>' );
   const toggle = () => o ( prev => ( prev === '<i>danger</i>' ) ? '<b>danger</b>' : '<i>danger</i>' );
@@ -1084,6 +1747,13 @@ const TestHTMLDangerouslySetInnerHTMLFunctionString = (): JSX.Element => {
       <p dangerouslySetInnerHTML={{ __html: () => o () }} />
     </>
   );
+};
+
+TestHTMLDangerouslySetInnerHTMLFunctionString.test = {
+  snapshots: [
+    '<p><i>danger</i></p>',
+    '<p><b>danger</b></p>'
+  ]
 };
 
 const TestEventClickStatic = (): JSX.Element => {
@@ -1296,6 +1966,15 @@ const TestABCD = (): JSX.Element => {
   );
 };
 
+TestABCD.test = {
+  snapshots: [
+    '<p><i>a</i></p>',
+    '<p><u>b</u></p>',
+    '<p><b>c</b></p>',
+    '<p><span>d</span></p>'
+  ]
+};
+
 const TestCleanupInner = () => {
   const page = $( true );
   const togglePage = () => page ( prev => !prev );
@@ -1337,12 +2016,27 @@ const TestCleanupInner = () => {
   };
 };
 
+TestCleanupInner.test = {
+  snapshots: [ //TODO: Double-check that this is correct
+    '<p>page1</p><button>Toggle Page</button>',
+    '<p>page2 - true</p><!----><button>Toggle</button><button>Toggle Page</button>',
+    '<!----><p>page2 - false</p><button>Toggle</button><button>Toggle Page</button>'
+  ]
+};
+
 const TestCleanupInnerPortal = () => {
   return (
     <Portal>
       <TestCleanupInner />
     </Portal>
   );
+};
+
+TestCleanupInnerPortal.test = {
+  static: true,
+  snapshots: [
+    '<!---->'
+  ]
 };
 
 const TestDynamicHeading = (): JSX.Element => {
@@ -1361,6 +2055,17 @@ const TestDynamicHeading = (): JSX.Element => {
   );
 };
 
+TestDynamicHeading.test = {
+  snapshots: [
+    '<h1>Level: 1</h1>',
+    '<h2>Level: 2</h2>',
+    '<h3>Level: 3</h3>',
+    '<h4>Level: 4</h4>',
+    '<h5>Level: 5</h5>',
+    '<h6>Level: 6</h6>'
+  ]
+};
+
 const TestDynamicObservableComponent = (): JSX.Element => {
   const level = $(1);
   const component = useComputed ( () => `h${level ()}` );
@@ -1374,6 +2079,17 @@ const TestDynamicObservableComponent = (): JSX.Element => {
       </Dynamic>
     </>
   );
+};
+
+TestDynamicObservableComponent.test = {
+  snapshots: [
+    '<h1>Level: 1</h1>',
+    '<h2>Level: 2</h2>',
+    '<h3>Level: 3</h3>',
+    '<h4>Level: 4</h4>',
+    '<h5>Level: 5</h5>',
+    '<h6>Level: 6</h6>'
+  ]
 };
 
 const TestDynamicObservableProps = (): JSX.Element => {
@@ -1392,18 +2108,31 @@ const TestDynamicObservableProps = (): JSX.Element => {
   );
 };
 
+TestDynamicObservableProps.test = {
+  snapshots: [
+    '<h5 class="red">Content</h5>',
+    '<h5 class="blue">Content</h5>'
+  ]
+};
+
 const TestDynamicObservableChildren = (): JSX.Element => {
   const o = $(random ());
   const update = () => o ( random () );
   useInterval ( update, TEST_INTERVAL );
   return (
     <>
-      <h3>Dynamic - Observable Props</h3>
+      <h3>Dynamic - Observable Children</h3>
       <Dynamic component="h5">
         {o}
       </Dynamic>
     </>
   );
+};
+
+TestDynamicObservableChildren.test = {
+  snapshots: [
+    '<h5>{random}</h5>'
+  ]
 };
 
 const TestIfStatic = (): JSX.Element => {
@@ -1420,6 +2149,13 @@ const TestIfStatic = (): JSX.Element => {
   );
 };
 
+TestIfStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>true</p><!---->'
+  ]
+};
+
 const TestIfObservable = (): JSX.Element => {
   const o = $( true );
   const toggle = () => o ( prev => !prev );
@@ -1432,6 +2168,13 @@ const TestIfObservable = (): JSX.Element => {
   );
 };
 
+TestIfObservable.test = {
+  snapshots: [
+    '<p>(content)</p>',
+    '<p>(<!---->)</p>'
+  ]
+};
+
 const TestIfFunction = (): JSX.Element => {
   const o = $( true );
   const toggle = () => o ( prev => !prev );
@@ -1442,6 +2185,13 @@ const TestIfFunction = (): JSX.Element => {
       <p>(<If when={() => o ()}>content</If>)</p>
     </>
   );
+};
+
+TestIfFunction.test = {
+  snapshots: [
+    '<p>(content)</p>',
+    '<p>(<!---->)</p>'
+  ]
 };
 
 const TestIfChildrenObservableStatic = (): JSX.Element => {
@@ -1460,6 +2210,13 @@ const TestIfChildrenObservableStatic = (): JSX.Element => {
   );
 };
 
+TestIfChildrenObservableStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>{random}</p>'
+  ]
+};
+
 const TestIfChildrenFunction = (): JSX.Element => {
   const Content = () => {
     const o = $( String ( random () ) );
@@ -1476,6 +2233,12 @@ const TestIfChildrenFunction = (): JSX.Element => {
   );
 };
 
+TestIfChildrenFunction.test = {
+  snapshots: [
+    '<p>{random}</p>'
+  ]
+};
+
 const TestIfFallbackStatic = (): JSX.Element => {
   return (
     <>
@@ -1483,6 +2246,13 @@ const TestIfFallbackStatic = (): JSX.Element => {
       <If when={false} fallback={<p>Fallback!</p>}>Children</If>
     </>
   );
+};
+
+TestIfFallbackStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Fallback!</p>'
+  ]
 };
 
 const TestIfFallbackObservable = (): JSX.Element => {
@@ -1498,6 +2268,12 @@ const TestIfFallbackObservable = (): JSX.Element => {
       <If when={false} fallback={<Fallback />}>Children</If>
     </>
   );
+};
+
+TestIfFallbackObservable.test = {
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
 };
 
 const TestIfFallbackObservableStatic = (): JSX.Element => {
@@ -1516,6 +2292,13 @@ const TestIfFallbackObservableStatic = (): JSX.Element => {
   );
 };
 
+TestIfFallbackObservableStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
+};
+
 const TestIfFallbackFunction = (): JSX.Element => {
   const Fallback = () => {
     const o = $( String ( random () ) );
@@ -1530,6 +2313,12 @@ const TestIfFallbackFunction = (): JSX.Element => {
       <If when={false} fallback={Fallback}>Children</If>
     </>
   );
+};
+
+TestIfFallbackFunction.test = {
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
 };
 
 const TestIfRace = () => {
@@ -1567,6 +2356,13 @@ const TestTernaryStatic = (): JSX.Element => {
   );
 };
 
+TestTernaryStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>true (1)</p><p>false (2)</p>'
+  ]
+};
+
 const TestTernaryStaticInline = (): JSX.Element => {
   return (
     <>
@@ -1575,6 +2371,13 @@ const TestTernaryStaticInline = (): JSX.Element => {
       <Ternary when={false}><p>true (2)</p><p>false (2)</p></Ternary>
     </>
   );
+};
+
+TestTernaryStaticInline.test = {
+  static: true,
+  snapshots: [
+    '<p>true (1)</p><p>false (2)</p>'
+  ]
 };
 
 const TestTernaryObservable = (): JSX.Element => {
@@ -1590,6 +2393,13 @@ const TestTernaryObservable = (): JSX.Element => {
       </Ternary>
     </>
   );
+};
+
+TestTernaryObservable.test = {
+  snapshots: [
+    '<p>true</p>',
+    '<p>false</p>'
+  ]
 };
 
 const TestTernaryObservableChildren = (): JSX.Element => {
@@ -1623,6 +2433,15 @@ const TestTernaryObservableChildren = (): JSX.Element => {
   );
 };
 
+TestTernaryObservableChildren.test = {
+  snapshots: [
+    '<i>a</i>',
+    '<u>b</u>',
+    '<b>c</b>',
+    '<span>d</span>'
+  ]
+};
+
 const TestTernaryFunction = (): JSX.Element => {
   const o = $( true );
   const toggle = () => o ( prev => !prev );
@@ -1636,6 +2455,13 @@ const TestTernaryFunction = (): JSX.Element => {
       </Ternary>
     </>
   );
+};
+
+TestTernaryFunction.test = {
+  snapshots: [
+    '<p>false</p>',
+    '<p>true</p>'
+  ]
 };
 
 const TestTernaryChildrenObservableStatic = (): JSX.Element => {
@@ -1668,6 +2494,13 @@ const TestTernaryChildrenObservableStatic = (): JSX.Element => {
   );
 };
 
+TestTernaryChildrenObservableStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>True: {random}</p><p>False: {random}</p>'
+  ]
+};
+
 const TestTernaryChildrenFunction = (): JSX.Element => {
   const True = () => {
     const o = $( String ( random () ) );
@@ -1698,6 +2531,12 @@ const TestTernaryChildrenFunction = (): JSX.Element => {
   );
 };
 
+TestTernaryChildrenFunction.test = {
+  snapshots: [
+    '<p>True: {random}</p><p>False: {random}</p>'
+  ]
+};
+
 const TestSwitchStatic = (): JSX.Element => {
   return (
     <>
@@ -1718,6 +2557,13 @@ const TestSwitchStatic = (): JSX.Element => {
       </Switch>
     </>
   );
+};
+
+TestSwitchStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>2</p>'
+  ]
 };
 
 const TestSwitchObservable = (): JSX.Element => {
@@ -1743,6 +2589,15 @@ const TestSwitchObservable = (): JSX.Element => {
       </Switch>
     </>
   );
+};
+
+TestSwitchObservable.test = {
+  snapshots: [
+    '<p>0</p>',
+    '<p>1</p>',
+    '<p>2</p>',
+    '<p>default</p>'
+  ]
 };
 
 const TestSwitchObservableComplex = (): JSX.Element => {
@@ -1820,6 +2675,15 @@ const TestSwitchFunction = (): JSX.Element => {
   );
 };
 
+TestSwitchFunction.test = {
+  snapshots: [
+    '<p>0</p>',
+    '<p>1</p>',
+    '<p>2</p>',
+    '<p>default</p>'
+  ]
+};
+
 const TestSwitchCaseObservableStatic = (): JSX.Element => {
   const Case = () => {
     const o = $( String ( random () ) );
@@ -1841,6 +2705,13 @@ const TestSwitchCaseObservableStatic = (): JSX.Element => {
       </Switch>
     </>
   );
+};
+
+TestSwitchCaseObservableStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Case: {random}</p>'
+  ]
 };
 
 const TestSwitchCaseFunction = (): JSX.Element => {
@@ -1866,6 +2737,12 @@ const TestSwitchCaseFunction = (): JSX.Element => {
   );
 };
 
+TestSwitchCaseFunction.test = {
+  snapshots: [
+    '<p>Case: {random}</p>'
+  ]
+};
+
 const TestSwitchDefaultObservableStatic = (): JSX.Element => {
   const Default = () => {
     const o = $( String ( random () ) );
@@ -1887,6 +2764,13 @@ const TestSwitchDefaultObservableStatic = (): JSX.Element => {
       </Switch>
     </>
   );
+};
+
+TestSwitchDefaultObservableStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Default: {random}</p>'
+  ]
 };
 
 const TestSwitchDefaultFunction = (): JSX.Element => {
@@ -1912,6 +2796,12 @@ const TestSwitchDefaultFunction = (): JSX.Element => {
   );
 };
 
+TestSwitchDefaultFunction.test = {
+  snapshots: [
+    '<p>Default: {random}</p>'
+  ]
+};
+
 class TestComponentStatic extends Component<{}> {
   render (): JSX.Element {
     return (
@@ -1922,6 +2812,13 @@ class TestComponentStatic extends Component<{}> {
     );
   }
 }
+
+TestComponentStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>content</p>'
+  ]
+};
 
 class TestComponentStaticProps extends Component<{ value: number }> {
   render (): JSX.Element {
@@ -1934,8 +2831,15 @@ class TestComponentStaticProps extends Component<{ value: number }> {
   }
 }
 
+TestComponentStaticProps.test = {
+  static: true,
+  snapshots: [
+    '<p>{random}</p>'
+  ]
+};
+
 class TestComponentStaticRenderProps extends Component<{ value: number }> {
-  render (props): JSX.Element {
+  render ( props ): JSX.Element {
     return (
       <>
         <h3>Component - Static Render Props</h3>
@@ -1944,6 +2848,13 @@ class TestComponentStaticRenderProps extends Component<{ value: number }> {
     );
   }
 }
+
+TestComponentStaticRenderProps.test = {
+  static: true,
+  snapshots: [
+    '<p>{random}</p>'
+  ]
+};
 
 class TestComponentObservable extends Component<{}> {
   getRandom (): number {
@@ -1962,6 +2873,12 @@ class TestComponentObservable extends Component<{}> {
   }
 }
 
+TestComponentObservable.test = {
+  snapshots: [
+    '<p>{random}</p>'
+  ]
+};
+
 class TestComponentFunction extends Component<{}> {
   getRandom (): number {
     return random ();
@@ -1979,6 +2896,12 @@ class TestComponentFunction extends Component<{}> {
   }
 }
 
+TestComponentFunction.test = {
+  snapshots: [
+    '<p>{random}</p>'
+  ]
+};
+
 const TestForStatic = (): JSX.Element => {
   const values = [1, 2, 3];
   return (
@@ -1990,7 +2913,14 @@ const TestForStatic = (): JSX.Element => {
         }}
       </For>
     </>
-  )
+  );
+};
+
+TestForStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Value: 1</p><p>Value: 2</p><p>Value: 3</p>'
+  ]
 };
 
 const TestForObservables = (): JSX.Element => {
@@ -1998,9 +2928,13 @@ const TestForObservables = (): JSX.Element => {
   const v2 = $(2);
   const v3 = $(3);
   const values = [v1, v2, v3];
-  useInterval ( () => v1 ( v1 () + 1 ), TEST_INTERVAL );
-  useInterval ( () => v2 ( v2 () + 1 ), TEST_INTERVAL );
-  useInterval ( () => v3 ( v3 () + 1 ), TEST_INTERVAL );
+  useInterval ( () => {
+    useBatch ( () => {
+      v1 ( ( v1 () + 1 ) % 5 );
+      v2 ( ( v2 () + 1 ) % 5 );
+      v3 ( ( v3 () + 1 ) % 5 );
+    });
+  }, TEST_INTERVAL );
   return (
     <>
       <h3>For - Observables</h3>
@@ -2010,7 +2944,17 @@ const TestForObservables = (): JSX.Element => {
         }}
       </For>
     </>
-  )
+  );
+};
+
+TestForObservables.test = {
+  snapshots: [
+    '<p>Value: 1</p><p>Value: 2</p><p>Value: 3</p>',
+    '<p>Value: 2</p><p>Value: 3</p><p>Value: 4</p>',
+    '<p>Value: 3</p><p>Value: 4</p><p>Value: 0</p>',
+    '<p>Value: 4</p><p>Value: 0</p><p>Value: 1</p>',
+    '<p>Value: 0</p><p>Value: 1</p><p>Value: 2</p>'
+  ]
 };
 
 const TestForObservablesStatic = (): JSX.Element => {
@@ -2018,9 +2962,13 @@ const TestForObservablesStatic = (): JSX.Element => {
   const v2 = $(2);
   const v3 = $(3);
   const values = [v1, v2, v3];
-  useInterval ( () => v1 ( v1 () + 1 ), TEST_INTERVAL );
-  useInterval ( () => v2 ( v2 () + 1 ), TEST_INTERVAL );
-  useInterval ( () => v3 ( v3 () + 1 ), TEST_INTERVAL );
+  useInterval ( () => {
+    useBatch ( () => {
+      v1 ( ( v1 () + 1 ) % 5 );
+      v2 ( ( v2 () + 1 ) % 5 );
+      v3 ( ( v3 () + 1 ) % 5 );
+    });
+  }, TEST_INTERVAL );
   return (
     <>
       <h3>For - Observables Static</h3>
@@ -2031,7 +2979,14 @@ const TestForObservablesStatic = (): JSX.Element => {
         }}
       </For>
     </>
-  )
+  );
+};
+
+TestForObservablesStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Value: 1</p><p>Value: 2</p><p>Value: 3</p>'
+  ]
 };
 
 const TestForObservableObservables = (): JSX.Element => {
@@ -2041,12 +2996,16 @@ const TestForObservableObservables = (): JSX.Element => {
   const v4 = $(4);
   const v5 = $(5);
   const values = $([v1, v2, v3, v4, v5]);
-  useInterval ( () => v1 ( v1 () + 1 ), TEST_INTERVAL );
-  useInterval ( () => v2 ( v2 () + 1 ), TEST_INTERVAL );
-  useInterval ( () => v3 ( v3 () + 1 ), TEST_INTERVAL );
-  useInterval ( () => v4 ( v4 () + 1 ), TEST_INTERVAL );
-  useInterval ( () => v5 ( v5 () + 1 ), TEST_INTERVAL );
-  useInterval ( () => values ( values ().slice ().sort ( () => .5 - random () ) ), TEST_INTERVAL );
+  useInterval ( () => {
+    useBatch ( () => {
+      v1 ( v1 () + 1 );
+      v2 ( v2 () + 1 );
+      v3 ( v3 () + 1 );
+      v4 ( v4 () + 1 );
+      v5 ( v5 () + 1 );
+      values ( values ().slice ().sort ( () => .5 - random () ) );
+    });
+  }, TEST_INTERVAL );
   return (
     <>
       <h3>For - Observable Observables</h3>
@@ -2056,7 +3015,7 @@ const TestForObservableObservables = (): JSX.Element => {
         }}
       </For>
     </>
-  )
+  );
 };
 
 const TestForFunctionObservables = (): JSX.Element => {
@@ -2064,9 +3023,13 @@ const TestForFunctionObservables = (): JSX.Element => {
   const v2 = $(2);
   const v3 = $(3);
   const values = [v1, v2, v3];
-  useInterval ( () => v1 ( v1 () + 1 ), TEST_INTERVAL );
-  useInterval ( () => v2 ( v2 () + 1 ), TEST_INTERVAL );
-  useInterval ( () => v3 ( v3 () + 1 ), TEST_INTERVAL );
+  useInterval ( () => {
+    useBatch ( () => {
+      v1 ( ( v1 () + 1 ) % 5 );
+      v2 ( ( v2 () + 1 ) % 5 );
+      v3 ( ( v3 () + 1 ) % 5 );
+    });
+  }, TEST_INTERVAL );
   return (
     <>
       <h3>For - Function Observables</h3>
@@ -2076,7 +3039,17 @@ const TestForFunctionObservables = (): JSX.Element => {
         }}
       </For>
     </>
-  )
+  );
+};
+
+TestForFunctionObservables.test = {
+  snapshots: [
+    '<p>Value: 1</p><p>Value: 2</p><p>Value: 3</p>',
+    '<p>Value: 2</p><p>Value: 3</p><p>Value: 4</p>',
+    '<p>Value: 3</p><p>Value: 4</p><p>Value: 0</p>',
+    '<p>Value: 4</p><p>Value: 0</p><p>Value: 1</p>',
+    '<p>Value: 0</p><p>Value: 1</p><p>Value: 2</p>'
+  ]
 };
 
 const TestForRandom = (): JSX.Element => {
@@ -2088,11 +3061,17 @@ const TestForRandom = (): JSX.Element => {
       <h3>For - Random</h3>
       <For values={values}>
         {( value: number ) => {
-          return <p>Value: {value}</p>
+          return <p>Value: {value}</p>;
         }}
       </For>
     </>
-  )
+  );
+};
+
+TestForRandom.test = {
+  snapshots: [
+    '<p>Value: {random}</p><p>Value: {random}</p><p>Value: {random}</p>'
+  ]
 };
 
 const TestForFallbackStatic = (): JSX.Element => {
@@ -2105,7 +3084,14 @@ const TestForFallbackStatic = (): JSX.Element => {
         }}
       </For>
     </>
-  )
+  );
+};
+
+TestForFallbackStatic.test = {
+  static: true,
+  snapshots: [
+    '<div>Fallback!</div>'
+  ]
 };
 
 const TestForFallbackObservable = (): JSX.Element => {
@@ -2128,7 +3114,13 @@ const TestForFallbackObservable = (): JSX.Element => {
         }}
       </For>
     </>
-  )
+  );
+};
+
+TestForFallbackObservable.test = {
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
 };
 
 const TestForFallbackObservableStatic = (): JSX.Element => {
@@ -2152,7 +3144,14 @@ const TestForFallbackObservableStatic = (): JSX.Element => {
         }}
       </For>
     </>
-  )
+  );
+};
+
+TestForFallbackObservableStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
 };
 
 const TestForFallbackFunction = (): JSX.Element => {
@@ -2176,7 +3175,13 @@ const TestForFallbackFunction = (): JSX.Element => {
         }}
       </For>
     </>
-  )
+  );
+};
+
+TestForFallbackFunction.test = {
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
 };
 
 const TestFragmentStatic = (): JSX.Element => {
@@ -2188,13 +3193,27 @@ const TestFragmentStatic = (): JSX.Element => {
   );
 };
 
+TestFragmentStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>content</p>'
+  ]
+};
+
 const TestFragmentStaticComponent = (): JSX.Element => {
   return (
-    <Fragment>
+    <Voby.Fragment>
       <h3>Fragment - Static Component</h3>
       <p>content</p>
-    </Fragment>
+    </Voby.Fragment>
   );
+};
+
+TestFragmentStaticComponent.test = {
+  static: true,
+  snapshots: [
+    '<p>content</p>'
+  ]
 };
 
 const TestFragmentStaticDeep = (): JSX.Element => {
@@ -2218,6 +3237,13 @@ const TestFragmentStaticDeep = (): JSX.Element => {
       </>
     </>
   );
+};
+
+TestFragmentStaticDeep.test = {
+  static: true,
+  snapshots: [
+    '<p>first</p><p>second</p><p>deep</p>'
+  ]
 };
 
 const TestErrorBoundary = (): JSX.Element => {
@@ -2244,6 +3270,124 @@ const TestErrorBoundary = (): JSX.Element => {
   );
 };
 
+TestErrorBoundary.test = {
+  snapshots: [
+    '<p>content</p>',
+    '<p>Error caught: Custom error</p>'
+  ]
+};
+
+const TestErrorBoundaryChildrenObservableStatic = (): JSX.Element => {
+  const Children = (): JSX.Element => {
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return <p>Children: {o ()}</p>
+  };
+  const Fallback = (): JSX.Element => {
+    return <p>Fallback!</p>;
+  };
+  return (
+    <>
+      <h3>Error Boundary - Children Observable Static</h3>
+      <ErrorBoundary fallback={<Fallback />}>
+        <Children />
+      </ErrorBoundary>
+    </>
+  );
+};
+
+TestErrorBoundaryChildrenObservableStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Children: {random}</p>'
+  ]
+};
+
+const TestErrorBoundaryChildrenFunction = (): JSX.Element => {
+  const Children = (): JSX.Element => {
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return <p>Children: {o ()}</p>
+  };
+  const Fallback = (): JSX.Element => {
+    return <p>Fallback!</p>;
+  };
+  return (
+    <>
+      <h3>Error Boundary - Children Function</h3>
+      <ErrorBoundary fallback={<Fallback />}>
+        {Children}
+      </ErrorBoundary>
+    </>
+  );
+};
+
+TestErrorBoundaryChildrenFunction.test = {
+  snapshots: [
+    '<p>Children: {random}</p>'
+  ]
+};
+
+const TestErrorBoundaryFallbackObservableStatic = (): JSX.Element => {
+  const Children = (): JSX.Element => {
+    throw new Error ();
+  };
+  const Fallback = (): JSX.Element => {
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return <p>Fallback: {o ()}</p>
+  };
+  return (
+    <>
+      <h3>Error Boundary - Fallback Observable Static</h3>
+      <ErrorBoundary fallback={<Fallback />}>
+        <Children />
+      </ErrorBoundary>
+    </>
+  );
+};
+
+TestErrorBoundaryFallbackObservableStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
+};
+
+const TestErrorBoundaryFallbackFunction = (): JSX.Element => {
+  const Children = (): JSX.Element => {
+    throw new Error ();
+  };
+  const Fallback = (): JSX.Element => {
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return <p>Fallback: {o ()}</p>
+  };
+  return (
+    <>
+      <h3>Error Boundary - Fallback Function</h3>
+      <ErrorBoundary fallback={Fallback}>
+        <Children />
+      </ErrorBoundary>
+    </>
+  );
+};
+
+TestErrorBoundaryFallbackFunction.test = {
+  static: true,
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
+};
+
 const TestChildren = (): JSX.Element => {
   const A = ({ children }): JSX.Element => {
     return <div class="A">{children}</div>;
@@ -2268,88 +3412,11 @@ const TestChildren = (): JSX.Element => {
   );
 };
 
-const TestErrorBoundaryChildrenObservableStatic = (): JSX.Element => {
-  const Children = (): JSX.Element => {
-    const o = $( String ( random () ) );
-    const randomize = () => o ( String ( random () ) );
-    useInterval ( randomize, TEST_INTERVAL );
-    o ();
-    return <p>Children: {o ()}</p>
-  };
-  const Fallback = (): JSX.Element => {
-    return <p>Fallback!</p>;
-  };
-  return (
-    <>
-      <h3>Error Boundary - Children Observable Static</h3>
-      <ErrorBoundary fallback={<Fallback />}>
-        <Children />
-      </ErrorBoundary>
-    </>
-  );
-};
-
-const TestErrorBoundaryChildrenFunction = (): JSX.Element => {
-  const Children = (): JSX.Element => {
-    const o = $( String ( random () ) );
-    const randomize = () => o ( String ( random () ) );
-    useInterval ( randomize, TEST_INTERVAL );
-    o ();
-    return <p>Children: {o ()}</p>
-  };
-  const Fallback = (): JSX.Element => {
-    return <p>Fallback!</p>;
-  };
-  return (
-    <>
-      <h3>Error Boundary - Children Function</h3>
-      <ErrorBoundary fallback={<Fallback />}>
-        {Children}
-      </ErrorBoundary>
-    </>
-  );
-};
-
-const TestErrorBoundaryFallbackObservableStatic = (): JSX.Element => {
-  const Children = (): JSX.Element => {
-    throw new Error ();
-  };
-  const Fallback = (): JSX.Element => {
-    const o = $( String ( random () ) );
-    const randomize = () => o ( String ( random () ) );
-    useInterval ( randomize, TEST_INTERVAL );
-    o ();
-    return <p>Fallback: {o ()}</p>
-  };
-  return (
-    <>
-      <h3>Error Boundary - Fallback Observable Static</h3>
-      <ErrorBoundary fallback={<Fallback />}>
-        <Children />
-      </ErrorBoundary>
-    </>
-  );
-};
-
-const TestErrorBoundaryFallbackFunction = (): JSX.Element => {
-  const Children = (): JSX.Element => {
-    throw new Error ();
-  };
-  const Fallback = (): JSX.Element => {
-    const o = $( String ( random () ) );
-    const randomize = () => o ( String ( random () ) );
-    useInterval ( randomize, TEST_INTERVAL );
-    o ();
-    return <p>Fallback: {o ()}</p>
-  };
-  return (
-    <>
-      <h3>Error Boundary - Fallback Function</h3>
-      <ErrorBoundary fallback={Fallback}>
-        <Children />
-      </ErrorBoundary>
-    </>
-  );
+TestChildren.test = {
+  static: true,
+  snapshots: [
+    '<div class="A"><div class="B"><div class="C"><p>content</p></div></div></div>',
+  ]
 };
 
 const TestRef = (): JSX.Element => {
@@ -2364,6 +3431,13 @@ const TestRef = (): JSX.Element => {
       <p ref={ref}>content</p>
     </>
   );
+};
+
+TestRef.test = {
+  static: true,
+  snapshots: [
+    '<p>Got ref - Has parent: true - Is connected: true</p>',
+  ]
 };
 
 const TestRefs = (): JSX.Element => {
@@ -2382,6 +3456,13 @@ const TestRefs = (): JSX.Element => {
       <p ref={[ref1, ref2]}>content</p>
     </>
   );
+};
+
+TestRefs.test = {
+  static: true,
+  snapshots: [
+    '<p>Got ref1 - Has parent: true - Is connected: true / Got ref2 - Has parent: true - Is connected: true</p>',
+  ]
 };
 
 const TestRefUnmounting = (): JSX.Element => {
@@ -2408,19 +3489,41 @@ const TestRefUnmounting = (): JSX.Element => {
   );
 };
 
-const TestPromise = (): JSX.Element => {
-  const resolved = usePromise<number> ( new Promise ( resolve => setTimeout ( () => resolve ( 123 ), TEST_INTERVAL ) ) );
-  const rejected = usePromise<number> ( new Promise ( ( _, reject ) => setTimeout ( () => reject ( 'Custom Error' ), TEST_INTERVAL ) ) );
+TestRefUnmounting.test = {
+  snapshots: [
+    '<p>Got ref - Has parent: true - Is connected: true</p><p>content</p>',
+    '<p>No ref</p><!---->'
+  ]
+};
+
+const TestPromiseResolved = (): JSX.Element => {
+  const resolved = usePromise<string> ( new Promise ( resolve => setTimeout ( () => resolve ( 'Loaded!' ), TEST_INTERVAL ) ) );
   return (
     <>
-      <h3>Promise</h3>
+      <h3>Promise - Resolved</h3>
       {() => {
-        if ( resolved ().loading ) return <p>loading...</p>;
+        if ( resolved ().loading ) return <p>Loading...</p>;
         if ( resolved ().error ) return <p>{resolved ().error.message}</p>;
         return <p>{resolved ().value}</p>
       }}
+    </>
+  );
+};
+
+TestPromiseResolved.test = {
+  snapshots: [
+    '<p>Loading...</p>',
+    '<p>Loaded!</p>'
+  ]
+};
+
+const TestPromiseRejected = (): JSX.Element => {
+  const rejected = usePromise<number> ( new Promise ( ( _, reject ) => setTimeout ( () => reject ( 'Custom Error' ), TEST_INTERVAL ) ) );
+  return (
+    <>
+      <h3>Promise - Rejected</h3>
       {() => {
-        if ( rejected ().loading ) return <p>loading...</p>;
+        if ( rejected ().loading ) return <p>Loading...</p>;
         if ( rejected ().error ) return <p>{rejected ().error.message}</p>;
         return <p>{rejected ().value}</p>
       }}
@@ -2428,16 +3531,29 @@ const TestPromise = (): JSX.Element => {
   );
 };
 
+TestPromiseRejected.test = {
+  snapshots: [
+    '<p>Loading...</p>',
+    '<p>Custom Error</p>'
+  ]
+};
+
 const TestSVGStatic = (): JSX.Element => {
-  const getColor = () => `#${Math.floor ( random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
   return (
     <>
       <h3>SVG - Static</h3>
-      <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke={getColor ()} stroke-width="3" fill="white">
+      <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke={randomColor ()} stroke-width="3" fill="white">
         <circle cx="25" cy="25" r="20" />
       </svg>
     </>
   );
+};
+
+TestSVGStatic.test = {
+  static: true,
+  snapshots: [
+    '<svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke="{random-color}" stroke-width="3" fill="white"><circle cx="25" cy="25" r="20"></circle></svg>'
+  ]
 };
 
 const TestSVGStaticComplex = (): JSX.Element => {
@@ -2489,21 +3605,26 @@ const TestSVGStaticComplex = (): JSX.Element => {
 };
 
 const TestSVGStaticCamelCase = (): JSX.Element => {
-  const getColor = () => `#${Math.floor ( random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
   return (
     <>
       <h3>SVG - Static CamelCase</h3>
-      <svg viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke={getColor ()} strokeWidth="3" fill="white">
+      <svg viewBox="0 0 50 50" width="50px" stroke={randomColor ()} strokeWidth="3" fill="white">
         <circle cx="25" cy="25" r="20" />
       </svg>
     </>
   );
 };
 
+TestSVGStaticCamelCase.test = {
+  static: true,
+  snapshots: [
+    '<svg viewBox="0 0 50 50" width="50px" stroke="{random-color}" stroke-width="3" fill="white"><circle cx="25" cy="25" r="20"></circle></svg>'
+  ]
+};
+
 const TestSVGObservable = (): JSX.Element => {
-  const getColor = () => `#${Math.floor ( random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
-  const color = $(getColor ());
-  const update = () => color ( getColor () );
+  const color = $(randomColor ());
+  const update = () => color ( randomColor () );
   useInterval ( update, TEST_INTERVAL / 2 );
   return (
     <>
@@ -2515,10 +3636,15 @@ const TestSVGObservable = (): JSX.Element => {
   );
 };
 
+TestSVGObservable.test = {
+  snapshots: [
+    '<svg viewBox="0 0 50 50" width="50px" stroke="{random-color}" stroke-width="3" fill="white"><circle cx="25" cy="25" r="20"></circle></svg>'
+  ]
+};
+
 const TestSVGFunction = (): JSX.Element => {
-  const getColor = () => `#${Math.floor ( random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
-  const color = $(getColor ());
-  const update = () => color ( getColor () );
+  const color = $(randomColor ());
+  const update = () => color ( randomColor () );
   useInterval ( update, TEST_INTERVAL / 2 );
   return (
     <>
@@ -2530,59 +3656,100 @@ const TestSVGFunction = (): JSX.Element => {
   );
 };
 
+TestSVGFunction.test = {
+  snapshots: [
+    '<svg viewBox="0 0 50 50" width="50px" stroke="{random-color}" stroke-width="3" fill="white"><circle cx="25" cy="25" r="20"></circle></svg>'
+  ]
+};
+
 const TestSVGStyleObject = (): JSX.Element => {
   return (
     <>
       <h3>SVG - Style Object</h3>
-      <svg style={{ stroke: 'red', fill: 'pink' }} viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke-width="3" fill="white">
+      <svg style={{ stroke: 'red', fill: 'pink' }} viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white">
         <circle cx="25" cy="25" r="20" />
       </svg>
     </>
   );
+};
+
+TestSVGStyleObject.test = {
+  static: true,
+  snapshots: [
+    '<svg viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white" style="stroke: red; fill: pink;"><circle cx="25" cy="25" r="20"></circle></svg>'
+  ]
 };
 
 const TestSVGStyleString = (): JSX.Element => {
   return (
     <>
       <h3>SVG - Style String</h3>
-      <svg style="stroke: red; fill: pink;" viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke-width="3" fill="white">
+      <svg style="stroke: red; fill: pink;" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white">
         <circle cx="25" cy="25" r="20" />
       </svg>
     </>
   );
+};
+
+TestSVGStyleString.test = {
+  static: true,
+  snapshots: [
+    '<svg viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white" style="stroke: red; fill: pink;"><circle cx="25" cy="25" r="20"></circle></svg>'
+  ]
 };
 
 const TestSVGClassObject = (): JSX.Element => {
   return (
     <>
       <h3>SVG - Class Object</h3>
-      <svg class={{ red: true }} viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke-width="3" fill="white">
+      <svg class={{ red: true }} viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white">
         <circle cx="25" cy="25" r="20" />
       </svg>
     </>
   );
+};
+
+TestSVGClassObject.test = {
+  static: true,
+  snapshots: [
+    '<svg viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white" class="red"><circle cx="25" cy="25" r="20"></circle></svg>'
+  ]
 };
 
 const TestSVGClassString = (): JSX.Element => {
   return (
     <>
       <h3>SVG - Class String</h3>
-      <svg class="red" viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke-width="3" fill="white">
+      <svg class="red" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white">
         <circle cx="25" cy="25" r="20" />
       </svg>
     </>
   );
 };
 
+TestSVGClassString.test = {
+  static: true,
+  snapshots: [
+    '<svg viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white" class="red"><circle cx="25" cy="25" r="20"></circle></svg>'
+  ]
+};
+
 const TestSVGClassNameString = (): JSX.Element => {
   return (
     <>
       <h3>SVG - ClassName String</h3>
-      <svg className="red" viewBox="0 0 50 50" width="50px" xmlns="http://www.w3.org/2000/svg" stroke-width="3" fill="white">
+      <svg className="red" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white">
         <circle cx="25" cy="25" r="20" />
       </svg>
     </>
   );
+};
+
+TestSVGClassNameString.test = {
+  static: true,
+  snapshots: [
+    '<svg class="red" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white"><circle cx="25" cy="25" r="20"></circle></svg>'
+  ]
 };
 
 const TestTemplateExternal = (): JSX.Element => {
@@ -2602,10 +3769,16 @@ const TestTemplateExternal = (): JSX.Element => {
   );
 };
 
+TestTemplateExternal.test = {
+  static: true,
+  snapshots: [
+    '<div class="red"><span>outer <span data-color="blue">inner</span></span></div><div class="blue"><span>outer <span data-color="red">inner</span></span></div>'
+  ]
+};
+
 const TestTemplateSVG = (): JSX.Element => {
-  const getColor = () => `#${Math.floor ( random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
-  const color = $(getColor ());
-  const update = () => color ( getColor () );
+  const color = $(randomColor ());
+  const update = () => color ( randomColor () );
   useInterval ( update, TEST_INTERVAL / 2 );
   const Templated = template<{ color }> ( props => {
     return (
@@ -2620,6 +3793,12 @@ const TestTemplateSVG = (): JSX.Element => {
       <Templated color={color} />
     </>
   );
+};
+
+TestTemplateSVG.test = {
+  snapshots: [
+    '<svg viewBox="0 0 50 50" width="50px" stroke="{random-color}" stroke-width="3" fill="white"><circle cx="25" cy="25" r="20"></circle></svg>'
+  ]
 };
 
 const TestContextComponents = (): JSX.Element => {
@@ -2650,6 +3829,13 @@ const TestContextComponents = (): JSX.Element => {
   );
 };
 
+TestContextComponents.test = {
+  static: true,
+  snapshots: [
+    '<p>outer</p><p>inner</p><p>outer</p>'
+  ]
+};
+
 const TestContextHook = (): JSX.Element => {
   const Context = createContext ();
   const Reader = (): JSX.Element => {
@@ -2670,9 +3856,16 @@ const TestContextHook = (): JSX.Element => {
   );
 };
 
-const TestRenderToString = async (): Promise<string> => {
+TestContextHook.test = {
+  static: true,
+  snapshots: [
+    '<p>outer</p><p>inner</p><p>outer</p>'
+  ]
+};
+
+const TestRenderToString = async (): Promise<void> => {
   const App = (): JSX.Element => {
-    const o = $( String ( random () ) );
+    const o = $(123);
     return (
       <div>
         <h3>renderToString</h3>
@@ -2680,19 +3873,19 @@ const TestRenderToString = async (): Promise<string> => {
       </div>
     );
   };
-  const html = await renderToString ( <App /> );
-  console.log ( { html } );
-  return html;
+  const expected = '<div><h3>renderToString</h3><p>123</p></div>';
+  const actual = await renderToString ( <App /> );
+  console.assert ( actual === expected );
 };
 
-const TestRenderToStringSuspense = async (): Promise<string> => {
+const TestRenderToStringSuspense = async (): Promise<void> => {
   const App = (): JSX.Element => {
     const o = $(0);
     const Content = () => {
       useResource ( () => {
         return new Promise<number> ( resolve => {
           setTimeout ( () => {
-            resolve ( o ( random () ) );
+            resolve ( o ( 123 ) );
           }, TEST_INTERVAL );
         });
       });
@@ -2705,9 +3898,9 @@ const TestRenderToStringSuspense = async (): Promise<string> => {
       </div>
     );
   };
-  const html = await renderToString ( <App /> );
-  console.log ( { html } );
-  return html;
+  const expected = '<div><h3>renderToString - Suspense</h3><p>123</p></div>';
+  const actual = await renderToString ( <App /> );
+  console.assert ( actual === expected );
 };
 
 const TestPortalStatic = (): JSX.Element => {
@@ -2719,6 +3912,13 @@ const TestPortalStatic = (): JSX.Element => {
       </Portal>
     </>
   );
+};
+
+TestPortalStatic.test = {
+  static: true,
+  snapshots: [
+    '<!---->'
+  ]
 };
 
 const TestPortalObservable = (): JSX.Element => {
@@ -2753,6 +3953,13 @@ const TestPortalObservable = (): JSX.Element => {
   );
 };
 
+TestPortalObservable.test = {
+  static: true,
+  snapshots: [
+    '<!---->'
+  ]
+};
+
 const TestPortalRemoval = (): JSX.Element => {
   const Inner = () => {
     const log = () => console.count ( 'portal.inner' );
@@ -2781,6 +3988,13 @@ const TestPortalRemoval = (): JSX.Element => {
   );
 };
 
+TestPortalRemoval.test = {
+  static: true,
+  snapshots: [
+    '<!---->'
+  ]
+};
+
 const TestSuspenseAlways = (): JSX.Element => {
   const Fallback = () => {
     return <p>Loading...</p>;
@@ -2801,6 +4015,13 @@ const TestSuspenseAlways = (): JSX.Element => {
   );
 };
 
+TestSuspenseAlways.test = {
+  static: true,
+  snapshots: [
+    '<p>Loading...</p>'
+  ]
+};
+
 const TestSuspenseNever = (): JSX.Element => {
   const Fallback = () => {
     return <p>Loading...</p>;
@@ -2816,6 +4037,13 @@ const TestSuspenseNever = (): JSX.Element => {
       </Suspense>
     </>
   );
+};
+
+TestSuspenseNever.test = {
+  static: true,
+  snapshots: [
+    '<p>Content!</p>'
+  ]
 };
 
 const TestSuspenseObservable = (): JSX.Element => {
@@ -2846,6 +4074,13 @@ const TestSuspenseObservable = (): JSX.Element => {
   );
 };
 
+TestSuspenseObservable.test = {
+  snapshots: [
+    '<p>Loading...</p>',
+    '<p>Content!</p>'
+  ]
+};
+
 const TestSuspenseWhen = (): JSX.Element => {
   const Fallback = () => {
     return <p>Loading...</p>;
@@ -2866,6 +4101,13 @@ const TestSuspenseWhen = (): JSX.Element => {
   );
 };
 
+TestSuspenseWhen.test = {
+  snapshots: [
+    '<p>Loading...</p>',
+    '<p>Content!</p>'
+  ]
+};
+
 const TestSuspenseAlive = (): JSX.Element => {
   const Fallback = () => {
     return <p>Loading ({random ()})...</p>;
@@ -2884,6 +4126,13 @@ const TestSuspenseAlive = (): JSX.Element => {
       </Suspense>
     </>
   );
+};
+
+TestSuspenseAlive.test = {
+  snapshots: [ //TODO: Test this properly, content is static but loading should be dynamic
+    '<p>Loading ({random})...</p>',
+    '<p>Content ({random})!</p>'
+  ]
 };
 
 const TestSuspenseChildrenObservableStatic = (): JSX.Element => {
@@ -2907,6 +4156,13 @@ const TestSuspenseChildrenObservableStatic = (): JSX.Element => {
   );
 };
 
+TestSuspenseChildrenObservableStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Children: {random}</p>'
+  ]
+};
+
 const TestSuspenseChildrenFunction = (): JSX.Element => {
   const Children = (): JSX.Element => {
     const o = $( String ( random () ) );
@@ -2926,6 +4182,12 @@ const TestSuspenseChildrenFunction = (): JSX.Element => {
       </Suspense>
     </>
   );
+};
+
+TestSuspenseChildrenFunction.test = {
+  snapshots: [
+    '<p>Children: {random}</p>'
+  ]
 };
 
 const TestSuspenseFallbackObservableStatic = (): JSX.Element => {
@@ -2952,6 +4214,13 @@ const TestSuspenseFallbackObservableStatic = (): JSX.Element => {
   );
 };
 
+TestSuspenseFallbackObservableStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
+};
+
 const TestSuspenseFallbackFunction = (): JSX.Element => {
   const Children = (): JSX.Element => {
     useResource ( () => {
@@ -2974,6 +4243,12 @@ const TestSuspenseFallbackFunction = (): JSX.Element => {
       </Suspense>
     </>
   );
+};
+
+TestSuspenseFallbackFunction.test = {
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
 };
 
 const TestSuspenseCleanup = (): JSX.Element => {
@@ -3010,6 +4285,13 @@ const TestSuspenseCleanup = (): JSX.Element => {
   );
 };
 
+TestSuspenseCleanup.test = {
+  snapshots: [
+    '<p>Loading...</p>',
+    '<p>Loaded!</p>'
+  ]
+};
+
 const TestLazy = (): JSX.Element => {
   const Component = (): JSX.Element => {
     return <p>Loaded!</p>;
@@ -3017,7 +4299,7 @@ const TestLazy = (): JSX.Element => {
   const Fallback = (): JSX.Element => {
     return <p>Loading...</p>;
   };
-  const lazyFetcher = () => new Promise ( resolve => setTimeout ( () => resolve ( { default: Component } ), TEST_INTERVAL ) );
+  const lazyFetcher = () => new Promise<{ default: JSX.Component }> ( resolve => setTimeout ( () => resolve ( { default: Component } ), TEST_INTERVAL ) );
   const LazyComponent = lazy ( lazyFetcher );
   return (
     <>
@@ -3029,47 +4311,60 @@ const TestLazy = (): JSX.Element => {
   );
 };
 
+TestLazy.test = {
+  snapshots: [
+    '<p>Loading...</p>',
+    '<p>Loaded!</p>'
+  ]
+};
+
+const ClassBugComponent = () => {
+  const klass = useComputed(() => "css");
+
+  return (<span id={ undefined } class={ klass }>Test</span>);
+};
+
 const Test = (): JSX.Element => {
   TestRenderToString ();
   TestRenderToStringSuspense ();
   return (
     <>
-      <TestNullStatic />
-      <TestNullObservable />
-      <TestNullFunction />
-      <TestNullRemoval />
-      <TestUndefinedStatic />
-      <TestUndefinedObservable />
-      <TestUndefinedFunction />
-      <TestUndefinedRemoval />
-      <TestBooleanStatic />
-      <TestBooleanObservable />
-      <TestBooleanFunction />
-      <TestBooleanRemoval />
-      <TestSymbolStatic />
-      <TestSymbolObservable />
-      <TestSymbolFunction />
-      <TestSymbolRemoval />
-      <TestNumberStatic />
-      <TestNumberObservable />
-      <TestNumberFunction />
-      <TestNumberRemoval />
-      <TestBigIntStatic />
-      <TestBigIntObservable />
-      <TestBigIntFunction />
-      <TestBigIntRemoval />
-      <TestStringStatic />
-      <TestStringObservable />
-      <TestStringObservableStatic />
-      <TestStringObservableDeepStatic />
-      <TestStringFunction />
-      <TestStringRemoval />
-      <TestAttributeStatic />
-      <TestAttributeObservable />
-      <TestAttributeObservableBoolean />
-      <TestAttributeFunction />
-      <TestAttributeFunctionBoolean />
-      <TestAttributeRemoval />
+      <TestSnapshots Component={TestNullStatic} />
+      <TestSnapshots Component={TestNullObservable} />
+      <TestSnapshots Component={TestNullFunction} />
+      {/* <TestSnapshots Component={TestNullRemoval} /> */}
+      <TestSnapshots Component={TestUndefinedStatic} />
+      <TestSnapshots Component={TestUndefinedObservable} />
+      <TestSnapshots Component={TestUndefinedFunction} />
+      {/* <TestSnapshots Component={TestUndefinedRemoval} /> */}
+      <TestSnapshots Component={TestBooleanStatic} />
+      <TestSnapshots Component={TestBooleanObservable} />
+      <TestSnapshots Component={TestBooleanFunction} />
+      {/* <TestSnapshots Component={TestBooleanRemoval} /> */}
+      <TestSnapshots Component={TestSymbolStatic} />
+      <TestSnapshots Component={TestSymbolObservable} />
+      <TestSnapshots Component={TestSymbolFunction} />
+      {/* <TestSnapshots Component={TestSymbolRemoval} /> */}
+      <TestSnapshots Component={TestNumberStatic} />
+      <TestSnapshots Component={TestNumberObservable} />
+      <TestSnapshots Component={TestNumberFunction} />
+      {/* <TestSnapshots Component={TestNumberRemoval} /> */}
+      <TestSnapshots Component={TestBigIntStatic} />
+      <TestSnapshots Component={TestBigIntObservable} />
+      <TestSnapshots Component={TestBigIntFunction} />
+      {/* <TestSnapshots Component={TestBigIntRemoval} /> */}
+      <TestSnapshots Component={TestStringStatic} />
+      <TestSnapshots Component={TestStringObservable} />
+      <TestSnapshots Component={TestStringObservableStatic} />
+      <TestSnapshots Component={TestStringObservableDeepStatic} />
+      <TestSnapshots Component={TestStringFunction} />
+      <TestSnapshots Component={TestStringRemoval} />
+      <TestSnapshots Component={TestAttributeStatic} />
+      <TestSnapshots Component={TestAttributeObservable} />
+      <TestSnapshots Component={TestAttributeObservableBoolean} />
+      <TestSnapshots Component={TestAttributeFunction} />
+      <TestSnapshots Component={TestAttributeFunctionBoolean} />
+      <TestSnapshots Component={TestAttributeRemoval} />
       <TestPropertyCheckedStatic />
       <TestPropertyCheckedObservable />
       <TestPropertyCheckedFunction />
@@ -3079,55 +4374,55 @@ const Test = (): JSX.Element => {
       <TestPropertyValueFunction />
       <TestPropertyValueRemoval />
       <TestInputLabelFor />
-      <TestClassNameStatic />
-      <TestClassNameObservable />
-      <TestClassNameFunction />
-      <TestClassNameRemoval />
-      <TestClassStatic />
-      <TestClassStaticString />
-      <TestClassObservable />
-      <TestClassObservableString />
-      <TestClassFunction />
-      <TestClassFunctionString />
-      <TestClassRemoval />
-      <TestClassRemovalString />
-      <TestClassesStatic />
-      <TestClassesObservable />
-      <TestClassesFunction />
-      <TestClassesRemoval />
-      <TestClassesCleanup />
-      <TestStyleStatic />
-      <TestStyleStaticNumeric />
-      <TestStyleStaticString />
-      <TestStyleStaticVariable />
-      <TestStyleObservable />
-      <TestStyleObservableNumeric />
-      <TestStyleObservableString />
-      <TestStyleObservableVariable />
-      <TestStyleFunction />
-      <TestStyleFunctionNumeric />
-      <TestStyleFunctionString />
-      <TestStyleFunctionVariable />
-      <TestStyleRemoval />
-      <TestStylesStatic />
-      <TestStylesObservable />
-      <TestStylesFunction />
-      <TestStylesRemoval />
-      <TestStylesCleanup />
-      <TestHTMLInnerHTMLStatic />
-      <TestHTMLInnerHTMLObservable />
-      <TestHTMLInnerHTMLFunction />
-      <TestHTMLOuterHTMLStatic />
-      <TestHTMLOuterHTMLObservable />
-      <TestHTMLOuterHTMLFunction />
-      <TestHTMLTextContentStatic />
-      <TestHTMLTextContentObservable />
-      <TestHTMLTextContentFunction />
-      <TestHTMLDangerouslySetInnerHTMLStatic />
-      <TestHTMLDangerouslySetInnerHTMLObservable />
-      <TestHTMLDangerouslySetInnerHTMLObservableString />
-      <TestHTMLDangerouslySetInnerHTMLFunction />
-      <TestHTMLDangerouslySetInnerHTMLFunctionString />
+      <TestSnapshots Component={TestClassNameStatic} />
+      <TestSnapshots Component={TestClassNameObservable} />
+      <TestSnapshots Component={TestClassNameFunction} />
+      <TestSnapshots Component={TestClassNameRemoval} />
+      <TestSnapshots Component={TestClassStatic} />
+      <TestSnapshots Component={TestClassStaticString} />
+      <TestSnapshots Component={TestClassObservable} />
+      <TestSnapshots Component={TestClassObservableString} />
+      <TestSnapshots Component={TestClassFunction} />
+      <TestSnapshots Component={TestClassFunctionString} />
+      <TestSnapshots Component={TestClassRemoval} />
+      <TestSnapshots Component={TestClassRemovalString} />
+      <TestSnapshots Component={TestClassesStatic} />
+      <TestSnapshots Component={TestClassesObservable} />
+      <TestSnapshots Component={TestClassesFunction} />
+      <TestSnapshots Component={TestClassesRemoval} />
+      <TestSnapshots Component={TestClassesCleanup} />
+      <TestSnapshots Component={TestStyleStatic} />
+      <TestSnapshots Component={TestStyleStaticNumeric} />
+      <TestSnapshots Component={TestStyleStaticString} />
+      <TestSnapshots Component={TestStyleStaticVariable} />
+      <TestSnapshots Component={TestStyleObservable} />
+      <TestSnapshots Component={TestStyleObservableNumeric} />
+      <TestSnapshots Component={TestStyleObservableString} />
+      <TestSnapshots Component={TestStyleObservableVariable} />
+      <TestSnapshots Component={TestStyleFunction} />
+      <TestSnapshots Component={TestStyleFunctionNumeric} />
+      <TestSnapshots Component={TestStyleFunctionString} />
+      <TestSnapshots Component={TestStyleFunctionVariable} />
+      <TestSnapshots Component={TestStyleRemoval} />
+      <TestSnapshots Component={TestStylesStatic} />
+      <TestSnapshots Component={TestStylesObservable} />
+      <TestSnapshots Component={TestStylesFunction} />
+      <TestSnapshots Component={TestStylesRemoval} />
+      <TestSnapshots Component={TestStylesCleanup} />
+      <TestSnapshots Component={TestHTMLInnerHTMLStatic} />
+      <TestSnapshots Component={TestHTMLInnerHTMLObservable} />
+      <TestSnapshots Component={TestHTMLInnerHTMLFunction} />
+      <TestSnapshots Component={TestHTMLOuterHTMLStatic} />
+      <TestSnapshots Component={TestHTMLOuterHTMLObservable} />
+      <TestSnapshots Component={TestHTMLOuterHTMLFunction} />
+      <TestSnapshots Component={TestHTMLTextContentStatic} />
+      <TestSnapshots Component={TestHTMLTextContentObservable} />
+      <TestSnapshots Component={TestHTMLTextContentFunction} />
+      <TestSnapshots Component={TestHTMLDangerouslySetInnerHTMLStatic} />
+      <TestSnapshots Component={TestHTMLDangerouslySetInnerHTMLObservable} />
+      <TestSnapshots Component={TestHTMLDangerouslySetInnerHTMLObservableString} />
+      <TestSnapshots Component={TestHTMLDangerouslySetInnerHTMLFunction} />
+      <TestSnapshots Component={TestHTMLDangerouslySetInnerHTMLFunctionString} />
       <TestEventClickStatic />
       <TestEventClickObservable />
       <TestEventClickRemoval />
@@ -3140,94 +4435,95 @@ const Test = (): JSX.Element => {
       <TestEventEnterStopPropagation />
       <TestEventEnterStopImmediatePropagation />
       <TestEventEnterAndEnterCaptureStatic />
-      <TestABCD />
-      <TestCleanupInner />
-      <TestCleanupInnerPortal />
-      <TestDynamicHeading />
-      <TestDynamicObservableComponent />
-      <TestDynamicObservableProps />
-      <TestDynamicObservableChildren />
-      <TestIfStatic />
-      <TestIfObservable />
-      <TestIfFunction />
-      <TestIfChildrenObservableStatic />
-      <TestIfChildrenFunction />
-      <TestIfFallbackStatic />
-      <TestIfFallbackObservable />
-      <TestIfFallbackObservableStatic />
-      <TestIfFallbackFunction />
-      {/* <TestIfRace /> */}
-      <TestTernaryStatic />
-      <TestTernaryStaticInline />
-      <TestTernaryObservable />
-      <TestTernaryObservableChildren />
-      <TestTernaryFunction />
-      <TestTernaryChildrenObservableStatic />
-      <TestTernaryChildrenFunction />
-      <TestSwitchStatic />
-      <TestSwitchObservable />
+      <TestSnapshots Component={TestABCD} />
+      <TestSnapshots Component={TestCleanupInner} />
+      <TestSnapshots Component={TestCleanupInnerPortal} />
+      <TestSnapshots Component={TestDynamicHeading} />
+      <TestSnapshots Component={TestDynamicObservableComponent} />
+      <TestSnapshots Component={TestDynamicObservableProps} />
+      <TestSnapshots Component={TestDynamicObservableChildren} />
+      <TestSnapshots Component={TestIfStatic} />
+      <TestSnapshots Component={TestIfObservable} />
+      <TestSnapshots Component={TestIfFunction} />
+      <TestSnapshots Component={TestIfChildrenObservableStatic} />
+      <TestSnapshots Component={TestIfChildrenFunction} />
+      <TestSnapshots Component={TestIfFallbackStatic} />
+      <TestSnapshots Component={TestIfFallbackObservable} />
+      <TestSnapshots Component={TestIfFallbackObservableStatic} />
+      <TestSnapshots Component={TestIfFallbackFunction} />
+      {/* <TestSnapshots Component={TestIfRace} /> */}
+      <TestSnapshots Component={TestTernaryStatic} />
+      <TestSnapshots Component={TestTernaryStaticInline} />
+      <TestSnapshots Component={TestTernaryObservable} />
+      <TestSnapshots Component={TestTernaryObservableChildren} />
+      <TestSnapshots Component={TestTernaryFunction} />
+      <TestSnapshots Component={TestTernaryChildrenObservableStatic} />
+      <TestSnapshots Component={TestTernaryChildrenFunction} />
+      <TestSnapshots Component={TestSwitchStatic} />
+      <TestSnapshots Component={TestSwitchObservable} />
       <TestSwitchObservableComplex />
-      <TestSwitchFunction />
-      <TestSwitchCaseObservableStatic />
-      <TestSwitchCaseFunction />
-      <TestSwitchDefaultObservableStatic />
-      <TestSwitchDefaultFunction />
-      <TestComponentStatic />
-      <TestComponentStaticProps value={123} />
-      <TestComponentStaticRenderProps value={123} />
-      <TestComponentObservable />
-      <TestComponentFunction />
-      <TestForStatic />
-      <TestForObservables />
-      <TestForObservablesStatic />
+      <TestSnapshots Component={TestSwitchFunction} />
+      <TestSnapshots Component={TestSwitchCaseObservableStatic} />
+      <TestSnapshots Component={TestSwitchCaseFunction} />
+      <TestSnapshots Component={TestSwitchDefaultObservableStatic} />
+      <TestSnapshots Component={TestSwitchDefaultFunction} />
+      <TestSnapshots Component={TestComponentStatic} />
+      <TestSnapshots Component={TestComponentStaticProps} props={{ value: random () }} />
+      <TestSnapshots Component={TestComponentStaticRenderProps} props={{ value: random () }} />
+      <TestSnapshots Component={TestComponentObservable} />
+      <TestSnapshots Component={TestComponentFunction} />
+      <TestSnapshots Component={TestForStatic} />
+      <TestSnapshots Component={TestForObservables} />
+      <TestSnapshots Component={TestForObservablesStatic} />
       <TestForObservableObservables />
-      <TestForFunctionObservables />
-      <TestForRandom />
-      <TestForFallbackStatic />
-      <TestForFallbackObservable />
-      <TestForFallbackObservableStatic />
-      <TestForFallbackFunction />
-      <TestFragmentStatic />
-      <TestFragmentStaticComponent />
-      <TestFragmentStaticDeep />
-      <TestErrorBoundary />
-      <TestErrorBoundaryChildrenObservableStatic />
-      <TestErrorBoundaryChildrenFunction />
-      <TestErrorBoundaryFallbackObservableStatic />
-      <TestErrorBoundaryFallbackFunction />
-      <TestChildren />
-      <TestRef />
-      <TestRefs />
-      <TestRefUnmounting />
-      <TestSVGStatic />
+      <TestSnapshots Component={TestForFunctionObservables} />
+      <TestSnapshots Component={TestForRandom} />
+      <TestSnapshots Component={TestForFallbackStatic} />
+      <TestSnapshots Component={TestForFallbackObservable} />
+      <TestSnapshots Component={TestForFallbackObservableStatic} />
+      <TestSnapshots Component={TestForFallbackFunction} />
+      <TestSnapshots Component={TestFragmentStatic} />
+      <TestSnapshots Component={TestFragmentStaticComponent} />
+      <TestSnapshots Component={TestFragmentStaticDeep} />
+      <TestSnapshots Component={TestErrorBoundary} />
+      <TestSnapshots Component={TestErrorBoundaryChildrenObservableStatic} />
+      <TestSnapshots Component={TestErrorBoundaryChildrenFunction} />
+      <TestSnapshots Component={TestErrorBoundaryFallbackObservableStatic} />
+      <TestSnapshots Component={TestErrorBoundaryFallbackFunction} />
+      <TestSnapshots Component={TestChildren} />
+      <TestSnapshots Component={TestRef} />
+      <TestSnapshots Component={TestRefs} />
+      <TestSnapshots Component={TestRefUnmounting} />
+      <TestSnapshots Component={TestPromiseResolved} />
+      <TestSnapshots Component={TestPromiseRejected} />
+      <TestSnapshots Component={TestSVGStatic} />
       <TestSVGStaticComplex />
-      <TestSVGStaticCamelCase />
-      <TestSVGObservable />
-      <TestSVGFunction />
-      <TestSVGStyleObject />
-      <TestSVGStyleString />
-      <TestSVGClassObject />
-      <TestSVGClassString />
-      <TestSVGClassNameString />
-      <TestTemplateExternal />
-      <TestTemplateSVG />
-      <TestPromise />
-      <TestContextComponents />
-      <TestContextHook />
-      <TestPortalStatic />
-      <TestPortalObservable />
-      <TestPortalRemoval />
-      <TestSuspenseAlways />
-      <TestSuspenseNever />
-      <TestSuspenseObservable />
-      <TestSuspenseWhen />
-      <TestSuspenseAlive />
-      <TestSuspenseChildrenObservableStatic />
-      <TestSuspenseChildrenFunction />
-      <TestSuspenseFallbackObservableStatic />
-      <TestSuspenseFallbackFunction />
-      <TestSuspenseCleanup />
-      <TestLazy />
+      <TestSnapshots Component={TestSVGStaticCamelCase} />
+      <TestSnapshots Component={TestSVGObservable} />
+      <TestSnapshots Component={TestSVGFunction} />
+      <TestSnapshots Component={TestSVGStyleObject} />
+      <TestSnapshots Component={TestSVGStyleString} />
+      <TestSnapshots Component={TestSVGClassObject} />
+      <TestSnapshots Component={TestSVGClassString} />
+      <TestSnapshots Component={TestSVGClassNameString} />
+      <TestSnapshots Component={TestTemplateExternal} />
+      <TestSnapshots Component={TestTemplateSVG} />
+      <TestSnapshots Component={TestContextComponents} />
+      <TestSnapshots Component={TestContextHook} />
+      <TestSnapshots Component={TestPortalStatic} />
+      <TestSnapshots Component={TestPortalObservable} />
+      <TestSnapshots Component={TestPortalRemoval} />
+      <TestSnapshots Component={TestSuspenseAlways} />
+      <TestSnapshots Component={TestSuspenseNever} />
+      <TestSnapshots Component={TestSuspenseObservable} />
+      <TestSnapshots Component={TestSuspenseWhen} />
+      <TestSnapshots Component={TestSuspenseAlive} />
+      <TestSnapshots Component={TestSuspenseChildrenObservableStatic} />
+      <TestSnapshots Component={TestSuspenseChildrenFunction} />
+      <TestSnapshots Component={TestSuspenseFallbackObservableStatic} />
+      <TestSnapshots Component={TestSuspenseFallbackFunction} />
+      <TestSnapshots Component={TestSuspenseCleanup} />
+      <TestSnapshots Component={TestLazy} />
       <hr />
     </>
   );
