@@ -194,7 +194,6 @@ Usage:
 
 ```tsx
 import {createDirective, useEffect} from 'voby';
-import type {ObservableReadonly} from 'voby';
 
 // First of all if you are using TypeScript you should extend the "JSX.Directives" interface, so that TypeScript will know about your new directive
 
