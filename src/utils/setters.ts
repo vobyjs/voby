@@ -15,9 +15,10 @@ import type {Child, EventListener, FunctionMaybe, ObservableMaybe, Ref, Template
 
 const setAttributeStatic = ( element: HTMLElement, key: string, value: null | undefined | boolean | number | string ): void => {
 
+  key = ( key === 'className' ) ? 'class' : key;
+
   if ( isSVG ( element ) ) {
 
-    key = ( key === 'className' ) ? 'class' : key;
     key = ( key === 'xlinkHref' || key === 'xlink:href' ) ? 'href' : key;
 
     element.setAttribute ( key, String ( value ) );
@@ -501,7 +502,13 @@ const setPropertyStatic = ( element: HTMLElement, key: string, value: null | und
 
   if ( key === 'className' || key === 'id' ) {
 
-    element.className = String ( value ?? '' );
+    element[key] = String ( value ?? '' );
+
+    if ( isNil ( value ) ) {
+
+      setAttributeStatic ( element, key, null );
+
+    }
 
   } else {
 
