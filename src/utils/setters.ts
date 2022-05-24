@@ -499,7 +499,7 @@ const setHTML = ( element: HTMLElement, value: FunctionMaybe<{ __html: FunctionM
 
 const setPropertyStatic = ( element: HTMLElement, key: string, value: null | undefined | boolean | number | string ): void => {
 
-  if ( key === 'className' ) {
+  if ( key === 'className' || key === 'id' ) {
 
     element.className = String ( value ?? '' );
 
