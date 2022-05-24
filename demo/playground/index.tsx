@@ -13,9 +13,12 @@ globalThis.Voby = Voby;
 
 const TEST_INTERVAL = 500; // Lowering this makes it easier to spot some memory leaks
 
+const random = Math.random;
+
 /* MAIN */
 
 //TODO: Test that error boundaries wrapped around built-in components work
+//TODO: Test template with all sorts of supported props
 
 const TestNullStatic = (): JSX.Element => {
   return (
@@ -207,8 +210,8 @@ const TestNumberStatic = (): JSX.Element => {
 };
 
 const TestNumberObservable = (): JSX.Element => {
-  const o = $( Math.random () );
-  const randomize = () => o ( Math.random () );
+  const o = $( random () );
+  const randomize = () => o ( random () );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -219,8 +222,8 @@ const TestNumberObservable = (): JSX.Element => {
 };
 
 const TestNumberFunction = (): JSX.Element => {
-  const o = $( Math.random () );
-  const randomize = () => o ( Math.random () );
+  const o = $( random () );
+  const randomize = () => o ( random () );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -231,8 +234,8 @@ const TestNumberFunction = (): JSX.Element => {
 };
 
 const TestNumberRemoval = (): JSX.Element => {
-  const o = $( Math.random () );
-  const randomize = () => o ( prev => prev ? null : Math.random () );
+  const o = $( random () );
+  const randomize = () => o ( prev => prev ? null : random () );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -252,8 +255,8 @@ const TestBigIntStatic = (): JSX.Element => {
 };
 
 const TestBigIntObservable = (): JSX.Element => {
-  const o = $( BigInt ( Math.random () * 100 | 0 ) );
-  const randomize = () => o ( BigInt ( Math.random () * 100 | 0 ) );
+  const o = $( BigInt ( random () * 100 | 0 ) );
+  const randomize = () => o ( BigInt ( random () * 100 | 0 ) );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -264,8 +267,8 @@ const TestBigIntObservable = (): JSX.Element => {
 };
 
 const TestBigIntFunction = (): JSX.Element => {
-  const o = $( BigInt ( Math.random () * 100 | 0 ) );
-  const randomize = () => o ( BigInt ( Math.random () * 100 | 0 ) );
+  const o = $( BigInt ( random () * 100 | 0 ) );
+  const randomize = () => o ( BigInt ( random () * 100 | 0 ) );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -276,8 +279,8 @@ const TestBigIntFunction = (): JSX.Element => {
 };
 
 const TestBigIntRemoval = (): JSX.Element => {
-  const o = $( BigInt ( Math.random () * 100 | 0 ) );
-  const randomize = () => o ( prev => prev ? null : BigInt ( Math.random () * 100 | 0 ) );
+  const o = $( BigInt ( random () * 100 | 0 ) );
+  const randomize = () => o ( prev => prev ? null : BigInt ( random () * 100 | 0 ) );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -297,8 +300,8 @@ const TestStringStatic = (): JSX.Element => {
 };
 
 const TestStringObservable = (): JSX.Element => {
-  const o = $( String ( Math.random () ) );
-  const randomize = () => o ( String ( Math.random () ) );
+  const o = $( String ( random () ) );
+  const randomize = () => o ( String ( random () ) );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -309,8 +312,8 @@ const TestStringObservable = (): JSX.Element => {
 };
 
 const TestStringObservableStatic = (): JSX.Element => {
-  const o = $( String ( Math.random () ) );
-  const randomize = () => o ( String ( Math.random () ) );
+  const o = $( String ( random () ) );
+  const randomize = () => o ( String ( random () ) );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -323,8 +326,8 @@ const TestStringObservableStatic = (): JSX.Element => {
 const TestStringObservableDeepStatic = (): JSX.Element => {
   return useComputed ( () => {
     const Deep = (): JSX.Element => {
-      const o = $( String ( Math.random () ) );
-      const randomize = () => o ( String ( Math.random () ) );
+      const o = $( String ( random () ) );
+      const randomize = () => o ( String ( random () ) );
       useInterval ( randomize, TEST_INTERVAL );
       return (
         <>
@@ -338,8 +341,8 @@ const TestStringObservableDeepStatic = (): JSX.Element => {
 };
 
 const TestStringFunction = (): JSX.Element => {
-  const o = $( String ( Math.random () ) );
-  const randomize = () => o ( String ( Math.random () ) );
+  const o = $( String ( random () ) );
+  const randomize = () => o ( String ( random () ) );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -350,8 +353,8 @@ const TestStringFunction = (): JSX.Element => {
 };
 
 const TestStringRemoval = (): JSX.Element => {
-  const o = $( String ( Math.random () ) );
-  const randomize = () => o ( prev => prev ? null : String ( Math.random () ) );
+  const o = $( String ( random () ) );
+  const randomize = () => o ( prev => prev ? null : String ( random () ) );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -485,8 +488,8 @@ const TestPropertyValueStatic = (): JSX.Element => {
 };
 
 const TestPropertyValueObservable = (): JSX.Element => {
-  const o = $( String ( Math.random () ) );
-  const randomize = () => o ( String ( Math.random () ) );
+  const o = $( String ( random () ) );
+  const randomize = () => o ( String ( random () ) );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -497,8 +500,8 @@ const TestPropertyValueObservable = (): JSX.Element => {
 };
 
 const TestPropertyValueFunction = (): JSX.Element => {
-  const o = $( String ( Math.random () ) );
-  const randomize = () => o ( String ( Math.random () ) );
+  const o = $( String ( random () ) );
+  const randomize = () => o ( String ( random () ) );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -509,8 +512,8 @@ const TestPropertyValueFunction = (): JSX.Element => {
 };
 
 const TestPropertyValueRemoval = (): JSX.Element => {
-  const o = $( String ( Math.random () ) );
-  const randomize = () => o ( prev => prev ? null : String ( Math.random () ) );
+  const o = $( String ( random () ) );
+  const randomize = () => o ( prev => prev ? null : String ( random () ) );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -521,8 +524,8 @@ const TestPropertyValueRemoval = (): JSX.Element => {
 };
 
 const TestInputLabelFor = (): JSX.Element => {
-  const o = $( String ( Math.random () ) );
-  const randomize = () => o ( prev => prev ? null : String ( Math.random () ) );
+  const o = $( String ( random () ) );
+  const randomize = () => o ( prev => prev ? null : String ( random () ) );
   useInterval ( randomize, TEST_INTERVAL );
   return (
     <>
@@ -1390,8 +1393,8 @@ const TestDynamicObservableProps = (): JSX.Element => {
 };
 
 const TestDynamicObservableChildren = (): JSX.Element => {
-  const o = $(Math.random ());
-  const update = () => o ( Math.random () );
+  const o = $(random ());
+  const update = () => o ( random () );
   useInterval ( update, TEST_INTERVAL );
   return (
     <>
@@ -1443,8 +1446,8 @@ const TestIfFunction = (): JSX.Element => {
 
 const TestIfChildrenObservableStatic = (): JSX.Element => {
   const Content = () => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>{o ()}</p>
@@ -1459,8 +1462,8 @@ const TestIfChildrenObservableStatic = (): JSX.Element => {
 
 const TestIfChildrenFunction = (): JSX.Element => {
   const Content = () => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>{o ()}</p>
@@ -1484,8 +1487,8 @@ const TestIfFallbackStatic = (): JSX.Element => {
 
 const TestIfFallbackObservable = (): JSX.Element => {
   const Fallback = () => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     return <p>Fallback: {o}</p>
   };
@@ -1499,8 +1502,8 @@ const TestIfFallbackObservable = (): JSX.Element => {
 
 const TestIfFallbackObservableStatic = (): JSX.Element => {
   const Fallback = () => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>Fallback: {o ()}</p>
@@ -1515,8 +1518,8 @@ const TestIfFallbackObservableStatic = (): JSX.Element => {
 
 const TestIfFallbackFunction = (): JSX.Element => {
   const Fallback = () => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>Fallback: {o ()}</p>
@@ -1637,15 +1640,15 @@ const TestTernaryFunction = (): JSX.Element => {
 
 const TestTernaryChildrenObservableStatic = (): JSX.Element => {
   const True = () => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>True: {o ()}</p>
   };
   const False = () => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>False: {o ()}</p>
@@ -1667,15 +1670,15 @@ const TestTernaryChildrenObservableStatic = (): JSX.Element => {
 
 const TestTernaryChildrenFunction = (): JSX.Element => {
   const True = () => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>True: {o ()}</p>
   };
   const False = () => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>False: {o ()}</p>
@@ -1819,8 +1822,8 @@ const TestSwitchFunction = (): JSX.Element => {
 
 const TestSwitchCaseObservableStatic = (): JSX.Element => {
   const Case = () => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>Case: {o ()}</p>
@@ -1842,8 +1845,8 @@ const TestSwitchCaseObservableStatic = (): JSX.Element => {
 
 const TestSwitchCaseFunction = (): JSX.Element => {
   const Case = () => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>Case: {o ()}</p>
@@ -1865,8 +1868,8 @@ const TestSwitchCaseFunction = (): JSX.Element => {
 
 const TestSwitchDefaultObservableStatic = (): JSX.Element => {
   const Default = () => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>Default: {o ()}</p>
@@ -1888,8 +1891,8 @@ const TestSwitchDefaultObservableStatic = (): JSX.Element => {
 
 const TestSwitchDefaultFunction = (): JSX.Element => {
   const Default = () => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>Default: {o ()}</p>
@@ -1944,7 +1947,7 @@ class TestComponentStaticRenderProps extends Component<{ value: number }> {
 
 class TestComponentObservable extends Component<{}> {
   getRandom (): number {
-    return Math.random ();
+    return random ();
   }
   render (): JSX.Element {
     const o = $( this.getRandom () );
@@ -1961,7 +1964,7 @@ class TestComponentObservable extends Component<{}> {
 
 class TestComponentFunction extends Component<{}> {
   getRandom (): number {
-    return Math.random ();
+    return random ();
   }
   render (): JSX.Element {
     const o = $( this.getRandom () );
@@ -2043,7 +2046,7 @@ const TestForObservableObservables = (): JSX.Element => {
   useInterval ( () => v3 ( v3 () + 1 ), TEST_INTERVAL );
   useInterval ( () => v4 ( v4 () + 1 ), TEST_INTERVAL );
   useInterval ( () => v5 ( v5 () + 1 ), TEST_INTERVAL );
-  useInterval ( () => values ( values ().slice ().sort ( () => .5 - Math.random () ) ), TEST_INTERVAL );
+  useInterval ( () => values ( values ().slice ().sort ( () => .5 - random () ) ), TEST_INTERVAL );
   return (
     <>
       <h3>For - Observable Observables</h3>
@@ -2077,8 +2080,8 @@ const TestForFunctionObservables = (): JSX.Element => {
 };
 
 const TestForRandom = (): JSX.Element => {
-  const values = $([Math.random (), Math.random (), Math.random ()]);
-  const update = () => values ( [Math.random (), Math.random (), Math.random ()] );
+  const values = $([random (), random (), random ()]);
+  const update = () => values ( [random (), random (), random ()] );
   useInterval ( update, TEST_INTERVAL );
   return (
     <>
@@ -2107,8 +2110,8 @@ const TestForFallbackStatic = (): JSX.Element => {
 
 const TestForFallbackObservable = (): JSX.Element => {
   const Fallback = () => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     return (
       <>
@@ -2130,8 +2133,8 @@ const TestForFallbackObservable = (): JSX.Element => {
 
 const TestForFallbackObservableStatic = (): JSX.Element => {
   const Fallback = () => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return (
@@ -2154,8 +2157,8 @@ const TestForFallbackObservableStatic = (): JSX.Element => {
 
 const TestForFallbackFunction = (): JSX.Element => {
   const Fallback = () => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return (
@@ -2267,8 +2270,8 @@ const TestChildren = (): JSX.Element => {
 
 const TestErrorBoundaryChildrenObservableStatic = (): JSX.Element => {
   const Children = (): JSX.Element => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>Children: {o ()}</p>
@@ -2288,8 +2291,8 @@ const TestErrorBoundaryChildrenObservableStatic = (): JSX.Element => {
 
 const TestErrorBoundaryChildrenFunction = (): JSX.Element => {
   const Children = (): JSX.Element => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>Children: {o ()}</p>
@@ -2312,8 +2315,8 @@ const TestErrorBoundaryFallbackObservableStatic = (): JSX.Element => {
     throw new Error ();
   };
   const Fallback = (): JSX.Element => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>Fallback: {o ()}</p>
@@ -2333,8 +2336,8 @@ const TestErrorBoundaryFallbackFunction = (): JSX.Element => {
     throw new Error ();
   };
   const Fallback = (): JSX.Element => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>Fallback: {o ()}</p>
@@ -2426,7 +2429,7 @@ const TestPromise = (): JSX.Element => {
 };
 
 const TestSVGStatic = (): JSX.Element => {
-  const getColor = () => `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
+  const getColor = () => `#${Math.floor ( random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
   return (
     <>
       <h3>SVG - Static</h3>
@@ -2486,7 +2489,7 @@ const TestSVGStaticComplex = (): JSX.Element => {
 };
 
 const TestSVGStaticCamelCase = (): JSX.Element => {
-  const getColor = () => `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
+  const getColor = () => `#${Math.floor ( random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
   return (
     <>
       <h3>SVG - Static CamelCase</h3>
@@ -2498,7 +2501,7 @@ const TestSVGStaticCamelCase = (): JSX.Element => {
 };
 
 const TestSVGObservable = (): JSX.Element => {
-  const getColor = () => `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
+  const getColor = () => `#${Math.floor ( random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
   const color = $(getColor ());
   const update = () => color ( getColor () );
   useInterval ( update, TEST_INTERVAL / 2 );
@@ -2513,7 +2516,7 @@ const TestSVGObservable = (): JSX.Element => {
 };
 
 const TestSVGFunction = (): JSX.Element => {
-  const getColor = () => `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
+  const getColor = () => `#${Math.floor ( random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
   const color = $(getColor ());
   const update = () => color ( getColor () );
   useInterval ( update, TEST_INTERVAL / 2 );
@@ -2600,7 +2603,7 @@ const TestTemplateExternal = (): JSX.Element => {
 };
 
 const TestTemplateSVG = (): JSX.Element => {
-  const getColor = () => `#${Math.floor ( Math.random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
+  const getColor = () => `#${Math.floor ( random () * 0xFFFFFF ).toString ( 16 ).padStart ( 6, '0' )}`;
   const color = $(getColor ());
   const update = () => color ( getColor () );
   useInterval ( update, TEST_INTERVAL / 2 );
@@ -2618,8 +2621,6 @@ const TestTemplateSVG = (): JSX.Element => {
     </>
   );
 };
-
-//TODO: Test template with all sorts of supported props
 
 const TestContextComponents = (): JSX.Element => {
   const Context = createContext ();
@@ -2671,7 +2672,7 @@ const TestContextHook = (): JSX.Element => {
 
 const TestRenderToString = async (): Promise<string> => {
   const App = (): JSX.Element => {
-    const o = $( String ( Math.random () ) );
+    const o = $( String ( random () ) );
     return (
       <div>
         <h3>renderToString</h3>
@@ -2691,7 +2692,7 @@ const TestRenderToStringSuspense = async (): Promise<string> => {
       useResource ( () => {
         return new Promise<number> ( resolve => {
           setTimeout ( () => {
-            resolve ( o ( Math.random () ) );
+            resolve ( o ( random () ) );
           }, TEST_INTERVAL );
         });
       });
@@ -2867,10 +2868,10 @@ const TestSuspenseWhen = (): JSX.Element => {
 
 const TestSuspenseAlive = (): JSX.Element => {
   const Fallback = () => {
-    return <p>Loading ({Math.random ()})...</p>;
+    return <p>Loading ({random ()})...</p>;
   };
   const Content = () => {
-    return <p>Content ({Math.random ()})!</p>;
+    return <p>Content ({random ()})!</p>;
   };
   const o = $(true);
   const toggle = () => o ( prev => !prev );
@@ -2887,8 +2888,8 @@ const TestSuspenseAlive = (): JSX.Element => {
 
 const TestSuspenseChildrenObservableStatic = (): JSX.Element => {
   const Children = (): JSX.Element => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>Children: {o ()}</p>
@@ -2908,8 +2909,8 @@ const TestSuspenseChildrenObservableStatic = (): JSX.Element => {
 
 const TestSuspenseChildrenFunction = (): JSX.Element => {
   const Children = (): JSX.Element => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>Children: {o ()}</p>
@@ -2935,8 +2936,8 @@ const TestSuspenseFallbackObservableStatic = (): JSX.Element => {
     return <p>children</p>;
   };
   const Fallback = (): JSX.Element => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>Fallback: {o ()}</p>
@@ -2959,8 +2960,8 @@ const TestSuspenseFallbackFunction = (): JSX.Element => {
     return <p>children</p>;
   };
   const Fallback = (): JSX.Element => {
-    const o = $( String ( Math.random () ) );
-    const randomize = () => o ( String ( Math.random () ) );
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
     o ();
     return <p>Fallback: {o ()}</p>
