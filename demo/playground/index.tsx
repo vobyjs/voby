@@ -699,7 +699,7 @@ const TestAttributeObservableBoolean = (): JSX.Element => {
 TestAttributeObservableBoolean.test = {
   snapshots: [
     '<p data-red="">content</p>',
-    '<p>content</p>'
+    '<p data-red="false">content</p>'
   ]
 };
 
@@ -736,7 +736,7 @@ const TestAttributeFunctionBoolean = (): JSX.Element => {
 
 TestAttributeFunctionBoolean.test = {
   snapshots: [
-    '<p>content</p>',
+    '<p data-red="false">content</p>',
     '<p data-red="">content</p>'
   ]
 };

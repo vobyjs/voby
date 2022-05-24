@@ -37,7 +37,7 @@ const setAttributeStatic = (() => {
 
     } else {
 
-      if ( isNil ( value ) || value === false ) {
+      if ( isNil ( value ) ) {
 
         element.removeAttribute ( key );
 
