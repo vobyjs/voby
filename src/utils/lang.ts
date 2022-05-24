@@ -110,6 +110,12 @@ const isTemplateAccessor = ( value: unknown ): value is TemplateActionProxy => {
 
 };
 
+const isVoidChild = ( value: unknown ): value is null | undefined | symbol | boolean => {
+
+  return value === null || value === undefined || typeof value === 'boolean' || typeof value === 'symbol';
+
+};
+
 const noop = (): void => {};
 
 const once = <T> ( fn: () => T ): (() => T) => {
@@ -134,4 +140,4 @@ const once = <T> ( fn: () => T ): (() => T) => {
 
 /* EXPORT */
 
-export {assign, castArray, castError, flatten, indexOf, isArray, isError, isFunction, isNil, isNode, isPrimitive, isPromise, isString, isSVG, isTemplateAccessor, noop, once};
+export {assign, castArray, castError, flatten, indexOf, isArray, isError, isFunction, isNil, isNode, isPrimitive, isPromise, isString, isSVG, isTemplateAccessor, isVoidChild, noop, once};

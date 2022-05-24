@@ -5,7 +5,7 @@ import BaseComponent from '~/components/component';
 import {SVG_ELEMENTS} from '~/constants';
 import wrapElement from '~/methods/wrap_element';
 import {createHTMLNode, createSVGNode} from '~/utils/creators';
-import {isFunction, isNil, isNode, isString} from '~/utils/lang';
+import {isFunction, isNil, isNode, isString, isVoidChild} from '~/utils/lang';
 import {setProps, setRef} from '~/utils/setters';
 import type {Child, Component, Element, Props} from '~/types';
 
@@ -36,7 +36,7 @@ const createElement = <P = {}> ( component: Component<P>, props?: Props | null, 
 
       const props = rest;
 
-      if ( !isNil ( children ) ) props.children = children;
+      if ( !isVoidChild ( children ) ) props.children = children;
 
       return wrapElement.bind ( (): Child => {
 
@@ -53,7 +53,7 @@ const createElement = <P = {}> ( component: Component<P>, props?: Props | null, 
 
       const props = rest;
 
-      if ( !isNil ( children ) ) props.children = children;
+      if ( !isVoidChild ( children ) ) props.children = children;
       if ( !isNil ( ref ) ) props.ref = ref;
 
       return wrapElement.bind ( component.bind ( undefined, props as P ) ); //TSC
@@ -66,7 +66,7 @@ const createElement = <P = {}> ( component: Component<P>, props?: Props | null, 
     const isSVG = SVG_ELEMENTS.has ( component );
     const createNode = isSVG ? createSVGNode : createHTMLNode;
 
-    if ( !isNil ( children ) ) props.children = children;
+    if ( !isVoidChild ( children ) ) props.children = children;
     if ( !isNil ( ref ) ) props.ref = ref;
 
     return wrapElement.bind ( (): Child => {
