@@ -4,6 +4,7 @@
     "isolatedModules": false,
     "noImplicitAny": false,
     "noPropertyAccessFromIndexSignature": false,
-    "noUnusedParameters": false
+    "noUnusedParameters": false,
+    "target": "es2018"
   }
 }
