@@ -552,7 +552,7 @@ const setEvent = ( element: HTMLElement, event: string, value: ObservableMaybe<n
 
 const setHTMLStatic = ( element: HTMLElement, value: null | undefined | number | string ): void => {
 
-  element.innerHTML = String ( value ?? '' );
+  element.innerHTML = String ( isNil ( value ) ? '' : value );
 
 };
 

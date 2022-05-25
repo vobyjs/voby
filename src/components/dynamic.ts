@@ -12,7 +12,7 @@ const Dynamic = <P = {}> ({ component, props, children }: { component: Component
 
   return useComputed ( () => {
 
-    return createElement<P> ( $$(component), $$(props ?? null), children );
+    return createElement<P> ( $$(component), $$(props || null), children );
 
   });
 

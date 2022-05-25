@@ -4,6 +4,7 @@
 import useComputed from '~/hooks/use_computed';
 import resolve from '~/methods/resolve';
 import {context} from '~/oby';
+import {isNil} from '~/utils/lang';
 import type {Child, Context} from '~/types';
 
 /* MAIN */
@@ -26,7 +27,8 @@ const createContext = <T> ( defaultValue?: T ): Context<T> => {
 
   const Consumer = ({ children }: { children: (( value?: T ) => Child) }): Child => {
 
-    const value = context<T> ( symbol ) ?? defaultValue;
+    const valueContext = context<T> ( symbol );
+    const value = isNil ( valueContext ) ? defaultValue : valueContext;
 
     return children ( value );
 
