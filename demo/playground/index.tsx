@@ -13,6 +13,12 @@ globalThis.Voby = Voby;
 
 const TEST_INTERVAL = 500; // Lowering this makes it easier to spot some memory leaks
 
+const assert = ( result: boolean, message?: string ): void => {
+
+  console.assert ( result, message );
+
+};
+
 const random = (): number => { // It's important for testing that 0, 1 or reused numbers are never returned
 
   const value = Math.random ();
@@ -57,25 +63,25 @@ const TestSnapshots = ({ Component, props }: { Component: JSX.Component & { test
     const expectedSnapshot = Component.test.snapshots[index];
     const actualHTML = getHTML ();
     const actualSnapshot = getSnapshot ( actualHTML );
-    console.assert ( actualSnapshot === expectedSnapshot, `[${Component.name}]: Expected '${actualSnapshot}' to be equal to '${expectedSnapshot}'` );
+    assert ( actualSnapshot === expectedSnapshot, `[${Component.name}]: Expected '${actualSnapshot}' to be equal to '${expectedSnapshot}'` );
     if ( expectedSnapshot.includes ( '{random}' ) ) {
-      console.assert ( actualHTML !== htmlPrev, `[${Component.name}]: Expected to find different {random} values in the HTML` );
+      assert ( actualHTML !== htmlPrev, `[${Component.name}]: Expected to find different {random} values in the HTML` );
     }
     if ( expectedSnapshot.includes ( '{random-bigint}' ) ) {
-      console.assert ( actualHTML !== htmlPrev, `[${Component.name}]: Expected to find different {random-bigint} values in the HTML` );
+      assert ( actualHTML !== htmlPrev, `[${Component.name}]: Expected to find different {random-bigint} values in the HTML` );
     }
     if ( expectedSnapshot.includes ( '{random-color}' ) ) {
-      console.assert ( actualHTML !== htmlPrev, `[${Component.name}]: Expected to find different {random-color} values in the HTML` );
+      assert ( actualHTML !== htmlPrev, `[${Component.name}]: Expected to find different {random-color} values in the HTML` );
     }
     htmlPrev = actualHTML;
   };
   const noUpdate = (): void => {
-    console.assert ( false, `[${Component.name}]: Expected no updates to even happen` );
+    assert ( false, `[${Component.name}]: Expected no updates to even happen` );
   };
   const yesUpdate = (): void => {
     if ( Component.test.static ) return;
     if ( ticks > 1 ) return;
-    console.assert ( false, `[${Component.name}]: Expected at least one update` );
+    assert ( false, `[${Component.name}]: Expected at least one update` );
   };
   useEffect ( () => {
     const root = ref ();
@@ -3999,7 +4005,7 @@ const TestRenderToString = async (): Promise<void> => {
   };
   const expected = '<div><h3>renderToString</h3><p>123</p></div>';
   const actual = await renderToString ( <App /> );
-  console.assert ( actual === expected );
+  assert ( actual === expected, `[TestRenderToString]: Expected '${actual}' to be equal to '${expected}'` );
 };
 
 const TestRenderToStringSuspense = async (): Promise<void> => {
@@ -4024,7 +4030,7 @@ const TestRenderToStringSuspense = async (): Promise<void> => {
   };
   const expected = '<div><h3>renderToString - Suspense</h3><p>123</p></div>';
   const actual = await renderToString ( <App /> );
-  console.assert ( actual === expected );
+  assert ( actual === expected, `[TestRenderToStringSuspense]: Expected '${actual}' to be equal to '${expected}'` );
 };
 
 const TestPortalStatic = (): JSX.Element => {
@@ -4440,12 +4446,6 @@ TestLazy.test = {
     '<p>Loading...</p>',
     '<p>Loaded!</p>'
   ]
-};
-
-const ClassBugComponent = () => {
-  const klass = useComputed(() => "css");
-
-  return (<span id={ undefined } class={ klass }>Test</span>);
 };
 
 const Test = (): JSX.Element => {
