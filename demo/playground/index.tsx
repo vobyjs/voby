@@ -1163,92 +1163,184 @@ TestClassRemovalString.test = {
   ]
 };
 
-const TestClassesStatic = (): JSX.Element => {
+const TestClassesArrayStatic = (): JSX.Element => {
   return (
     <>
-      <h3>Classes - Static</h3>
-      <p class={{ red: true, blue: false }}>content</p>
+      <h3>Classes - Array Static</h3>
+      <p class={[ 'red', false && 'blue', null && 'blue', undefined && 'blue' ]}>content</p>
     </>
   );
 };
 
-TestClassesStatic.test = {
+TestClassesArrayStatic.test = {
   static: true,
   snapshots: [
     '<p class="red">content</p>'
   ]
 };
 
-const TestClassesObservable = (): JSX.Element => {
-  const o = $({ red: true, blue: false });
-  const toggle = () => o ( prev => prev.red ? { red: false, blue: true } : { red: true, blue: false } );
+const TestClassesArrayObservable = (): JSX.Element => {
+  const o = $([ 'red', false ]);
+  const toggle = () => o ( prev => prev[0] ? [false, 'blue'] : ['red', false] );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
-      <h3>Classes - Observable</h3>
+      <h3>Classes - Array Observable</h3>
       <p class={o}>content</p>
     </>
   );
 };
 
-TestClassesObservable.test = {
+TestClassesArrayObservable.test = {
   snapshots: [
     '<p class="red">content</p>',
     '<p class="blue">content</p>'
   ]
 };
 
-const TestClassesFunction = (): JSX.Element => {
-  const o = $({ red: true, blue: false });
-  const toggle = () => o ( prev => prev.red ? { red: false, blue: true } : { red: true, blue: false } );
+const TestClassesArrayFunction = (): JSX.Element => {
+  const o = $([ 'red', false ]);
+  const toggle = () => o ( prev => prev[0] ? [false, 'blue'] : ['red', false] );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
-      <h3>Classes - Function</h3>
+      <h3>Classes - Array Function</h3>
       <p class={() => o ()}>content</p>
     </>
   );
 };
 
-TestClassesFunction.test = {
+TestClassesArrayFunction.test = {
   snapshots: [
     '<p class="red">content</p>',
     '<p class="blue">content</p>'
   ]
 };
 
-const TestClassesRemoval = (): JSX.Element => {
-  const o = $({ red: true, blue: false });
-  const toggle = () => o ( prev => prev ? null : { red: true, blue: false } );
+const TestClassesArrayRemoval = (): JSX.Element => {
+  const o = $([ 'red', false ]);
+  const toggle = () => o ( prev => prev ? null : ['red', false] );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
-      <h3>Classes - Removal</h3>
+      <h3>Classes - Array Removal</h3>
       <p class={o}>content</p>
     </>
   );
 };
 
-TestClassesRemoval.test = {
+TestClassesArrayRemoval.test = {
   snapshots: [
     '<p class="red">content</p>',
     '<p class="">content</p>'
   ]
 };
 
-const TestClassesCleanup = (): JSX.Element => {
-  const o = $<JSX.ClassProperties>({ red: true });
-  const toggle = () => o ( prev => prev.red ? { blue: true } : { red: true } );
+const TestClassesArrayCleanup = (): JSX.Element => {
+  const o = $<JSX.ClassProperties>([ 'red' ]);
+  const toggle = () => o ( prev => prev[0] === 'red' ? ['blue'] : ['red'] );
   useInterval ( toggle, TEST_INTERVAL );
   return (
     <>
-      <h3>Classes - Cleanup</h3>
+      <h3>Classes - Array Cleanup</h3>
       <p class={o}>content</p>
     </>
   );
 };
 
-TestClassesCleanup.test = {
+TestClassesArrayCleanup.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="blue">content</p>'
+  ]
+};
+
+const TestClassesObjectStatic = (): JSX.Element => {
+  return (
+    <>
+      <h3>Classes - Object Static</h3>
+      <p class={{ red: true, blue: false }}>content</p>
+    </>
+  );
+};
+
+TestClassesObjectStatic.test = {
+  static: true,
+  snapshots: [
+    '<p class="red">content</p>'
+  ]
+};
+
+const TestClassesObjectObservable = (): JSX.Element => {
+  const o = $({ red: true, blue: false });
+  const toggle = () => o ( prev => prev.red ? { red: false, blue: true } : { red: true, blue: false } );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Classes - Object Observable</h3>
+      <p class={o}>content</p>
+    </>
+  );
+};
+
+TestClassesObjectObservable.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="blue">content</p>'
+  ]
+};
+
+const TestClassesObjectFunction = (): JSX.Element => {
+  const o = $({ red: true, blue: false });
+  const toggle = () => o ( prev => prev.red ? { red: false, blue: true } : { red: true, blue: false } );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Classes - Object Function</h3>
+      <p class={() => o ()}>content</p>
+    </>
+  );
+};
+
+TestClassesObjectFunction.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="blue">content</p>'
+  ]
+};
+
+const TestClassesObjectRemoval = (): JSX.Element => {
+  const o = $({ red: true, blue: false });
+  const toggle = () => o ( prev => prev ? null : { red: true, blue: false } );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Classes - Object Removal</h3>
+      <p class={o}>content</p>
+    </>
+  );
+};
+
+TestClassesObjectRemoval.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="">content</p>'
+  ]
+};
+
+const TestClassesObjectCleanup = (): JSX.Element => {
+  const o = $<JSX.ClassProperties>({ red: true });
+  const toggle = () => o ( prev => prev.red ? { blue: true } : { red: true } );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Classes - Object Cleanup</h3>
+      <p class={o}>content</p>
+    </>
+  );
+};
+
+TestClassesObjectCleanup.test = {
   snapshots: [
     '<p class="red">content</p>',
     '<p class="blue">content</p>'
@@ -4514,11 +4606,16 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestClassFunctionString} />
       <TestSnapshots Component={TestClassRemoval} />
       <TestSnapshots Component={TestClassRemovalString} />
-      <TestSnapshots Component={TestClassesStatic} />
-      <TestSnapshots Component={TestClassesObservable} />
-      <TestSnapshots Component={TestClassesFunction} />
-      <TestSnapshots Component={TestClassesRemoval} />
-      <TestSnapshots Component={TestClassesCleanup} />
+      <TestSnapshots Component={TestClassesArrayStatic} />
+      <TestSnapshots Component={TestClassesArrayObservable} />
+      <TestSnapshots Component={TestClassesArrayFunction} />
+      <TestSnapshots Component={TestClassesArrayRemoval} />
+      <TestSnapshots Component={TestClassesArrayCleanup} />
+      <TestSnapshots Component={TestClassesObjectStatic} />
+      <TestSnapshots Component={TestClassesObjectObservable} />
+      <TestSnapshots Component={TestClassesObjectFunction} />
+      <TestSnapshots Component={TestClassesObjectRemoval} />
+      <TestSnapshots Component={TestClassesObjectCleanup} />
       <TestSnapshots Component={TestStyleStatic} />
       <TestSnapshots Component={TestStyleStaticNumeric} />
       <TestSnapshots Component={TestStyleStaticString} />

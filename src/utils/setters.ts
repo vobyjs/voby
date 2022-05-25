@@ -337,7 +337,21 @@ const setClass = ( element: HTMLElement, key: string, value: FunctionMaybe<null 
 
 };
 
-const setClassesStatic = ( element: HTMLElement, object: null | undefined | string | Record<string, FunctionMaybe<null | undefined | boolean>>, objectPrev?: null | undefined | string | Record<string, FunctionMaybe<null | undefined | boolean>> ): void => {
+const setClassBooleanStatic = ( element: HTMLElement, value: boolean, key: null | undefined | boolean | string ): void => {
+
+  if ( !key || key === true ) return;
+
+  element.classList.toggle ( key, value );
+
+};
+
+const setClassBoolean = ( element: HTMLElement, value: boolean, key: FunctionMaybe<null | undefined | boolean | string> ): void => {
+
+  resolveFunction ( key, setClassBooleanStatic.bind ( undefined, element, value ) );
+
+};
+
+const setClassesStatic = ( element: HTMLElement, object: null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>>, objectPrev?: null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>> ): void => {
 
   if ( isString ( object ) ) {
 
@@ -371,6 +385,16 @@ const setClassesStatic = ( element: HTMLElement, object: null | undefined | stri
 
         }
 
+      } else if ( isArray ( objectPrev ) ) {
+
+        for ( let i = 0, l = objectPrev.length; i < l; i++ ) {
+
+          if ( !objectPrev[i] ) continue;
+
+          setClassBoolean ( element, false, objectPrev[i] );
+
+        }
+
       } else {
 
         for ( const key in objectPrev ) {
@@ -385,9 +409,23 @@ const setClassesStatic = ( element: HTMLElement, object: null | undefined | stri
 
     }
 
-    for ( const key in object ) {
+    if ( isArray ( object ) ) {
 
-      setClass ( element, key, object[key] );
+      for ( let i = 0, l = object.length; i < l; i++ ) {
+
+        if ( !object[i] ) continue;
+
+        setClassBoolean ( element, true, object[i] );
+
+      }
+
+    } else {
+
+      for ( const key in object ) {
+
+        setClass ( element, key, object[key] );
+
+      }
 
     }
 
@@ -395,9 +433,7 @@ const setClassesStatic = ( element: HTMLElement, object: null | undefined | stri
 
 };
 
-const setClasses = ( element: HTMLElement, object: FunctionMaybe<null | undefined | string | Record<string, FunctionMaybe<null | undefined | boolean>>> ): void => {
-
-  //TODO: Maybe support an array of classes
+const setClasses = ( element: HTMLElement, object: FunctionMaybe<null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>>> ): void => {
 
   resolveFunction ( object, setClassesStatic.bind ( undefined, element ) );
 

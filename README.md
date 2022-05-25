@@ -1531,7 +1531,7 @@ JSX is supported out of the box, as a rule of thumb it's very similar to how Rea
 - A ref function attached to a DOM element will also be called with `undefined` when that node is unmounted.
 - The "ref" attribute can also accept an array of functions to call, for convenience.
 - You can simply just use "class" instead of "className".
-- The "class" attribute can also accept an object of classes, for convenience.
+- The "class" attribute can also accept an object of classes or an array of classes, for convenience.
 - SVGs are supported out of the box and will also be updated in a fine-grained manner.
 - The "innerHTML", "outerHTML" and "textContent" attributes are forbidden, as they are largely just footguns.
 - A React-like "dangerouslySetInnerHTML" attribute is supported for setting some raw HTML.

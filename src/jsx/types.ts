@@ -404,7 +404,7 @@ declare namespace JSX {
     challenge?: FunctionMaybe<string>,
     checked?: FunctionMaybe<boolean>,
     cite?: FunctionMaybe<string>,
-    class?: FunctionMaybe<string | ClassProperties>,
+    class?: FunctionMaybe<string | FunctionMaybe<null | undefined | boolean | string>[] | ClassProperties>,
     className?: FunctionMaybe<string>,
     cols?: FunctionMaybe<number>,
     colSpan?: FunctionMaybe<number>,
