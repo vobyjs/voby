@@ -1,11 +1,7 @@
 
 /* IMPORT */
 
-import oby from '~/oby';
-
-/* MAIN */
-
-const resolve = oby.resolve;
+import {resolve} from '~/oby';
 
 /* EXPORT */
 

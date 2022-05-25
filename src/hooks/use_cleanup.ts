@@ -1,12 +1,8 @@
 
 /* IMPORT */
 
-import oby from '~/oby';
-
-/* MAIN */
-
-const useCleanup = oby.cleanup;
+import {cleanup} from '~/oby';
 
 /* EXPORT */
 
-export default useCleanup;
+export default cleanup;

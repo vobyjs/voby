@@ -1,12 +1,8 @@
 
 /* IMPORT */
 
-import oby from '~/oby';
-
-/* MAIN */
-
-const isObservable = oby.is;
+import {is} from '~/oby';
 
 /* EXPORT */
 
-export default isObservable;
+export default is;

@@ -1,12 +1,8 @@
 
 /* IMPORT */
 
-import oby from '~/oby';
-
-/* MAIN */
-
-const useBatch = oby.batch;
+import {batch} from '~/oby';
 
 /* EXPORT */
 
-export default useBatch;
+export default batch;

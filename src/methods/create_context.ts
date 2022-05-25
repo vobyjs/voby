@@ -3,7 +3,7 @@
 
 import useComputed from '~/hooks/use_computed';
 import resolve from '~/methods/resolve';
-import oby from '~/oby';
+import {context} from '~/oby';
 import type {Child, Context} from '~/types';
 
 /* MAIN */
@@ -16,7 +16,7 @@ const createContext = <T> ( defaultValue?: T ): Context<T> => {
 
     return useComputed ( () => {
 
-      oby.context ( symbol, value );
+      context ( symbol, value );
 
       return resolve ( children );
 
@@ -26,7 +26,7 @@ const createContext = <T> ( defaultValue?: T ): Context<T> => {
 
   const Consumer = ({ children }: { children: (( value?: T ) => Child) }): Child => {
 
-    const value = oby.context<T> ( symbol ) ?? defaultValue;
+    const value = context<T> ( symbol ) ?? defaultValue;
 
     return children ( value );
 

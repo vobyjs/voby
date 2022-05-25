@@ -1,12 +1,8 @@
 
 /* IMPORT */
 
-import oby from '~/oby';
-
-/* MAIN */
-
-const useDisposed = oby.disposed;
+import {disposed} from '~/oby';
 
 /* EXPORT */
 
-export default useDisposed;
+export default disposed;

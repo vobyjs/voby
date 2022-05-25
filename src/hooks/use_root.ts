@@ -1,12 +1,8 @@
 
 /* IMPORT */
 
-import oby from '~/oby';
-
-/* MAIN */
-
-const useRoot = oby.root;
+import {root} from '~/oby';
 
 /* EXPORT */
 
-export default useRoot;
+export default root;

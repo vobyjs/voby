@@ -6,7 +6,7 @@ import useCleanup from '~/hooks/use_cleanup';
 import useEffect from '~/hooks/use_effect';
 import useReadonly from '~/hooks/use_readonly';
 import $ from '~/methods/S';
-import oby from '~/oby';
+import {context} from '~/oby';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import Fragment from '~/utils/fragment';
@@ -406,7 +406,7 @@ const setClasses = ( element: HTMLElement, object: FunctionMaybe<null | undefine
 const setDirective = <T extends unknown[]> ( element: HTMLElement, directive: string, args: T ): void => {
 
   const symbol = SYMBOLS_DIRECTIVES[directive] || Symbol ();
-  const fn = oby.context<DirectiveFunction<T>> ( symbol );
+  const fn = context<DirectiveFunction<T>> ( symbol );
 
   if ( !symbol || !fn ) throw new Error ( `Directive "${directive}" not found` );
 

@@ -4,7 +4,7 @@
 import {SYMBOL_SUSPENSE} from '~/constants';
 import useComputed from '~/hooks/use_computed';
 import $ from '~/methods/S';
-import oby from '~/oby';
+import {context} from '~/oby';
 import type {SuspenseData} from '~/types';
 
 /* MAIN */
@@ -36,13 +36,13 @@ const SuspenseContext = {
 
   get: (): SuspenseData | undefined => {
 
-    return oby.context<SuspenseData> ( SYMBOL_SUSPENSE );
+    return context<SuspenseData> ( SYMBOL_SUSPENSE );
 
   },
 
   set: ( data: SuspenseData ): void => {
 
-    return oby.context<SuspenseData> ( SYMBOL_SUSPENSE, data );
+    return context<SuspenseData> ( SYMBOL_SUSPENSE, data );
 
   }
 

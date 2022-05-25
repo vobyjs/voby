@@ -1,12 +1,8 @@
 
 /* IMPORT */
 
-import oby from '~/oby';
-
-/* MAIN */
-
-const useSample = oby.sample;
+import {sample} from '~/oby';
 
 /* EXPORT */
 
-export default useSample;
+export default sample;

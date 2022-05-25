@@ -4,7 +4,7 @@
 import {SYMBOLS_DIRECTIVES} from '~/constants';
 import useComputed from '~/hooks/use_computed';
 import resolve from '~/methods/resolve';
-import oby from '~/oby';
+import {context} from '~/oby';
 import type {Child, DirectiveFunction, Directive} from '~/types';
 
 /* MAIN */
@@ -17,7 +17,7 @@ const createDirective = ( name: string, fn: DirectiveFunction ): Directive => {
 
     return useComputed ( () => {
 
-      oby.context ( symbol, fn );
+      context ( symbol, fn );
 
       return resolve ( children );
 

@@ -3,7 +3,8 @@
 
 import SuspenseContext from '~/components/suspense.context';
 import useComputed from '~/hooks/use_computed';
-import oby from '~/oby';
+import resolve from '~/methods/resolve';
+import {suspense as _suspense, ternary} from '~/oby';
 import {isFunction} from '~/utils/lang';
 import type {Child, FunctionMaybe, ObservableReadonly} from '~/types';
 
@@ -17,9 +18,9 @@ const Suspense = ({ when, fallback, children }: { when?: FunctionMaybe<unknown>,
 
     const condition = useComputed ( () => isFunction ( when ) ? !!when () || suspense.active () : !!when || suspense.active () );
 
-    const fallbackLazy = useComputed ( () => condition () && fallback ); // Ensuring it's not kept alive when not used
+    const childrenSuspended = _suspense ( condition, () => resolve ( children ) );
 
-    return oby.suspense ( condition, [[true, fallbackLazy], [children]] );
+    return ternary ( condition, fallback, childrenSuspended );
 
   });
 

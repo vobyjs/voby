@@ -1,12 +1,8 @@
 
 /* IMPORT */
 
-import oby from '~/oby';
-
-/* MAIN */
-
-const useEffect = oby.effect;
+import {effect} from '~/oby';
 
 /* EXPORT */
 
-export default useEffect;
+export default effect;

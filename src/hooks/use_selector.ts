@@ -1,12 +1,8 @@
 
 /* IMPORT */
 
-import oby from '~/oby';
-
-/* MAIN */
-
-const useSelector = oby.selector;
+import {selector} from '~/oby';
 
 /* EXPORT */
 
-export default useSelector;
+export default selector;

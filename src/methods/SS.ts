@@ -1,12 +1,8 @@
 
 /* IMPORT */
 
-import oby from '~/oby';
-
-/* MAIN */
-
-const $$ = oby.get;
+import {get} from '~/oby';
 
 /* EXPORT */
 
-export default $$;
+export default get;

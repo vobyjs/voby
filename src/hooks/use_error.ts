@@ -1,12 +1,8 @@
 
 /* IMPORT */
 
-import oby from '~/oby';
-
-/* MAIN */
-
-const useError = oby.error;
+import {error} from '~/oby';
 
 /* EXPORT */
 
-export default useError;
+export default error;

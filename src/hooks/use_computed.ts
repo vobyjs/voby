@@ -1,12 +1,8 @@
 
 /* IMPORT */
 
-import oby from '~/oby';
-
-/* MAIN */
-
-const useComputed = oby.computed;
+import {computed} from '~/oby';
 
 /* EXPORT */
 
-export default useComputed;
+export default computed;

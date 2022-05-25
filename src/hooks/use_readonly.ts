@@ -1,12 +1,8 @@
 
 /* IMPORT */
 
-import oby from '~/oby';
-
-/* MAIN */
-
-const useReadonly = oby.readonly;
+import {readonly} from '~/oby';
 
 /* EXPORT */
 
-export default useReadonly;
+export default readonly;
