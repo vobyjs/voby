@@ -1,12 +1,6 @@
 
 /* GLOBALS */
 
-interface Document {
-  onbeforeinput: (( this: GlobalEventHandlers, event: Event ) => any) | null,
-  onfocusin: (( this: GlobalEventHandlers, event: FocusEvent ) => any) | null,
-  onfocusout: (( this: GlobalEventHandlers, event: FocusEvent ) => any) | null
-}
-
 interface Element {
   cloneNode ( deep?: boolean ): Element
 }
