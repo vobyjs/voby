@@ -479,7 +479,7 @@ const setEventStatic = (() => {
 
     if ( !key ) return;
 
-    document[event] = ( event: Event ): void => {
+    document.addEventListener ( event.slice ( 2 ), event => {
 
       const targets = event.composedPath ();
       const target = targets[0] || document;
@@ -503,7 +503,7 @@ const setEventStatic = (() => {
 
       }
 
-    };
+    });
 
   };
 
