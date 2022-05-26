@@ -648,7 +648,7 @@ const setStylesStatic = ( element: HTMLElement, object: null | undefined | strin
 
   if ( isString ( object ) ) {
 
-    element.style.cssText = object;
+    element.setAttribute ( 'style', object );
 
   } else {
 
