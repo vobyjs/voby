@@ -73,9 +73,11 @@ declare namespace JSX {
   type TargetedCompositionEvent<T extends EventTarget> = TargetedEvent<T, CompositionEvent>;
   type TargetedDragEvent<T extends EventTarget> = TargetedEvent<T, DragEvent>;
   type TargetedFocusEvent<T extends EventTarget> = TargetedEvent<T, FocusEvent>;
+  type TargetedInputEvent<T extends EventTarget> = TargetedEvent<T, InputEvent>;
   type TargetedKeyboardEvent<T extends EventTarget> = TargetedEvent<T, KeyboardEvent>;
   type TargetedMouseEvent<T extends EventTarget> = TargetedEvent<T, MouseEvent>;
   type TargetedPointerEvent<T extends EventTarget> = TargetedEvent<T, PointerEvent>;
+  type TargetedSubmitEvent<T extends EventTarget> = TargetedEvent<T, SubmitEvent>;
   type TargetedTouchEvent<T extends EventTarget> = TargetedEvent<T, TouchEvent>;
   type TargetedTransitionEvent<T extends EventTarget> = TargetedEvent<T, TransitionEvent>;
   type TargetedUIEvent<T extends EventTarget> = TargetedEvent<T, UIEvent>;
@@ -88,9 +90,11 @@ declare namespace JSX {
   type DragEventHandler<T extends EventTarget> = EventHandler<TargetedDragEvent<T>>;
   type FocusEventHandler<T extends EventTarget> = EventHandler<TargetedFocusEvent<T>>;
   type GenericEventHandler<T extends EventTarget> = EventHandler<TargetedEvent<T>>;
+  type InputEventHandler<T extends EventTarget> = EventHandler<TargetedInputEvent<T>>;
   type KeyboardEventHandler<T extends EventTarget> = EventHandler<TargetedKeyboardEvent<T>>;
   type MouseEventHandler<T extends EventTarget> = EventHandler<TargetedMouseEvent<T>>;
   type PointerEventHandler<T extends EventTarget> = EventHandler<TargetedPointerEvent<T>>;
+  type SubmitEventHandler<T extends EventTarget> = EventHandler<TargetedSubmitEvent<T>>;
   type TouchEventHandler<T extends EventTarget> = EventHandler<TargetedTouchEvent<T>>;
   type TransitionEventHandler<T extends EventTarget> = EventHandler<TargetedTransitionEvent<T>>;
   type UIEventHandler<T extends EventTarget> = EventHandler<TargetedUIEvent<T>>;
@@ -200,14 +204,14 @@ declare namespace JSX {
     /* FORM EVENTS */
     onChange?: ObservableMaybe<KeyboardEventHandler<T>>,
     onChangeCapture?: ObservableMaybe<KeyboardEventHandler<T>>,
-    onInput?: ObservableMaybe<GenericEventHandler<T>>,
-    onInputCapture?: ObservableMaybe<GenericEventHandler<T>>,
-    onBeforeInput?: ObservableMaybe<GenericEventHandler<T>>,
-    onBeforeInputCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onInput?: ObservableMaybe<InputEventHandler<T>>,
+    onInputCapture?: ObservableMaybe<InputEventHandler<T>>,
+    onBeforeInput?: ObservableMaybe<InputEventHandler<T>>,
+    onBeforeInputCapture?: ObservableMaybe<InputEventHandler<T>>,
     onSearch?: ObservableMaybe<GenericEventHandler<T>>,
     onSearchCapture?: ObservableMaybe<GenericEventHandler<T>>,
-    onSubmit?: ObservableMaybe<GenericEventHandler<T>>,
-    onSubmitCapture?: ObservableMaybe<GenericEventHandler<T>>,
+    onSubmit?: ObservableMaybe<SubmitEventHandler<T>>,
+    onSubmitCapture?: ObservableMaybe<SubmitEventHandler<T>>,
     onInvalid?: ObservableMaybe<GenericEventHandler<T>>,
     onInvalidCapture?: ObservableMaybe<GenericEventHandler<T>>,
     onReset?: ObservableMaybe<GenericEventHandler<T>>,
