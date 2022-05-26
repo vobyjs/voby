@@ -532,7 +532,17 @@ const setEventStatic = (() => {
 
       }
 
-      element[delegatedEvents[event]] = value;
+      const delegated = delegatedEvents[event];
+
+      if ( delegated in element ) {
+
+        throw new Error ( `A delegated event handler for "${event}" already exists on this element` );
+
+      } else {
+
+        element[delegated] = value;
+
+      }
 
     } else {
 
