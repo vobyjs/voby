@@ -32,7 +32,7 @@ const createElement = <P = {}> ( component: Component<P>, props?: Props | null, 
 
   if ( isFunction ( component ) ) {
 
-    if ( BaseComponent.isPrototypeOf ( component ) ) {
+    if ( BaseComponent.isPrototypeOf ( component ) ) { //TODO: Maybe replace this with a Symbol check, which allows for Component to be tree-shaken off
 
       const props = rest;
 
