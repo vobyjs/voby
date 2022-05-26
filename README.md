@@ -688,7 +688,7 @@ const App = () => {
   const Content = () => {
     const resource = useResource ( () => makeSomePromise () );
     return (
-      <Show when={() => !resource ().loading && !resource ().error}>
+      <Show when={() => !resource ().pensing && !resource ().error}>
         {resource ().value}
       </Show>
     );
@@ -1041,7 +1041,7 @@ import {useFetch} from 'voby';
 const App = () => {
   const state = useFetch ( 'https://my.api' );
   return state.on ( state => {
-    if ( state.loading ) return <p>loading...</p>;
+    if ( state.pending ) return <p>pending...</p>;
     if ( state.error ) return <p>{state.error.message}</p>;
     return <p>Status: {state.value.status}</p>
   });
@@ -1141,7 +1141,7 @@ const App = () => {
   const request = fetch ( 'https://my.api' ).then ( res => res.json ( 0 ) );
   const promise = usePromise ( request );
   return resolved.on ( state => {
-    if ( state.loading ) return <p>loading...</p>;
+    if ( state.pending ) return <p>pending...</p>;
     if ( state.error ) return <p>{state.error.message}</p>;
     return <p>{JSON.stringify ( state.value )}</p>
   });
@@ -1433,10 +1433,10 @@ It's an object that tells if whether the resource is loading or not, whether an 
 Interface:
 
 ```ts
-type ResourceLoading = { loading: true, error?: never, value?: never };
-type ResourceRejected = { loading: false, error: Error, value?: never };
-type ResourceResolved<T> = { loading: false, error?: never, value: T };
-type Resource<T> = ResourceLoading | ResourceRejected | ResourceResolved<T>;
+type ResourcePending = { pending: true, error?: never, value?: never };
+type ResourceRejected = { pending: false, error: Error, value?: never };
+type ResourceResolved<T> = { pending: false, error?: never, value: T };
+type Resource<T> = ResourcePending | ResourceRejected | ResourceResolved<T>;
 ```
 
 Usage:
@@ -1446,7 +1446,7 @@ import type {ObservableReadonly, Resource} from 'voby';
 
 const resource: ObservableReadonly<Resource> = useResource ( () => fetch ( 'https://my.api' ) );
 
-resource ().loading // => true | false
+resource ().pending // => true | false
 resource ().error // => Error | undefined
 resource ().value // => Whatever the resource will resolve to
 ```

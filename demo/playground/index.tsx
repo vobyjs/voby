@@ -3724,7 +3724,7 @@ const TestPromiseResolved = (): JSX.Element => {
     <>
       <h3>Promise - Resolved</h3>
       {() => {
-        if ( resolved ().loading ) return <p>Loading...</p>;
+        if ( resolved ().pending ) return <p>Pending...</p>;
         if ( resolved ().error ) return <p>{resolved ().error.message}</p>;
         return <p>{resolved ().value}</p>
       }}
@@ -3734,7 +3734,7 @@ const TestPromiseResolved = (): JSX.Element => {
 
 TestPromiseResolved.test = {
   snapshots: [
-    '<p>Loading...</p>',
+    '<p>Pending...</p>',
     '<p>Loaded!</p>'
   ]
 };
@@ -3745,7 +3745,7 @@ const TestPromiseRejected = (): JSX.Element => {
     <>
       <h3>Promise - Rejected</h3>
       {() => {
-        if ( rejected ().loading ) return <p>Loading...</p>;
+        if ( rejected ().pending ) return <p>Pending...</p>;
         if ( rejected ().error ) return <p>{rejected ().error.message}</p>;
         return <p>{rejected ().value}</p>
       }}
@@ -3755,7 +3755,7 @@ const TestPromiseRejected = (): JSX.Element => {
 
 TestPromiseRejected.test = {
   snapshots: [
-    '<p>Loading...</p>',
+    '<p>Pending...</p>',
     '<p>Custom Error</p>'
   ]
 };

@@ -16,7 +16,7 @@ import type {ObservableReadonly, ObservableMaybe, PromiseMaybe, Resource} from '
 
 const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): ObservableReadonly<Resource<T>> => {
 
-  const resource = $<Resource<T>>({ loading: true });
+  const resource = $<Resource<T>>({ pending: true });
 
   useEffect ( () => {
 
@@ -26,7 +26,7 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): O
     const suspenseDecrement = once ( suspense?.decrement || noop );
     const suspenseIncrement = once ( suspense?.increment || noop );
 
-    resource ({ loading: true });
+    resource ({ pending: true });
 
     const onResolve = ( value: T ): void => {
 
@@ -34,7 +34,7 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): O
 
       suspenseDecrement ();
 
-      resource ({ loading: false, value });
+      resource ({ pending: false, value });
 
     };
 
@@ -46,7 +46,7 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): O
 
       const error = castError ( exception );
 
-      resource ({ loading: false, error });
+      resource ({ pending: false, error });
 
     };
 

@@ -21,9 +21,9 @@ const lazy = <P = {}> ( fetcher: LazyFetcher<P> ): LazyResult<P> => {
 
     return useComputed ( () => {
 
-      return useResolved ( resource, ({ loading, error, value }) => {
+      return useResolved ( resource, ({ pending, error, value }) => {
 
-        if ( loading ) return;
+        if ( pending ) return;
 
         if ( error ) throw error;
 
@@ -41,9 +41,9 @@ const lazy = <P = {}> ( fetcher: LazyFetcher<P> ): LazyResult<P> => {
 
       const resource = useResource ( fetcherOnce );
 
-      useResolved ( resource, ({ loading, error }) => {
+      useResolved ( resource, ({ pending, error }) => {
 
-        if ( loading ) return;
+        if ( pending ) return;
 
         if ( error ) return reject ( error );
 
