@@ -198,10 +198,10 @@ declare namespace JSX {
     /* FOCUS EVENTS */
     onFocus?: ObservableMaybe<FocusEventHandler<T>>,
     onFocusCapture?: ObservableMaybe<FocusEventHandler<T>>,
-    onfocusin?: ObservableMaybe<FocusEventHandler<T>>,
-    onfocusinCapture?: ObservableMaybe<FocusEventHandler<T>>,
-    onfocusout?: ObservableMaybe<FocusEventHandler<T>>,
-    onfocusoutCapture?: ObservableMaybe<FocusEventHandler<T>>,
+    onFocusIn?: ObservableMaybe<FocusEventHandler<T>>,
+    onFocusInCapture?: ObservableMaybe<FocusEventHandler<T>>,
+    onFocusOut?: ObservableMaybe<FocusEventHandler<T>>,
+    onFocusOutCapture?: ObservableMaybe<FocusEventHandler<T>>,
     onBlur?: ObservableMaybe<FocusEventHandler<T>>,
     onBlurCapture?: ObservableMaybe<FocusEventHandler<T>>,
     /* FORM EVENTS */
