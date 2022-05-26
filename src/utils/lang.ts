@@ -104,6 +104,19 @@ const isSVG = ( value: Element ): value is SVGAElement => {
 
 };
 
+const isSVGElement = (() => {
+
+  const svgRe = /^(t(ext$|s)|s[vwy]|g)|^set|tad|ker|p(at|s)|s(to|c$|ca|k)|r(ec|cl)|ew|us|f($|e|s)|cu|n[ei]|l[ty]|[GOP]/; //URL: https://regex101.com/r/Ck4kFp/1
+  const svgCache = {};
+
+  return ( element: string ): boolean => {
+
+    return ( element in svgCache ) ? svgCache[element] : ( svgCache[element] = svgRe.test ( element ) && element.indexOf ( '-' ) === -1 );
+
+  };
+
+})();
+
 const isTemplateAccessor = ( value: unknown ): value is TemplateActionProxy => {
 
   return isFunction ( value ) && ( SYMBOL_TEMPLATE_ACCESSOR in value );
@@ -140,4 +153,4 @@ const once = <T> ( fn: () => T ): (() => T) => {
 
 /* EXPORT */
 
-export {assign, castArray, castError, flatten, indexOf, isArray, isError, isFunction, isNil, isNode, isPrimitive, isPromise, isString, isSVG, isTemplateAccessor, isVoidChild, noop, once};
+export {assign, castArray, castError, flatten, indexOf, isArray, isError, isFunction, isNil, isNode, isPrimitive, isPromise, isString, isSVG, isSVGElement, isTemplateAccessor, isVoidChild, noop, once};

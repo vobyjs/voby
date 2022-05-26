@@ -18,7 +18,7 @@ import type {Child, DirectiveFunction, EventListener, FunctionMaybe, ObservableM
 
 const setAttributeStatic = (() => {
 
-  const attributeCamelCasedRe = /e(r[HRWrv]|[Vawy])|Con|l(e[Tcs]|c)|s(eP|y)|a(t[rt]|u|v)|Of|Ex|f[XYa]|gt|hR|d[Pg]|t[TXYd]|[UZq]/;
+  const attributeCamelCasedRe = /e(r[HRWrv]|[Vawy])|Con|l(e[Tcs]|c)|s(eP|y)|a(t[rt]|u|v)|Of|Ex|f[XYa]|gt|hR|d[Pg]|t[TXYd]|[UZq]/; //URL: https://regex101.com/r/I8Wm4S/1
   const attributesCache: Record<string, string> = {};
   const uppercaseRe = /[A-Z]/g;
 

@@ -2,10 +2,9 @@
 /* IMPORT */
 
 import BaseComponent from '~/components/component';
-import {SVG_ELEMENTS} from '~/constants';
 import wrapElement from '~/methods/wrap_element';
 import {createHTMLNode, createSVGNode} from '~/utils/creators';
-import {isFunction, isNil, isNode, isString, isVoidChild} from '~/utils/lang';
+import {isFunction, isNil, isNode, isString, isSVGElement, isVoidChild} from '~/utils/lang';
 import {setProps, setRef} from '~/utils/setters';
 import type {Child, Component, Element, Props} from '~/types';
 
@@ -63,7 +62,7 @@ const createElement = <P = {}> ( component: Component<P>, props?: Props | null, 
   } else if ( isString ( component ) ) {
 
     const props = rest;
-    const isSVG = SVG_ELEMENTS.has ( component );
+    const isSVG = isSVGElement ( component );
     const createNode = isSVG ? createSVGNode : createHTMLNode;
 
     if ( !isVoidChild ( children ) ) props.children = children;
