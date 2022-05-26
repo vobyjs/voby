@@ -1463,8 +1463,8 @@ const TestStyleObservableString = (): JSX.Element => {
 
 TestStyleObservableString.test = {
   snapshots: [
-    '<p style="color: green;">content</p>',
-    '<p style="color: orange;">content</p>'
+    '<p style="color: green">content</p>',
+    '<p style="color: orange">content</p>'
   ]
 };
 
@@ -1539,8 +1539,8 @@ const TestStyleFunctionString = (): JSX.Element => {
 
 TestStyleFunctionString.test = {
   snapshots: [
-    '<p style="color: green;">content</p>',
-    '<p style="color: orange;">content</p>'
+    '<p style="color: green">content</p>',
+    '<p style="color: orange">content</p>'
   ]
 };
 
@@ -3916,7 +3916,7 @@ const TestSVGStyleString = (): JSX.Element => {
 TestSVGStyleString.test = {
   static: true,
   snapshots: [
-    '<svg viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white" style="stroke: red; fill: pink;"><circle cx="25" cy="25" r="20"></circle></svg>'
+    '<svg style="stroke: red; fill: pink;" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white"><circle cx="25" cy="25" r="20"></circle></svg>'
   ]
 };
 
