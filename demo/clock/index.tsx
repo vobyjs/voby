@@ -49,10 +49,7 @@ const ClockFace = ({ time }: { time: Observable<number> }): JSX.Element => {
       <g transform="translate(50, 50)">
         <circle class="clock-face" r={48} />
         {mapRange ( 0, 60, 1, i => (
-          <line class="minor" y1={44} y2={45} transform={`rotate(${(360 * i) / 60})`} />
-        ))}
-        {mapRange ( 0, 12, 1, i => (
-          <line class="major" y1={40} y2={45} transform={`rotate(${(360 * i) / 12})`} />
+          <line class={i % 5 ? 'minor' : 'major'} y1={-(i % 5 ? 44 : 40)} y2={-45} transform={`rotate(${(360 * i) / 60})`} />
         ))}
         <line class="millisecond" y2={-44} transform={millisecond} />
         <line class="hour" y2={-22} transform={hour} />
