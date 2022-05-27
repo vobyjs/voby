@@ -10,7 +10,7 @@ import {context} from '~/oby';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import Fragment from '~/utils/fragment';
-import {flatten, isArray, isFunction, isNil, isPrimitive, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
+import {castArray, flatten, isArray, isFunction, isNil, isPrimitive, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
 import {resolveChild, resolveFunction, resolveObservable} from '~/utils/resolvers';
 import type {Child, DirectiveFunction, EventListener, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 
@@ -598,19 +598,11 @@ const setRef = <T> ( element: T, value: null | undefined | Ref<T> | Ref<T>[] ): 
 
   if ( isNil ( value ) ) return;
 
-  if ( isArray ( value ) ) {
+  const values = castArray ( value );
 
-    value.forEach ( value => queueMicrotask ( value.bind ( undefined, element ) ) );
+  values.forEach ( value => queueMicrotask ( value.bind ( undefined, element ) ) );
 
-    useCleanup ( () => value.forEach ( value => queueMicrotask ( value.bind ( undefined, undefined ) ) ) );
-
-  } else {
-
-    queueMicrotask ( value.bind ( undefined, element ) );
-
-    useCleanup ( value.bind ( undefined, undefined ) );
-
-  }
+  useCleanup ( () => values.forEach ( value => queueMicrotask ( value.bind ( undefined, undefined ) ) ) );
 
 };
 
