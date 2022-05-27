@@ -10,7 +10,7 @@ class Fragment {
 
   /* API */
 
-  childrenFragmented ( children: Node[] = [] ): Node[] {
+  getChildrenFragmented ( children: Node[] = [] ): Node[] {
 
     const {values} = this;
 
@@ -20,7 +20,7 @@ class Fragment {
 
       if ( value instanceof Fragment ) {
 
-        value.childrenFragmented ( children );
+        value.getChildrenFragmented ( children );
 
       } else {
 
@@ -34,11 +34,11 @@ class Fragment {
 
   }
 
-  children (): Node[] {
+  getChildren (): Node[] {
 
     if ( this.fragmented ) {
 
-      return this.childrenFragmented ();
+      return this.getChildrenFragmented ();
 
     } else {
 

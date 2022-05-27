@@ -148,7 +148,7 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
 const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child ): void => {
 
-  const prev = fragment.children ();
+  const prev = fragment.getChildren ();
   const prevLength = prev.length;
   const prevFirst = prev[0];
   const prevLast = prev[prevLength - 1];
@@ -227,7 +227,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
   }
 
-  const next = fragmentNext.children ();
+  const next = fragmentNext.getChildren ();
   const nextLength = next.length;
 
   if ( nextLength === 0 && prevLength === 1 && prevFirst.nodeType === 8 ) { // It's a placeholder already, no need to replace it
