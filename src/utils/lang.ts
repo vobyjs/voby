@@ -98,7 +98,7 @@ const isString = ( value: unknown ): value is string => {
 
 };
 
-const isSVG = ( value: Element ): value is SVGAElement => {
+const isSVG = ( value: Element ): value is SVGElement => {
 
   return !!value['isSVG'];
 
