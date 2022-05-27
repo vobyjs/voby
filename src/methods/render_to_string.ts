@@ -4,8 +4,10 @@
 import Portal from '~/components/portal';
 import Suspense from '~/components/suspense';
 import SuspenseContext from '~/components/suspense.context';
+import {SYMBOL_SUSPENSE} from '~/constants';
 import useEffect from '~/hooks/use_effect';
 import useRoot from '~/hooks/use_root';
+import {context} from '~/oby';
 import type {Child} from '~/types';
 
 /* MAIN */
@@ -17,6 +19,8 @@ const renderToString = ( child: Child ): Promise<string> => {
   return new Promise ( resolve => {
 
     useRoot ( dispose => {
+
+      context ( SYMBOL_SUSPENSE, undefined ); // Ensuring the parent Suspense boundary, if any, is not triggered
 
       const suspense = SuspenseContext.new ();
 
