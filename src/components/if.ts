@@ -10,7 +10,7 @@ import type {Child, FunctionMaybe, ObservableReadonly, Truthy} from '~/types';
 
 const If = <T> ({ when, fallback, children }: { when: FunctionMaybe<T>, fallback?: Child, children: Child | (( value: ObservableReadonly<Truthy<T>> ) => Child) }): ObservableReadonly<Child> => {
 
-  if ( isFunction ( children ) && children.length ) { // Calling the child with a non-nullable "when"
+  if ( isFunction ( children ) && children.length ) { // Calling the children function with an ObservableReadonly<Truthy<T>>
 
     let prev;
     const nonNullable = useComputed<Truthy<T>> ( () => {
