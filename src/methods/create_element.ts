@@ -25,7 +25,7 @@ const createElement = <P = {}> ( component: Component<P>, props?: Props | null, 
 
   if ( !isNil ( rest.className ) && isString ( rest.class ) ) {
 
-    throw new Error ( 'Invalid class prop, it can only be null, undefined or an object when className is provided too' );
+    throw new Error ( 'Invalid class prop, it can only be null, undefined, an array or an object when className is provided too' );
 
   }
 
