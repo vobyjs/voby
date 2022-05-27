@@ -528,7 +528,7 @@ const setEventStatic = (() => {
     if ( event.endsWith ( 'capture' ) ) {
 
       const type = event.slice ( 2, -7 );
-      const key = `_${event}`;
+      const key = `_${event}`; //TODO: Doesn't this clash with regular delegated events?
 
       const valuePrev = element[key];
 

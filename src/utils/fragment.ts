@@ -1,6 +1,8 @@
 
 /* MAIN */
 
+//TODO: Delete some wrapper arrays, check if there are any in the benchmark (with or without template())
+
 class Fragment {
 
   /* VARIABLES */
