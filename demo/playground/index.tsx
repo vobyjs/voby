@@ -2438,6 +2438,30 @@ TestIfChildrenFunction.test = {
   ]
 };
 
+const TestIfChildrenFunctionObservable = (): JSX.Element => {
+  const o = $<number | false>( Math.random () );
+  const toggle = () => o ( prev => prev ? false : Math.random () );
+  useInterval ( toggle, TEST_INTERVAL );
+  const Content = ({ value }): JSX.Element => {
+    return <p>Value: {value}</p>
+  };
+  return (
+    <>
+      <h3>If - Children Function Observable</h3>
+      <If when={o}>
+        {value => <Content value={value}/>}
+      </If>
+    </>
+  );
+};
+
+TestIfChildrenFunctionObservable.test = {
+  snapshots: [
+    '<p>Value: {random}</p>',
+    '<!---->'
+  ]
+};
+
 const TestIfFallbackStatic = (): JSX.Element => {
   return (
     <>
@@ -4673,6 +4697,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestIfFunction} />
       <TestSnapshots Component={TestIfChildrenObservableStatic} />
       <TestSnapshots Component={TestIfChildrenFunction} />
+      <TestSnapshots Component={TestIfChildrenFunctionObservable} />
       <TestSnapshots Component={TestIfFallbackStatic} />
       <TestSnapshots Component={TestIfFallbackObservable} />
       <TestSnapshots Component={TestIfFallbackObservableStatic} />

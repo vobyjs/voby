@@ -608,10 +608,14 @@ const App = () => {
 
 This component is the reactive alternative to the native `if`.
 
+If a function is passed as the children then it will be called with a read-only observable that contains the current, always truthy, value of the "when" condition.
+
 Interface:
 
 ```ts
-function If ( props: { when: FunctionMaybe<unknown>, fallback?: JSX.Element, children: JSX.Element }): ObservableReadonly<JSX.Element>;
+type Truthy<T = unknown> = Extract<T, number | bigint | string | true | object | symbol | Function>;
+
+function If <T> ( props: { when: FunctionMaybe<T>, fallback?: JSX.Element, children: JSX.Element | (( value: ObservableReadonly<Truthy<T>> ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
 ```
 
 Usage:

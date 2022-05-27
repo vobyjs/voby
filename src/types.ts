@@ -41,6 +41,8 @@ type Element<T = Child> = () => T;
 
 type EventListener = ( event: Event ) => void;
 
+type Falsy<T = unknown> = Extract<T, 0 | -0 | 0n | -0n | '' | false | null | undefined | void>;
+
 type FN<Arguments extends unknown[], Return extends unknown = void> = ( ...args: Arguments ) => Return;
 
 type FunctionMaybe<T = unknown> = (() => T) | T;
@@ -91,6 +93,8 @@ type TemplateVariableData = { path: TemplateActionPath, properties: TemplateVari
 
 type TemplateVariablesMap = Map<TemplateActionPath, string>;
 
+type Truthy<T = unknown> = Extract<T, number | bigint | string | true | object | symbol | Function>;
+
 /* EXPORT */
 
-export type {ArrayMaybe, Callback, Child, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, DirectiveFunction, DirectiveProvider, Directive, Disposer, Element, EventListener, FN, FunctionMaybe, LazyComponent, LazyFetcher, LazyResult, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourcePending, ResourceRejected, ResourceResolved, Resource, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap};
+export type {ArrayMaybe, Callback, Child, ChildWithMetadata, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, DirectiveFunction, DirectiveProvider, Directive, Disposer, Element, EventListener, Falsy, FN, FunctionMaybe, LazyComponent, LazyFetcher, LazyResult, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourcePending, ResourceRejected, ResourceResolved, Resource, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap, Truthy};
