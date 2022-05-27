@@ -1179,6 +1179,22 @@ TestClassesArrayStatic.test = {
   ]
 };
 
+const TestClassesArrayStaticMultiple = (): JSX.Element => {
+  return (
+    <>
+      <h3>Classes - Array Static Multiple</h3>
+      <p class={[ 'red bold' ]}>content</p>
+    </>
+  );
+};
+
+TestClassesArrayStaticMultiple.test = {
+  static: true,
+  snapshots: [
+    '<p class="red bold">content</p>'
+  ]
+};
+
 const TestClassesArrayObservable = (): JSX.Element => {
   const o = $([ 'red', false ]);
   const toggle = () => o ( prev => prev[0] ? [false, 'blue'] : ['red', false] );
@@ -1194,6 +1210,25 @@ const TestClassesArrayObservable = (): JSX.Element => {
 TestClassesArrayObservable.test = {
   snapshots: [
     '<p class="red">content</p>',
+    '<p class="blue">content</p>'
+  ]
+};
+
+const TestClassesArrayObservableMultiple = (): JSX.Element => {
+  const o = $([ 'red bold', false ]);
+  const toggle = () => o ( prev => prev[0] ? [false, 'blue'] : ['red bold', false] );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Classes - Array Observable Multiple</h3>
+      <p class={o}>content</p>
+    </>
+  );
+};
+
+TestClassesArrayObservableMultiple.test = {
+  snapshots: [
+    '<p class="red bold">content</p>',
     '<p class="blue">content</p>'
   ]
 };
@@ -1217,6 +1252,25 @@ TestClassesArrayFunction.test = {
   ]
 };
 
+const TestClassesArrayFunctionMultiple = (): JSX.Element => {
+  const o = $([ 'red bold', false ]);
+  const toggle = () => o ( prev => prev[0] ? [false, 'blue'] : ['red bold', false] );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Classes - Array Function Multiple</h3>
+      <p class={() => o ()}>content</p>
+    </>
+  );
+};
+
+TestClassesArrayFunctionMultiple.test = {
+  snapshots: [
+    '<p class="red bold">content</p>',
+    '<p class="blue">content</p>'
+  ]
+};
+
 const TestClassesArrayRemoval = (): JSX.Element => {
   const o = $([ 'red', false ]);
   const toggle = () => o ( prev => prev ? null : ['red', false] );
@@ -1232,6 +1286,25 @@ const TestClassesArrayRemoval = (): JSX.Element => {
 TestClassesArrayRemoval.test = {
   snapshots: [
     '<p class="red">content</p>',
+    '<p class="">content</p>'
+  ]
+};
+
+const TestClassesArrayRemovalMultiple = (): JSX.Element => {
+  const o = $([ 'red bold', false ]);
+  const toggle = () => o ( prev => prev ? null : ['red bold', false] );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Classes - Array Removal Multiple</h3>
+      <p class={o}>content</p>
+    </>
+  );
+};
+
+TestClassesArrayRemovalMultiple.test = {
+  snapshots: [
+    '<p class="red bold">content</p>',
     '<p class="">content</p>'
   ]
 };
@@ -1271,6 +1344,22 @@ TestClassesObjectStatic.test = {
   ]
 };
 
+const TestClassesObjectStaticMultiple = (): JSX.Element => {
+  return (
+    <>
+      <h3>Classes - Object Static Multiple</h3>
+      <p class={{ 'red bold': true }}>content</p>
+    </>
+  );
+};
+
+TestClassesObjectStaticMultiple.test = {
+  static: true,
+  snapshots: [
+    '<p class="red bold">content</p>'
+  ]
+};
+
 const TestClassesObjectObservable = (): JSX.Element => {
   const o = $({ red: true, blue: false });
   const toggle = () => o ( prev => prev.red ? { red: false, blue: true } : { red: true, blue: false } );
@@ -1286,6 +1375,25 @@ const TestClassesObjectObservable = (): JSX.Element => {
 TestClassesObjectObservable.test = {
   snapshots: [
     '<p class="red">content</p>',
+    '<p class="blue">content</p>'
+  ]
+};
+
+const TestClassesObjectObservableMultiple = (): JSX.Element => {
+  const o = $({ 'red bold': true, blue: false });
+  const toggle = () => o ( prev => prev['red bold'] ? { 'red bold': false, blue: true } : { 'red bold': true, blue: false } );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Classes - Object Observable Multiple</h3>
+      <p class={o}>content</p>
+    </>
+  );
+};
+
+TestClassesObjectObservableMultiple.test = {
+  snapshots: [
+    '<p class="red bold">content</p>',
     '<p class="blue">content</p>'
   ]
 };
@@ -1309,6 +1417,25 @@ TestClassesObjectFunction.test = {
   ]
 };
 
+const TestClassesObjectFunctionMultiple = (): JSX.Element => {
+  const o = $({ 'red bold': true, blue: false });
+  const toggle = () => o ( prev => prev['red bold'] ? { 'red bold': false, blue: true } : { 'red bold': true, blue: false } );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Classes - Object Function Multiple</h3>
+      <p class={() => o ()}>content</p>
+    </>
+  );
+};
+
+TestClassesObjectFunctionMultiple.test = {
+  snapshots: [
+    '<p class="red bold">content</p>',
+    '<p class="blue">content</p>'
+  ]
+};
+
 const TestClassesObjectRemoval = (): JSX.Element => {
   const o = $({ red: true, blue: false });
   const toggle = () => o ( prev => prev ? null : { red: true, blue: false } );
@@ -1324,6 +1451,25 @@ const TestClassesObjectRemoval = (): JSX.Element => {
 TestClassesObjectRemoval.test = {
   snapshots: [
     '<p class="red">content</p>',
+    '<p class="">content</p>'
+  ]
+};
+
+const TestClassesObjectRemovalMultiple = (): JSX.Element => {
+  const o = $({ 'red bold': true, blue: false });
+  const toggle = () => o ( prev => prev ? null : { 'red bold': true, blue: false } );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Classes - Object Removal Multiple</h3>
+      <p class={o}>content</p>
+    </>
+  );
+};
+
+TestClassesObjectRemovalMultiple.test = {
+  snapshots: [
+    '<p class="red bold">content</p>',
     '<p class="">content</p>'
   ]
 };
@@ -4631,14 +4777,22 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestClassRemoval} />
       <TestSnapshots Component={TestClassRemovalString} />
       <TestSnapshots Component={TestClassesArrayStatic} />
+      <TestSnapshots Component={TestClassesArrayStaticMultiple} />
       <TestSnapshots Component={TestClassesArrayObservable} />
+      <TestSnapshots Component={TestClassesArrayObservableMultiple} />
       <TestSnapshots Component={TestClassesArrayFunction} />
+      <TestSnapshots Component={TestClassesArrayFunctionMultiple} />
       <TestSnapshots Component={TestClassesArrayRemoval} />
+      <TestSnapshots Component={TestClassesArrayRemovalMultiple} />
       <TestSnapshots Component={TestClassesArrayCleanup} />
       <TestSnapshots Component={TestClassesObjectStatic} />
+      <TestSnapshots Component={TestClassesObjectStaticMultiple} />
       <TestSnapshots Component={TestClassesObjectObservable} />
+      <TestSnapshots Component={TestClassesObjectObservableMultiple} />
       <TestSnapshots Component={TestClassesObjectFunction} />
+      <TestSnapshots Component={TestClassesObjectFunctionMultiple} />
       <TestSnapshots Component={TestClassesObjectRemoval} />
+      <TestSnapshots Component={TestClassesObjectRemovalMultiple} />
       <TestSnapshots Component={TestClassesObjectCleanup} />
       <TestSnapshots Component={TestStyleStatic} />
       <TestSnapshots Component={TestStyleStaticNumeric} />

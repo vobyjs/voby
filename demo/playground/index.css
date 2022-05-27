@@ -26,3 +26,7 @@
   color: blue;
   stroke: blue;
 }
+
+.bold {
+  font-weight: bold;
+}

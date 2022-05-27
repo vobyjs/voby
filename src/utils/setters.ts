@@ -325,11 +325,27 @@ const setChild = ( parent: HTMLElement, child: Child, fragment: Fragment = new F
 
 };
 
-const setClassStatic = ( element: HTMLElement, key: string, value: null | undefined | boolean ): void => {
+const setClassStatic = (() => {
 
-  element.classList.toggle ( key, !!value );
+  const whitespaceRe = /\s+/g;
 
-};
+  return ( element: HTMLElement, key: string, value: null | undefined | boolean ): void => {
+
+    const keys = key.split ( whitespaceRe );
+
+    if ( value ) {
+
+      element.classList.add ( ...keys );
+
+    } else {
+
+      element.classList.remove ( ...keys );
+
+    }
+
+  };
+
+})();
 
 const setClass = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean> ): void => {
 
@@ -341,7 +357,7 @@ const setClassBooleanStatic = ( element: HTMLElement, value: boolean, key: null 
 
   if ( !key || key === true ) return;
 
-  element.classList.toggle ( key, value );
+  setClassStatic ( element, key, value );
 
 };
 
