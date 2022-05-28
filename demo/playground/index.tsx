@@ -107,6 +107,7 @@ const TestSnapshots = ({ Component, props }: { Component: JSX.Component & { test
 //TODO: Test template with all sorts of supported props
 //TODO: Automate all tests
 //TODO: Enable all tests
+//TODO: Test ForIndex
 
 const TestNullStatic = (): JSX.Element => {
   return (
