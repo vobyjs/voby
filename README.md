@@ -55,13 +55,13 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`$$`](#methods)                      | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`Observable`](#observable)                 | [`JSX`](#jsx)                   |
 | [`createContext`](#createcontext)     | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`ObservableReadonly`](#observablereadonly) | [`Tree Shaking`](#tree-shaking) |
 | [`createDirective`](#createdirective) | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableMaybe`](#observablemaybe)       | [`TypeScript`](#typescript)     |
-| [`createElement`](#createelement)     | [`Fragment`](#fragment)           | [`useBatch`](#usebatch)                     | [`ObservableOptions`](#observableoptions)   |                                 |
-| [`h`](#h)                             | [`If`](#if)                       | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                                 |
-| [`html`](#html)                       | [`Portal`](#portal)               | [`useComputed`](#usecomputed)               | [`F`](#f)                                   |                                 |
-| [`isObservable`](#isobservable)       | [`Suspense`](#suspense)           | [`useContext`](#usecontext)                 | [`O`](#o)                                   |                                 |
-| [`lazy`](#lazy)                       | [`Switch`](#switch)               | [`useDisposed`](#usedisposed)               |                                             |                                 |
-| [`render`](#render)                   | [`Ternary`](#ternary)             | [`useEffect`](#useeffect)                   |                                             |                                 |
-| [`renderToString`](#rendertostring)   |                                   | [`useError`](#useerror)                     |                                             |                                 |
+| [`createElement`](#createelement)     | [`ForIndex`](#forindex)           | [`useBatch`](#usebatch)                     | [`ObservableOptions`](#observableoptions)   |                                 |
+| [`h`](#h)                             | [`Fragment`](#fragment)           | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                                 |
+| [`html`](#html)                       | [`If`](#if)                       | [`useComputed`](#usecomputed)               | [`F`](#f)                                   |                                 |
+| [`isObservable`](#isobservable)       | [`Portal`](#portal)               | [`useContext`](#usecontext)                 | [`O`](#o)                                   |                                 |
+| [`lazy`](#lazy)                       | [`Suspense`](#suspense)           | [`useDisposed`](#usedisposed)               |                                             |                                 |
+| [`render`](#render)                   | [`Switch`](#switch)               | [`useEffect`](#useeffect)                   |                                             |                                 |
+| [`renderToString`](#rendertostring)   | [`Ternary`](#ternary)             | [`useError`](#useerror)                     |                                             |                                 |
 | [`resolve`](#resolve)                 |                                   | [`useEventListener`](#useeventlistener)     |                                             |                                 |
 | [`template`](#template)               |                                   | [`useFetch`](#usefetch)                     |                                             |                                 |
 |                                       |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
@@ -576,6 +576,41 @@ const App = () => {
         return <p>Value: {value}</p>
       }}
     </For>
+  );
+};
+```
+
+#### `ForIndex`
+
+This component is a reactive alternative to natively mapping over an array, but it takes the index as the unique key instead of the value.
+
+This is an alternative to `For` that uses the index of the value in the array for caching, rather than the value itself.
+
+It's recommended to use `ForIndex` for arrays containing duplicate values and/or arrays containing primitive values, and `For` for everything else.
+
+The passed function will always be called with a read-only observable containing the current value at the index being mapped.
+
+Interface:
+
+```ts
+type Value<T = unknown> = T extends ObservableReadonly<infer U> ? ObservableReadonly<U> : ObservableReadonly<T>;
+
+function ForIndex <T> ( props: { values: FunctionMaybe<readonly T[]>, fallback?: JSX.Element, children: (( value: Value<T> ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
+```
+
+Usage:
+
+```tsx
+import {ForIndex} from 'voby';
+
+const App = () => {
+  const numbers = [1, 2, 3, 4, 5];
+  return (
+    <ForIndex values={numbers}>
+      {( value ) => {
+        return <p>Double value: {() => value () ** 2}</p>
+      }}
+    </ForIndex>
   );
 };
 ```
