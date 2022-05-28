@@ -49,7 +49,7 @@ type FunctionMaybe<T = unknown> = (() => T) | T;
 
 type LazyComponent<P = {}> = ( props: P ) => ObservableReadonly<Child>;
 
-type LazyFetcher<P = {}> = () => Promise<{ default: ComponentClass<P> | ComponentFunction<P> }>;
+type LazyFetcher<P = {}> = () => Promise<{ default: ComponentClass<P> | ComponentFunction<P> } | ComponentClass<P> | ComponentFunction<P>>;
 
 type LazyResult<P = {}> = LazyComponent<P> & ({ preload: () => Promise<void> });
 

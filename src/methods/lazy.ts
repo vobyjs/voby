@@ -27,7 +27,9 @@ const lazy = <P = {}> ( fetcher: LazyFetcher<P> ): LazyResult<P> => {
 
         if ( error ) throw error;
 
-        return resolve ( creatElement<P> ( value.default, props ) );
+        const component = ( 'default' in value ) ? value.default : value;
+
+        return resolve ( creatElement<P> ( component, props ) );
 
       });
 
