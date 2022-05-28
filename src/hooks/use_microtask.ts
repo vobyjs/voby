@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import useEffect from '~/hooks/use_effect';
+import useReaction from '~/hooks/use_reaction';
 import $ from '~/methods/S';
 import type {Callback} from '~/types';
 
@@ -11,7 +11,7 @@ const useMicrotask = ( fn: Callback ): void => {
 
   const active = $(false);
 
-  useEffect ( () => {
+  useReaction ( () => {
 
     if ( !active () ) return;
 

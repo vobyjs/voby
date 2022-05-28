@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import {SYMBOL_ELEMENT} from '~/constants';
-import useEffect from '~/hooks/use_effect';
+import useReaction from '~/hooks/use_reaction';
 import isObservable from '~/methods/is_observable';
 import {isArray, isFunction, isPrimitive} from '~/utils/lang';
 import type {FunctionMaybe, ObservableMaybe} from '~/types';
@@ -22,7 +22,7 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T ) => v
       let valuePrev: T | undefined;
       let valuePrimitive = false;
 
-      useEffect ( () => {
+      useReaction ( () => {
 
         const valueNext = value ();
 
@@ -39,7 +39,7 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T ) => v
 
   } else if ( isArray ( value ) && value.some ( isObservable ) ) {
 
-    useEffect ( () => {
+    useReaction ( () => {
 
       setter ( resolveResolved ( value ) );
 
@@ -60,7 +60,7 @@ const resolveFunction = <T> ( value: FunctionMaybe<T>, setter: (( value: T, valu
     let valuePrev: T | undefined;
     let valuePrimitive = false;
 
-    useEffect ( () => {
+    useReaction ( () => {
 
       const valueNext = value ();
 
@@ -88,7 +88,7 @@ const resolveObservable = <T> ( value: ObservableMaybe<T>, setter: (( value?: T,
     let valuePrev: T | undefined;
     let valuePrimitive = false;
 
-    useEffect ( () => {
+    useReaction ( () => {
 
       const valueNext = value ();
 

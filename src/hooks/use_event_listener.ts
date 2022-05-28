@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import useEffect from '~/hooks/use_effect';
+import useReaction from '~/hooks/use_reaction';
 import useResolved from '~/hooks/use_resolved';
 import type {Disposer, ObservableMaybe} from '~/types';
 
@@ -9,7 +9,7 @@ import type {Disposer, ObservableMaybe} from '~/types';
 
 const useEventListener = ( target: ObservableMaybe<EventTarget>, event: ObservableMaybe<string>, handler: ObservableMaybe<EventListener>, options?: ObservableMaybe<true | AddEventListenerOptions> ): Disposer => {
 
-  return useEffect ( () => {
+  return useReaction ( () => {
 
     return useResolved ( [target, event, handler, options], ( target, event, handler, options ) => {
 

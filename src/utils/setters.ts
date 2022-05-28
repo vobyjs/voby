@@ -3,7 +3,7 @@
 
 import {SYMBOLS_DIRECTIVES, TEMPLATE_STATE} from '~/constants';
 import useCleanup from '~/hooks/use_cleanup';
-import useEffect from '~/hooks/use_effect';
+import useReaction from '~/hooks/use_reaction';
 import useReadonly from '~/hooks/use_readonly';
 import $ from '~/methods/S';
 import {context} from '~/oby';
@@ -69,7 +69,7 @@ const setChildReplacementFunction = ( parent: HTMLElement, fragment: Fragment, c
   let valuePrev: Child | undefined;
   let valuePrimitive = false;
 
-  useEffect ( () => {
+  useReaction ( () => {
 
     let valueNext = child ();
 

@@ -3,7 +3,7 @@
 
 import SuspenseContext from '~/components/suspense.context';
 import useDisposed from '~/hooks/use_disposed';
-import useEffect from '~/hooks/use_effect';
+import useReaction from '~/hooks/use_reaction';
 import useReadonly from '~/hooks/use_readonly';
 import $ from '~/methods/S';
 import $$ from '~/methods/SS';
@@ -18,7 +18,7 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): O
 
   const resource = $<Resource<T>>({ pending: true });
 
-  useEffect ( () => {
+  useReaction ( () => {
 
     const disposed = useDisposed ();
 
