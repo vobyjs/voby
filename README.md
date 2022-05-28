@@ -69,6 +69,7 @@ You can find some demos and benchmarks below, more demos are contained inside th
 |                                       |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
 |                                       |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
 |                                       |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
+|                                       |                                   | [`useReaction`](#usereaction)               |                                             |                                 |
 |                                       |                                   | [`useReadonly`](#usereadonly)               |                                             |                                 |
 |                                       |                                   | [`useResolved`](#useresolved)               |                                             |                                 |
 |                                       |                                   | [`useResource`](#useresource)               |                                             |                                 |
@@ -1150,6 +1151,28 @@ const App = () => {
     return <p>{JSON.stringify ( state.value )}</p>
   });
 };
+```
+
+#### `useReaction`
+
+This hook works just like `useEffect`, expect that it's not affected by `Suspense.
+
+This is an advanced hook mostly useful internally, you may never need to use this, `useEffect` and `useMemo` should suffice.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#reaction).
+
+Interface:
+
+```ts
+function useReaction ( fn: () => (() => void) | void ): (() => void);
+```
+
+Usage:
+
+```tsx
+import {useReaction} from 'voby';
+
+useReaction // => Same as require ( 'oby' ).reaction
 ```
 
 #### `useReadonly`
