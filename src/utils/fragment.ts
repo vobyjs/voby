@@ -15,7 +15,6 @@ const FragmentUtils = {
 
     return {
       values: undefined,
-      fragmented: false,
       length: 0
     };
 
@@ -114,7 +113,7 @@ const FragmentUtils = {
   replaceWithNode: ( thiz: Fragment, node: Node ): void => {
 
     thiz.values = node;
-    thiz.fragmented = false;
+    delete thiz.fragmented;
     thiz.length = 1;
 
   },

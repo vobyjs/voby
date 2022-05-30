@@ -49,13 +49,13 @@ type Falsy<T = unknown> = Extract<T, 0 | -0 | 0n | -0n | '' | false | null | und
 
 type FN<Arguments extends unknown[], Return extends unknown = void> = ( ...args: Arguments ) => Return;
 
-type FragmentUndefined = { values: undefined, fragmented: false, length: 0 };
+type FragmentUndefined = { values: undefined, fragmented?: false, length: 0 };
 
-type FragmentNode = { values: Node, fragmented: false, length: 1 };
+type FragmentNode = { values: Node, fragmented?: false, length: 1 };
 
 type FragmentFragment = { values: Fragment, fragmented: true, length: 1 };
 
-type FragmentNodes = { values: Node[], fragmented: false, length: 2 | 3 | 4 | 5 };
+type FragmentNodes = { values: Node[], fragmented?: false, length: 2 | 3 | 4 | 5 };
 
 type FragmentFragments = { values: Fragment[], fragmented: true, length: 2 | 3 | 4 | 5 };
 
