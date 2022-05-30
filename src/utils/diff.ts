@@ -25,6 +25,7 @@ const beforeDummyWrapper: [Node] = [dummyNode];
 const afterDummyWrapper: [Node] = [dummyNode];
 
 const diff = ( parent: Node, before: Node | Node[], after: Node | Node[], nextSibling: Node | null ): void => {
+  if ( before === after ) return;
   if ( before instanceof Node ) {
     beforeDummyWrapper[0] = before;
     before = beforeDummyWrapper;
