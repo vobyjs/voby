@@ -280,7 +280,7 @@ function html ( strings: TemplateStringsArray, ...values: any[] ): JSX.Element;
 Usage:
 
 ```tsx
-import {html} from 'voby';
+import {html, If} from 'voby';
 
 const Counter = (): JSX.Element => {
   const value = $(0);
@@ -291,6 +291,28 @@ const Counter = (): JSX.Element => {
     <p>${value}</p>
     <button onClick=${increment}>+</button>
     <button onClick=${decrement}>-</button>
+  `;
+};
+
+// Using a custom component without registering it
+
+const NoRegistration = (): JSX.Element => {
+  return html`
+    <${If} when=${true}>
+      <p>content</p>
+    </${If}>
+  `;
+};
+
+// Using a custom component after registering it, so you won't need to interpolate it anymore
+
+html.register ({ If });
+
+const NoRegistration = (): JSX.Element => {
+  return html`
+    <If when=${true}>
+      <p>content</p>
+    </If>
   `;
 };
 ```

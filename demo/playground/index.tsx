@@ -5,7 +5,7 @@ import * as Voby from 'voby';
 import {Observable} from 'voby';
 import {Component, Dynamic, ErrorBoundary, For, If, Portal, Suspense, Switch, Ternary} from 'voby';
 import {useBatch, useComputed, useContext, useEffect, useInterval, usePromise, useResource, useTimeout} from 'voby';
-import {$, createContext, createDirective, lazy, render, renderToString, template} from 'voby';
+import {$, createContext, createDirective, html, lazy, render, renderToString, template} from 'voby';
 
 globalThis.Voby = Voby;
 
@@ -1818,6 +1818,50 @@ TestStylesCleanup.test = {
   snapshots: [
     '<p style="color: orange; font-weight: bold;">content</p>',
     '<p style="font-style: italic; text-decoration: line-through;">content</p>'
+  ]
+};
+
+const TestHTMLFunctionStatic = (): JSX.Element => {
+  return (
+    <>
+      <h3>HTML - Function - Static</h3>
+      {html`
+        <${If} when=${true}>
+          <p>${random ()}</p>
+        </${If}>
+      `}
+    </>
+  );
+};
+
+TestHTMLFunctionStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>{random}</p>'
+  ]
+};
+
+const TestHTMLFunctionStaticRegistry = (): JSX.Element => {
+  const P = (): JSX.Element => {
+    return <p>{random ()}</p>;
+  };
+  html.register ({ If, P });
+  return (
+    <>
+      <h3>HTML - Function - Static Registry</h3>
+      {html`
+        <If when=${true}>
+          <P />
+        </If>
+      `}
+    </>
+  );
+};
+
+TestHTMLFunctionStaticRegistry.test = {
+  static: true,
+  snapshots: [
+    '<p>{random}</p>'
   ]
 };
 
@@ -4813,6 +4857,8 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestStylesFunction} />
       <TestSnapshots Component={TestStylesRemoval} />
       <TestSnapshots Component={TestStylesCleanup} />
+      <TestSnapshots Component={TestHTMLFunctionStatic} />
+      <TestSnapshots Component={TestHTMLFunctionStaticRegistry} />
       <TestSnapshots Component={TestHTMLInnerHTMLStatic} />
       <TestSnapshots Component={TestHTMLInnerHTMLObservable} />
       <TestSnapshots Component={TestHTMLInnerHTMLFunction} />
