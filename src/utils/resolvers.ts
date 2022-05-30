@@ -135,7 +135,7 @@ const resolveResolved = <T> ( value: T ): any => {
 
   }
 
-}
+};
 
 /* EXPORT */
 
