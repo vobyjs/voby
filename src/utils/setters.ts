@@ -10,7 +10,7 @@ import {context} from '~/oby';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import FragmentUtils from '~/utils/fragment';
-import {castArray, flatten, isArray, isFunction, isNil, isPrimitive, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
+import {castArray, flatten, isArray, isFunction, isNil, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
 import {resolveChild, resolveFunction, resolveObservable} from '~/utils/resolvers';
 import type {Child, DirectiveFunction, EventListener, Fragment, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 
@@ -67,7 +67,6 @@ const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<n
 const setChildReplacementFunction = ( parent: HTMLElement, fragment: Fragment, child: (() => Child) ): void => {
 
   let valuePrev: Child | undefined;
-  let valuePrimitive = false;
 
   useReaction ( () => {
 
@@ -79,12 +78,9 @@ const setChildReplacementFunction = ( parent: HTMLElement, fragment: Fragment, c
 
     }
 
-    if ( valuePrimitive && valuePrev === valueNext ) return; // Nothing actually changed, skipping
-
     setChildStatic ( parent, fragment, valueNext );
 
     valuePrev = valueNext;
-    valuePrimitive = isPrimitive ( valueNext );
 
   });
 

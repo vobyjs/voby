@@ -4,7 +4,7 @@
 import {SYMBOL_ELEMENT} from '~/constants';
 import useReaction from '~/hooks/use_reaction';
 import isObservable from '~/methods/is_observable';
-import {isArray, isFunction, isPrimitive} from '~/utils/lang';
+import {isArray, isFunction} from '~/utils/lang';
 import type {FunctionMaybe, ObservableMaybe} from '~/types';
 
 /* MAIN */
@@ -20,18 +20,14 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T ) => v
     } else {
 
       let valuePrev: T | undefined;
-      let valuePrimitive = false;
 
       useReaction ( () => {
 
         const valueNext = value ();
 
-        if ( valuePrimitive && valuePrev === valueNext ) return; // Nothing actually changed, skipping
-
         resolveChild ( valueNext, setter );
 
         valuePrev = valueNext;
-        valuePrimitive = isPrimitive ( valueNext );
 
       });
 
@@ -58,18 +54,14 @@ const resolveFunction = <T> ( value: FunctionMaybe<T>, setter: (( value: T, valu
   if ( isFunction ( value ) ) {
 
     let valuePrev: T | undefined;
-    let valuePrimitive = false;
 
     useReaction ( () => {
 
       const valueNext = value ();
 
-      if ( valuePrimitive && valuePrev === valueNext ) return; // Nothing actually changed, skipping
-
       setter ( valueNext, valuePrev );
 
       valuePrev = valueNext;
-      valuePrimitive = isPrimitive ( valueNext );
 
     });
 
@@ -86,18 +78,14 @@ const resolveObservable = <T> ( value: ObservableMaybe<T>, setter: (( value?: T,
   if ( isObservable ( value ) ) {
 
     let valuePrev: T | undefined;
-    let valuePrimitive = false;
 
     useReaction ( () => {
 
       const valueNext = value ();
 
-      if ( valuePrimitive && valuePrev === valueNext ) return; // Nothing actually changed, skipping
-
       setter ( valueNext, valuePrev );
 
       valuePrev = valueNext;
-      valuePrimitive = isPrimitive ( valueNext );
 
     });
 
