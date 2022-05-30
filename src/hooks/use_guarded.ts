@@ -1,7 +1,8 @@
 
 /* IMPORT */
 
-import useComputed from '~/hooks/use_computed';
+import useReaction from '~/hooks/use_reaction';
+import $ from '~/methods/S';
 import {isFunction} from '~/utils/lang';
 import type {FunctionMaybe} from '~/types';
 
@@ -11,11 +12,15 @@ import type {FunctionMaybe} from '~/types';
 
 const useGuarded = <T, U extends T> ( value: FunctionMaybe<T>, guard: (( value: T ) => value is U) ): (() => U) => {
 
-  const guarded = useComputed<U | undefined> ( () => {
+  const guarded = $<U | undefined> ();
+
+  useReaction ( () => {
 
     const current = isFunction ( value ) ? value () : value;
 
-    return guard ( current ) ? current : undefined;
+    if ( !guard ( current ) ) return;
+
+    guarded ( () => current );
 
   });
 
