@@ -18,9 +18,21 @@
 
 /* MAIN */
 
-// This is just a slightly customized version of udomdiff: with types, no accessor function and recycling support
+// This is just a slightly customized version of udomdiff: with types, no accessor function, recycling support and support for diffing unwrapped nodes
 
-const diff = ( parent: Node, before: Node[], after: Node[], nextSibling: Node | null ): void => {
+const dummyNode = document.createComment ( '' );
+const beforeDummyWrapper: [Node] = [dummyNode];
+const afterDummyWrapper: [Node] = [dummyNode];
+
+const diff = ( parent: Node, before: Node | Node[], after: Node | Node[], nextSibling: Node | null ): void => {
+  if ( before instanceof Node ) {
+    beforeDummyWrapper[0] = before;
+    before = beforeDummyWrapper;
+  }
+  if ( after instanceof Node ) {
+    afterDummyWrapper[0] = after;
+    after = afterDummyWrapper;
+  }
   const bLength = after.length;
   let aEnd = before.length;
   let bEnd = bLength;
@@ -158,6 +170,8 @@ const diff = ( parent: Node, before: Node[], after: Node[], nextSibling: Node | 
       }
     }
   }
+  beforeDummyWrapper[0] = dummyNode;
+  afterDummyWrapper[0] = dummyNode;
 };
 
 /* EXPORT */
