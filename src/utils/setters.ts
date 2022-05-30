@@ -353,11 +353,19 @@ const setClass = ( element: HTMLElement, key: string, value: FunctionMaybe<null 
 
 };
 
-const setClassBooleanStatic = ( element: HTMLElement, value: boolean, key: null | undefined | boolean | string ): void => {
+const setClassBooleanStatic = ( element: HTMLElement, value: boolean, key: null | undefined | boolean | string, keyPrev?: null | undefined | boolean | string ): void => {
 
-  if ( !key || key === true ) return;
+  if ( keyPrev && keyPrev !== true ) {
 
-  setClassStatic ( element, key, value );
+    setClassStatic ( element, keyPrev, false );
+
+  }
+
+  if ( key && key !== true ) {
+
+    setClassStatic ( element, key, value );
+
+  }
 
 };
 

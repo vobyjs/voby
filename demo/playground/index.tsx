@@ -1234,6 +1234,25 @@ TestClassesArrayObservableMultiple.test = {
   ]
 };
 
+const TestClassesArrayObservableValue = (): JSX.Element => {
+  const o = $('red');
+  const toggle = () => o ( prev => prev === 'red' ? 'blue' : 'red' );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Classes - Array Observable Value</h3>
+      <p class={[o]}>content</p>
+    </>
+  );
+};
+
+TestClassesArrayObservableValue.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="blue">content</p>'
+  ]
+};
+
 const TestClassesArrayFunction = (): JSX.Element => {
   const o = $([ 'red', false ]);
   const toggle = () => o ( prev => prev[0] ? [false, 'blue'] : ['red', false] );
@@ -1268,6 +1287,25 @@ const TestClassesArrayFunctionMultiple = (): JSX.Element => {
 TestClassesArrayFunctionMultiple.test = {
   snapshots: [
     '<p class="red bold">content</p>',
+    '<p class="blue">content</p>'
+  ]
+};
+
+const TestClassesArrayFunctionValue = (): JSX.Element => {
+  const o = $('red');
+  const toggle = () => o ( prev => prev === 'red' ? 'blue' : 'red' );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Classes - Array Function Value</h3>
+      <p class={[() => o ()]}>content</p>
+    </>
+  );
+};
+
+TestClassesArrayFunctionValue.test = {
+  snapshots: [
+    '<p class="red">content</p>',
     '<p class="blue">content</p>'
   ]
 };
@@ -4825,8 +4863,10 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestClassesArrayStaticMultiple} />
       <TestSnapshots Component={TestClassesArrayObservable} />
       <TestSnapshots Component={TestClassesArrayObservableMultiple} />
+      <TestSnapshots Component={TestClassesArrayObservableValue} />
       <TestSnapshots Component={TestClassesArrayFunction} />
       <TestSnapshots Component={TestClassesArrayFunctionMultiple} />
+      <TestSnapshots Component={TestClassesArrayFunctionValue} />
       <TestSnapshots Component={TestClassesArrayRemoval} />
       <TestSnapshots Component={TestClassesArrayRemovalMultiple} />
       <TestSnapshots Component={TestClassesArrayCleanup} />
