@@ -1,24 +1,20 @@
 
 /* IMPORT */
 
-import useComputed from '~/hooks/use_computed';
+import useTruthy from '~/hooks/use_truthy';
 import {ternary} from '~/oby';
 import {isFunction} from '~/utils/lang';
 import type {Child, FunctionMaybe, ObservableReadonly, Truthy} from '~/types';
 
 /* MAIN */
 
-const If = <T> ({ when, fallback, children }: { when: FunctionMaybe<T>, fallback?: Child, children: Child | (( value: ObservableReadonly<Truthy<T>> ) => Child) }): ObservableReadonly<Child> => {
+const If = <T> ({ when, fallback, children }: { when: FunctionMaybe<T>, fallback?: Child, children: Child | (( value: (() => Truthy<T>) ) => Child) }): ObservableReadonly<Child> => {
 
-  if ( isFunction ( children ) && children.length ) { // Calling the children function with an ObservableReadonly<Truthy<T>>
+  if ( isFunction ( children ) && children.length ) { // Calling the children function with an (() => Truthy<T>)
 
-    let prev;
-    const nonNullable = useComputed<Truthy<T>> ( () => {
-      const value = isFunction ( when ) ? when () : when;
-      return prev = ( value || prev );
-    });
+    const truthy = useTruthy ( when );
 
-    return ternary ( when, () => children ( nonNullable ), fallback );
+    return ternary ( when, () => children ( truthy ), fallback );
 
   } else { // Just passing the children along
 

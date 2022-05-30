@@ -673,7 +673,7 @@ Interface:
 ```ts
 type Truthy<T = unknown> = Extract<T, number | bigint | string | true | object | symbol | Function>;
 
-function If <T> ( props: { when: FunctionMaybe<T>, fallback?: JSX.Element, children: JSX.Element | (( value: ObservableReadonly<Truthy<T>> ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
+function If <T> ( props: { when: FunctionMaybe<T>, fallback?: JSX.Element, children: JSX.Element | (( value: (() => Truthy<T>) ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
 ```
 
 Usage:
