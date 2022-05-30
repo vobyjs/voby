@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import {SYMBOL_TEMPLATE_ACCESSOR} from '~/constants';
-import type {TemplateActionProxy} from '~/types';
+import type {Falsy, TemplateActionProxy, Truthy} from '~/types';
 
 /* MAIN */
 
@@ -55,6 +55,12 @@ const {isArray} = Array;
 const isError = ( value: unknown ): value is Error => {
 
   return value instanceof Error;
+
+};
+
+const isFalsy = <T> ( value: T ): value is Falsy<T> => {
+
+  return !value;
 
 };
 
@@ -123,6 +129,12 @@ const isTemplateAccessor = ( value: unknown ): value is TemplateActionProxy => {
 
 };
 
+const isTruthy = <T> ( value: T ): value is Truthy<T> => {
+
+  return !!value;
+
+};
+
 const isVoidChild = ( value: unknown ): value is null | undefined | symbol | boolean => {
 
   return value === null || value === undefined || typeof value === 'boolean' || typeof value === 'symbol';
@@ -153,4 +165,4 @@ const once = <T> ( fn: () => T ): (() => T) => {
 
 /* EXPORT */
 
-export {assign, castArray, castError, flatten, indexOf, isArray, isError, isFunction, isNil, isNode, isPrimitive, isPromise, isString, isSVG, isSVGElement, isTemplateAccessor, isVoidChild, noop, once};
+export {assign, castArray, castError, flatten, indexOf, isArray, isError, isFalsy, isFunction, isNil, isNode, isPrimitive, isPromise, isString, isSVG, isSVGElement, isTemplateAccessor, isTruthy, isVoidChild, noop, once};
