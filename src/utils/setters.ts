@@ -5,13 +5,14 @@ import {SYMBOLS_DIRECTIVES, TEMPLATE_STATE} from '~/constants';
 import useCleanup from '~/hooks/use_cleanup';
 import useReaction from '~/hooks/use_reaction';
 import useReadonly from '~/hooks/use_readonly';
+import isObservable from '~/methods/is_observable';
 import $ from '~/methods/S';
 import {context} from '~/oby';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import FragmentUtils from '~/utils/fragment';
 import {castArray, flatten, isArray, isFunction, isNil, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
-import {resolveChild, resolveFunction, resolveObservable} from '~/utils/resolvers';
+import {resolveChild, resolveFunction} from '~/utils/resolvers';
 import type {Child, DirectiveFunction, EventListener, Fragment, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 
 /* MAIN */
@@ -60,13 +61,23 @@ const setAttributeStatic = (() => {
 
 const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean | number | string> ): void => {
 
-  resolveFunction ( value, setAttributeStatic.bind ( undefined, element, key ) );
+  if ( isFunction ( value ) ) {
+
+    useReaction ( () => {
+
+      setAttributeStatic ( element, key, value () );
+
+    });
+
+  } else {
+
+    setAttributeStatic ( element, key, value );
+
+  }
 
 };
 
 const setChildReplacementFunction = ( parent: HTMLElement, fragment: Fragment, child: (() => Child) ): void => {
-
-  let valuePrev: Child | undefined;
 
   useReaction ( () => {
 
@@ -79,8 +90,6 @@ const setChildReplacementFunction = ( parent: HTMLElement, fragment: Fragment, c
     }
 
     setChildStatic ( parent, fragment, valueNext );
-
-    valuePrev = valueNext;
 
   });
 
@@ -364,7 +373,19 @@ const setClassStatic = (() => {
 
 const setClass = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean> ): void => {
 
-  resolveFunction ( value, setClassStatic.bind ( undefined, element, key ) );
+  if ( isFunction ( value ) ) {
+
+    useReaction ( () => {
+
+      setClassStatic ( element, key, value () );
+
+    });
+
+  } else {
+
+    setClassStatic ( element, key, value );
+
+  }
 
 };
 
@@ -386,7 +407,25 @@ const setClassBooleanStatic = ( element: HTMLElement, value: boolean, key: null 
 
 const setClassBoolean = ( element: HTMLElement, value: boolean, key: FunctionMaybe<null | undefined | boolean | string> ): void => {
 
-  resolveFunction ( key, setClassBooleanStatic.bind ( undefined, element, value ) );
+  if ( isFunction ( key ) ) {
+
+    let keyPrev: null | undefined | boolean | string;
+
+    useReaction ( () => {
+
+      const keyNext = key ();
+
+      setClassBooleanStatic ( element, value, keyNext, keyPrev );
+
+      keyPrev = keyNext;
+
+    });
+
+  } else {
+
+    setClassBooleanStatic ( element, value, key );
+
+  }
 
 };
 
@@ -474,7 +513,25 @@ const setClassesStatic = ( element: HTMLElement, object: null | undefined | stri
 
 const setClasses = ( element: HTMLElement, object: FunctionMaybe<null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>>> ): void => {
 
-  resolveFunction ( object, setClassesStatic.bind ( undefined, element ) );
+  if ( isFunction ( object ) ) {
+
+    let objectPrev: null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>>;
+
+    useReaction ( () => {
+
+      const objectNext = object ();
+
+      setClassesStatic ( element, objectNext, objectPrev );
+
+      objectPrev = objectNext;
+
+    });
+
+  } else {
+
+    setClassesStatic ( element, object );
+
+  }
 
 };
 
@@ -595,7 +652,19 @@ const setEventStatic = (() => {
 
 const setEvent = ( element: HTMLElement, event: string, value: ObservableMaybe<null | undefined | EventListener> ): void => {
 
-  resolveObservable<EventListener | null | undefined> ( value, setEventStatic.bind ( undefined, element, event ) ); //TSC
+  if ( isObservable ( value ) ) {
+
+    useReaction ( () => {
+
+      setEventStatic ( element, event, value () );
+
+    });
+
+  } else {
+
+    setEventStatic ( element, event, value );
+
+  }
 
 };
 
@@ -607,9 +676,9 @@ const setHTMLStatic = ( element: HTMLElement, value: null | undefined | number |
 
 const setHTML = ( element: HTMLElement, value: FunctionMaybe<{ __html: FunctionMaybe<null | undefined | number | string> }> ): void => {
 
-  resolveFunction ( value, value => {
+  useReaction ( () => {
 
-    resolveFunction ( value.__html, setHTMLStatic.bind ( undefined, element ) );
+    setHTMLStatic ( element, resolveFunction ( resolveFunction ( value ).__html ) );
 
   });
 
@@ -629,7 +698,19 @@ const setPropertyStatic = ( element: HTMLElement, key: string, value: null | und
 
 const setProperty = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean | number | string> ): void => {
 
-  resolveFunction ( value, setPropertyStatic.bind ( undefined, element, key ) );
+  if ( isFunction ( value ) ) {
+
+    useReaction ( () => {
+
+      setPropertyStatic ( element, key, value () );
+
+    });
+
+  } else {
+
+    setPropertyStatic ( element, key, value );
+
+  }
 
 };
 
@@ -671,7 +752,19 @@ const setStyleStatic = (() => {
 
 const setStyle = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | number | string> ): void => {
 
-  resolveFunction ( value, setStyleStatic.bind ( undefined, element, key ) );
+  if ( isFunction ( value ) ) {
+
+    useReaction ( () => {
+
+      setStyleStatic ( element, key, value () );
+
+    });
+
+  } else {
+
+    setStyleStatic ( element, key, value );
+
+  }
 
 };
 
@@ -719,7 +812,25 @@ const setStylesStatic = ( element: HTMLElement, object: null | undefined | strin
 
 const setStyles = ( element: HTMLElement, object: FunctionMaybe<null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>> ): void => {
 
-  resolveFunction ( object, setStylesStatic.bind ( undefined, element ) );
+  if ( isFunction ( object ) ) {
+
+    let objectPrev: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>;
+
+    useReaction ( () => {
+
+      const objectNext = object ();
+
+      setStylesStatic ( element, objectNext, objectPrev );
+
+      objectPrev = objectNext;
+
+    });
+
+  } else {
+
+    setStylesStatic ( element, object );
+
+  }
 
 };
 

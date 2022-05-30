@@ -19,15 +19,9 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T ) => v
 
     } else {
 
-      let valuePrev: T | undefined;
-
       useReaction ( () => {
 
-        const valueNext = value ();
-
-        resolveChild ( valueNext, setter );
-
-        valuePrev = valueNext;
+        resolveChild ( value (), setter );
 
       });
 
@@ -49,51 +43,15 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T ) => v
 
 };
 
-const resolveFunction = <T> ( value: FunctionMaybe<T>, setter: (( value: T, valuePrev?: T ) => void) ): void => {
+const resolveFunction = <T> ( value: FunctionMaybe<T> ): T => {
 
-  if ( isFunction ( value ) ) {
-
-    let valuePrev: T | undefined;
-
-    useReaction ( () => {
-
-      const valueNext = value ();
-
-      setter ( valueNext, valuePrev );
-
-      valuePrev = valueNext;
-
-    });
-
-  } else {
-
-    setter ( value );
-
-  }
+  return isFunction ( value ) ? value () : value;
 
 };
 
-const resolveObservable = <T> ( value: ObservableMaybe<T>, setter: (( value?: T, valuePrev?: T ) => void) ): void => {
+const resolveObservable = <T> ( value: ObservableMaybe<T> ): T => {
 
-  if ( isObservable ( value ) ) {
-
-    let valuePrev: T | undefined;
-
-    useReaction ( () => {
-
-      const valueNext = value ();
-
-      setter ( valueNext, valuePrev );
-
-      valuePrev = valueNext;
-
-    });
-
-  } else {
-
-    setter ( value );
-
-  }
+  return isObservable ( value ) ? value () : value;
 
 };
 
