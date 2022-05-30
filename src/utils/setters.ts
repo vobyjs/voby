@@ -9,10 +9,10 @@ import $ from '~/methods/S';
 import {context} from '~/oby';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
-import Fragment from '~/utils/fragment';
+import FragmentUtils from '~/utils/fragment';
 import {castArray, flatten, isArray, isFunction, isNil, isPrimitive, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
 import {resolveChild, resolveFunction, resolveObservable} from '~/utils/resolvers';
-import type {Child, DirectiveFunction, EventListener, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
+import type {Child, DirectiveFunction, EventListener, Fragment, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 
 /* MAIN */
 
@@ -128,9 +128,9 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
     if ( !parent ) throw new Error ( 'Invalid child replacement' );
 
-    const fragment = new Fragment ();
+    const fragment = FragmentUtils.make ();
 
-    fragment.pushNode ( childPrev );
+    FragmentUtils.pushNode ( fragment, childPrev );
 
     if ( type === 'function' ) {
 
@@ -148,10 +148,11 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
 const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child ): void => {
 
-  const prev = fragment.getChildren ();
-  const prevLength = prev.length;
-  const prevFirst = prev[0];
-  const prevLast = prev[prevLength - 1];
+  const prev = FragmentUtils.getChildren ( fragment );
+  const prevIsArray = ( prev instanceof Array );
+  const prevLength = prevIsArray ? prev.length : 1;
+  const prevFirst = prevIsArray ? prev[0] : prev;
+  const prevLast = prevIsArray ? prev[prevLength - 1] : prev;
   const prevSibling = prevLast?.nextSibling || null;
 
   if ( prevLength === 0 ) { // Fast path for appending a node the first time
@@ -164,7 +165,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
       parent.appendChild ( textNode );
 
-      fragment.setNode ( textNode );
+      FragmentUtils.replaceWithNode ( fragment, textNode );
 
       return;
 
@@ -174,7 +175,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
       parent.insertBefore ( node, null );
 
-      fragment.setNode ( node );
+      FragmentUtils.replaceWithNode ( fragment, node );
 
       return;
 
@@ -190,7 +191,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
       const node = setChildReplacementText ( String ( child ), prevFirst );
 
-      fragment.setNode ( node );
+      FragmentUtils.replaceWithNode ( fragment, node );
 
       return;
 
@@ -198,7 +199,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
   }
 
-  const fragmentNext = new Fragment ();
+  const fragmentNext = FragmentUtils.make ();
 
   const children: Node[] = Array.isArray ( child ) ? flatten ( child ) : [child]; //TSC
 
@@ -209,17 +210,17 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
     if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
-      fragmentNext.pushNode ( createText ( child ) );
+      FragmentUtils.pushNode ( fragmentNext, createText ( child ) );
 
     } else if ( type === 'object' && child !== null && typeof child.nodeType === 'number' ) {
 
-      fragmentNext.pushNode ( child );
+      FragmentUtils.pushNode ( fragmentNext, child );
 
     } else if ( type === 'function' ) {
 
-      const fragment = new Fragment ();
+      const fragment = FragmentUtils.make ();
 
-      fragmentNext.pushFragment ( fragment );
+      FragmentUtils.pushFragment ( fragmentNext, fragment );
 
       resolveChild ( child, setChildStatic.bind ( undefined, parent, fragment ) );
 
@@ -227,8 +228,8 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
   }
 
-  const next = fragmentNext.getChildren ();
-  const nextLength = next.length;
+  let next = FragmentUtils.getChildren ( fragmentNext );
+  let nextLength = fragmentNext.length;
 
   if ( nextLength === 0 && prevLength === 1 && prevFirst.nodeType === 8 ) { // It's a placeholder already, no need to replace it
 
@@ -263,11 +264,12 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
         const placeholder = createComment ();
 
-        fragmentNext.pushNode ( placeholder );
+        FragmentUtils.pushNode ( fragmentNext, placeholder );
 
         if ( next !== fragmentNext.values ) {
 
-          next.push ( placeholder );
+          next = placeholder;
+          nextLength += 1;
 
         }
 
@@ -275,23 +277,39 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
       if ( prevSibling ) {
 
-        for ( let i = 0, l = next.length; i < l; i++ ) {
+        if ( next instanceof Array ) {
 
-          parent.insertBefore ( next[i], prevSibling );
+          for ( let i = 0, l = next.length; i < l; i++ ) {
+
+            parent.insertBefore ( next[i], prevSibling );
+
+          }
+
+        } else {
+
+          parent.insertBefore ( next, prevSibling );
 
         }
 
       } else {
 
-        for ( let i = 0, l = next.length; i < l; i++ ) {
+        if ( next instanceof Array ) {
 
-          parent.append ( next[i] );
+          for ( let i = 0, l = next.length; i < l; i++ ) {
+
+            parent.append ( next[i] );
+
+          }
+
+        } else {
+
+          parent.append ( next );
 
         }
 
       }
 
-      fragment.replaceWithFragment ( fragmentNext );
+      FragmentUtils.replaceWithFragment ( fragment, fragmentNext );
 
       return;
 
@@ -303,11 +321,12 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
     const placeholder = createComment ();
 
-    fragmentNext.pushNode ( placeholder );
+    FragmentUtils.pushNode ( fragmentNext, placeholder );
 
     if ( next !== fragmentNext.values ) {
 
-      next.push ( placeholder );
+      next = placeholder;
+      nextLength += 1;
 
     }
 
@@ -315,11 +334,11 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
   diff ( parent, prev, next, prevSibling );
 
-  fragment.replaceWithFragment ( fragmentNext );
+  FragmentUtils.replaceWithFragment ( fragment, fragmentNext );
 
 };
 
-const setChild = ( parent: HTMLElement, child: Child, fragment: Fragment = new Fragment () ): void => {
+const setChild = ( parent: HTMLElement, child: Child, fragment: Fragment = FragmentUtils.make () ): void => {
 
   resolveChild ( child, setChildStatic.bind ( undefined, parent, fragment ) );
 

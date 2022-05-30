@@ -49,6 +49,20 @@ type Falsy<T = unknown> = Extract<T, 0 | -0 | 0n | -0n | '' | false | null | und
 
 type FN<Arguments extends unknown[], Return extends unknown = void> = ( ...args: Arguments ) => Return;
 
+type FragmentUndefined = { values: undefined, fragmented: false, length: 0 };
+
+type FragmentNode = { values: Node, fragmented: false, length: 1 };
+
+type FragmentFragment = { values: Fragment, fragmented: true, length: 1 };
+
+type FragmentNodes = { values: Node[], fragmented: false, length: 2 | 3 | 4 | 5 };
+
+type FragmentFragments = { values: Fragment[], fragmented: true, length: 2 | 3 | 4 | 5 };
+
+type FragmentMixed = { values: (Node | Fragment)[], fragmented: true, length: 2 | 3 | 4 | 5 };
+
+type Fragment = FragmentUndefined | FragmentNode | FragmentFragment | FragmentNodes | FragmentFragments | FragmentMixed;
+
 type FunctionMaybe<T = unknown> = (() => T) | T;
 
 type LazyComponent<P = {}> = ( props: P ) => ObservableReadonly<Child>;
@@ -101,4 +115,4 @@ type Truthy<T = unknown> = Extract<T, number | bigint | string | true | object |
 
 /* EXPORT */
 
-export type {ArrayMaybe, Callback, Child, ChildWithMetadata, ComponentCallable, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, ComponentsMap, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, DirectiveFunction, DirectiveProvider, Directive, Disposer, Element, EventListener, Falsy, FN, FunctionMaybe, LazyComponent, LazyFetcher, LazyResult, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourcePending, ResourceRejected, ResourceResolved, Resource, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap, Truthy};
+export type {ArrayMaybe, Callback, Child, ChildWithMetadata, ComponentCallable, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, ComponentsMap, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, DirectiveFunction, DirectiveProvider, Directive, Disposer, Element, EventListener, Falsy, FN, FragmentUndefined, FragmentNode, FragmentFragment, FragmentNodes, FragmentFragments, FragmentMixed, Fragment, FunctionMaybe, LazyComponent, LazyFetcher, LazyResult, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourcePending, ResourceRejected, ResourceResolved, Resource, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateOptions, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap, Truthy};
