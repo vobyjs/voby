@@ -111,7 +111,7 @@ type TemplateVariableData = { path: TemplateActionPath, properties: TemplateVari
 
 type TemplateVariablesMap = Map<TemplateActionPath, string>;
 
-type Truthy<T = unknown> = Extract<T, number | bigint | string | true | object | symbol | Function>;
+type Truthy<T = unknown> = Exclude<T, 0 | -0 | 0n | -0n | '' | false | null | undefined | void>;
 
 /* EXPORT */
 
