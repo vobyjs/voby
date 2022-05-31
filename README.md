@@ -114,7 +114,41 @@ Usage:
 ```tsx
 import {$} from 'voby';
 
-$ // => Same as require ( 'oby' ).default
+// Create an observable without an initial value
+
+$<number> ();
+
+// Create an observable with an initial value
+
+$(1);
+
+// Create an observable with an initial value and a custom equality function
+
+const equals = ( value, valuePrev ) => Object.is ( value, valuePrev );
+
+const o = $( 1, { equals } );
+
+// Create an observable with an initial value and a special "false" equality function, which is a shorthand for `() => false`, which causes the observable to always emit when its setter is called
+
+const oFalse = $( 1, { equals: false } );
+
+// Getter
+
+o (); // => 1
+
+// Setter
+
+o ( 2 ); // => 2
+
+// Setter via a function, which gets called with the current value
+
+o ( value => value + 1 ); // => 3
+
+// Setter that sets a function, it has to be wrapped in another function because the above form exists
+
+const noop = () => {};
+
+o ( () => noop );
 ```
 
 #### `$$`
@@ -134,7 +168,16 @@ Usage:
 ```tsx
 import {$$} from 'voby';
 
-$$ // => Same as require ( 'oby' ).get
+// Getting the value out of an observable
+
+const o = $(123);
+
+$$ ( o ); // => 123
+
+// Getting the value out of a non-observable
+
+$$ ( 123 ); // => 123
+$$ ( () => 123 ); // => () => 123
 ```
 
 #### `createContext`
