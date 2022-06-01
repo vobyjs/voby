@@ -1,27 +1,18 @@
 
 /* IMPORT */
 
-import useReaction from '~/hooks/use_reaction';
-import $ from '~/methods/S';
+import {with as _with} from '~/oby';
 import type {Callback} from '~/types';
 
 /* MAIN */
 
 const useMicrotask = ( fn: Callback ): void => {
 
-  const active = $(false);
-
-  useReaction ( () => {
-
-    if ( !active () ) return;
-
-    fn ();
-
-  });
+  const runWithOwner = _with ();
 
   queueMicrotask ( () => {
 
-    active ( true );
+    runWithOwner ( fn );
 
   });
 

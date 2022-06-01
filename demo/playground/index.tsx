@@ -3965,10 +3965,34 @@ const TestRefUnmounting = (): JSX.Element => {
 };
 
 TestRefUnmounting.test = {
-  static: true,
   snapshots: [
     '<p>Got ref - Has parent: true - Is connected: true</p><p>content</p>',
+    '<p>Got ref - Has parent: true - Is connected: true</p><!---->',
     // '<p>No ref</p><!---->' //TODO: Maybe enable this back?
+  ]
+};
+
+const TestRefContext = (): JSX.Element => {
+  const message = $('');
+  const Context = createContext ( 123 );
+  const Reffed = (): JSX.Element => {
+    const ref = element => message ( `Got ref - Has parent: ${!!element.parentElement} - Is connected: ${element.isConnected} - Context: ${useContext ( Context )}` );
+    return <p ref={ref}>{message}</p>;
+  };
+  return (
+    <>
+      <h3>Ref - Context</h3>
+      <Context.Provider value={321}>
+        <Reffed />
+      </Context.Provider>
+    </>
+  );
+};
+
+TestRefContext.test = {
+  static: true,
+  snapshots: [
+    '<p>Got ref - Has parent: true - Is connected: true - Context: 321</p>'
   ]
 };
 
@@ -4988,6 +5012,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestRef} />
       <TestSnapshots Component={TestRefs} />
       <TestSnapshots Component={TestRefUnmounting} />
+      <TestSnapshots Component={TestRefContext} />
       <TestSnapshots Component={TestPromiseResolved} />
       <TestSnapshots Component={TestPromiseRejected} />
       <TestSnapshots Component={TestSVGStatic} />

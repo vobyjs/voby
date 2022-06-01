@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import {SYMBOLS_DIRECTIVES, TEMPLATE_STATE} from '~/constants';
-import useCleanup from '~/hooks/use_cleanup';
+import useMicrotask from '~/hooks/use_microtask';
 import useReaction from '~/hooks/use_reaction';
 import useReadonly from '~/hooks/use_readonly';
 import isObservable from '~/methods/is_observable';
@@ -720,9 +720,9 @@ const setRef = <T> ( element: T, value: null | undefined | Ref<T> | Ref<T>[] ): 
 
   const values = castArray ( value );
 
-  values.forEach ( value => queueMicrotask ( value.bind ( undefined, element ) ) );
+  useMicrotask ( () => values.forEach ( value => value ( element ) ) );
 
-  // useCleanup ( () => values.forEach ( value => queueMicrotask ( value.bind ( undefined, undefined ) ) ) ); // Too wasteful probably...
+  // useCleanup ( () => useMicrotask ( () => values.forEach ( value => value ( undefined ) ) ) ); // Too wasteful probably...
 
 };
 
