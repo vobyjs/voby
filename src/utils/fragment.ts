@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import type {Fragment} from '~/types';
+import type {FragmentNode, FragmentFragment, Fragment} from '~/types';
 
 /* HELPERS */
 
@@ -16,6 +16,25 @@ const FragmentUtils = {
     return {
       values: undefined,
       length: 0
+    };
+
+  },
+
+  makeWithNode: ( node: Node ): FragmentNode => {
+
+    return {
+      values: node,
+      length: 1
+    };
+
+  },
+
+  makeWithFragment: ( fragment: Fragment ): FragmentFragment => {
+
+    return {
+      values: fragment,
+      fragmented: true,
+      length: 1
     };
 
   },

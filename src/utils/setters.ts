@@ -133,9 +133,7 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
     if ( !parent ) throw new Error ( 'Invalid child replacement' );
 
-    const fragment = FragmentUtils.make ();
-
-    FragmentUtils.pushNode ( fragment, childPrev );
+    const fragment = FragmentUtils.makeWithNode ( childPrev );
 
     if ( type === 'function' ) {
 
