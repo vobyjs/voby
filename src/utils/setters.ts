@@ -722,7 +722,7 @@ const setRef = <T> ( element: T, value: null | undefined | Ref<T> | Ref<T>[] ): 
 
   values.forEach ( value => queueMicrotask ( value.bind ( undefined, element ) ) );
 
-  useCleanup ( () => values.forEach ( value => queueMicrotask ( value.bind ( undefined, undefined ) ) ) );
+  // useCleanup ( () => values.forEach ( value => queueMicrotask ( value.bind ( undefined, undefined ) ) ) ); // Too wasteful probably...
 
 };
 

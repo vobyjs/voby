@@ -1658,7 +1658,6 @@ JSX is supported out of the box, as a rule of thumb it's very similar to how Rea
 - The value provided to an attribute can always be either just the plain value itself, an observable to that value, or a function to that value. If an observable or a function is provided then that attribute will update itself in a fine-grained manner.
 - There's no "key" attribute because it's unnecessary.
 - Only refs in the function form are supported, so you are incentivized to simply use observables for them too.
-- A ref function attached to a DOM element will also be called with `undefined` when that node is unmounted.
 - The "ref" attribute can also accept an array of functions to call, for convenience.
 - You can simply just use "class" instead of "className".
 - The "class" attribute can also accept an object of classes or an array of classes, for convenience.
