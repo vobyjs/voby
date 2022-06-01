@@ -5,7 +5,7 @@ import Portal from '~/components/portal';
 import Suspense from '~/components/suspense';
 import SuspenseContext from '~/components/suspense.context';
 import {SYMBOL_SUSPENSE} from '~/constants';
-import useEffect from '~/hooks/use_effect';
+import useReaction from '~/hooks/use_reaction';
 import useRoot from '~/hooks/use_root';
 import {context} from '~/oby';
 import type {Child} from '~/types';
@@ -26,7 +26,7 @@ const renderToString = ( child: Child ): Promise<string> => {
 
       const {portal} = Portal ({ children: Suspense ({ children: child }) }).metadata;
 
-      useEffect ( () => {
+      useReaction ( () => {
 
         if ( suspense.active () ) return;
 
