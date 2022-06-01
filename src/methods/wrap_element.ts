@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {SYMBOL_ELEMENT, SYMBOL_SAMPLED} from '~/constants';
+import {SYMBOL_ELEMENT, SYMBOL_RESOLVE_UNWRAPPED, SYMBOL_SAMPLED} from '~/constants';
 import useSample from '~/hooks/use_sample';
 import type {Child, FunctionMaybe} from '~/types';
 
@@ -18,7 +18,7 @@ function wrapElement ( this: FunctionMaybe<Child> ): Child {
 
 }
 
-setPrototypeOf ( wrapElement, setPrototypeOf ( { [SYMBOL_ELEMENT]: true, [SYMBOL_SAMPLED]: true }, prototype ) );
+setPrototypeOf ( wrapElement, setPrototypeOf ( { [SYMBOL_ELEMENT]: true, [SYMBOL_RESOLVE_UNWRAPPED]: true, [SYMBOL_SAMPLED]: true }, prototype ) );
 
 /* EXPORT */
 
