@@ -8,7 +8,7 @@ import useReadonly from '~/hooks/use_readonly';
 import isObservable from '~/methods/is_observable';
 import $ from '~/methods/S';
 import {context} from '~/oby';
-import {CallableChildStatic} from '~/utils/callables';
+import {CallableAttributeStatic, CallableChildStatic, CallableClassStatic, CallableClassBooleanStatic, CallableClassesStatic, CallableEventStatic, CallablePropertyStatic, CallableStyleStatic, CallableStylesStatic} from '~/utils/callables';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import FragmentUtils from '~/utils/fragment';
@@ -64,11 +64,19 @@ const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<n
 
   if ( isFunction ( value ) ) {
 
-    useReaction ( () => {
+    if ( isObservable ( value ) ) {
 
-      setAttributeStatic ( element, key, value () );
+      new CallableAttributeStatic ( value, element, key );
 
-    });
+    } else {
+
+      useReaction ( () => {
+
+        setAttributeStatic ( element, key, value () );
+
+      });
+
+    }
 
   } else {
 
@@ -382,11 +390,19 @@ const setClass = ( element: HTMLElement, key: string, value: FunctionMaybe<null 
 
   if ( isFunction ( value ) ) {
 
-    useReaction ( () => {
+    if ( isObservable ( value ) ) {
 
-      setClassStatic ( element, key, value () );
+      new CallableClassStatic ( value, element, key );
 
-    });
+    } else {
+
+      useReaction ( () => {
+
+        setClassStatic ( element, key, value () );
+
+      });
+
+    }
 
   } else {
 
@@ -416,17 +432,25 @@ const setClassBoolean = ( element: HTMLElement, value: boolean, key: FunctionMay
 
   if ( isFunction ( key ) ) {
 
-    let keyPrev: null | undefined | boolean | string;
+    if ( isObservable ( key ) ) {
 
-    useReaction ( () => {
+      new CallableClassBooleanStatic ( key, element, value );
 
-      const keyNext = key ();
+    } else {
 
-      setClassBooleanStatic ( element, value, keyNext, keyPrev );
+      let keyPrev: null | undefined | boolean | string;
 
-      keyPrev = keyNext;
+      useReaction ( () => {
 
-    });
+        const keyNext = key ();
+
+        setClassBooleanStatic ( element, value, keyNext, keyPrev );
+
+        keyPrev = keyNext;
+
+      });
+
+    }
 
   } else {
 
@@ -522,17 +546,25 @@ const setClasses = ( element: HTMLElement, object: FunctionMaybe<null | undefine
 
   if ( isFunction ( object ) ) {
 
-    let objectPrev: null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>>;
+    if ( isObservable ( object ) ) {
 
-    useReaction ( () => {
+      new CallableClassesStatic ( object, element );
 
-      const objectNext = object ();
+    } else {
 
-      setClassesStatic ( element, objectNext, objectPrev );
+      let objectPrev: null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>>;
 
-      objectPrev = objectNext;
+      useReaction ( () => {
 
-    });
+        const objectNext = object ();
+
+        setClassesStatic ( element, objectNext, objectPrev );
+
+        objectPrev = objectNext;
+
+      });
+
+    }
 
   } else {
 
@@ -637,15 +669,7 @@ const setEventStatic = (() => {
 
       const delegated = delegatedEvents[event];
 
-      if ( delegated in element ) {
-
-        throw new Error ( `A delegated event handler for "${event}" already exists on this element` );
-
-      } else {
-
-        element[delegated] = value;
-
-      }
+      element[delegated] = value;
 
     } else {
 
@@ -661,11 +685,7 @@ const setEvent = ( element: HTMLElement, event: string, value: ObservableMaybe<n
 
   if ( isObservable ( value ) ) {
 
-    useReaction ( () => {
-
-      setEventStatic ( element, event, value () );
-
-    });
+    new CallableEventStatic ( value, element, event );
 
   } else {
 
@@ -707,11 +727,19 @@ const setProperty = ( element: HTMLElement, key: string, value: FunctionMaybe<nu
 
   if ( isFunction ( value ) ) {
 
-    useReaction ( () => {
+    if ( isObservable ( value ) ) {
 
-      setPropertyStatic ( element, key, value () );
+      new CallablePropertyStatic ( value, element, key );
 
-    });
+    } else {
+
+      useReaction ( () => {
+
+        setPropertyStatic ( element, key, value () );
+
+      });
+
+    }
 
   } else {
 
@@ -761,11 +789,19 @@ const setStyle = ( element: HTMLElement, key: string, value: FunctionMaybe<null 
 
   if ( isFunction ( value ) ) {
 
-    useReaction ( () => {
+    if ( isObservable ( value ) ) {
 
-      setStyleStatic ( element, key, value () );
+      new CallableStyleStatic ( value, element, key );
 
-    });
+    } else {
+
+      useReaction ( () => {
+
+        setStyleStatic ( element, key, value () );
+
+      });
+
+    }
 
   } else {
 
@@ -821,17 +857,25 @@ const setStyles = ( element: HTMLElement, object: FunctionMaybe<null | undefined
 
   if ( isFunction ( object ) ) {
 
-    let objectPrev: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>;
+    if ( isObservable ( object ) ) {
 
-    useReaction ( () => {
+      new CallableStylesStatic ( object, element );
 
-      const objectNext = object ();
+    } else {
 
-      setStylesStatic ( element, objectNext, objectPrev );
+      let objectPrev: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>;
 
-      objectPrev = objectNext;
+      useReaction ( () => {
 
-    });
+        const objectNext = object ();
+
+        setStylesStatic ( element, objectNext, objectPrev );
+
+        objectPrev = objectNext;
+
+      });
+
+    }
 
   } else {
 
@@ -967,4 +1011,4 @@ const setProps = ( element: HTMLElement, object: Record<string, unknown> ): void
 
 /* EXPORT */
 
-export {setAttributeStatic, setAttribute, setChildReplacementFunction, setChildReplacementText, setChildReplacement, setChildStatic, setChild, setClassStatic, setClass, setClassesStatic, setClasses, setEventStatic, setEvent, setHTMLStatic, setHTML, setPropertyStatic, setProperty, setRef, setStyleStatic, setStyle, setStylesStatic, setStyles, setTemplateAccessor, setProp, setProps};
+export {setAttributeStatic, setAttribute, setChildReplacementFunction, setChildReplacementText, setChildReplacement, setChildStatic, setChild, setClassStatic, setClass, setClassBooleanStatic, setClassesStatic, setClasses, setEventStatic, setEvent, setHTMLStatic, setHTML, setPropertyStatic, setProperty, setRef, setStyleStatic, setStyle, setStylesStatic, setStyles, setTemplateAccessor, setProp, setProps};
