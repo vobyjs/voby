@@ -8,6 +8,7 @@ import useReadonly from '~/hooks/use_readonly';
 import isObservable from '~/methods/is_observable';
 import $ from '~/methods/S';
 import {context} from '~/oby';
+import {CallableChildStatic} from '~/utils/callables';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import FragmentUtils from '~/utils/fragment';
@@ -79,19 +80,27 @@ const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<n
 
 const setChildReplacementFunction = ( parent: HTMLElement, fragment: Fragment, child: (() => Child) ): void => {
 
-  useReaction ( () => {
+  if ( isObservable ( child ) ) {
 
-    let valueNext = child ();
+    new CallableChildStatic ( child, parent, fragment );
 
-    while ( isFunction ( valueNext ) ) {
+  } else {
 
-      valueNext = valueNext ();
+    useReaction ( () => {
 
-    }
+      let valueNext = child ();
 
-    setChildStatic ( parent, fragment, valueNext );
+      while ( isFunction ( valueNext ) ) {
 
-  });
+        valueNext = valueNext ();
+
+      }
+
+      setChildStatic ( parent, fragment, valueNext );
+
+    });
+
+  }
 
 };
 
