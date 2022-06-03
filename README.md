@@ -491,9 +491,7 @@ Basically you can use this to wrap a component that doesn't directly create any 
 Interface:
 
 ```ts
-type TemplateOptions = { recycle?: boolean };
-
-function template <P = {}> ( fn: (( props: P ) => JSX.Element), options: TemplateOptions = {} ): (( props: P ) => () => Element);
+function template <P = {}> ( fn: (( props: P ) => JSX.Element) ): (( props: P ) => () => Element);
 ```
 
 Usage:

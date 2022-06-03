@@ -13,10 +13,6 @@ interface SVGElement {
   cloneNode ( deep?: boolean ): SVGElement
 }
 
-interface Node {
-  recycle? ( node: Node ): void
-}
-
 interface Object {
   isPrototypeOf<T extends Object> ( this: T, object: Object ): object is T
 }

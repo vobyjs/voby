@@ -18,7 +18,7 @@
 
 /* MAIN */
 
-// This is just a slightly customized version of udomdiff: with types, no accessor function, recycling support and support for diffing unwrapped nodes
+// This is just a slightly customized version of udomdiff: with types, no accessor function and support for diffing unwrapped nodes
 
 const dummyNode = document.createComment ( '' );
 const beforeDummyWrapper: [Node] = [dummyNode];
@@ -40,7 +40,6 @@ const diff = ( parent: Node, before: Node | Node[], after: Node | Node[], nextSi
   let aStart = 0;
   let bStart = 0;
   let map: Map<any, any> | null = null;
-  let recycle: Function | undefined;
   let removable: Node | undefined;
   while (aStart < aEnd || bStart < bEnd) {
     // append head, tail, or nodes in between: fast path
@@ -64,8 +63,6 @@ const diff = ( parent: Node, before: Node | Node[], after: Node | Node[], nextSi
         if (!map || !map.has(before[aStart])) {
           removable = before[aStart];
           parent.removeChild(removable);
-          recycle = removable.recycle;
-          if (recycle) recycle(removable);
         }
         aStart++;
       }
@@ -166,8 +163,6 @@ const diff = ( parent: Node, before: Node | Node[], after: Node | Node[], nextSi
       else {
         removable = before[aStart++];
         parent.removeChild(removable);
-        recycle = removable.recycle;
-        if (recycle) recycle(removable);
       }
     }
   }

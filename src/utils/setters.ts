@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {SYMBOLS_DIRECTIVES, TEMPLATE_STATE} from '~/constants';
+import {SYMBOLS_DIRECTIVES} from '~/constants';
 import useMicrotask from '~/hooks/use_microtask';
 import useReaction from '~/hooks/use_reaction';
 import useReadonly from '~/hooks/use_readonly';
@@ -263,21 +263,6 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
     const {childNodes} = parent;
 
     if ( childNodes.length === prevLength ) { // Maybe this fragment doesn't handle all children but only a range of them, checking for that here
-
-      if ( TEMPLATE_STATE.active ) {
-
-        for ( let i = 0, l = childNodes.length; i < l; i++ ) {
-
-          const node = childNodes[i];
-          const recycle = node.recycle;
-
-          if ( !recycle ) continue;
-
-          recycle ( node );
-
-        }
-
-      }
 
       parent.textContent = '';
 
