@@ -1404,7 +1404,12 @@ This hook massively optimizes `isSelected` kind of workloads.
 Interface:
 
 ```ts
-function useSelector <T> ( observable: Observable<T> | ObservableReadonly<T> ): (( value: T ) => boolean);
+type SelectorFunction<T> = {
+  ( value: T, options?: { observable?: false } ): boolean;
+  ( value: T, options: { observable: true } ): ObservableReadonly<boolean>;
+};
+
+function useSelector <T> ( observable: Observable<T> | ObservableReadonly<T> ): SelectorFunction<T>;
 ```
 
 Usage:
