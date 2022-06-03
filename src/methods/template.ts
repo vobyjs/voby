@@ -284,8 +284,11 @@ const template = <P = {}> ( fn: (( props: P ) => Child) ): (( props: P ) => () =
     const actions = makeReviverActions ( actionsWithPaths, map );
     const fn = new Function ( 'root', 'props', `${assignments.join ( '' )}${actions.join ( '' )}return root;` );
     const apis = {setAttribute, setChildReplacement, setClasses, setEvent, setHTML, setProperty, setRef, setStyles};
+    const reviver = fn.bind ( apis );
 
-    return fn.bind ( apis );
+    Object.setPrototypeOf ( reviver, Object.getPrototypeOf ( wrapElement ) );
+
+    return reviver;
 
   };
 
@@ -295,11 +298,11 @@ const template = <P = {}> ( fn: (( props: P ) => Child) ): (( props: P ) => () =
     const actionsWithPaths = makeActionsWithPaths ( actionsWithNodes );
     const reviver = makeReviver ( actionsWithPaths );
 
-    return ( props: P ): () => Child => {
+    return ( props: P ): (() => Child) => {
 
       const clone = root.cloneNode ( true );
 
-      return wrapElement.bind ( reviver.bind ( undefined, clone, props ) );
+      return reviver.bind ( undefined, clone, props );
 
     };
 
