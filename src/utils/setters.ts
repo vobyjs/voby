@@ -9,6 +9,7 @@ import isObservable from '~/methods/is_observable';
 import $ from '~/methods/S';
 import {context} from '~/oby';
 import {CallableAttributeStatic, CallableChildStatic, CallableClassStatic, CallableClassBooleanStatic, CallableClassesStatic, CallableEventStatic, CallablePropertyStatic, CallableStyleStatic, CallableStylesStatic} from '~/utils/callables';
+import {classesToggle} from '~/utils/classlist';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import FragmentUtils from '~/utils/fragment';
@@ -364,27 +365,7 @@ const setChild = ( parent: HTMLElement, child: Child, fragment: Fragment = Fragm
 
 };
 
-const setClassStatic = (() => {
-
-  const whitespaceRe = /\s+/g;
-
-  return ( element: HTMLElement, key: string, value: null | undefined | boolean ): void => {
-
-    const keys = key.split ( whitespaceRe );
-
-    if ( value ) {
-
-      element.classList.add ( ...keys );
-
-    } else {
-
-      element.classList.remove ( ...keys );
-
-    }
-
-  };
-
-})();
+const setClassStatic = classesToggle;
 
 const setClass = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean> ): void => {
 
