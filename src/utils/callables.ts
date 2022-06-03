@@ -1,10 +1,15 @@
 
 /* IMPORT */
 
+import {SYMBOL_OBSERVABLE, SYMBOL_OBSERVABLE_FROZEN} from '~/constants';
 import useCleanup from '~/hooks/use_cleanup';
 import {on, off} from '~/oby';
 import {setAttributeStatic, setChildStatic, setClassStatic, setClassBooleanStatic, setClassesStatic, setEventStatic, setPropertyStatic, setStyleStatic, setStylesStatic} from '~/utils/setters';
 import type {Child, EventListener, Fragment, FunctionMaybe, ObservableReadonly} from '~/types';
+
+/* HELPERS */
+
+const target = <T> ( observable: ObservableReadonly<T> ): ObservableReadonly<T> => ( SYMBOL_OBSERVABLE_FROZEN in observable ) ? observable : ( observable as any )( SYMBOL_OBSERVABLE ); //TSC
 
 /* MAIN */
 
@@ -18,7 +23,7 @@ abstract class Callable<T> {
 
   constructor ( observable: ObservableReadonly<T> ) {
 
-    this.observable = observable;
+    this.observable = target ( observable );
 
   }
 
