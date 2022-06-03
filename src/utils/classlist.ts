@@ -24,13 +24,17 @@ const classesToggle = ( element: HTMLElement, classes: string, force: null | und
 
     });
 
-  } else if ( !className ) { // Optimized toggling
+  } else if ( !className ) { // Optimized addition
 
     if ( force ) {
 
       element.className = classes;
 
     }
+
+  } else if ( !force && className === classes ) { // Optimized deletion
+
+    element.className = '';
 
   } else { // Regular toggling
 
