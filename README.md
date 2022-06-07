@@ -62,12 +62,12 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`h`](#h)                             | [`Fragment`](#fragment)           | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                                 |
 | [`html`](#html)                       | [`If`](#if)                       | [`useComputed`](#usecomputed)               | [`F`](#f)                                   |                                 |
 | [`isObservable`](#isobservable)       | [`Portal`](#portal)               | [`useContext`](#usecontext)                 | [`O`](#o)                                   |                                 |
-| [`lazy`](#lazy)                       | [`Suspense`](#suspense)           | [`useDisposed`](#usedisposed)               |                                             |                                 |
-| [`render`](#render)                   | [`Switch`](#switch)               | [`useEffect`](#useeffect)                   |                                             |                                 |
-| [`renderToString`](#rendertostring)   | [`Ternary`](#ternary)             | [`useError`](#useerror)                     |                                             |                                 |
-| [`resolve`](#resolve)                 |                                   | [`useEventListener`](#useeventlistener)     |                                             |                                 |
-| [`template`](#template)               |                                   | [`useFetch`](#usefetch)                     |                                             |                                 |
-|                                       |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
+| [`isStore`](#isstore)                 | [`Suspense`](#suspense)           | [`useDisposed`](#usedisposed)               |                                             |                                 |
+| [`lazy`](#lazy)                       | [`Switch`](#switch)               | [`useEffect`](#useeffect)                   |                                             |                                 |
+| [`render`](#render)                   | [`Ternary`](#ternary)             | [`useError`](#useerror)                     |                                             |                                 |
+| [`renderToString`](#rendertostring)   |                                   | [`useEventListener`](#useeventlistener)     |                                             |                                 |
+| [`resolve`](#resolve)                 |                                   | [`useFetch`](#usefetch)                     |                                             |                                 |
+| [`template`](#template)               |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
 |                                       |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
 |                                       |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
 |                                       |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
@@ -380,6 +380,25 @@ import {$, isObservable} from 'voby';
 
 isObservable ( 123 ); // => false
 isObservable ( $(123) ); // => true
+```
+
+#### `isStore`
+
+This function tells you if a variable is a store or not.
+
+Interface:
+
+```ts
+function isStore ( value: unknown ): boolean;
+```
+
+Usage:
+
+```tsx
+import {store, isStore} from 'voby';
+
+isStore ( {} ); // => false
+isStore ( store ( {} ) ); // => true
 ```
 
 #### `lazy`
