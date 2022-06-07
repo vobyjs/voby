@@ -67,8 +67,8 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`render`](#render)                   | [`Ternary`](#ternary)             | [`useError`](#useerror)                     |                                             |                                 |
 | [`renderToString`](#rendertostring)   |                                   | [`useEventListener`](#useeventlistener)     |                                             |                                 |
 | [`resolve`](#resolve)                 |                                   | [`useFetch`](#usefetch)                     |                                             |                                 |
-| [`template`](#template)               |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
-|                                       |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
+| [`store`](#store)                     |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
+| [`template`](#template)               |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
 |                                       |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
 |                                       |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
 |                                       |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
@@ -497,6 +497,26 @@ Usage:
 import {resolve} from 'voby';
 
 resolve // => Same as require ( 'oby' ).resolve
+```
+
+#### `store`
+
+This function returns a deeply reactive version of the passed object, where property accesses and writes are automatically interpreted as Observables reads and writes for you.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#store).
+
+Interface:
+
+```ts
+function store <T> ( value: T, options?: StoreOptions ): T;
+```
+
+Usage:
+
+```tsx
+import {store} from 'voby';
+
+store // => Same as require ( 'oby' ).store
 ```
 
 #### `template`

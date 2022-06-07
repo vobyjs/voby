@@ -14,8 +14,9 @@ import lazy from '~/methods/lazy';
 import render from '~/methods/render';
 import renderToString from '~/methods/render_to_string';
 import resolve from '~/methods/resolve';
+import store from '~/methods/store';
 import template from '~/methods/template';
 
 /* EXPORT */
 
-export {$, $$, createContext, createDirective, createElement, h, html, isObservable, isStore, lazy, render, renderToString, resolve, template};
+export {$, $$, createContext, createDirective, createElement, h, html, isObservable, isStore, lazy, render, renderToString, resolve, store, template};
