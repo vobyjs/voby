@@ -60,9 +60,9 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`createDirective`](#createdirective) | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableMaybe`](#observablemaybe)       | [`TypeScript`](#typescript)     |
 | [`createElement`](#createelement)     | [`ForIndex`](#forindex)           | [`useBatch`](#usebatch)                     | [`ObservableOptions`](#observableoptions)   |                                 |
 | [`h`](#h)                             | [`Fragment`](#fragment)           | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                                 |
-| [`html`](#html)                       | [`If`](#if)                       | [`useComputed`](#usecomputed)               | [`F`](#f)                                   |                                 |
-| [`isObservable`](#isobservable)       | [`Portal`](#portal)               | [`useContext`](#usecontext)                 | [`O`](#o)                                   |                                 |
-| [`isStore`](#isstore)                 | [`Suspense`](#suspense)           | [`useDisposed`](#usedisposed)               |                                             |                                 |
+| [`html`](#html)                       | [`If`](#if)                       | [`useComputed`](#usecomputed)               | [`StoreOptions`](#storeoptions)             |                                 |
+| [`isObservable`](#isobservable)       | [`Portal`](#portal)               | [`useContext`](#usecontext)                 | [`F`](#f)                                   |                                 |
+| [`isStore`](#isstore)                 | [`Suspense`](#suspense)           | [`useDisposed`](#usedisposed)               | [`O`](#o)                                   |                                 |
 | [`lazy`](#lazy)                       | [`Switch`](#switch)               | [`useEffect`](#useeffect)                   |                                             |                                 |
 | [`render`](#render)                   | [`Ternary`](#ternary)             | [`useError`](#useerror)                     |                                             |                                 |
 | [`renderToString`](#rendertostring)   |                                   | [`useEventListener`](#useeventlistener)     |                                             |                                 |
@@ -1618,6 +1618,29 @@ const resource: ObservableReadonly<Resource> = useResource ( () => fetch ( 'http
 resource ().pending // => true | false
 resource ().error // => Error | undefined
 resource ().value // => Whatever the resource will resolve to
+```
+
+#### `StoreOptions`
+
+This type describes the options object that the `store` function accepts.
+
+Interface:
+
+```ts
+type StoreOptions = {
+  unwrap?: boolean
+};
+```
+
+Usage:
+
+```ts
+import type {StoreOptions} from 'voby';
+import {store} from 'voby';
+
+const createStore = <T> ( value: T, options?: StoreOptions ): T => {
+  return store ( value, options );
+};
 ```
 
 #### `F`
