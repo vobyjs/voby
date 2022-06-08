@@ -665,7 +665,7 @@ It must be called with an array, or a function that returns an array, of _unique
 Interface:
 
 ```ts
-function For <T> ( props: { values: FunctionMaybe<readonly T[]>, fallback?: JSX.Element, children: (( value: T ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
+function For <T> ( props: { values: FunctionMaybe<readonly T[]>, fallback?: JSX.Element, children: (( value: T, index: ObservableReadonly<number> ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
 ```
 
 Usage:
@@ -700,7 +700,7 @@ Interface:
 ```ts
 type Value<T = unknown> = T extends ObservableReadonly<infer U> ? ObservableReadonly<U> : ObservableReadonly<T>;
 
-function ForIndex <T> ( props: { values: FunctionMaybe<readonly T[]>, fallback?: JSX.Element, children: (( value: Value<T> ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
+function ForIndex <T> ( props: { values: FunctionMaybe<readonly T[]>, fallback?: JSX.Element, children: (( value: Value<T>, index: number ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
 ```
 
 Usage:
@@ -1443,7 +1443,7 @@ Interface:
 ```ts
 type SelectorFunction<T> = ( value: T ) => ObservableReadonly<boolean>;
 
-function useSelector <T> ( observable: Observable<T> | ObservableReadonly<T> ): SelectorFunction<T>;
+function useSelector <T> ( source: () => T | ObservableReadonly<T> ): SelectorFunction<T>;
 ```
 
 Usage:
