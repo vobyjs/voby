@@ -53,6 +53,8 @@
     "prod:playground": "cd demo/playground && npm i && npm update && npm run prod",
     "dev:spiral": "cd demo/spiral && npm i && npm update && npm run dev",
     "prod:spiral": "cd demo/spiral && npm i && npm update && npm run prod",
+    "dev:store_counter": "cd demo/store_counter && npm i && npm update && npm run dev",
+    "prod:store_counter": "cd demo/store_counter && npm i && npm update && npm run prod",
     "dev:triangle": "cd demo/triangle && npm i && npm update && npm run dev",
     "prod:triangle": "cd demo/triangle && npm i && npm update && npm run prod",
     "dev": "npm run dev:playground",

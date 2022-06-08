@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "name": "store-counter",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --force --config vite.ts --mode dev",
+    "prod": "vite --force --config vite.ts"
+  },
+  "dependencies": {
+    "vite": "^2.9.7",
+    "voby": "*"
+  }
+}

@@ -47,6 +47,7 @@ You can find some demos and benchmarks below, more demos are contained inside th
 - HTML Template Literal: https://codesandbox.io/s/voby-demo-html-lvfeyo
 - Single-file HTML: https://codesandbox.io/s/voby-demo-html-dueygt?file=/public/index.html
 - Spiral: https://codesandbox.io/s/voby-demo-spiral-ux33p6
+- Store Counter: https://codesandbox.io/s/voby-demo-store-counter-kvoqrw
 - Triangle: https://codesandbox.io/s/voby-demo-triangle-l837v0
 - Boxes: https://codesandbox.io/s/voby-demo-boxes-wx6rqb
 
