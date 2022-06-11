@@ -4818,6 +4818,50 @@ TestLazy.test = {
   ]
 };
 
+const TestNestedArrays = (): JSX.Element => {
+  const items = $([ 0, 1, 2 ]);
+  const activeItem = $(1);
+
+  const incrementItems = () => {
+    items ( items => [...items, items.length] );
+    activeItem ( item => item + 1 );
+  };
+
+  setTimeout ( incrementItems, TEST_INTERVAL );
+  setTimeout ( incrementItems, TEST_INTERVAL * 2 );
+
+  return (
+    <>
+      <h3>Nested Arrays</h3>
+      <button onClick={incrementItems}>Increment</button>
+      <ul>
+        <For values={items}>
+          {item => {
+            return (
+              <>
+                <If when={() => activeItem () === item}>
+                  <li>test</li>
+                </If>
+                <li>
+                  {item}
+                </li>
+              </>
+            );
+          }}
+        </For>
+      </ul>
+    </>
+  );
+};
+
+TestNestedArrays.test = {
+  snapshots: [
+    '<button>Increment</button><ul><li>0</li><li>test</li><li>1</li><li>2</li></ul>',
+    '<button>Increment</button><ul><li>0</li><li>1</li><li>test</li><li>2</li><li>3</li></ul>',
+    '<button>Increment</button><ul><li>0</li><li>1</li><li>2</li><li>test</li><li>3</li><li>4</li></ul>'
+  ]
+};
+
 const Test = (): JSX.Element => {
   TestRenderToString ();
   TestRenderToStringSuspense ();
@@ -5043,6 +5087,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestSuspenseFallbackFunction} />
       <TestSnapshots Component={TestSuspenseCleanup} />
       <TestSnapshots Component={TestLazy} />
+      <TestSnapshots Component={TestNestedArrays} />
       <hr />
     </>
   );

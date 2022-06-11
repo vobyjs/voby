@@ -13,7 +13,7 @@ import {classesToggle} from '~/utils/classlist';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import FragmentUtils from '~/utils/fragment';
-import {castArray, flatten, isArray, isFunction, isNil, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
+import {castArray, isArray, isFunction, isNil, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
 import {resolveChild, resolveFunction} from '~/utils/resolvers';
 import type {Child, DirectiveFunction, EventListener, Fragment, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 
@@ -222,7 +222,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
   const fragmentNext = FragmentUtils.make ();
 
-  const children: Node[] = Array.isArray ( child ) ? flatten ( child ) : [child]; //TSC
+  const children = ( Array.isArray ( child ) ? child : [child] ) as Node[]; //TSC
 
   for ( let i = 0, l = children.length; i < l; i++ ) {
 

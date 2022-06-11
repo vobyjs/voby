@@ -4,12 +4,12 @@
 import {SYMBOL_ELEMENT, SYMBOL_OBSERVABLE_FROZEN} from '~/constants';
 import useReaction from '~/hooks/use_reaction';
 import isObservable from '~/methods/is_observable';
-import {isArray, isFunction} from '~/utils/lang';
+import {flatten, isArray, isFunction} from '~/utils/lang';
 import type {FunctionMaybe, ObservableMaybe} from '~/types';
 
 /* MAIN */
 
-const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T ) => void) ): void => {
+const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T | T[] ) => void) ): void => {
 
   if ( isFunction ( value ) ) {
 
@@ -27,13 +27,23 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T ) => v
 
     }
 
-  } else if ( isArray ( value ) && value.some ( isObservable ) ) {
+  } else if ( isArray ( value ) ) {
 
-    useReaction ( () => {
+    const values = flatten ( value );
 
-      setter ( resolveResolved ( value ) );
+    if ( values.some ( isObservable ) ) {
 
-    });
+      useReaction ( () => {
+
+        setter ( resolveResolved ( values ) );
+
+      });
+
+    } else {
+
+      setter ( values );
+
+    }
 
   } else {
 
