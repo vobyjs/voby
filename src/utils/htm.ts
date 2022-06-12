@@ -11,6 +11,8 @@
  * limitations under the License.
  */
 
+// @ts-nocheck //TODO
+
 /* MAIN */
 
 // This is just a slightly customized version of htm: dynamic props are marked as such, indexes of dynamics are remembered //TODO
