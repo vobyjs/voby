@@ -4,7 +4,7 @@
 import {SYMBOL_ELEMENT, SYMBOL_OBSERVABLE_FROZEN} from '~/constants';
 import useReaction from '~/hooks/use_reaction';
 import isObservable from '~/methods/is_observable';
-import {flatten, isArray, isFunction} from '~/utils/lang';
+import {flatten, isArray, isFunction, isVoidChild} from '~/utils/lang';
 import type {FunctionMaybe, ObservableMaybe} from '~/types';
 
 /* MAIN */
@@ -35,7 +35,7 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T | T[] 
 
       useReaction ( () => {
 
-        setter ( resolveResolved ( values ) );
+        setter ( resolveResolved ( values, [] ) );
 
       });
 
@@ -65,7 +65,7 @@ const resolveObservable = <T> ( value: ObservableMaybe<T> ): T => {
 
 };
 
-const resolveResolved = <T> ( value: T ): any => {
+const resolveResolved = <T> ( value: T, values: any[] ): any => {
 
   while ( isObservable<T> ( value ) ) {
 
@@ -75,21 +75,19 @@ const resolveResolved = <T> ( value: T ): any => {
 
   if ( isArray ( value ) ) {
 
-    const resolved = new Array ( value.length );
+    for ( let i = 0, l = value.length; i < l; i++ ) {
 
-    for ( let i = 0, l = resolved.length; i < l; i++ ) {
-
-      resolved[i] = resolveResolved ( value[i] );
+      resolveResolved ( value[i], values );
 
     }
 
-    return resolved;
+  } else if ( !isVoidChild ( value ) ) { // It's cheaper to discard void children here
 
-  } else {
-
-    return value;
+    values.push ( value );
 
   }
+
+  return values;
 
 };
 

@@ -4862,6 +4862,27 @@ TestNestedArrays.test = {
   ]
 };
 
+const TestNestedIfs = (): JSX.Element => {
+  return (
+    <>
+      <If when={true}>
+        <If when={true}>
+          <div>1</div>
+          <div>2</div>
+        </If>
+        <div>Footer</div>
+      </If>
+    </>
+  );
+};
+
+TestNestedIfs.test = {
+  static: true,
+  snapshots: [
+    '<div>1</div><div>2</div><div>Footer</div>'
+  ]
+};
+
 const Test = (): JSX.Element => {
   TestRenderToString ();
   TestRenderToStringSuspense ();
@@ -5088,6 +5109,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestSuspenseCleanup} />
       <TestSnapshots Component={TestLazy} />
       <TestSnapshots Component={TestNestedArrays} />
+      <TestSnapshots Component={TestNestedIfs} />
       <hr />
     </>
   );
