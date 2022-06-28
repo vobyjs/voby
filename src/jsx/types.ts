@@ -165,7 +165,7 @@ declare namespace JSX {
   }
 
   type DirectiveAttributes = {
-    [Directive in keyof Directives as `use:${Directive}`]?: Directives[Directive]
+    [Directive in keyof Directives as `use:${Directive}`]?: Directives[Directive] extends [infer U] ? U | [U] : Directives[Directive];
   };
 
   interface EventAttributes<T extends EventTarget> {
