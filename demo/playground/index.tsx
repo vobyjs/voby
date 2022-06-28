@@ -1310,6 +1310,23 @@ TestClassesArrayFunctionValue.test = {
   ]
 };
 
+// const TestClassesArrayNestedStatic = (): JSX.Element => {
+//   const o = $(['red', ['bold', { 'italic': true }]]);
+//   return (
+//     <>
+//       <h3>Classes - Array Nested Static</h3>
+//       <p class={o}>content</p>
+//     </>
+//   );
+// };
+
+// TestClassesArrayNestedStatic.test = {
+//   static: true,
+//   snapshots: [
+//     '<p class="red bold italic">content</p>'
+//   ]
+// };
+
 const TestClassesArrayRemoval = (): JSX.Element => {
   const o = $([ 'red', false ]);
   const toggle = () => o ( prev => prev ? null : ['red', false] );
@@ -4984,6 +5001,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestClassesArrayFunction} />
       <TestSnapshots Component={TestClassesArrayFunctionMultiple} />
       <TestSnapshots Component={TestClassesArrayFunctionValue} />
+      {/* <TestSnapshots Component={TestClassesArrayNestedStatic} /> */}
       <TestSnapshots Component={TestClassesArrayRemoval} />
       <TestSnapshots Component={TestClassesArrayRemovalMultiple} />
       <TestSnapshots Component={TestClassesArrayCleanup} />
