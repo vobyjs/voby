@@ -59,6 +59,8 @@ declare namespace JSX {
 
   type Ref<T = unknown> = (( value: T | undefined ) => void);
 
+  type IntrinsicElement<T extends keyof IntrinsicElements> = IntrinsicElements[T];
+
   interface ClassProperties extends AllClassProperties {}
 
   interface StyleProperties extends AllCSSProperties, DOMCSSProperties {}
