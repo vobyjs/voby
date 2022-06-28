@@ -231,11 +231,11 @@ Interface:
 
 ```ts
 type DirectiveRef = ObservableReadonly<Element | undefined>;
-type DirectiveFunction = ( ref: DirectiveRef, ...T: unknown[] ) => void;
+type DirectiveFunction = <T extends unknown[]> ( ref: DirectiveRef, ...args: T ) => void;
 type DirectiveProvider = ( props: { children: JSX.Element } ) => JSX.Element;
 type Directive = { Provider: DirectiveProvider };
 
-function createDirective ( name: string, fn: DirectiveFunction ): Directive;
+function createDirective <T extends unknown[] = []> ( name: string, fn: DirectiveFunction<T> ): Directive;
 ```
 
 Usage:
