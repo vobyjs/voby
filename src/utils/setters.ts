@@ -551,7 +551,7 @@ const setDirective = <T extends unknown[]> ( element: HTMLElement, directive: st
 
   setRef ( element, value => ref ( value ) );
 
-  fn ( useReadonly ( ref ), ...castArray ( args ) as any );
+  fn ( useReadonly ( ref ), ...castArray ( args ) as any ); //TSC
 
 };
 
