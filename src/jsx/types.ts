@@ -49,6 +49,8 @@ declare namespace JSX {
 
   type Children = Child;
 
+  type Class = FunctionMaybe<string | FunctionMaybe<null | undefined | boolean | string>[] | ClassProperties>
+
   type Component<P = {}> = ( props: P ) => Child;
 
   type ComponentClass<P = {}, S = {}> = { render: ( props: P, state: S ) => Child };
@@ -395,7 +397,7 @@ declare namespace JSX {
     challenge?: FunctionMaybe<string>,
     checked?: FunctionMaybe<boolean>,
     cite?: FunctionMaybe<string>,
-    class?: FunctionMaybe<string | FunctionMaybe<null | undefined | boolean | string>[] | ClassProperties>,
+    class?: Class,
     className?: FunctionMaybe<string>,
     cols?: FunctionMaybe<number>,
     colSpan?: FunctionMaybe<number>,
