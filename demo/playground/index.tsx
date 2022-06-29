@@ -5,7 +5,7 @@ import * as Voby from 'voby';
 import {Observable} from 'voby';
 import {Component, Dynamic, ErrorBoundary, For, If, Portal, Suspense, Switch, Ternary} from 'voby';
 import {useBatch, useComputed, useContext, useEffect, useInterval, usePromise, useResource, useTimeout} from 'voby';
-import {$, createContext, createDirective, html, lazy, render, renderToString, template} from 'voby';
+import {$, createContext, createDirective, html, lazy, render, renderToString, store, template} from 'voby';
 
 globalThis.Voby = Voby;
 
@@ -1486,6 +1486,60 @@ const TestClassesObjectFunctionMultiple = (): JSX.Element => {
 };
 
 TestClassesObjectFunctionMultiple.test = {
+  snapshots: [
+    '<p class="red bold">content</p>',
+    '<p class="blue">content</p>'
+  ]
+};
+
+const TestClassesObjectStore = (): JSX.Element => {
+  const o = store ({ red: true, blue: false });
+  const toggle = () => {
+    if ( o.red ) {
+      o.red = false;
+      o.blue = true;
+    } else {
+      o.red = true;
+      o.blue = false;
+    }
+  };
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Classes - Object Store</h3>
+      <p class={o}>content</p>
+    </>
+  );
+};
+
+TestClassesObjectStore.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="blue">content</p>'
+  ]
+};
+
+const TestClassesObjectStoreMultiple = (): JSX.Element => {
+  const o = store ({ 'red bold': true, blue: false });
+  const toggle = () => {
+    if ( o['red bold'] ) {
+      o['red bold'] = false;
+      o.blue = true;
+    } else {
+      o['red bold'] = true;
+      o.blue = false;
+    }
+  };
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Classes - Object Store Multiple</h3>
+      <p class={o}>content</p>
+    </>
+  );
+};
+
+TestClassesObjectStoreMultiple.test = {
   snapshots: [
     '<p class="red bold">content</p>',
     '<p class="blue">content</p>'
@@ -5011,6 +5065,8 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestClassesObjectObservableMultiple} />
       <TestSnapshots Component={TestClassesObjectFunction} />
       <TestSnapshots Component={TestClassesObjectFunctionMultiple} />
+      <TestSnapshots Component={TestClassesObjectStore} />
+      <TestSnapshots Component={TestClassesObjectStoreMultiple} />
       <TestSnapshots Component={TestClassesObjectRemoval} />
       <TestSnapshots Component={TestClassesObjectRemovalMultiple} />
       <TestSnapshots Component={TestClassesObjectCleanup} />

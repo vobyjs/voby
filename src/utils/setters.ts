@@ -5,8 +5,11 @@ import {SYMBOLS_DIRECTIVES} from '~/constants';
 import useMicrotask from '~/hooks/use_microtask';
 import useReaction from '~/hooks/use_reaction';
 import useReadonly from '~/hooks/use_readonly';
+import useSample from '~/hooks/use_sample';
 import isObservable from '~/methods/is_observable';
+import isStore from '~/methods/is_store';
 import $ from '~/methods/S';
+import store from '~/methods/store';
 import {context} from '~/oby';
 import {CallableAttributeStatic, CallableChildStatic, CallableClassStatic, CallableClassBooleanStatic, CallableClassesStatic, CallableEventStatic, CallablePropertyStatic, CallableStyleStatic, CallableStylesStatic} from '~/utils/callables';
 import {classesToggle} from '~/utils/classlist';
@@ -472,6 +475,8 @@ const setClassesStatic = ( element: HTMLElement, object: null | undefined | stri
 
       } else {
 
+        objectPrev = store ( objectPrev, { unwrap: true } );
+
         for ( const key in objectPrev ) {
 
           if ( object && key in object ) continue;
@@ -496,9 +501,23 @@ const setClassesStatic = ( element: HTMLElement, object: null | undefined | stri
 
     } else {
 
-      for ( const key in object ) {
+      if ( isStore ( object ) ) {
 
-        setClass ( element, key, object[key] );
+        for ( const key in object ) {
+
+          const fn = useSample ( () => isFunction ( object[key] ) ? object[key] : () => object[key] ) as (() => boolean | null | undefined); //TSC
+
+          setClass ( element, key, fn );
+
+        }
+
+      } else {
+
+        for ( const key in object ) {
+
+          setClass ( element, key, object[key] );
+
+        }
 
       }
 
