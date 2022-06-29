@@ -465,6 +465,8 @@ const setClassesStatic = ( element: HTMLElement, object: null | undefined | stri
 
       } else if ( isArray ( objectPrev ) ) {
 
+        objectPrev = store ( objectPrev, { unwrap: true } );
+
         for ( let i = 0, l = objectPrev.length; i < l; i++ ) {
 
           if ( !objectPrev[i] ) continue;
@@ -491,11 +493,25 @@ const setClassesStatic = ( element: HTMLElement, object: null | undefined | stri
 
     if ( isArray ( object ) ) {
 
-      for ( let i = 0, l = object.length; i < l; i++ ) {
+      if ( isStore ( object ) ) {
 
-        if ( !object[i] ) continue;
+        for ( let i = 0, l = object.length; i < l; i++ ) {
 
-        setClassBoolean ( element, true, object[i] );
+          const fn = useSample ( () => isFunction ( object[i] ) ? object[i] : () => object[i] ) as (() => string | boolean | null | undefined); //TSC
+
+          setClassBoolean ( element, true, fn );
+
+        }
+
+      } else {
+
+        for ( let i = 0, l = object.length; i < l; i++ ) {
+
+          if ( !object[i] ) continue;
+
+          setClassBoolean ( element, true, object[i] );
+
+        }
 
       }
 

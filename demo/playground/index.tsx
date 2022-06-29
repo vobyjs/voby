@@ -1310,6 +1310,60 @@ TestClassesArrayFunctionValue.test = {
   ]
 };
 
+const TestClassesArrayStore = (): JSX.Element => {
+  const o = store ([ 'red', false ]);
+  const toggle = () => {
+    if ( o[0] ) {
+      o[0] = false;
+      o[1] = 'blue';
+    } else {
+      o[0] = 'red';
+      o[1] = false;
+    }
+  };
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Classes - Array Store</h3>
+      <p class={o}>content</p>
+    </>
+  );
+};
+
+TestClassesArrayStore.test = {
+  snapshots: [
+    '<p class="red">content</p>',
+    '<p class="blue">content</p>'
+  ]
+};
+
+const TestClassesArrayStoreMultiple = (): JSX.Element => {
+  const o = store ([ 'red bold', false ]);
+  const toggle = () => {
+    if ( o[0] ) {
+      o[0] = false;
+      o[1] = 'blue';
+    } else {
+      o[0] = 'red bold';
+      o[1] = false;
+    }
+  };
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Classes - Array Store Multiple</h3>
+      <p class={o}>content</p>
+    </>
+  );
+};
+
+TestClassesArrayStoreMultiple.test = {
+  snapshots: [
+    '<p class="red bold">content</p>',
+    '<p class="blue">content</p>'
+  ]
+};
+
 // const TestClassesArrayNestedStatic = (): JSX.Element => {
 //   const o = $(['red', ['bold', { 'italic': true }]]);
 //   return (
@@ -5055,6 +5109,8 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestClassesArrayFunction} />
       <TestSnapshots Component={TestClassesArrayFunctionMultiple} />
       <TestSnapshots Component={TestClassesArrayFunctionValue} />
+      <TestSnapshots Component={TestClassesArrayStore} />
+      <TestSnapshots Component={TestClassesArrayStoreMultiple} />
       {/* <TestSnapshots Component={TestClassesArrayNestedStatic} /> */}
       <TestSnapshots Component={TestClassesArrayRemoval} />
       <TestSnapshots Component={TestClassesArrayRemovalMultiple} />
