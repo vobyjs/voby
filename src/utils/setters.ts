@@ -11,6 +11,7 @@ import isStore from '~/methods/is_store';
 import $ from '~/methods/S';
 import store from '~/methods/store';
 import {context} from '~/oby';
+import {SYMBOL_STORE_OBSERVABLE} from '~/oby';
 import {CallableAttributeStatic, CallableChildStatic, CallableClassStatic, CallableClassBooleanStatic, CallableClassesStatic, CallableEventStatic, CallablePropertyStatic, CallableStyleStatic, CallableStylesStatic} from '~/utils/callables';
 import {classesToggle} from '~/utils/classlist';
 import {createText, createComment} from '~/utils/creators';
@@ -497,7 +498,7 @@ const setClassesStatic = ( element: HTMLElement, object: null | undefined | stri
 
         for ( let i = 0, l = object.length; i < l; i++ ) {
 
-          const fn = useSample ( () => isFunction ( object[i] ) ? object[i] : () => object[i] ) as (() => string | boolean | null | undefined); //TSC
+          const fn = useSample ( () => isFunction ( object[i] ) ? object[i] : object[SYMBOL_STORE_OBSERVABLE]( String ( i ) ) ) as (() => string | boolean | null | undefined); //TSC
 
           setClassBoolean ( element, true, fn );
 
@@ -521,7 +522,7 @@ const setClassesStatic = ( element: HTMLElement, object: null | undefined | stri
 
         for ( const key in object ) {
 
-          const fn = useSample ( () => isFunction ( object[key] ) ? object[key] : () => object[key] ) as (() => boolean | null | undefined); //TSC
+          const fn = useSample ( () => isFunction ( object[key] ) ? object[key] : ( object as any )[SYMBOL_STORE_OBSERVABLE]( key ) ) as (() => boolean | null | undefined); //TSC
 
           setClass ( element, key, fn );
 
@@ -854,7 +855,7 @@ const setStylesStatic = ( element: HTMLElement, object: null | undefined | strin
 
       for ( const key in object ) {
 
-        const fn = useSample ( () => isFunction ( object[key] ) ? object[key] : () => object[key] ) as (() => number | string | null | undefined); //TSC
+        const fn = useSample ( () => isFunction ( object[key] ) ? object[key] : ( object as any )[SYMBOL_STORE_OBSERVABLE]( key ) ) as (() => number | string | null | undefined); //TSC
 
         setStyle ( element, key, fn );
 
