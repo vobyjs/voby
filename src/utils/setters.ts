@@ -836,6 +836,8 @@ const setStylesStatic = ( element: HTMLElement, object: null | undefined | strin
 
       } else {
 
+        objectPrev = store ( objectPrev, { unwrap: true } );
+
         for ( const key in objectPrev ) {
 
           if ( object && key in object ) continue;
@@ -848,9 +850,23 @@ const setStylesStatic = ( element: HTMLElement, object: null | undefined | strin
 
     }
 
-    for ( const key in object ) {
+    if ( isStore ( object ) ) {
 
-      setStyle ( element, key, object[key] );
+      for ( const key in object ) {
+
+        const fn = useSample ( () => isFunction ( object[key] ) ? object[key] : () => object[key] ) as (() => number | string | null | undefined); //TSC
+
+        setStyle ( element, key, fn );
+
+      }
+
+    } else {
+
+      for ( const key in object ) {
+
+        setStyle ( element, key, object[key] );
+
+      }
 
     }
 

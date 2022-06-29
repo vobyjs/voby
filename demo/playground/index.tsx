@@ -1946,6 +1946,33 @@ TestStylesFunction.test = {
   ]
 };
 
+const TestStylesStore = (): JSX.Element => {
+  const o = store ({ color: 'orange', fontWeight: 'normal' });
+  const toggle = () => {
+    if ( o.color === 'orange' ) {
+      o.color = 'green';
+      o.fontWeight = 'bold';
+    } else {
+      o.color = 'orange';
+      o.fontWeight = 'normal';
+    }
+  };
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Styles - Store</h3>
+      <p style={o}>content</p>
+    </>
+  );
+};
+
+TestStylesStore.test = {
+  snapshots: [
+    '<p style="color: orange; font-weight: normal;">content</p>',
+    '<p style="color: green; font-weight: bold;">content</p>'
+  ]
+};
+
 const TestStylesRemoval = (): JSX.Element => {
   const o = $({ color: 'orange', fontWeight: 'normal' });
   const toggle = () => o ( prev => prev ? null : { color: 'orange', fontWeight: 'normal' } );
@@ -5142,6 +5169,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestStylesStatic} />
       <TestSnapshots Component={TestStylesObservable} />
       <TestSnapshots Component={TestStylesFunction} />
+      <TestSnapshots Component={TestStylesStore} />
       <TestSnapshots Component={TestStylesRemoval} />
       <TestSnapshots Component={TestStylesCleanup} />
       <TestSnapshots Component={TestHTMLFunctionStatic} />
