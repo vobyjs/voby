@@ -9,7 +9,7 @@ import type {Child, ChildWithMetadata} from '~/types';
 
 /* MAIN */
 
-const Portal = ({ mount, children }: { mount?: HTMLElement | null, children: Child }): ChildWithMetadata<{ portal: HTMLElement }> => {
+const Portal = ({ mount, children }: { mount?: Element | null, children: Child }): ChildWithMetadata<{ portal: HTMLElement }> => {
 
   const parent = mount || document.body;
   const portal = createHTMLNode ( 'div' );

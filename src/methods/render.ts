@@ -7,9 +7,9 @@ import type {Child, Disposer} from '~/types';
 
 /* MAIN */
 
-const render = ( child: Child, parent?: HTMLElement | null ): Disposer => {
+const render = ( child: Child, parent?: Element | null ): Disposer => {
 
-  if ( !parent ) throw new Error ( 'Invalid parent node' );
+  if ( !parent || !( parent instanceof HTMLElement ) ) throw new Error ( 'Invalid parent node' );
 
   parent.textContent = '';
 
