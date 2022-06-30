@@ -9,6 +9,8 @@ type Child = null | undefined | boolean | bigint | number | string | symbol | No
 
 type ChildWithMetadata<T = unknown> = (() => Child) & { metadata: T };
 
+type Classes = FunctionMaybe<null | undefined | string | Record<string, FunctionMaybe<null | undefined | boolean>> | (FunctionMaybe<null | undefined | boolean | string> | Classes)[]>;
+
 type ComponentCallable<P = {}> = ComponentClass<P> | ComponentFunction<P>;
 
 type ComponentClass<P = {}> = ConstructorWith<import ( '~/components/component' ).default<P>, [P]>;
@@ -115,4 +117,4 @@ type Truthy<T = unknown> = Exclude<T, 0 | -0 | 0n | -0n | '' | false | null | un
 
 /* EXPORT */
 
-export type {ArrayMaybe, Callback, Child, ChildWithMetadata, ComponentCallable, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, ComponentsMap, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, DirectiveFunction, DirectiveProvider, Directive, Disposer, Element, EventListener, Falsy, FN, FragmentUndefined, FragmentNode, FragmentFragment, FragmentNodes, FragmentFragments, FragmentMixed, Fragment, FunctionMaybe, LazyComponent, LazyFetcher, LazyResult, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourcePending, ResourceRejected, ResourceResolved, Resource, StoreOptions, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap, Truthy};
+export type {ArrayMaybe, Callback, Child, ChildWithMetadata, Classes, ComponentCallable, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, ComponentsMap, Constructor, ConstructorWith, ContextConsumer, ContextProvider, Context, DirectiveFunction, DirectiveProvider, Directive, Disposer, Element, EventListener, Falsy, FN, FragmentUndefined, FragmentNode, FragmentFragment, FragmentNodes, FragmentFragments, FragmentMixed, Fragment, FunctionMaybe, LazyComponent, LazyFetcher, LazyResult, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourcePending, ResourceRejected, ResourceResolved, Resource, StoreOptions, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap, Truthy};

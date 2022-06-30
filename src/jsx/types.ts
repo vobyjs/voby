@@ -49,7 +49,7 @@ declare namespace JSX {
 
   type Children = Child;
 
-  type Class = FunctionMaybe<string | FunctionMaybe<null | undefined | boolean | string>[] | ClassProperties>
+  type Class = FunctionMaybe<string | ClassProperties | (FunctionMaybe<null | undefined | boolean | string> | Class)[]>;
 
   type Component<P = {}> = ( props: P ) => Child;
 

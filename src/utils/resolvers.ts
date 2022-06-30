@@ -4,8 +4,8 @@
 import {SYMBOL_ELEMENT, SYMBOL_OBSERVABLE_FROZEN} from '~/constants';
 import useReaction from '~/hooks/use_reaction';
 import isObservable from '~/methods/is_observable';
-import {flatten, isArray, isFunction, isVoidChild} from '~/utils/lang';
-import type {FunctionMaybe, ObservableMaybe} from '~/types';
+import {flatten, isArray, isFunction, isString, isVoidChild} from '~/utils/lang';
+import type {Classes, FunctionMaybe, ObservableMaybe} from '~/types';
 
 /* MAIN */
 
@@ -53,6 +53,47 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T | T[] 
 
 };
 
+const resolveClass = ( classes: Classes, resolved: Record<string, true> = {} ): Record<string, true> => {
+
+  if ( isString ( classes ) ) {
+
+    classes.split ( /\s+/g ).filter ( Boolean ).filter ( cls => {
+
+      resolved[cls] = true;
+
+    });
+
+  } else if ( isFunction ( classes ) ) {
+
+    resolveClass ( classes (), resolved );
+
+  } else if ( isArray ( classes ) ) {
+
+    classes.forEach ( cls => {
+
+      resolveClass ( cls as Classes, resolved ); //TSC
+
+    });
+
+  } else if ( classes ) {
+
+    for ( const key in classes ) {
+
+      const value = classes[key];
+      const isActive = isFunction ( value ) ? !!value () : !!value;
+
+      if ( !isActive ) continue;
+
+      resolved[key] = true;
+
+    }
+
+  }
+
+  return resolved;
+
+};
+
 const resolveFunction = <T> ( value: FunctionMaybe<T> ): T => {
 
   return isFunction ( value ) ? value () : value;
@@ -93,4 +134,4 @@ const resolveResolved = <T> ( value: T, values: any[] ): any => {
 
 /* EXPORT */
 
-export {resolveChild, resolveFunction, resolveObservable, resolveResolved};
+export {resolveChild, resolveClass, resolveFunction, resolveObservable, resolveResolved};

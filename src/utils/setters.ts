@@ -12,14 +12,14 @@ import $ from '~/methods/S';
 import store from '~/methods/store';
 import {context} from '~/oby';
 import {SYMBOL_STORE_OBSERVABLE} from '~/oby';
-import {CallableAttributeStatic, CallableChildStatic, CallableClassStatic, CallableClassBooleanStatic, CallableClassesStatic, CallableEventStatic, CallablePropertyStatic, CallableStyleStatic, CallableStylesStatic} from '~/utils/callables';
+import {CallableAttributeStatic, CallableChildStatic, CallableClassStatic, CallableClassBooleanStatic, CallableEventStatic, CallablePropertyStatic, CallableStyleStatic, CallableStylesStatic} from '~/utils/callables';
 import {classesToggle} from '~/utils/classlist';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import FragmentUtils from '~/utils/fragment';
 import {castArray, isArray, isFunction, isNil, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
-import {resolveChild, resolveFunction} from '~/utils/resolvers';
-import type {Child, DirectiveFunction, EventListener, Fragment, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
+import {resolveChild, resolveClass, resolveFunction} from '~/utils/resolvers';
+import type {Child, Classes, DirectiveFunction, EventListener, Fragment, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 
 /* MAIN */
 
@@ -544,35 +544,59 @@ const setClassesStatic = ( element: HTMLElement, object: null | undefined | stri
 
 };
 
-const setClasses = ( element: HTMLElement, object: FunctionMaybe<null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>>> ): void => {
+const setClasses = ( element: HTMLElement, object: Classes ): void => {
 
-  if ( isFunction ( object ) ) {
+  /* RECURSIVE IMPLEMENTATION */
 
-    if ( isObservable ( object ) ) {
+  if ( isFunction ( object ) || isArray ( object ) ) {
 
-      new CallableClassesStatic ( object, element );
+    let objectPrev: Record<string, boolean> | undefined;
 
-    } else {
+    useReaction ( () => {
 
-      let objectPrev: null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>>;
+      const objectNext = resolveClass ( object );
 
-      useReaction ( () => {
+      setClassesStatic ( element, objectNext, objectPrev );
 
-        const objectNext = object ();
+      objectPrev = objectNext;
 
-        setClassesStatic ( element, objectNext, objectPrev );
-
-        objectPrev = objectNext;
-
-      });
-
-    }
+    });
 
   } else {
 
     setClassesStatic ( element, object );
 
   }
+
+  /* REGULAR IMPLEMENTATION */
+
+  // if ( isFunction ( object ) ) {
+
+  //   if ( isObservable ( object ) ) {
+
+  //     new CallableClassesStatic ( object, element );
+
+  //   } else {
+
+  //     let objectPrev: null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>>;
+
+  //     useReaction ( () => {
+
+  //       const objectNext = object ();
+
+  //       setClassesStatic ( element, objectNext, objectPrev );
+
+  //       objectPrev = objectNext;
+
+  //     });
+
+  //   }
+
+  // } else {
+
+  //   setClassesStatic ( element, object );
+
+  // }
 
 };
 
