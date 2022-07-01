@@ -233,7 +233,8 @@ Interface:
 type DirectiveRef = ObservableReadonly<Element | undefined>;
 type DirectiveFunction = <T extends unknown[]> ( ref: DirectiveRef, ...args: T ) => void;
 type DirectiveProvider = ( props: { children: JSX.Element } ) => JSX.Element;
-type Directive = { Provider: DirectiveProvider };
+type DirectiveRef<T extends unknown[]> = ( ...args: T ) => (( ref: Element | undefined ) => void);
+type Directive = { Provider: DirectiveProvider, ref: DirectiveRef };
 
 function createDirective <T extends unknown[] = []> ( name: string, fn: DirectiveFunction<T> ): Directive;
 ```
@@ -271,8 +272,14 @@ const App = () => {
   return (
     <TooltipDirective.Provider>
       <input value="Placeholder..." use:tooltip={['This is a tooltip!']} />
-    <TooltipDirective.Provider>
+    </TooltipDirective.Provider>
   );
+};
+
+// You can also use directives directly by padding them along as refs
+
+const App = () => {
+  return <input ref={TooltipDirective.ref ( 'This is a tooltip!' )} value="Placeholder..." />;
 };
 ```
 

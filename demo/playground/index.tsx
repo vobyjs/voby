@@ -2363,6 +2363,31 @@ TestDirectiveSingleArgument.test = {
   ]
 };
 
+const TestDirectiveRef = () => {
+  const model = ( ref, arg1 ) => {
+    useEffect ( () => {
+      if ( !ref () ) return;
+      const value = `${arg1}`;
+      ref ().value = value;
+      ref ().setAttribute ( 'value', value );
+    });
+  };
+  const Model = createDirective ( 'model', model );
+  return (
+    <>
+      <h3>Directive - Ref</h3>
+      <input ref={Model.ref ( 'bar' )} value="foo" />
+    </>
+  );
+};
+
+TestDirectiveRef.test = {
+  static: true,
+  snapshots: [
+    '<input value="bar">'
+  ]
+};
+
 const TestEventClickStatic = (): JSX.Element => {
   const o = $( 0 );
   const increment = () => o ( prev => prev + 1 );
@@ -5190,6 +5215,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestHTMLDangerouslySetInnerHTMLFunctionString} />
       <TestSnapshots Component={TestDirective} />
       <TestSnapshots Component={TestDirectiveSingleArgument} />
+      <TestSnapshots Component={TestDirectiveRef} />
       <TestEventClickStatic />
       <TestEventClickObservable />
       <TestEventClickRemoval />
