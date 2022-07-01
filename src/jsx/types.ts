@@ -61,6 +61,8 @@ declare namespace JSX {
 
   type Ref<T = unknown> = (( value: T | undefined ) => void);
 
+  type Refs<T = unknown> = ArrayMaybe<Ref<T>>;
+
   type IntrinsicElement<T extends keyof IntrinsicElements> = IntrinsicElements[T];
 
   interface ClassProperties extends AllClassProperties {}
@@ -373,7 +375,7 @@ declare namespace JSX {
   }
 
   interface HTMLAttributes<T extends EventTarget> extends AriaAttributes, DOMAttributes<T>, DirectiveAttributes {
-    ref?: ArrayMaybe<Ref<T>>,
+    ref?: Refs<T>,
 
     accept?: FunctionMaybe<string>,
     acceptCharset?: FunctionMaybe<FunctionMaybe<string>>,
@@ -550,7 +552,7 @@ declare namespace JSX {
   }
 
   interface SVGAttributes<T extends EventTarget = SVGElement> extends HTMLAttributes<T>, DirectiveAttributes {
-    ref?: ArrayMaybe<Ref<T>>,
+    ref?: Refs<T>,
 
     accentHeight?: FunctionMaybe<number | string>,
     accumulate?: FunctionMaybe<'none' | 'sum'>,
