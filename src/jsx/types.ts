@@ -344,10 +344,14 @@ declare namespace JSX {
     onLostPointerCaptureCapture?: ObservableMaybe<PointerEventHandler<T>>,
     /* UI EVENTS */
     onScroll?: ObservableMaybe<UIEventHandler<T>>,
+    onScrollPassive?: ObservableMaybe<UIEventHandler<T>>,
     onScrollCapture?: ObservableMaybe<UIEventHandler<T>>,
+    onScrollCapturePassive?: ObservableMaybe<UIEventHandler<T>>,
     /* WHEEL EVENTS */
     onWheel?: ObservableMaybe<WheelEventHandler<T>>,
+    onWheelPassive?: ObservableMaybe<WheelEventHandler<T>>,
     onWheelCapture?: ObservableMaybe<WheelEventHandler<T>>,
+    onWheelCapturePassive?: ObservableMaybe<WheelEventHandler<T>>,
     /* ANIMATION EVENTS */
     onAnimationStart?: ObservableMaybe<AnimationEventHandler<T>>,
     onAnimationStartCapture?: ObservableMaybe<AnimationEventHandler<T>>,

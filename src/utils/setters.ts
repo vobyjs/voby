@@ -674,7 +674,21 @@ const setEventStatic = (() => {
 
   return ( element: HTMLElement, event: string, value: null | undefined | EventListener ): void => {
 
-    if ( event.endsWith ( 'capture' ) ) {
+    if ( event.endsWith ( 'passive' ) ) {
+
+      const isCapture = event.endsWith ( 'capturepassive' );
+      const type = event.slice ( 2, -7 - ( isCapture ? 7 : 0 ) );
+      const key = `_${event}`; //TODO: Doesn't this clash with regular delegated events?
+
+      const valuePrev = element[key];
+
+      if ( valuePrev ) element.removeEventListener ( type, valuePrev, { capture: isCapture } );
+
+      if ( value ) element.addEventListener ( type, value, { passive: true, capture: isCapture } );
+
+      element[key] = value;
+
+    } else if ( event.endsWith ( 'capture' ) ) {
 
       const type = event.slice ( 2, -7 );
       const key = `_${event}`; //TODO: Doesn't this clash with regular delegated events?
