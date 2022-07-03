@@ -12,7 +12,7 @@ import type {Child, DirectiveFunction, Directive} from '~/types';
 
 /* MAIN */
 
-const createDirective = <T extends unknown[] = []> ( name: string, fn: DirectiveFunction<T> ): Directive => {
+const createDirective = <T extends unknown[] = []> ( name: string, fn: DirectiveFunction<T> ): Directive<T> => {
 
   const symbol = SYMBOLS_DIRECTIVES[name] || ( SYMBOLS_DIRECTIVES[name] = Symbol () );
 

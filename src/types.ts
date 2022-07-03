@@ -41,7 +41,7 @@ type DirectiveProvider = ( props: { children: Child } ) => Child;
 
 type DirectiveRef<Arguments extends unknown[] = []> = ( ...args: Arguments ) => (( ref: globalThis.Element | undefined ) => void);
 
-type Directive = { Provider: DirectiveProvider, ref: DirectiveRef };
+type Directive<Arguments extends unknown[] = []> = { Provider: DirectiveProvider, ref: DirectiveRef<Arguments> };
 
 type Disposer = () => void;
 
