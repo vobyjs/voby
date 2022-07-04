@@ -188,9 +188,8 @@ This function creates a context object, optionally with a default value, which c
 Interface:
 
 ```ts
-type ContextConsumer<T> = ( props: { children: (( value?: T ) => JSX.Element) } ) => JSX.Element;
 type ContextProvider<T> = ( props: { value: T, children: JSX.Element } ) => JSX.Element;
-type Context<T> = { Consumer: ContextConsumer<T>, Provider: ContextProvider<T> };
+type Context<T> = { Provider: ContextProvider<T> };
 
 function createContext <T> ( defaultValue?: T ): Context<T>;
 ```
@@ -198,19 +197,21 @@ function createContext <T> ( defaultValue?: T ): Context<T>;
 Usage:
 
 ```tsx
-import {createContext} from 'voby';
+import {createContext, useContext} from 'voby';
 
 const App = () => {
   const Context = createContext ( 123 );
   return (
     <>
-      <Context.Consumer>
-        {value => <p>{value}</p>}
-      </Context.Consumer>
+      {() => {
+        const value = useContext ( Context );
+        return <p>{value}</p>;
+      }}
       <Context.Provider value={312}>
-        <Context.Consumer>
-          {value => <p>{value}</p>}
-        </Context.Consumer>
+        {() => {
+          const value = useContext ( Context );
+          return <p>{value}</p>;
+        }}
       </Context.Provider>
     </>
   );

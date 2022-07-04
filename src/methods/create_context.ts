@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
+import {CONTEXTS_DATA} from '~/constants';
 import useComputed from '~/hooks/use_computed';
 import resolve from '~/methods/resolve';
 import {context} from '~/oby';
-import {isNil} from '~/utils/lang';
 import type {Child, Context} from '~/types';
 
 /* MAIN */
@@ -25,16 +25,11 @@ const createContext = <T> ( defaultValue?: T ): Context<T> => {
 
   };
 
-  const Consumer = ({ children }: { children: (( value?: T ) => Child) }): Child => {
+  const Context = {Provider};
 
-    const valueContext = context<T> ( symbol );
-    const value = isNil ( valueContext ) ? defaultValue : valueContext;
+  CONTEXTS_DATA.set ( Context, { symbol, defaultValue } );
 
-    return children ( value );
-
-  };
-
-  return {Provider, Consumer};
+  return Context;
 
 };
 

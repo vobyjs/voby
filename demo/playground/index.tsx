@@ -4551,28 +4551,25 @@ TestTemplateSVG.test = {
 };
 
 const TestContextComponents = (): JSX.Element => {
-  const Context = createContext ();
+  const Context = createContext ( '' );
   return (
     <>
       <h3>Context - Components</h3>
       <Context.Provider value="outer">
-        <Context.Consumer>
-          {value => {
-            return <p>{value}</p>;
-          }}
-        </Context.Consumer>
+        {() => {
+          const value = useContext ( Context );
+          return <p>{value}</p>;
+        }}
         <Context.Provider value="inner">
-          <Context.Consumer>
-            {value => {
-              return <p>{value}</p>;
-            }}
-          </Context.Consumer>
-        </Context.Provider>
-        <Context.Consumer>
-          {value => {
+          {() => {
+            const value = useContext ( Context );
             return <p>{value}</p>;
           }}
-        </Context.Consumer>
+        </Context.Provider>
+        {() => {
+          const value = useContext ( Context );
+          return <p>{value}</p>;
+        }}
       </Context.Provider>
     </>
   );
