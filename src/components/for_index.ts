@@ -10,7 +10,7 @@ type Indexed<T = unknown> = T extends ObservableReadonly<infer U> ? ObservableRe
 
 /* MAIN */
 
-const ForIndex = <T> ({ values, fallback, children }: { values: FunctionMaybe<readonly T[]>, fallback?: Child, children: (( value: Indexed<T> ) => Child) }): ObservableReadonly<Child> => {
+const ForIndex = <T> ({ values, fallback, children }: { values: FunctionMaybe<readonly T[]>, fallback?: Child, children: (( value: Indexed<T>, index: number ) => Child) }): ObservableReadonly<Child> => {
 
   return forIndex ( values, children, fallback );
 

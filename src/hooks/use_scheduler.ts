@@ -4,11 +4,11 @@
 import useCleanup from '~/hooks/use_cleanup';
 import useSample from '~/hooks/use_sample';
 import $$ from '~/methods/SS';
-import type {Disposer, FN, ObservableMaybe} from '~/types';
+import type {Disposer, FN, FunctionMaybe, ObservableMaybe} from '~/types';
 
 /* MAIN */
 
-const useScheduler = <T, U> ({ loop, callback, cancel, schedule }: { loop?: ObservableMaybe<boolean>, callback: ObservableMaybe<FN<[U]>>, cancel: FN<[T]>, schedule: (( callback: FN<[U]> ) => T) }) : Disposer => {
+const useScheduler = <T, U> ({ loop, callback, cancel, schedule }: { loop?: FunctionMaybe<boolean>, callback: ObservableMaybe<FN<[U]>>, cancel: FN<[T]>, schedule: (( callback: FN<[U]> ) => T) }) : Disposer => {
 
   let tickId: T;
 
@@ -16,7 +16,7 @@ const useScheduler = <T, U> ({ loop, callback, cancel, schedule }: { loop?: Obse
 
     if ( $$(loop) ) tick ();
 
-    $$(callback)( value );
+    $$(callback, false)( value );
 
   };
 

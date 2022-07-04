@@ -4,8 +4,9 @@
 import {SYMBOL_ELEMENT, SYMBOL_OBSERVABLE_FROZEN} from '~/constants';
 import useReaction from '~/hooks/use_reaction';
 import isObservable from '~/methods/is_observable';
+import $$ from '~/methods/SS';
 import {flatten, isArray, isFunction, isString, isVoidChild} from '~/utils/lang';
-import type {Classes, FunctionMaybe, ObservableMaybe} from '~/types';
+import type {Classes, ObservableMaybe} from '~/types';
 
 /* MAIN */
 
@@ -80,7 +81,7 @@ const resolveClass = ( classes: Classes, resolved: Record<string, true> = {} ): 
     for ( const key in classes ) {
 
       const value = classes[key];
-      const isActive = isFunction ( value ) ? !!value () : !!value;
+      const isActive = !!$$(value);
 
       if ( !isActive ) continue;
 
@@ -91,18 +92,6 @@ const resolveClass = ( classes: Classes, resolved: Record<string, true> = {} ): 
   }
 
   return resolved;
-
-};
-
-const resolveFunction = <T> ( value: FunctionMaybe<T> ): T => {
-
-  return isFunction ( value ) ? value () : value;
-
-};
-
-const resolveObservable = <T> ( value: ObservableMaybe<T> ): T => {
-
-  return isObservable ( value ) ? value () : value;
 
 };
 
@@ -134,4 +123,4 @@ const resolveResolved = <T> ( value: T, values: any[] ): any => {
 
 /* EXPORT */
 
-export {resolveChild, resolveClass, resolveFunction, resolveObservable, resolveResolved};
+export {resolveChild, resolveClass, resolveResolved};

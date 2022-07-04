@@ -3,11 +3,11 @@
 
 import useScheduler from '~/hooks/use_scheduler';
 import $$ from '~/methods/SS';
-import type {Callback, Disposer, ObservableMaybe} from '~/types';
+import type {Callback, Disposer, FunctionMaybe, ObservableMaybe} from '~/types';
 
 /* MAIN */
 
-const useInterval = ( callback: ObservableMaybe<Callback>, ms?: ObservableMaybe<number> ): Disposer => {
+const useInterval = ( callback: ObservableMaybe<Callback>, ms?: FunctionMaybe<number> ): Disposer => {
 
   return useScheduler ({
     callback,

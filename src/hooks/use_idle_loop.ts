@@ -3,11 +3,11 @@
 
 import useScheduler from '~/hooks/use_scheduler';
 import $$ from '~/methods/SS';
-import type {Disposer, ObservableMaybe} from '~/types';
+import type {Disposer, FunctionMaybe, ObservableMaybe} from '~/types';
 
 /* MAIN */
 
-const useIdleLoop = ( callback: ObservableMaybe<IdleRequestCallback>, options?: ObservableMaybe<IdleRequestOptions> ): Disposer => {
+const useIdleLoop = ( callback: ObservableMaybe<IdleRequestCallback>, options?: FunctionMaybe<IdleRequestOptions> ): Disposer => {
 
   return useScheduler ({
     callback,

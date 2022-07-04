@@ -609,7 +609,7 @@ This component is just an alternative to `createElement` that can be used in JSX
 Interface:
 
 ```ts
-function Dynamic <P = {}> ( props: { component: ObservableMaybe<JSX.Component<P>, props?: ObservableMaybe<P | null>, children: JSX.Element }): JSX. Element;
+function Dynamic <P = {}> ( props: { component: ObservableMaybe<JSX.Component<P>, props?: FunctionMaybe<P | null>, children: JSX.Element }): JSX. Element;
 ```
 
 Usage:
@@ -1163,7 +1163,7 @@ This hook is just an alternative to `addEventListener` that automatically clears
 Interface:
 
 ```ts
-function useEventListener ( target: ObservableMaybe<EventTarget>, event: ObservableMaybe<string>, handler: ObservableMaybe<( event: Event ) => void>, options?: ObservableMaybe<true | AddEventListenerOptions> ): Disposer;
+function useEventListener ( target: FunctionMaybe<EventTarget>, event: FunctionMaybe<string>, handler: ObservableMaybe<( event: Event ) => void>, options?: FunctionMaybe<true | AddEventListenerOptions> ): Disposer;
 ```
 
 Usage:
@@ -1183,7 +1183,7 @@ This hook uses `useResource` internally, so it's significant for `Suspense` too.
 Interface:
 
 ```ts
-function useFetch ( request: ObservableMaybe<RequestInfo>, init?: ObservableMaybe<RequestInit> ): ObservableReadonly<Resource<Response>>;
+function useFetch ( request: FunctionMaybe<RequestInfo>, init?: FunctionMaybe<RequestInit> ): ObservableReadonly<Resource<Response>>;
 ```
 
 Usage:
@@ -1208,7 +1208,7 @@ This hook is just an alternative to `requestIdleCallback` that automatically cle
 Interface:
 
 ```ts
-function useIdleCallback ( callback: ObservableMaybe<IdleRequestCallback>, options?: ObservableMaybe<IdleRequestOptions> ): Disposer;
+function useIdleCallback ( callback: ObservableMaybe<IdleRequestCallback>, options?: FunctionMaybe<IdleRequestOptions> ): Disposer;
 ```
 
 Usage:
@@ -1226,7 +1226,7 @@ This hook is just a version of `useIdleCallback` that loops until the parent com
 Interface:
 
 ```ts
-function useIdleLoop ( callback: ObservableMaybe<IdleRequestCallback>, options?: ObservableMaybe<IdleRequestOptions> ): Disposer;
+function useIdleLoop ( callback: ObservableMaybe<IdleRequestCallback>, options?: FunctionMaybe<IdleRequestOptions> ): Disposer;
 ```
 
 Usage:
@@ -1244,7 +1244,7 @@ This hook is just an alternative to `setInterval` that automatically clears itse
 Interface:
 
 ```ts
-function useInterval ( callback: ObservableMaybe<Callback>, ms?: ObservableMaybe<number> ): Disposer;
+function useInterval ( callback: ObservableMaybe<Callback>, ms?: FunctionMaybe<number> ): Disposer;
 ```
 
 Usage:
@@ -1282,7 +1282,7 @@ This hook uses `useResource` internally, so it's significant for `Suspense` too.
 Interface:
 
 ```ts
-function usePromise <T> ( promise: ObservableMaybe<Promise<T>> ): ObservableReadonly<Resource<T>>;
+function usePromise <T> ( promise: FunctionMaybe<Promise<T>> ): ObservableReadonly<Resource<T>>;
 ```
 
 Usage:
@@ -1469,7 +1469,7 @@ This hook is just an alternative to `setTimeout` that automatically clears itsel
 Interface:
 
 ```ts
-function useTimeout ( callback: ObservableMaybe<Callback>, ms?: ObservableMaybe<number> ): Disposer;
+function useTimeout ( callback: ObservableMaybe<Callback>, ms?: FunctionMaybe<number> ): Disposer;
 ```
 
 Usage:

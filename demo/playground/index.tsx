@@ -2724,6 +2724,28 @@ TestDynamicObservableComponent.test = {
   ]
 };
 
+const TestDynamicFunctionComponent = (): JSX.Element => {
+  const level = $(1);
+  const component = () => `h${level ()}`;
+  const increment = () => level ( ( level () + 1 ) % 7 || 1 );
+  useInterval ( increment, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Dynamic - Function Component</h3>
+      <Dynamic component={component}>
+        Level: {level}
+      </Dynamic>
+    </>
+  );
+};
+
+TestDynamicFunctionComponent.test = {
+  static: true,
+  snapshots: [
+    'h1'
+  ]
+};
+
 const TestDynamicObservableProps = (): JSX.Element => {
   const red = { class: 'red' };
   const blue = { class: 'blue' };
@@ -2741,6 +2763,29 @@ const TestDynamicObservableProps = (): JSX.Element => {
 };
 
 TestDynamicObservableProps.test = {
+  snapshots: [
+    '<h5 class="red">Content</h5>',
+    '<h5 class="blue">Content</h5>'
+  ]
+};
+
+const TestDynamicFunctionProps = (): JSX.Element => {
+  const red = { class: 'red' };
+  const blue = { class: 'blue' };
+  const props = $(red);
+  const toggle = () => props ( prev => prev === red ? blue : red );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Dynamic - Function Props</h3>
+      <Dynamic component="h5" props={props}>
+        Content
+      </Dynamic>
+    </>
+  );
+};
+
+TestDynamicFunctionProps.test = {
   snapshots: [
     '<h5 class="red">Content</h5>',
     '<h5 class="blue">Content</h5>'
@@ -5233,7 +5278,9 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestCleanupInnerPortal} />
       <TestSnapshots Component={TestDynamicHeading} />
       <TestSnapshots Component={TestDynamicObservableComponent} />
+      <TestSnapshots Component={TestDynamicFunctionComponent} />
       <TestSnapshots Component={TestDynamicObservableProps} />
+      <TestSnapshots Component={TestDynamicFunctionProps} />
       <TestSnapshots Component={TestDynamicObservableChildren} />
       <TestSnapshots Component={TestIfStatic} />
       <TestSnapshots Component={TestIfObservable} />

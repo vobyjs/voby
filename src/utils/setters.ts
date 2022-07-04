@@ -9,6 +9,7 @@ import useSample from '~/hooks/use_sample';
 import isObservable from '~/methods/is_observable';
 import isStore from '~/methods/is_store';
 import $ from '~/methods/S';
+import $$ from '~/methods/SS';
 import store from '~/methods/store';
 import {context} from '~/oby';
 import {SYMBOL_STORE_OBSERVABLE} from '~/oby';
@@ -18,7 +19,7 @@ import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import FragmentUtils from '~/utils/fragment';
 import {castArray, isArray, isFunction, isNil, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
-import {resolveChild, resolveClass, resolveFunction} from '~/utils/resolvers';
+import {resolveChild, resolveClass} from '~/utils/resolvers';
 import type {Child, Classes, DirectiveFunction, EventListener, Fragment, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 
 /* MAIN */
@@ -749,7 +750,7 @@ const setHTML = ( element: HTMLElement, value: FunctionMaybe<{ __html: FunctionM
 
   useReaction ( () => {
 
-    setHTMLStatic ( element, resolveFunction ( resolveFunction ( value ).__html ) );
+    setHTMLStatic ( element, $$( $$( value ).__html ) );
 
   });
 
