@@ -634,7 +634,7 @@ The error boundary catches errors thrown inside it, and renders a fallback compo
 Interface:
 
 ```ts
-function ErrorBoundary ( props: { fallback: JSX.Element | (( props: { error: Error, reset: Disposer } ) => JSX.Element), children: JSX.Element }): ObservableReadonly<JSX.Element>;
+function ErrorBoundary ( props: { fallback: JSX.Element | (( props: { error: Error, reset: Callback } ) => JSX.Element), children: JSX.Element }): ObservableReadonly<JSX.Element>;
 ```
 
 Usage:
