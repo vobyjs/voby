@@ -233,6 +233,10 @@ Each directive has a unique name and it can be called by simply writing `use:dir
 
 Directives internally are registered using context providers, so you can also override directives for a particular scope just by registering another directive with the same name closer to where you are reading it.
 
+A directive's `Provider` will register the directive with its children, which is always what you want, but it can lead to messy code due to nesting.
+
+A directive's `register` function will register the directive with the current parent observer, which is usually only safe to do at the root level, but it will lead to very readable code.
+
 Interface:
 
 ```ts
@@ -240,7 +244,8 @@ type DirectiveRef = ObservableReadonly<Element | undefined>;
 type DirectiveFunction = <T extends unknown[]> ( ref: DirectiveRef, ...args: T ) => void;
 type DirectiveProvider = ( props: { children: JSX.Element } ) => JSX.Element;
 type DirectiveRef<T extends unknown[]> = ( ...args: T ) => (( ref: Element | undefined ) => void);
-type Directive = { Provider: DirectiveProvider, ref: DirectiveRef };
+type DirectiveRegister = () => void;
+type Directive = { Provider: DirectiveProvider, ref: DirectiveRef, register: DirectiveRegister };
 
 function createDirective <T extends unknown[] = []> ( name: string, fn: DirectiveFunction<T> ): Directive;
 ```

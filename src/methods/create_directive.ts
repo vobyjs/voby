@@ -20,7 +20,7 @@ const createDirective = <T extends unknown[] = []> ( name: string, fn: Directive
 
     return useComputed ( () => {
 
-      context ( symbol, fn );
+      register ();
 
       return resolve ( children );
 
@@ -44,7 +44,13 @@ const createDirective = <T extends unknown[] = []> ( name: string, fn: Directive
 
   };
 
-  return {Provider, ref};
+  const register = (): void => {
+
+    context ( symbol, fn );
+
+  };
+
+  return {Provider, ref, register};
 
 };
 
