@@ -42,13 +42,14 @@ const randomColor = (): string => {
 };
 
 const TestSnapshots = ({ Component, props }: { Component: JSX.Component & { test: { static?: boolean, snapshots: string[] } }, props?: Record<any, any> }): JSX.Element => {
-  const ref = $<HTMLDivElement>(); //TODO: This should be <HTMLDivElement | undefined>
+  const ref = $<HTMLDivElement>();
   let index = -1;
   let htmlPrev = '';
   let ticks = 0;
   const getHTML = (): string => {
-    if ( !ref () ) return '';
-    return ref ().innerHTML;
+    const element = ref ();
+    if ( !element ) return '';
+    return element.innerHTML;
   };
   const getSnapshot = ( html: string ): string => {
     const htmlWithoutTitle = html.replace ( /<h3>[a-zA-Z0-9 -]*<\/h3>/, '' );
