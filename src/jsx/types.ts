@@ -63,6 +63,8 @@ declare namespace JSX {
 
   type Refs<T = unknown> = ArrayMaybe<Ref<T>>;
 
+  type Style = FunctionMaybe<string | StyleProperties>;
+
   type IntrinsicElement<T extends keyof IntrinsicElements> = IntrinsicElements[T];
 
   interface ClassProperties extends AllClassProperties {}
