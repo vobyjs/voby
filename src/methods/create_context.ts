@@ -17,7 +17,7 @@ const createContext = <T> ( defaultValue?: T ): Context<T> => {
 
     return useComputed ( () => {
 
-      context ( symbol, value );
+      register ( value );
 
       return resolve ( children );
 
@@ -25,7 +25,13 @@ const createContext = <T> ( defaultValue?: T ): Context<T> => {
 
   };
 
-  const Context = {Provider};
+  const register = ( value: T ): void => {
+
+    context ( symbol, value );
+
+  };
+
+  const Context = {Provider, register};
 
   CONTEXTS_DATA.set ( Context, { symbol, defaultValue } );
 

@@ -185,11 +185,16 @@ $$ ( () => 123 ); // => () => 123
 
 This function creates a context object, optionally with a default value, which can later be used to provide a new value for the context or to read the current value.
 
+A context's `Provider` will register the context with its children, which is always what you want, but it can lead to messy code due to nesting.
+
+A context's `register` function will register the context with the current parent observer, which is usually only safe to do at the root level, but it will lead to very readable code.
+
 Interface:
 
 ```ts
 type ContextProvider<T> = ( props: { value: T, children: JSX.Element } ) => JSX.Element;
-type Context<T> = { Provider: ContextProvider<T> };
+type ContextRegister<T> = ( value: T ) => void;
+type Context<T> = { Provider: ContextProvider<T>, register: ContextRegister<T> };
 
 function createContext <T> ( defaultValue?: T ): Context<T>;
 ```
