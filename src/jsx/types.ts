@@ -35,12 +35,12 @@ declare namespace JSX {
     [key: string]: FunctionMaybe<Nullable<boolean>>
   };
 
-  type AllCSSProperties = {
-    [key: string]: FunctionMaybe<Nullable<string | number>>
-  };
-
   type DOMCSSProperties = {
     [key in keyof Omit<CSSStyleDeclaration, 'item' | 'setProperty' | 'removeProperty' | 'getPropertyValue' | 'getPropertyPriority'>]?: FunctionMaybe<Nullable<string | number>>
+  };
+
+  type DOMCSSVariables = {
+    [key: `--${string}`]: FunctionMaybe<Nullable<string | number>>
   };
 
   type HTMLAttributeReferrerPolicy = '' | 'no-referrer' | 'no-referrer-when-downgrade' | 'origin' | 'origin-when-cross-origin' | 'same-origin' | 'strict-origin' | 'strict-origin-when-cross-origin' | 'unsafe-url';
@@ -71,7 +71,7 @@ declare namespace JSX {
 
   interface ClassProperties extends AllClassProperties {}
 
-  interface StyleProperties extends AllCSSProperties, DOMCSSProperties {}
+  interface StyleProperties extends DOMCSSProperties, DOMCSSVariables {}
 
   type TargetedEvent<T extends EventTarget = EventTarget, TypedEvent extends Event = Event> = Omit<TypedEvent, 'currentTarget'> & { readonly currentTarget: T };
   type TargetedAnimationEvent<T extends EventTarget> = TargetedEvent<T, AnimationEvent>;
