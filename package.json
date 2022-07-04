@@ -2,7 +2,7 @@
   "name": "voby",
   "repository": "github:fabiospampinato/voby",
   "description": "A high-performance framework with fine-grained observable-based reactivity for building rich applications.",
-  "version": "0.32.1",
+  "version": "0.33.0",
   "type": "module",
   "sideEffects": false,
   "main": "dist/index.js",

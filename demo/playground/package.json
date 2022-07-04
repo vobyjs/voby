@@ -3,7 +3,7 @@
   "name": "playground",
   "type": "module",
   "scripts": {
-    "dev": "vite --force --config vite.ts --mode dev",
+    "dev": "vite --force --config vite.ts --mode dev --port 3003",
     "prod": "vite --force --config vite.ts"
   },
   "dependencies": {
