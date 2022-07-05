@@ -175,10 +175,18 @@ const o = $(123);
 
 $$ ( o ); // => 123
 
-// Getting the value out of a non-observable
+// Getting the value out of a function
+
+$$ ( () => 123 ); // => 123
+
+// Getting the value out of an observable but not out of a function
+
+$$ ( o, false ); // => 123
+$$ ( () => 123, false ); // => () => 123
+
+// Getting the value out of a non-observable and non-function
 
 $$ ( 123 ); // => 123
-$$ ( () => 123 ); // => () => 123
 ```
 
 #### `createContext`
@@ -1377,13 +1385,13 @@ useResolved ( 123 ); // => 123
 
 useResolved ( $(123) ); // => 123
 
-useResolved ( () => 123 ); // => () => 123
+useResolved ( () => 123 ); // => 123
 
-useResolved ( () => 123, true ); // => 123
+useResolved ( () => 123, false ); // => () => 123
 
 useResolved ( $(123), value => 321 ); // => 321
 
-useResolved ( [$(123), () => 123], ( a, b ) => 321, true ); // => 321
+useResolved ( [$(123), () => 123], ( a, b ) => 321 ); // => 321
 ```
 
 #### `useResource`
