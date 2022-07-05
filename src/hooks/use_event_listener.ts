@@ -3,6 +3,7 @@
 
 import useReaction from '~/hooks/use_reaction';
 import useResolved from '~/hooks/use_resolved';
+import $$ from '~/methods/SS';
 import type {Disposer, FunctionMaybe, ObservableMaybe} from '~/types';
 
 /* MAIN */
@@ -11,13 +12,15 @@ const useEventListener = ( target: FunctionMaybe<EventTarget>, event: FunctionMa
 
   return useReaction ( () => {
 
-    return useResolved ( [target, event, handler, options], ( target, event, handler, options ) => {
+    const fn = $$(handler, false);
 
-      target.addEventListener ( event, handler, options );
+    return useResolved ( [target, event, options], ( target, event, options ) => {
+
+      target.addEventListener ( event, fn, options );
 
       return () => {
 
-        target.removeEventListener ( event, handler, options );
+        target.removeEventListener ( event, fn, options );
 
       };
 
