@@ -860,7 +860,7 @@ const App = () => {
   const Content = () => {
     const resource = useResource ( () => makeSomePromise () );
     return (
-      <Show when={() => !resource ().pensing && !resource ().error}>
+      <Show when={() => !resource ().pending && !resource ().error}>
         {resource ().value}
       </Show>
     );
