@@ -628,7 +628,7 @@ This component is just an alternative to `createElement` that can be used in JSX
 Interface:
 
 ```ts
-function Dynamic <P = {}> ( props: { component: ObservableMaybe<JSX.Component<P>, props?: FunctionMaybe<P | null>, children: JSX.Element }): JSX. Element;
+function Dynamic <P = {}> ( props: { component: ObservableMaybe<JSX.Component<P>, props?: FunctionMaybe<P | null>, children?: JSX.Element }): JSX. Element;
 ```
 
 Usage:

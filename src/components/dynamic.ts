@@ -8,7 +8,7 @@ import type {Child, Component, FunctionMaybe, Props} from '~/types';
 
 /* MAIN */
 
-const Dynamic = <P = {}> ({ component, props, children }: { component: Component<P>, props?: FunctionMaybe<Props | null>, children: Child }): Child => {
+const Dynamic = <P = {}> ({ component, props, children }: { component: Component<P>, props?: FunctionMaybe<Props | null>, children?: Child }): Child => {
 
   return useComputed ( () => {
 
