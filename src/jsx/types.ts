@@ -63,7 +63,7 @@ declare namespace JSX {
 
   type Ref<T = unknown> = (( value: T | undefined ) => void);
 
-  type Refs<T = unknown> = ArrayMaybe<Ref<T>>;
+  type Refs<T = unknown> = ArrayMaybe<Nullable<Ref<T>>>;
 
   type Style = FunctionMaybe<Nullable<string | StyleProperties>>;
 

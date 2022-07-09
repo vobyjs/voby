@@ -4294,7 +4294,7 @@ const TestRefs = (): JSX.Element => {
   return (
     <>
       <h3>Refs</h3>
-      <p ref={[ref1, ref2]}>content</p>
+      <p ref={[ref1, ref2, null, undefined]}>content</p>
     </>
   );
 };

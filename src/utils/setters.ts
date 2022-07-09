@@ -794,15 +794,15 @@ const setProperty = ( element: HTMLElement, key: string, value: FunctionMaybe<nu
 
 };
 
-const setRef = <T> ( element: T, value: null | undefined | Ref<T> | Ref<T>[] ): void => { // Scheduling a microtask to dramatically increase the probability that the element will get connected to the DOM in the meantime, which would be more convenient
+const setRef = <T> ( element: T, value: null | undefined | Ref<T> | (null | undefined | Ref<T>)[] ): void => { // Scheduling a microtask to dramatically increase the probability that the element will get connected to the DOM in the meantime, which would be more convenient
 
   if ( isNil ( value ) ) return;
 
   const values = castArray ( value );
 
-  useMicrotask ( () => values.forEach ( value => value ( element ) ) );
+  useMicrotask ( () => values.forEach ( value => value?.( element ) ) );
 
-  // useCleanup ( () => useMicrotask ( () => values.forEach ( value => value ( undefined ) ) ) ); // Too wasteful probably...
+  // useCleanup ( () => useMicrotask ( () => values.forEach ( value => value?.( undefined ) ) ) ); // Too wasteful probably...
 
 };
 
