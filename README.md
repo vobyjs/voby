@@ -62,8 +62,8 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`createElement`](#createelement)     | [`ForIndex`](#forindex)           | [`useBatch`](#usebatch)                     | [`ObservableOptions`](#observableoptions)   |                                 |
 | [`h`](#h)                             | [`Fragment`](#fragment)           | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                                 |
 | [`html`](#html)                       | [`If`](#if)                       | [`useComputed`](#usecomputed)               | [`StoreOptions`](#storeoptions)             |                                 |
-| [`isObservable`](#isobservable)       | [`Portal`](#portal)               | [`useContext`](#usecontext)                 | [`F`](#f)                                   |                                 |
-| [`isStore`](#isstore)                 | [`Suspense`](#suspense)           | [`useDisposed`](#usedisposed)               | [`O`](#o)                                   |                                 |
+| [`isObservable`](#isobservable)       | [`Portal`](#portal)               | [`useContext`](#usecontext)                 |                                             |                                 |
+| [`isStore`](#isstore)                 | [`Suspense`](#suspense)           | [`useDisposed`](#usedisposed)               |                                             |                                 |
 | [`lazy`](#lazy)                       | [`Switch`](#switch)               | [`useEffect`](#useeffect)                   |                                             |                                 |
 | [`render`](#render)                   | [`Ternary`](#ternary)             | [`useError`](#useerror)                     |                                             |                                 |
 | [`renderToString`](#rendertostring)   |                                   | [`useEventListener`](#useeventlistener)     |                                             |                                 |
@@ -1667,50 +1667,6 @@ import {store} from 'voby';
 
 const createStore = <T> ( value: T, options?: StoreOptions ): T => {
   return store ( value, options );
-};
-```
-
-#### `F`
-
-This type is just a convenient alias for `FunctionMaybe`, because typing `FunctionMaybe` a lot can be annoying.
-
-Interface:
-
-```ts
-type F<T> = FunctionMaybe<T>;
-```
-
-Usage:
-
-```tsx
-import type {F} from 'voby';
-
-const SomeConditionalComponent = ( when: F<boolean>, value: string ): JSX.Element => {
-  return (
-    <If when={when}>
-      {value}
-    </If>
-  );
-};
-```
-
-#### `O`
-
-This type is just a convenient alias for `ObservableMaybe`, because typing `ObservableMaybe` a lot can be annoying.
-
-Interface:
-
-```ts
-type O<T> = ObservableMaybe<T>;
-```
-
-Usage:
-
-```tsx
-import type {O} from 'voby';
-
-const Button = ({ label }: { label: O<string> }): JSX.Element => {
-  return <button>{label}</button>;
 };
 ```
 
