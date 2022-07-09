@@ -93,13 +93,17 @@ type Props = Record<string, any>;
 
 type Ref<T = unknown> = ( value: T | undefined ) => void;
 
-type ResourcePending = { pending: true, error?: never, value?: never };
+type ResourceStaticPending = { pending: true, error?: never, value?: never };
 
-type ResourceRejected = { pending: false, error: Error, value?: never };
+type ResourceStaticRejected = { pending: false, error: Error, value?: never };
 
-type ResourceResolved<T = unknown> = { pending: false, error?: never, value: T };
+type ResourceStaticResolved<T = unknown> = { pending: false, error?: never, value: T };
 
-type Resource<T = unknown> = ResourcePending | ResourceRejected | ResourceResolved<T>;
+type ResourceStatic<T = unknown> = ResourceStaticPending | ResourceStaticRejected | ResourceStaticResolved<T>;
+
+type ResourceFunction<T = unknown> = { pending (): boolean, error (): Error | undefined, value (): T | undefined };
+
+type Resource<T = unknown> = ObservableReadonly<ResourceStatic<T>> & ResourceFunction<T>;
 
 type StoreOptions = import ( 'oby' ).StoreOptions;
 
@@ -123,4 +127,4 @@ type Truthy<T = unknown> = Exclude<T, 0 | -0 | 0n | -0n | '' | false | null | un
 
 /* EXPORT */
 
-export type {ArrayMaybe, Callback, Child, ChildWithMetadata, Classes, ComponentCallable, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, ComponentsMap, Constructor, ConstructorWith, ContextData, ContextProvider, ContextRegister, Context, DirectiveFunction, DirectiveProvider, DirectiveRef, DirectiveRegister, Directive, Disposer, Element, EventListener, Falsy, FN, FragmentUndefined, FragmentNode, FragmentFragment, FragmentNodes, FragmentFragments, FragmentMixed, Fragment, FunctionMaybe, LazyComponent, LazyFetcher, LazyResult, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourcePending, ResourceRejected, ResourceResolved, Resource, StoreOptions, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap, Truthy};
+export type {ArrayMaybe, Callback, Child, ChildWithMetadata, Classes, ComponentCallable, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, ComponentsMap, Constructor, ConstructorWith, ContextData, ContextProvider, ContextRegister, Context, DirectiveFunction, DirectiveProvider, DirectiveRef, DirectiveRegister, Directive, Disposer, Element, EventListener, Falsy, FN, FragmentUndefined, FragmentNode, FragmentFragment, FragmentNodes, FragmentFragments, FragmentMixed, Fragment, FunctionMaybe, LazyComponent, LazyFetcher, LazyResult, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceStaticPending, ResourceStaticRejected, ResourceStaticResolved, ResourceStatic, ResourceFunction, Resource, StoreOptions, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap, Truthy};

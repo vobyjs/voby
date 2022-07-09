@@ -1405,7 +1405,7 @@ This function is also the mechanism through which `Suspense` understands if ther
 Interface:
 
 ```ts
-function useResource <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): ObservableReadonly<Resource<T>>;
+function useResource <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): Resource<T>;
 ```
 
 Usage:
@@ -1626,13 +1626,17 @@ This is the type of object that `useResource`, `usePromise` and `useFetch` will 
 
 It's an object that tells if whether the resource is loading or not, whether an error happened or not, if what the eventual resulting value is.
 
+It's a read-only observable that holds the resulting object, but it also comes with helper methods for retrieving specific keys out of the object, which can make some code much cleaner.
+
 Interface:
 
 ```ts
-type ResourcePending = { pending: true, error?: never, value?: never };
-type ResourceRejected = { pending: false, error: Error, value?: never };
-type ResourceResolved<T> = { pending: false, error?: never, value: T };
-type Resource<T> = ResourcePending | ResourceRejected | ResourceResolved<T>;
+type ResourceStaticPending = { pending: true, error?: never, value?: never };
+type ResourceStaticRejected = { pending: false, error: Error, value?: never };
+type ResourceStaticResolved<T = unknown> = { pending: false, error?: never, value: T };
+type ResourceStatic<T = unknown> = ResourceStaticPending | ResourceStaticRejected | ResourceStaticResolved<T>;
+type ResourceFunction<T = unknown> = { pending (): boolean, error (): Error | undefined, value (): T | undefined };
+type Resource<T = unknown> = ObservableReadonly<ResourceStatic<T>> & ResourceFunction<T>;
 ```
 
 Usage:
@@ -1640,11 +1644,19 @@ Usage:
 ```tsx
 import type {ObservableReadonly, Resource} from 'voby';
 
-const resource: ObservableReadonly<Resource> = useResource ( () => fetch ( 'https://my.api' ) );
+const resource: Resource<Response> = useResource ( () => fetch ( 'https://my.api' ) );
 
-resource ().pending // => true | false
-resource ().error // => Error | undefined
-resource ().value // => Whatever the resource will resolve to
+// Reading the static object
+
+resource ().pending; // => true | false
+resource ().error; // => Error | undefined
+resource ().value; // => Whatever the resource will resolve to
+
+// Using helper methods
+
+resource.pending (); // => true | false
+resource.error (); // => Error | undefined
+resource.value (); // => Whatever the resource will resolve to
 ```
 
 #### `StoreOptions`

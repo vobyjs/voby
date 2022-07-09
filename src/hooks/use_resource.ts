@@ -7,16 +7,16 @@ import useReaction from '~/hooks/use_reaction';
 import useReadonly from '~/hooks/use_readonly';
 import $ from '~/methods/S';
 import $$ from '~/methods/SS';
-import {castError, isPromise, noop, once} from '~/utils/lang';
-import type {ObservableReadonly, ObservableMaybe, PromiseMaybe, Resource} from '~/types';
+import {assign, castError, isPromise, noop, once} from '~/utils/lang';
+import type {ObservableMaybe, PromiseMaybe, ResourceStatic, Resource} from '~/types';
 
 /* MAIN */
 
 //TODO: Option for returning the resource as a store, where also the returned value gets wrapped in a store
 
-const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): ObservableReadonly<Resource<T>> => {
+const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): Resource<T> => {
 
-  const resource = $<Resource<T>>({ pending: true });
+  const resource = $<ResourceStatic<T>>({ pending: true });
 
   useReaction ( () => {
 
@@ -82,7 +82,11 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): O
 
   });
 
-  return useReadonly ( resource );
+  return assign ( useReadonly ( resource ), {
+    pending: () => resource ().pending,
+    error: () => resource ().error,
+    value: () => resource ().value
+  });
 
 };
 
