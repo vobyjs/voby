@@ -60,13 +60,13 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`createContext`](#createcontext)     | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`ObservableReadonly`](#observablereadonly) | [`Tree Shaking`](#tree-shaking) |
 | [`createDirective`](#createdirective) | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableMaybe`](#observablemaybe)       | [`TypeScript`](#typescript)     |
 | [`createElement`](#createelement)     | [`ForIndex`](#forindex)           | [`useBatch`](#usebatch)                     | [`ObservableOptions`](#observableoptions)   |                                 |
-| [`h`](#h)                             | [`Fragment`](#fragment)           | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                                 |
-| [`html`](#html)                       | [`If`](#if)                       | [`useComputed`](#usecomputed)               | [`StoreOptions`](#storeoptions)             |                                 |
-| [`isObservable`](#isobservable)       | [`Portal`](#portal)               | [`useContext`](#usecontext)                 |                                             |                                 |
-| [`isStore`](#isstore)                 | [`Suspense`](#suspense)           | [`useDisposed`](#usedisposed)               |                                             |                                 |
-| [`lazy`](#lazy)                       | [`Switch`](#switch)               | [`useEffect`](#useeffect)                   |                                             |                                 |
-| [`render`](#render)                   | [`Ternary`](#ternary)             | [`useError`](#useerror)                     |                                             |                                 |
-| [`renderToString`](#rendertostring)   |                                   | [`useEventListener`](#useeventlistener)     |                                             |                                 |
+| [`h`](#h)                             | [`ForValue`](#forvalue)           | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                                 |
+| [`html`](#html)                       | [`Fragment`](#fragment)           | [`useComputed`](#usecomputed)               | [`StoreOptions`](#storeoptions)             |                                 |
+| [`isObservable`](#isobservable)       | [`If`](#if)                       | [`useContext`](#usecontext)                 |                                             |                                 |
+| [`isStore`](#isstore)                 | [`Portal`](#portal)               | [`useDisposed`](#usedisposed)               |                                             |                                 |
+| [`lazy`](#lazy)                       | [`Suspense`](#suspense)           | [`useEffect`](#useeffect)                   |                                             |                                 |
+| [`render`](#render)                   | [`Switch`](#switch)               | [`useError`](#useerror)                     |                                             |                                 |
+| [`renderToString`](#rendertostring)   | [`Ternary`](#ternary)             | [`useEventListener`](#useeventlistener)     |                                             |                                 |
 | [`resolve`](#resolve)                 |                                   | [`useFetch`](#usefetch)                     |                                             |                                 |
 | [`store`](#store)                     |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
 | [`template`](#template)               |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
@@ -743,6 +743,43 @@ const App = () => {
         return <p>Double value: {() => value () ** 2}</p>
       }}
     </ForIndex>
+  );
+};
+```
+
+#### `ForValue`
+
+This component is a reactive alternative to natively mapping over an array, but it caches results for values that didn't change, _and_ repurposes results for items that got discarded for new items that need to be rendered.
+
+This is an alternative to `For` and `ForIndex` that enables reusing the same result for different items, when possible. Reusing the same result means also reusing everything in it, including DOM nodes.
+
+Basically `Array.prototype.map` doesn't wrap the value nor the index in an observable, `For` wraps the index only in an observable, `ForIndex` wraps the value only in an observable, and `ForValue` wraps both the value and the index in observables.
+
+This is useful for use cases like virtualized rendering, where `For` would cause some nodes to be discarded and others to be created, `ForIndex` would cause _all_ nodes to be repurposed, but `ForValue` allows you to only repurpose the nodes that would have been discareded by `For`, not all of them.
+
+This is a more advanced component, it's recommended to simply use `For` or `ForIndex`, until you really understand how to squeeze extra performance with this, and you actually need that performance.
+
+Interface:
+
+```ts
+type Value<T = unknown> = T extends ObservableReadonly<infer U> ? ObservableReadonly<U> : ObservableReadonly<T>;
+
+function ForValue <T> ( props: { values: FunctionMaybe<readonly T[]>, fallback?: JSX.Element, children: (( value: Value<T>, index: ObservableReadonly<number> ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
+```
+
+Usage:
+
+```tsx
+import {ForValue} from 'voby';
+
+const App = () => {
+  const numbers = [1, 2, 3, 4, 5];
+  return (
+    <ForValue values={numbers}>
+      {( value ) => {
+        return <p>Double value: {() => value () ** 2}</p>
+      }}
+    </ForValue>
   );
 };
 ```
