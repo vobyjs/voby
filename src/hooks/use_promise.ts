@@ -3,11 +3,11 @@
 
 import useResource from '~/hooks/use_resource';
 import $$ from '~/methods/SS';
-import type {FunctionMaybe, ObservableReadonly, Resource} from '~/types';
+import type {FunctionMaybe, Resource} from '~/types';
 
 /* MAIN */
 
-const usePromise = <T> ( promise: FunctionMaybe<Promise<T>> ): ObservableReadonly<Resource<T>> => {
+const usePromise = <T> ( promise: FunctionMaybe<Promise<T>> ): Resource<T> => {
 
   return useResource ( () => $$(promise) );
 

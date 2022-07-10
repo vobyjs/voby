@@ -4,11 +4,11 @@
 import useAbortSignal from '~/hooks/use_abort_signal';
 import useResolved from '~/hooks/use_resolved';
 import useResource from '~/hooks/use_resource';
-import type {FunctionMaybe, ObservableReadonly, Resource} from '~/types';
+import type {FunctionMaybe, Resource} from '~/types';
 
 /* MAIN */
 
-const useFetch = ( request: FunctionMaybe<RequestInfo>, init?: FunctionMaybe<RequestInit> ): ObservableReadonly<Resource<Response>> => {
+const useFetch = ( request: FunctionMaybe<RequestInfo>, init?: FunctionMaybe<RequestInit> ): Resource<Response> => {
 
   return useResource ( () => {
 
