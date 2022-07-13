@@ -4,11 +4,9 @@
 import {SYMBOLS_DIRECTIVES} from '~/constants';
 import useMicrotask from '~/hooks/use_microtask';
 import useReaction from '~/hooks/use_reaction';
-import useReadonly from '~/hooks/use_readonly';
 import useSample from '~/hooks/use_sample';
 import isObservable from '~/methods/is_observable';
 import isStore from '~/methods/is_store';
-import $ from '~/methods/S';
 import $$ from '~/methods/SS';
 import store from '~/methods/store';
 import {context} from '~/oby';
@@ -608,13 +606,9 @@ const setDirective = <T extends unknown[]> ( element: HTMLElement, directive: st
 
   if ( !symbol || !fn ) throw new Error ( `Directive "${directive}" not found` );
 
-  const ref = $<Element | undefined>();
+  setRef ( element, element => {
 
-  setRef ( element, value => {
-
-    ref ( value );
-
-    fn ( useReadonly ( ref ), ...castArray ( args ) as any ); //TSC
+    fn ( element, ...castArray ( args ) as any ); //TSC
 
   });
 
@@ -801,8 +795,6 @@ const setRef = <T> ( element: T, value: null | undefined | Ref<T> | (null | unde
   const values = castArray ( value );
 
   useMicrotask ( () => values.forEach ( value => value?.( element ) ) );
-
-  // useCleanup ( () => useMicrotask ( () => values.forEach ( value => value?.( undefined ) ) ) ); // Too wasteful probably...
 
 };
 

@@ -2388,12 +2388,11 @@ TestHTMLDangerouslySetInnerHTMLFunctionString.test = {
 };
 
 const TestDirective = () => {
-  const model = ( ref, arg1, arg2 ) => {
+  const model = ( element, arg1, arg2 ) => {
     useEffect ( () => {
-      if ( !ref () ) return;
       const value = `${arg1} - ${arg2}`
-      ref ().value = value;
-      ref ().setAttribute ( 'value', value );
+      element.value = value;
+      element.setAttribute ( 'value', value );
     });
   };
   const Model = createDirective ( 'model', model );
@@ -2415,12 +2414,11 @@ TestDirective.test = {
 };
 
 const TestDirectiveSingleArgument = () => {
-  const model = ( ref, arg1 ) => {
+  const model = ( element, arg1 ) => {
     useEffect ( () => {
-      if ( !ref () ) return;
       const value = `${arg1}`;
-      ref ().value = value;
-      ref ().setAttribute ( 'value', value );
+      element.value = value;
+      element.setAttribute ( 'value', value );
     });
   };
   const Model = createDirective ( 'model', model );
@@ -2442,12 +2440,11 @@ TestDirectiveSingleArgument.test = {
 };
 
 const TestDirectiveRef = () => {
-  const model = ( ref, arg1 ) => {
+  const model = ( element, arg1 ) => {
     useEffect ( () => {
-      if ( !ref () ) return;
       const value = `${arg1}`;
-      ref ().value = value;
-      ref ().setAttribute ( 'value', value );
+      element.value = value;
+      element.setAttribute ( 'value', value );
     });
   };
   const Model = createDirective ( 'model', model );

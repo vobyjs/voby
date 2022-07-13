@@ -61,7 +61,7 @@ declare namespace JSX {
 
   type ElementClass<P = {}> = ComponentClass<P>;
 
-  type Ref<T = unknown> = (( value: T | undefined ) => void);
+  type Ref<T = unknown> = (( value: T ) => void);
 
   type Refs<T = unknown> = ArrayMaybe<Nullable<Ref<T>>>;
 

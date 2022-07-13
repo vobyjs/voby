@@ -37,11 +37,11 @@ type ContextRegister<T = unknown> = ( value: T ) => void;
 
 type Context<T = unknown> = { Provider: ContextProvider<T>, register: ContextRegister<T> };
 
-type DirectiveFunction<Arguments extends unknown[] = []> = ( ref: ObservableReadonly<globalThis.Element | undefined>, ...args: Arguments ) => void;
+type DirectiveFunction<Arguments extends unknown[] = []> = ( ref: globalThis.Element, ...args: Arguments ) => void;
 
 type DirectiveProvider = ( props: { children: Child } ) => Child;
 
-type DirectiveRef<Arguments extends unknown[] = []> = ( ...args: Arguments ) => (( ref: globalThis.Element | undefined ) => void);
+type DirectiveRef<Arguments extends unknown[] = []> = ( ...args: Arguments ) => (( ref: globalThis.Element ) => void);
 
 type DirectiveRegister = () => void;
 
@@ -91,7 +91,7 @@ type PromiseMaybe<T = unknown> = Promise<T> | T;
 
 type Props = Record<string, any>;
 
-type Ref<T = unknown> = ( value: T | undefined ) => void;
+type Ref<T = unknown> = ( value: T ) => void;
 
 type ResourceStaticPending = { pending: true, error?: never, value?: never };
 

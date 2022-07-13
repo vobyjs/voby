@@ -30,15 +30,9 @@ const createDirective = <T extends unknown[] = []> ( name: string, fn: Directive
 
   const ref = ( ...args: T ) => {
 
-    const observable = $<Element | undefined>();
-    const readonly = useReadonly ( observable );
-    const call = once ( () => fn ( readonly, ...args ) );
+    return ( element: Element ): void => {
 
-    return ( element: Element | undefined ): void => {
-
-      observable ( element );
-
-      return call ();
+      fn ( element, ...args );
 
     };
 

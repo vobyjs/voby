@@ -235,7 +235,7 @@ const App = () => {
 
 This function creates a directive provider, which can be used to register a directive with its children.
 
-A directive is a function that always receives an `ObservableReadonly<Element | undefined>` as its first argument, which is basically a ref to the target element, and arbitrary user-provided arguments after that.
+A directive is a function that always receives an `Element` as its first argument, which is basically a ref to the target element, and arbitrary user-provided arguments after that.
 
 Each directive has a unique name and it can be called by simply writing `use:directivename={[arg1, arg2, ...argN]]}` in the JSX.
 
@@ -248,10 +248,9 @@ A directive's `register` function will register the directive with the current p
 Interface:
 
 ```ts
-type DirectiveRef = ObservableReadonly<Element | undefined>;
-type DirectiveFunction = <T extends unknown[]> ( ref: DirectiveRef, ...args: T ) => void;
+type DirectiveFunction = <T extends unknown[]> ( ref: Element, ...args: T ) => void;
 type DirectiveProvider = ( props: { children: JSX.Element } ) => JSX.Element;
-type DirectiveRef<T extends unknown[]> = ( ...args: T ) => (( ref: Element | undefined ) => void);
+type DirectiveRef<T extends unknown[]> = ( ...args: T ) => (( ref: Element ) => void);
 type DirectiveRegister = () => void;
 type Directive = { Provider: DirectiveProvider, ref: DirectiveRef, register: DirectiveRegister };
 
