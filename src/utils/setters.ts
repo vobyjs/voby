@@ -16,7 +16,7 @@ import {classesToggle} from '~/utils/classlist';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import FragmentUtils from '~/utils/fragment';
-import {castArray, isArray, isFunction, isNil, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
+import {castArray, flatten, isArray, isFunction, isNil, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
 import {resolveChild, resolveClass} from '~/utils/resolvers';
 import type {Child, Classes, DirectiveFunction, EventListener, Fragment, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 
@@ -792,7 +792,7 @@ const setRef = <T> ( element: T, value: null | undefined | Ref<T> | (null | unde
 
   if ( isNil ( value ) ) return;
 
-  const values = castArray ( value );
+  const values = flatten ( castArray ( value ) );
 
   useMicrotask ( () => values.forEach ( value => value?.( element ) ) );
 
