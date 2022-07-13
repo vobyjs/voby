@@ -35,7 +35,7 @@ const createElement = <P = {}> ( component: Component<P>, props?: Props | null, 
 
       const props = rest;
 
-      if ( !isVoidChild ( children ) ) props.children = children;
+      if ( !isNil ( children ) ) props.children = children;
 
       return wrapElement.bind ( (): Child => {
 
@@ -52,7 +52,7 @@ const createElement = <P = {}> ( component: Component<P>, props?: Props | null, 
 
       const props = rest;
 
-      if ( !isVoidChild ( children ) ) props.children = children;
+      if ( !isNil ( children ) ) props.children = children;
       if ( !isNil ( ref ) ) props.ref = ref;
 
       return wrapElement.bind ( component.bind ( undefined, props as P ) ); //TSC

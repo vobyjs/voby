@@ -2683,6 +2683,45 @@ TestABCD.test = {
   ]
 };
 
+const TestChildrenBoolean = (): JSX.Element => {
+  const Custom = ({ children }) => {
+    return <p>{Number ( children )}</p>;
+  };
+  return (
+    <>
+      <h3>Children - Boolean</h3>
+      <Custom>{true}</Custom>
+      <Custom>{false}</Custom>
+    </>
+  );
+};
+
+TestChildrenBoolean.test = {
+  static: true,
+  snapshots: [
+    '<p>1</p><p>0</p>'
+  ]
+};
+
+const TestChildrenSymbol = (): JSX.Element => {
+  const Custom = ({ children }) => {
+    return <p>{typeof children}</p>;
+  };
+  return (
+    <>
+      <h3>Children - Boolean</h3>
+      <Custom>{Symbol ()}</Custom>
+    </>
+  );
+};
+
+TestChildrenSymbol.test = {
+  static: true,
+  snapshots: [
+    '<p>symbol</p>'
+  ]
+};
+
 const TestCleanupInner = () => {
   const page = $( true );
   const togglePage = () => page ( prev => !prev );
@@ -5401,6 +5440,8 @@ const Test = (): JSX.Element => {
       <TestEventEnterStopImmediatePropagation />
       <TestEventEnterAndEnterCaptureStatic />
       <TestSnapshots Component={TestABCD} />
+      <TestSnapshots Component={TestChildrenBoolean} />
+      <TestSnapshots Component={TestChildrenSymbol} />
       <TestSnapshots Component={TestCleanupInner} />
       <TestSnapshots Component={TestCleanupInnerPortal} />
       <TestSnapshots Component={TestDynamicHeading} />
