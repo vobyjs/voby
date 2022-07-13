@@ -3,11 +3,8 @@
 
 import {SYMBOLS_DIRECTIVES} from '~/constants';
 import useComputed from '~/hooks/use_computed';
-import useReadonly from '~/hooks/use_readonly';
 import resolve from '~/methods/resolve';
-import $ from '~/methods/S';
 import {context} from '~/oby';
-import {once} from '~/utils/lang';
 import type {Child, DirectiveFunction, Directive} from '~/types';
 
 /* MAIN */
