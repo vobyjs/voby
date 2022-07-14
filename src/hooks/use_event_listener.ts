@@ -41,17 +41,23 @@ function useEventListener <T extends EventTarget> ( target: FunctionMaybe<ArrayM
 
     return useResolved ( [target, event, options], ( target, event, options ) => {
 
-      castArray ( target ).forEach ( target => {
+      const targets = castArray ( target );
+
+      targets.forEach ( target => {
 
         target.addEventListener ( event, fn, options );
 
-        return () => {
+      });
+
+      return () => {
+
+        targets.forEach ( target => {
 
           target.removeEventListener ( event, fn, options );
 
-        };
+        });
 
-      });
+      };
 
     });
 
