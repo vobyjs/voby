@@ -55,14 +55,14 @@ You can find some demos and benchmarks below, more demos are contained inside th
 
 | [Methods](#methods)                   | [Components](#components)         | [Hooks](#hooks)                             | [Types](#types)                             | [Extras](#extras)               |
 | ------------------------------------- | --------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------- |
-| [`$`](#methods)                       | [`Component`](#component)         | [`useAbortController`](#useabortcontroller) | [`FunctionMaybe`](#functionmaybe)           | [`Contributing`](#contributing) |
-| [`$$`](#methods)                      | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`Observable`](#observable)                 | [`JSX`](#jsx)                   |
-| [`createContext`](#createcontext)     | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`ObservableReadonly`](#observablereadonly) | [`Tree Shaking`](#tree-shaking) |
-| [`createDirective`](#createdirective) | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableMaybe`](#observablemaybe)       | [`TypeScript`](#typescript)     |
-| [`createElement`](#createelement)     | [`ForIndex`](#forindex)           | [`useBatch`](#usebatch)                     | [`ObservableOptions`](#observableoptions)   |                                 |
-| [`h`](#h)                             | [`ForValue`](#forvalue)           | [`useCleanup`](#usecleanup)                 | [`Resource`](#resource)                     |                                 |
-| [`html`](#html)                       | [`Fragment`](#fragment)           | [`useComputed`](#usecomputed)               | [`StoreOptions`](#storeoptions)             |                                 |
-| [`isObservable`](#isobservable)       | [`If`](#if)                       | [`useContext`](#usecontext)                 |                                             |                                 |
+| [`$`](#methods)                       | [`Component`](#component)         | [`useAbortController`](#useabortcontroller) | [`DirectiveOptions`](#directiveoptions)     | [`Contributing`](#contributing) |
+| [`$$`](#methods)                      | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`FunctionMaybe`](#functionmaybe)           | [`JSX`](#jsx)                   |
+| [`createContext`](#createcontext)     | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`Observable`](#observable)                 | [`Tree Shaking`](#tree-shaking) |
+| [`createDirective`](#createdirective) | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableReadonly`](#observablereadonly) | [`TypeScript`](#typescript)     |
+| [`createElement`](#createelement)     | [`ForIndex`](#forindex)           | [`useBatch`](#usebatch)                     | [`ObservableMaybe`](#observablemaybe)       |                                 |
+| [`h`](#h)                             | [`ForValue`](#forvalue)           | [`useCleanup`](#usecleanup)                 | [`ObservableOptions`](#observableoptions)   |                                 |
+| [`html`](#html)                       | [`Fragment`](#fragment)           | [`useComputed`](#usecomputed)               | [`Resource`](#resource)                     |                                 |
+| [`isObservable`](#isobservable)       | [`If`](#if)                       | [`useContext`](#usecontext)                 | [`StoreOptions`](#storeoptions)             |                                 |
 | [`isStore`](#isstore)                 | [`Portal`](#portal)               | [`useDisposed`](#usedisposed)               |                                             |                                 |
 | [`lazy`](#lazy)                       | [`Suspense`](#suspense)           | [`useEffect`](#useeffect)                   |                                             |                                 |
 | [`render`](#render)                   | [`Switch`](#switch)               | [`useError`](#useerror)                     |                                             |                                 |
@@ -254,7 +254,7 @@ type DirectiveRef<T extends unknown[]> = ( ...args: T ) => (( ref: Element ) => 
 type DirectiveRegister = () => void;
 type Directive = { Provider: DirectiveProvider, ref: DirectiveRef, register: DirectiveRegister };
 
-function createDirective <T extends unknown[] = []> ( name: string, fn: DirectiveFunction<T> ): Directive;
+function createDirective <T extends unknown[] = []> ( name: string, fn: DirectiveFunction<T>, options?: DirectiveOptions ): Directive;
 ```
 
 Usage:
@@ -1536,6 +1536,36 @@ useTimeout ( () => console.log ( 'called' ), 1000 );
 ```
 
 ### Types
+
+#### `DirectiveOptions`
+
+This type describes the options object that the `createDirective` function accepts.
+
+Interface:
+
+```ts
+type DirectiveOptions = {
+  immediate?: boolean // If `true` the directive is called as soon as the node is created, otherwise it also waits for that node to be attached to the DOM
+};
+```
+
+Usage:
+
+```tsx
+import {createDirective} from 'voby';
+
+// Create an regular, non-immediate, directive
+
+const TooltipDirective = createDirective ( 'tooltip', ( ref, title: string ) => {
+  // Implementation...
+});
+
+// Create an immediate directive
+
+const TooltipDirectiveImmediate = createDirective ( 'tooltip', ( ref, title: string ) => {
+  // Implementation...
+}, { immediate: true } );
+```
 
 #### `FunctionMaybe`
 

@@ -18,7 +18,7 @@ import diff from '~/utils/diff';
 import FragmentUtils from '~/utils/fragment';
 import {castArray, flatten, isArray, isFunction, isNil, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
 import {resolveChild, resolveClass} from '~/utils/resolvers';
-import type {Child, Classes, DirectiveFunction, EventListener, Fragment, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
+import type {Child, Classes, DirectiveData, EventListener, Fragment, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 
 /* MAIN */
 
@@ -602,15 +602,21 @@ const setClasses = ( element: HTMLElement, object: Classes ): void => {
 const setDirective = <T extends unknown[]> ( element: HTMLElement, directive: string, args: T ): void => {
 
   const symbol = SYMBOLS_DIRECTIVES[directive] || Symbol ();
-  const fn = context<DirectiveFunction<T>> ( symbol );
+  const data = context<DirectiveData<T>> ( symbol );
 
-  if ( !symbol || !fn ) throw new Error ( `Directive "${directive}" not found` );
+  if ( !data ) throw new Error ( `Directive "${directive}" not found` );
 
-  setRef ( element, element => {
+  const call = () => data.fn ( element, ...castArray ( args ) as any ); //TSC
 
-    fn ( element, ...castArray ( args ) as any ); //TSC
+  if ( data.immediate ) {
 
-  });
+    call ();
+
+  } else {
+
+    useMicrotask ( call );
+
+  }
 
 };
 
