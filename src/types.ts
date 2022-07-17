@@ -1,4 +1,8 @@
 
+/* HELPERS */
+
+declare const ContextWithDefaultSymbol: unique symbol;
+
 /* MAIN */
 
 type ArrayMaybe<T = unknown> = T[] | T;
@@ -36,6 +40,8 @@ type ContextProvider<T = unknown> = ( props: { value: T, children: Child } ) => 
 type ContextRegister<T = unknown> = ( value: T ) => void;
 
 type Context<T = unknown> = { Provider: ContextProvider<T>, register: ContextRegister<T> };
+
+type ContextWithDefault<T = unknown> = Context<T> & { readonly [ContextWithDefaultSymbol]: true };
 
 type DirectiveFunction<Arguments extends unknown[] = []> = ( ref: globalThis.Element, ...args: Arguments ) => void;
 
@@ -131,4 +137,4 @@ type Truthy<T = unknown> = Exclude<T, 0 | -0 | 0n | -0n | '' | false | null | un
 
 /* EXPORT */
 
-export type {ArrayMaybe, Callback, Child, ChildWithMetadata, Classes, ComponentCallable, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, ComponentsMap, Constructor, ConstructorWith, ContextData, ContextProvider, ContextRegister, Context, DirectiveFunction, DirectiveProvider, DirectiveRef, DirectiveRegister, Directive, DirectiveData, DirectiveOptions, Disposer, Element, EventListener, Falsy, FN, FragmentUndefined, FragmentNode, FragmentFragment, FragmentNodes, FragmentFragments, FragmentMixed, Fragment, FunctionMaybe, LazyComponent, LazyFetcher, LazyResult, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceStaticPending, ResourceStaticRejected, ResourceStaticResolved, ResourceStatic, ResourceFunction, Resource, StoreOptions, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap, Truthy};
+export type {ArrayMaybe, Callback, Child, ChildWithMetadata, Classes, ComponentCallable, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, ComponentsMap, Constructor, ConstructorWith, ContextData, ContextProvider, ContextRegister, Context, ContextWithDefault, DirectiveFunction, DirectiveProvider, DirectiveRef, DirectiveRegister, Directive, DirectiveData, DirectiveOptions, Disposer, Element, EventListener, Falsy, FN, FragmentUndefined, FragmentNode, FragmentFragment, FragmentNodes, FragmentFragments, FragmentMixed, Fragment, FunctionMaybe, LazyComponent, LazyFetcher, LazyResult, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceStaticPending, ResourceStaticRejected, ResourceStaticResolved, ResourceStatic, ResourceFunction, Resource, StoreOptions, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap, Truthy};
