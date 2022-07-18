@@ -1360,7 +1360,7 @@ const App = () => {
 
 This hook works just like `useEffect`, expect that it's not affected by `Suspense.
 
-This is an advanced hook mostly useful internally, you may never need to use this, `useEffect` and `useMemo` should suffice.
+This is an advanced hook mostly useful internally, you may never need to use this, `useEffect` and `useComputed` should suffice.
 
 [Read upstream documentation](https://github.com/fabiospampinato/oby#reaction).
 
