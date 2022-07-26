@@ -625,6 +625,7 @@ const setEventStatic = (() => {
   //TODO: Maybe delegate more events: [onmousemove, onmouseout, onmouseover, onpointerdown, onpointermove, onpointerout, onpointerover, onpointerup, ontouchend, ontouchmove, ontouchstart]
 
   const delegatedEvents = <const> {
+    onauxclick: '_onauxclick',
     onbeforeinput: '_onbeforeinput',
     onclick: '_onclick',
     ondblclick: '_ondblclick',
