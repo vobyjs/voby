@@ -277,6 +277,8 @@ declare namespace JSX {
     onWaiting?: ObservableMaybe<Nullable<GenericEventHandler<T>>>,
     onWaitingCapture?: ObservableMaybe<Nullable<GenericEventHandler<T>>>,
     /* MOUSE EVENTS */
+    onAuxClick?: ObservableMaybe<Nullable<MouseEventHandler<T>>>,
+    onAuxClickCapture?: ObservableMaybe<Nullable<MouseEventHandler<T>>>,
     onClick?: ObservableMaybe<Nullable<MouseEventHandler<T>>>,
     onClickCapture?: ObservableMaybe<Nullable<MouseEventHandler<T>>>,
     onContextMenu?: ObservableMaybe<Nullable<MouseEventHandler<T>>>,
