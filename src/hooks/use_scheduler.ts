@@ -2,8 +2,8 @@
 /* IMPORT */
 
 import useCleanup from '~/hooks/use_cleanup';
-import useSample from '~/hooks/use_sample';
 import $$ from '~/methods/SS';
+import untrack from '~/methods/untrack';
 import type {Disposer, FN, FunctionMaybe, ObservableMaybe} from '~/types';
 
 /* MAIN */
@@ -22,13 +22,13 @@ const useScheduler = <T, U> ({ loop, callback, cancel, schedule }: { loop?: Func
 
   const tick = (): void => {
 
-    tickId = useSample ( () => schedule ( work ) );
+    tickId = untrack ( () => schedule ( work ) );
 
   };
 
   const dispose = (): void => {
 
-    useSample ( () => cancel ( tickId ) );
+    untrack ( () => cancel ( tickId ) );
 
   };
 

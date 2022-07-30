@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import useComputed from '~/hooks/use_computed';
+import useMemo from '~/hooks/use_memo';
 import createElement from '~/methods/create_element';
 import $$ from '~/methods/SS';
 import type {Child, Component, FunctionMaybe, Props} from '~/types';
@@ -10,7 +10,7 @@ import type {Child, Component, FunctionMaybe, Props} from '~/types';
 
 const Dynamic = <P = {}> ({ component, props, children }: { component: Component<P>, props?: FunctionMaybe<Props | null>, children?: Child }): Child => {
 
-  return useComputed ( () => {
+  return useMemo ( () => {
 
     return createElement<P> ( $$(component, false), $$(props), children );
 

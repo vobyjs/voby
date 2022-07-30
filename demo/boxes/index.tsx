@@ -9,7 +9,7 @@ import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {Scene} from 'three/src/scenes/Scene';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 
-import {$, render, useAnimationLoop, useComputed, useEffect, Observable, ObservableReadonly} from 'voby';
+import {$, render, useAnimationLoop, useEffect, useMemo, Observable, ObservableReadonly} from 'voby';
 
 /* TYPES */
 
@@ -50,7 +50,7 @@ const useRotations = ( count: Observable<number> ): ObservableReadonly<Rotation[
 
   const getRandom = (): number => Math.random () * 360;
   const getRotation = (): Rotation => $([ getRandom (), getRandom (), getRandom () ]);
-  const rotations = useComputed ( () => Array ( count () ).fill ( 0 ).map ( getRotation ) );
+  const rotations = useMemo ( () => Array ( count () ).fill ( 0 ).map ( getRotation ) );
 
   useAnimationLoop ( () => {
 
@@ -173,7 +173,7 @@ const Rotations = ({ rotations }: { rotations: ObservableReadonly<Rotation[]> })
 
   const camera = ThreePerspectiveCamera ([ 0, 0, 3.2 ]);
   const light = ThreeDirectionalLight ([ -5, 0, -10 ]);
-  const meshes = useComputed ( () => rotations ().map ( ThreeMesh ) );
+  const meshes = useMemo ( () => rotations ().map ( ThreeMesh ) );
   const scene = ThreeScene ( camera, light, meshes );
 
   return (

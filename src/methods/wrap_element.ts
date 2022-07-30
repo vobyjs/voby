@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import {SYMBOL_ELEMENT, SYMBOL_RESOLVE_UNWRAPPED, SYMBOL_SAMPLED} from '~/constants';
-import useSample from '~/hooks/use_sample';
+import {SYMBOL_ELEMENT, SYMBOL_RESOLVE_UNWRAPPED, SYMBOL_UNTRACKED} from '~/constants';
+import untrack from '~/methods/untrack';
 import type {Child, FunctionMaybe} from '~/types';
 
 /* HELPERS */
@@ -14,11 +14,11 @@ const {setPrototypeOf} = Object;
 
 function wrapElement ( this: FunctionMaybe<Child> ): Child {
 
-  return useSample ( this );
+  return untrack ( this );
 
 }
 
-setPrototypeOf ( wrapElement, setPrototypeOf ( { [SYMBOL_ELEMENT]: true, [SYMBOL_RESOLVE_UNWRAPPED]: true, [SYMBOL_SAMPLED]: true }, prototype ) );
+setPrototypeOf ( wrapElement, setPrototypeOf ( { [SYMBOL_ELEMENT]: true, [SYMBOL_RESOLVE_UNWRAPPED]: true, [SYMBOL_UNTRACKED]: true }, prototype ) );
 
 /* EXPORT */
 

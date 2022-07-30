@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import {Observable, ObservableReadonly} from 'voby';
-import {$, render, useInterval, useAnimationLoop, useComputed} from 'voby';
+import {$, render, useInterval, useAnimationLoop, useMemo} from 'voby';
 
 /* HELPERS */
 
@@ -41,7 +41,7 @@ const useElapsed = (): Observable<number> => {
 
 const useScale = ( elapsed: Observable<number> ): ObservableReadonly<number> => {
 
-  return useComputed ( () => {
+  return useMemo ( () => {
 
     const e = elapsed () / 1000 % 10;
 

@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import {Observable, ObservableReadonly} from 'voby';
-import {$, render, For, If, useAnimationLoop, useComputed, useSample} from 'voby';
+import {$, render, untrack, For, If, useAnimationLoop, useMemo} from 'voby';
 
 /* HELPERS */
 
@@ -45,30 +45,30 @@ const Spiral = (): JSX.Element => {
 
   useAnimationLoop ( () => counter ( counter () + 1 ) );
 
-  const max = useComputed ( () => COUNT + Math.round ( Math.sin ( counter () / 90 * 2 * Math.PI ) * COUNT * 0.5 ) );
+  const max = useMemo ( () => COUNT + Math.round ( Math.sin ( counter () / 90 * 2 * Math.PI ) * COUNT * 0.5 ) );
 
   const makeCursor = ( i: number ) => ({
     x: (): number => {
       const f = i / max () * LOOPS;
       const θ = f * 2 * Math.PI;
       const m = 20 + i;
-      return (useSample ( x ) + Math.sin ( θ ) * m) | 0;
+      return (untrack ( x ) + Math.sin ( θ ) * m) | 0;
     },
     y: (): number => {
       const f = i / max () * LOOPS;
       const θ = f * 2 * Math.PI;
       const m = 20 + i;
-      return (useSample ( y ) + Math.cos ( θ ) * m) | 0;
+      return (untrack ( y ) + Math.cos ( θ ) * m) | 0;
     },
     color: (): string => {
       const f = i / max () * LOOPS;
-      const hue = (f * 255 + useSample ( counter ) * 10) % 255;
+      const hue = (f * 255 + untrack ( counter ) * 10) % 255;
       return `hsl(${hue},100%,50%)`;
     }
   });
 
   const cache = [];
-  const cursors = useComputed ( () => Array ( max () ).fill ( 0 ).map ( ( _, i ) => cache[i] || ( cache[i] = makeCursor ( i ) ) ) );
+  const cursors = useMemo ( () => Array ( max () ).fill ( 0 ).map ( ( _, i ) => cache[i] || ( cache[i] = makeCursor ( i ) ) ) );
 
   return (
     <div id="main">

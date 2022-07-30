@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import useComputed from '~/hooks/use_computed';
+import useMemo from '~/hooks/use_memo';
 import useResolved from '~/hooks/use_resolved';
 import useResource from '~/hooks/use_resource';
 import creatElement from '~/methods/create_element';
@@ -19,7 +19,7 @@ const lazy = <P = {}> ( fetcher: LazyFetcher<P> ): LazyResult<P> => {
 
     const resource = useResource ( fetcherOnce );
 
-    return useComputed ( () => {
+    return useMemo ( () => {
 
       return useResolved ( resource, ({ pending, error, value }) => {
 

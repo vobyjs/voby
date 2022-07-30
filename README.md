@@ -61,16 +61,16 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`createDirective`](#createdirective) | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableReadonly`](#observablereadonly) | [`TypeScript`](#typescript)     |
 | [`createElement`](#createelement)     | [`ForIndex`](#forindex)           | [`useBatch`](#usebatch)                     | [`ObservableMaybe`](#observablemaybe)       |                                 |
 | [`h`](#h)                             | [`ForValue`](#forvalue)           | [`useCleanup`](#usecleanup)                 | [`ObservableOptions`](#observableoptions)   |                                 |
-| [`html`](#html)                       | [`Fragment`](#fragment)           | [`useComputed`](#usecomputed)               | [`Resource`](#resource)                     |                                 |
-| [`isObservable`](#isobservable)       | [`If`](#if)                       | [`useContext`](#usecontext)                 | [`StoreOptions`](#storeoptions)             |                                 |
-| [`isStore`](#isstore)                 | [`Portal`](#portal)               | [`useDisposed`](#usedisposed)               |                                             |                                 |
-| [`lazy`](#lazy)                       | [`Suspense`](#suspense)           | [`useEffect`](#useeffect)                   |                                             |                                 |
-| [`render`](#render)                   | [`Switch`](#switch)               | [`useError`](#useerror)                     |                                             |                                 |
-| [`renderToString`](#rendertostring)   | [`Ternary`](#ternary)             | [`useEventListener`](#useeventlistener)     |                                             |                                 |
-| [`resolve`](#resolve)                 |                                   | [`useFetch`](#usefetch)                     |                                             |                                 |
-| [`store`](#store)                     |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
-| [`template`](#template)               |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
-|                                       |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
+| [`html`](#html)                       | [`Fragment`](#fragment)           | [`useContext`](#usecontext)                 | [`Resource`](#resource)                     |                                 |
+| [`isObservable`](#isobservable)       | [`If`](#if)                       | [`useDisposed`](#usedisposed)               | [`StoreOptions`](#storeoptions)             |                                 |
+| [`isStore`](#isstore)                 | [`Portal`](#portal)               | [`useEffect`](#useeffect)                   |                                             |                                 |
+| [`lazy`](#lazy)                       | [`Suspense`](#suspense)           | [`useError`](#useerror)                     |                                             |                                 |
+| [`render`](#render)                   | [`Switch`](#switch)               | [`useEventListener`](#useeventlistener)     |                                             |                                 |
+| [`renderToString`](#rendertostring)   | [`Ternary`](#ternary)             | [`useFetch`](#usefetch)                     |                                             |                                 |
+| [`resolve`](#resolve)                 |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
+| [`store`](#store)                     |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
+| [`template`](#template)               |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
+| [`untrack`](#untrack)                 |                                   | [`useMemo`](#usememo)                       |                                             |                                 |
 |                                       |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
 |                                       |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
 |                                       |                                   | [`useReaction`](#usereaction)               |                                             |                                 |
@@ -78,9 +78,10 @@ You can find some demos and benchmarks below, more demos are contained inside th
 |                                       |                                   | [`useResolved`](#useresolved)               |                                             |                                 |
 |                                       |                                   | [`useResource`](#useresource)               |                                             |                                 |
 |                                       |                                   | [`useRoot`](#useroot)                       |                                             |                                 |
-|                                       |                                   | [`useSample`](#usesample)                   |                                             |                                 |
 |                                       |                                   | [`useSelector`](#useselector)               |                                             |                                 |
 |                                       |                                   | [`useTimeout`](#usetimeout)                 |                                             |                                 |
+
+
 
 ## Usage
 
@@ -499,7 +500,7 @@ const html = await renderToString ( <App /> );
 
 #### `resolve`
 
-This function basically resolves any reactivity inside the passed argument, basically replacing every function it finds with a computed to the value of that function.
+This function basically resolves any reactivity inside the passed argument, basically replacing every function it finds with a memo to the value of that function.
 
 You may never need to use this function yourself, but it's necessary internally at times to make sure that a child value is properly tracked by its parent computation.
 
@@ -585,6 +586,27 @@ const Table = () => {
   const rows = [ /* props for all your rows here */ ];
   return rows.map ( row => <Row {...row}> );
 };
+```
+
+#### `untrack`
+
+This function executes the provided function without creating dependencies on observables retrieved inside it.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#untrack).
+
+Interface:
+
+```ts
+function untrack <T> ( fn: () => T ): T;
+function untrack <T> ( value: T ): T;
+```
+
+Usage:
+
+```tsx
+import {untrack} from 'voby';
+
+untrack // => Same as require ( 'oby' ).untrack
 ```
 
 ### Components
@@ -1107,28 +1129,6 @@ import {useCleanup} from 'voby';
 useCleanup // => Same as require ( 'oby' ).cleanup
 ```
 
-#### `useComputed`
-
-This hook is the crucial other ingredient that we need, other than observables themselves, to have a powerful reactive system that can track dependencies and re-execute computations when needed.
-
-This hook registers a function to be called when any of its dependencies change, and the return of that function is wrapped in a read-only observable and returned.
-
-[Read upstream documentation](https://github.com/fabiospampinato/oby#computed).
-
-Interface:
-
-```ts
-function useComputed <T> ( fn: () => T, options?: ObservableOptions<T | undefined> ): ObservableReadonly<T>;
-```
-
-Usage:
-
-```tsx
-import {useComputed} from 'voby';
-
-useComputed // => Same as require ( 'oby' ).computed
-```
-
 #### `useContext`
 
 This hook retrieves the value out of a context object.
@@ -1310,6 +1310,28 @@ import {useInterval} from 'voby';
 useInterval ( () => console.log ( 'called' ), 1000 );
 ```
 
+#### `useMemo`
+
+This hook is the crucial other ingredient that we need, other than observables themselves, to have a powerful reactive system that can track dependencies and re-execute computations when needed.
+
+This hook registers a function to be called when any of its dependencies change, and the return of that function is wrapped in a read-only observable and returned.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#memo).
+
+Interface:
+
+```ts
+function useMemo <T> ( fn: () => T, options?: ObservableOptions<T | undefined> ): ObservableReadonly<T>;
+```
+
+Usage:
+
+```tsx
+import {useMemo} from 'voby';
+
+useMemo // => Same as require ( 'oby' ).memo
+```
+
 #### `useMicrotask`
 
 This hook is just an alternative to `queueMicrotask` that automatically clears itself when the parent computation is disposed, and that ensures things like contexts, error boundaries etc. keep working inside the microtask.
@@ -1360,7 +1382,7 @@ const App = () => {
 
 This hook works just like `useEffect`, expect that it's not affected by `Suspense`.
 
-This is an advanced hook mostly useful internally, you may never need to use this, `useEffect` and `useComputed` should suffice.
+This is an advanced hook mostly useful internally, you may never need to use this, `useEffect` and `useMemo` should suffice.
 
 [Read upstream documentation](https://github.com/fabiospampinato/oby#reaction).
 
@@ -1404,7 +1426,7 @@ This hook receives a value, or an array of values, potentially wrapped in functi
 
 If no callback is used then it returns the unwrapped value, otherwise it returns whatever the callback returns.
 
-This is useful for handling reactive and non reactive values the same way. Usually if the value is a function, or always for convenience, you'd want to wrap the `useResolved` call in a `useComputed`, to maintain reactivity.
+This is useful for handling reactive and non reactive values the same way. Usually if the value is a function, or always for convenience, you'd want to wrap the `useResolved` call in a `useMemo`, to maintain reactivity.
 
 This is potentially a more convenient version of `$$`, made especially for handling nicely arguments passed that your hooks receive that may or may not be observables.
 
@@ -1472,27 +1494,6 @@ Usage:
 import {useRoot} from 'voby';
 
 useRoot // => Same as require ( 'oby' ).root
-```
-
-#### `useSample`
-
-This hook executes the provided function without creating dependencies on observables retrieved inside it.
-
-[Read upstream documentation](https://github.com/fabiospampinato/oby#sample).
-
-Interface:
-
-```ts
-function useSample <T> ( fn: () => T ): T;
-function useSample <T> ( value: T ): T;
-```
-
-Usage:
-
-```tsx
-import {useSample} from 'voby';
-
-useSample // => Same as require ( 'oby' ).sample
 ```
 
 #### `useSelector`

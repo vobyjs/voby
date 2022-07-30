@@ -4,11 +4,11 @@
 import {SYMBOLS_DIRECTIVES} from '~/constants';
 import useMicrotask from '~/hooks/use_microtask';
 import useReaction from '~/hooks/use_reaction';
-import useSample from '~/hooks/use_sample';
 import isObservable from '~/methods/is_observable';
 import isStore from '~/methods/is_store';
 import $$ from '~/methods/SS';
 import store from '~/methods/store';
+import untrack from '~/methods/untrack';
 import {context} from '~/oby';
 import {SYMBOL_STORE_OBSERVABLE} from '~/oby';
 import {CallableAttributeStatic, CallableChildStatic, CallableClassStatic, CallableClassBooleanStatic, CallableEventStatic, CallablePropertyStatic, CallableStyleStatic, CallableStylesStatic} from '~/utils/callables';
@@ -497,7 +497,7 @@ const setClassesStatic = ( element: HTMLElement, object: null | undefined | stri
 
         for ( let i = 0, l = object.length; i < l; i++ ) {
 
-          const fn = useSample ( () => isFunction ( object[i] ) ? object[i] : object[SYMBOL_STORE_OBSERVABLE]( String ( i ) ) ) as (() => string | boolean | null | undefined); //TSC
+          const fn = untrack ( () => isFunction ( object[i] ) ? object[i] : object[SYMBOL_STORE_OBSERVABLE]( String ( i ) ) ) as (() => string | boolean | null | undefined); //TSC
 
           setClassBoolean ( element, true, fn );
 
@@ -521,7 +521,7 @@ const setClassesStatic = ( element: HTMLElement, object: null | undefined | stri
 
         for ( const key in object ) {
 
-          const fn = useSample ( () => isFunction ( object[key] ) ? object[key] : ( object as any )[SYMBOL_STORE_OBSERVABLE]( key ) ) as (() => boolean | null | undefined); //TSC
+          const fn = untrack ( () => isFunction ( object[key] ) ? object[key] : ( object as any )[SYMBOL_STORE_OBSERVABLE]( key ) ) as (() => boolean | null | undefined); //TSC
 
           setClass ( element, key, fn );
 
@@ -893,7 +893,7 @@ const setStylesStatic = ( element: HTMLElement, object: null | undefined | strin
 
       for ( const key in object ) {
 
-        const fn = useSample ( () => isFunction ( object[key] ) ? object[key] : ( object as any )[SYMBOL_STORE_OBSERVABLE]( key ) ) as (() => number | string | null | undefined); //TSC
+        const fn = untrack ( () => isFunction ( object[key] ) ? object[key] : ( object as any )[SYMBOL_STORE_OBSERVABLE]( key ) ) as (() => number | string | null | undefined); //TSC
 
         setStyle ( element, key, fn );
 

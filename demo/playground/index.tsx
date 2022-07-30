@@ -4,7 +4,7 @@
 import * as Voby from 'voby';
 import {Observable} from 'voby';
 import {Component, Dynamic, ErrorBoundary, For, If, Portal, Suspense, Switch, Ternary} from 'voby';
-import {useBatch, useComputed, useContext, useEffect, useInterval, usePromise, useResource, useTimeout} from 'voby';
+import {useBatch, useContext, useEffect, useInterval, useMemo, usePromise, useResource, useTimeout} from 'voby';
 import {$, createContext, createDirective, html, lazy, render, renderToString, store, template} from 'voby';
 
 globalThis.Voby = Voby;
@@ -618,7 +618,7 @@ TestStringObservableStatic.test = {
 };
 
 const TestStringObservableDeepStatic = (): JSX.Element => {
-  return useComputed ( () => {
+  return useMemo ( () => {
     const Deep = (): JSX.Element => {
       const o = $( String ( random () ) );
       const randomize = () => o ( String ( random () ) );
@@ -2817,7 +2817,7 @@ TestDynamicHeading.test = {
 
 const TestDynamicObservableComponent = (): JSX.Element => {
   const level = $(1);
-  const component = useComputed ( () => `h${level ()}` );
+  const component = useMemo ( () => `h${level ()}` );
   const increment = () => level ( ( level () + 1 ) % 7 || 1 );
   useInterval ( increment, TEST_INTERVAL );
   return (
@@ -4124,7 +4124,7 @@ const TestErrorBoundary = (): JSX.Element => {
     const o = $( true );
     const toggle = () => o ( prev => !prev );
     useTimeout ( toggle, TEST_INTERVAL );
-    return useComputed ( () => {
+    return useMemo ( () => {
       if ( o () ) return <p>content</p>;
       throw new Error ( 'Custom error' );
     });
