@@ -3,6 +3,7 @@
 
 import $ from '~/methods/S';
 import $$ from '~/methods/SS';
+import batch from '~/methods/batch';
 import createContext from '~/methods/create_context';
 import createDirective from '~/methods/create_directive';
 import createElement from '~/methods/create_element';
@@ -19,4 +20,4 @@ import template from '~/methods/template';
 
 /* EXPORT */
 
-export {$, $$, createContext, createDirective, createElement, h, html, isObservable, isStore, lazy, render, renderToString, resolve, store, template};
+export {$, $$, batch, createContext, createDirective, createElement, h, html, isObservable, isStore, lazy, render, renderToString, resolve, store, template};

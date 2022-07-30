@@ -4,8 +4,8 @@
 import * as Voby from 'voby';
 import {Observable} from 'voby';
 import {Component, Dynamic, ErrorBoundary, For, If, Portal, Suspense, Switch, Ternary} from 'voby';
-import {useBatch, useContext, useEffect, useInterval, useMemo, usePromise, useResource, useTimeout} from 'voby';
-import {$, createContext, createDirective, html, lazy, render, renderToString, store, template} from 'voby';
+import {useContext, useEffect, useInterval, useMemo, usePromise, useResource, useTimeout} from 'voby';
+import {$, batch, createContext, createDirective, html, lazy, render, renderToString, store, template} from 'voby';
 
 globalThis.Voby = Voby;
 
@@ -3153,7 +3153,7 @@ const TestIfRace = () => {
   const data = $<{ deep: string } | null>({ deep: 'hi' });
   const visible = $(true);
   setTimeout ( () => {
-    useBatch ( () => {
+    batch ( () => {
       data ( null );
       visible ( false );
     });
@@ -3797,7 +3797,7 @@ const TestForObservables = (): JSX.Element => {
   const v3 = $(3);
   const values = [v1, v2, v3];
   useInterval ( () => {
-    useBatch ( () => {
+    batch ( () => {
       v1 ( ( v1 () + 1 ) % 5 );
       v2 ( ( v2 () + 1 ) % 5 );
       v3 ( ( v3 () + 1 ) % 5 );
@@ -3832,7 +3832,7 @@ const TestForObservablesStatic = (): JSX.Element => {
   const v3 = $(3);
   const values = [v1, v2, v3];
   useInterval ( () => {
-    useBatch ( () => {
+    batch ( () => {
       v1 ( ( v1 () + 1 ) % 5 );
       v2 ( ( v2 () + 1 ) % 5 );
       v3 ( ( v3 () + 1 ) % 5 );
@@ -3866,7 +3866,7 @@ const TestForObservableObservables = (): JSX.Element => {
   const v5 = $(5);
   const values = $([v1, v2, v3, v4, v5]);
   useInterval ( () => {
-    useBatch ( () => {
+    batch ( () => {
       v1 ( v1 () + 1 );
       v2 ( v2 () + 1 );
       v3 ( v3 () + 1 );
@@ -3893,7 +3893,7 @@ const TestForFunctionObservables = (): JSX.Element => {
   const v3 = $(3);
   const values = [v1, v2, v3];
   useInterval ( () => {
-    useBatch ( () => {
+    batch ( () => {
       v1 ( ( v1 () + 1 ) % 5 );
       v2 ( ( v2 () + 1 ) % 5 );
       v3 ( ( v3 () + 1 ) % 5 );

@@ -57,22 +57,21 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | ------------------------------------- | --------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------- |
 | [`$`](#methods)                       | [`Component`](#component)         | [`useAbortController`](#useabortcontroller) | [`DirectiveOptions`](#directiveoptions)     | [`Contributing`](#contributing) |
 | [`$$`](#methods)                      | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`FunctionMaybe`](#functionmaybe)           | [`JSX`](#jsx)                   |
-| [`createContext`](#createcontext)     | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`Observable`](#observable)                 | [`Tree Shaking`](#tree-shaking) |
-| [`createDirective`](#createdirective) | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableReadonly`](#observablereadonly) | [`TypeScript`](#typescript)     |
-| [`createElement`](#createelement)     | [`ForIndex`](#forindex)           | [`useBatch`](#usebatch)                     | [`ObservableMaybe`](#observablemaybe)       |                                 |
-| [`h`](#h)                             | [`ForValue`](#forvalue)           | [`useCleanup`](#usecleanup)                 | [`ObservableOptions`](#observableoptions)   |                                 |
-| [`html`](#html)                       | [`Fragment`](#fragment)           | [`useContext`](#usecontext)                 | [`Resource`](#resource)                     |                                 |
-| [`isObservable`](#isobservable)       | [`If`](#if)                       | [`useDisposed`](#usedisposed)               | [`StoreOptions`](#storeoptions)             |                                 |
-| [`isStore`](#isstore)                 | [`Portal`](#portal)               | [`useEffect`](#useeffect)                   |                                             |                                 |
-| [`lazy`](#lazy)                       | [`Suspense`](#suspense)           | [`useError`](#useerror)                     |                                             |                                 |
-| [`render`](#render)                   | [`Switch`](#switch)               | [`useEventListener`](#useeventlistener)     |                                             |                                 |
-| [`renderToString`](#rendertostring)   | [`Ternary`](#ternary)             | [`useFetch`](#usefetch)                     |                                             |                                 |
-| [`resolve`](#resolve)                 |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
-| [`store`](#store)                     |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
-| [`template`](#template)               |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
-| [`untrack`](#untrack)                 |                                   | [`useMemo`](#usememo)                       |                                             |                                 |
-|                                       |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
-|                                       |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
+| [`batch`](#batch)                     | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`Observable`](#observable)                 | [`Tree Shaking`](#tree-shaking) |
+| [`createContext`](#createcontext)     | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`ObservableReadonly`](#observablereadonly) | [`TypeScript`](#typescript)     |
+| [`createDirective`](#createdirective) | [`ForIndex`](#forindex)           | [`useCleanup`](#usecleanup)                 | [`ObservableMaybe`](#observablemaybe)       |                                 |
+| [`createElement`](#createelement)     | [`ForValue`](#forvalue)           | [`useContext`](#usecontext)                 | [`ObservableOptions`](#observableoptions)   |                                 |
+| [`h`](#h)                             | [`Fragment`](#fragment)           | [`useDisposed`](#usedisposed)               | [`Resource`](#resource)                     |                                 |
+| [`html`](#html)                       | [`If`](#if)                       | [`useEffect`](#useeffect)                   | [`StoreOptions`](#storeoptions)             |                                 |
+| [`isObservable`](#isobservable)       | [`Portal`](#portal)               | [`useError`](#useerror)                     |                                             |                                 |
+| [`isStore`](#isstore)                 | [`Suspense`](#suspense)           | [`useEventListener`](#useeventlistener)     |                                             |                                 |
+| [`lazy`](#lazy)                       | [`Switch`](#switch)               | [`useFetch`](#usefetch)                     |                                             |                                 |
+| [`render`](#render)                   | [`Ternary`](#ternary)             | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
+| [`renderToString`](#rendertostring)   |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
+| [`resolve`](#resolve)                 |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
+| [`store`](#store)                     |                                   | [`useMemo`](#usememo)                       |                                             |                                 |
+| [`template`](#template)               |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
+| [`untrack`](#untrack)                 |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
 |                                       |                                   | [`useReaction`](#usereaction)               |                                             |                                 |
 |                                       |                                   | [`useReadonly`](#usereadonly)               |                                             |                                 |
 |                                       |                                   | [`useResolved`](#useresolved)               |                                             |                                 |
@@ -188,6 +187,27 @@ $$ ( () => 123, false ); // => () => 123
 // Getting the value out of a non-observable and non-function
 
 $$ ( 123 ); // => 123
+```
+
+#### `batch`
+
+This function holds onto updates within its scope and flushes them out at once once it exits.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#batch).
+
+Interface:
+
+```ts
+function batch <T> ( fn: () => T ): T;
+function batch <T> ( value: T ): T;
+```
+
+Usage:
+
+```tsx
+import {batch} from 'voby';
+
+batch // => Same as require ( 'oby' ).batch
 ```
 
 #### `createContext`
@@ -1086,27 +1106,6 @@ Usage:
 import {useAnimationLoop} from 'voby';
 
 useAnimationLoop ( () => console.log ( 'called' ) );
-```
-
-#### `useBatch`
-
-This hook holds onto updates within its scope and flushes them out at once once it exits.
-
-[Read upstream documentation](https://github.com/fabiospampinato/oby#batch).
-
-Interface:
-
-```ts
-function useBatch <T> ( fn: () => T ): T;
-function useBatch <T> ( value: T ): T;
-```
-
-Usage:
-
-```tsx
-import {useBatch} from 'voby';
-
-useBatch // => Same as require ( 'oby' ).batch
 ```
 
 #### `useCleanup`
