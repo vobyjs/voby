@@ -13,6 +13,8 @@ const target = <T> ( observable: ObservableReadonly<T> ): ObservableReadonly<T> 
 
 /* MAIN */
 
+// These classes exist mainly as a memory-usage optimization, as they sometimes avoid keeping some functions in memory
+
 abstract class Callable<T> {
 
   /* VARIABLES */
