@@ -2413,6 +2413,31 @@ TestDirective.test = {
   ]
 };
 
+const TestDirectiveRegisterLocal = () => {
+  const model = ( element, arg1, arg2 ) => {
+    useEffect ( () => {
+      const value = `${arg1} - ${arg2}`
+      element.value = value;
+      element.setAttribute ( 'value', value );
+    });
+  };
+  const Model = createDirective ( 'modelLocal', model );
+  Model.register ();
+  return (
+    <>
+      <h3>Directive</h3>
+      <input value="foo" use:modelLocal={['bar', 'baz']} />
+    </>
+  );
+};
+
+TestDirectiveRegisterLocal.test = {
+  static: true,
+  snapshots: [
+    '<input value="bar - baz">'
+  ]
+};
+
 const TestDirectiveSingleArgument = () => {
   const model = ( element, arg1 ) => {
     useEffect ( () => {
@@ -5500,6 +5525,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestHTMLDangerouslySetInnerHTMLFunction} />
       <TestSnapshots Component={TestHTMLDangerouslySetInnerHTMLFunctionString} />
       <TestSnapshots Component={TestDirective} />
+      <TestSnapshots Component={TestDirectiveRegisterLocal} />
       <TestSnapshots Component={TestDirectiveSingleArgument} />
       <TestSnapshots Component={TestDirectiveRef} />
       <TestEventClickStatic />
