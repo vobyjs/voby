@@ -4929,6 +4929,54 @@ TestPortalRemoval.test = {
   ]
 };
 
+const TestPortalMountObservable = (): JSX.Element => {
+  const div1 = document.createElement ( 'div' );
+  const div2 = document.createElement ( 'div' );
+  const mount = $(div1);
+  const toggle = () => mount ( prev => prev === div1 ? div2 : div1 );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Portal - Mount Observable</h3>
+      {div1}
+      {div2}
+      <Portal mount={mount}>
+        <p>content</p>
+      </Portal>
+    </>
+  );
+};
+
+TestPortalMountObservable.test = {
+  static: false,
+  snapshots: [
+    '<div><div><p>content</p></div></div><div></div><!---->',
+    '<div></div><div><div><p>content</p></div></div><!---->'
+  ]
+};
+
+const TestPortalWhenObservable = (): JSX.Element => {
+  const when = $(false);
+  const toggle = () => when ( prev => !prev );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Portal - When Observable</h3>
+      <Portal when={when}>
+        <p>content</p>
+      </Portal>
+    </>
+  );
+};
+
+TestPortalWhenObservable.test = {
+  static: false,
+  snapshots: [
+    '<p>content</p>',
+    '<!---->'
+  ]
+};
+
 const TestSuspenseAlways = (): JSX.Element => {
   const Fallback = () => {
     return <p>Loading...</p>;
@@ -5552,6 +5600,8 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestPortalStatic} />
       <TestSnapshots Component={TestPortalObservable} />
       <TestSnapshots Component={TestPortalRemoval} />
+      <TestSnapshots Component={TestPortalMountObservable} />
+      <TestSnapshots Component={TestPortalWhenObservable} />
       <TestSnapshots Component={TestSuspenseAlways} />
       <TestSnapshots Component={TestSuspenseNever} />
       <TestSnapshots Component={TestSuspenseObservable} />

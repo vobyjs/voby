@@ -1,32 +1,46 @@
 
 /* IMPORT */
 
-import useCleanup from '~/hooks/use_cleanup';
+import useBoolean from '~/hooks/use_boolean';
+import useEffect from '~/hooks/use_effect';
 import render from '~/methods/render';
+import $$ from '~/methods/SS';
 import {createHTMLNode} from '~/utils/creators';
 import {assign} from '~/utils/lang';
-import type {Child, ChildWithMetadata} from '~/types';
+import type {Child, ChildWithMetadata, FunctionMaybe} from '~/types';
 
 /* MAIN */
 
-const Portal = ({ mount, children }: { mount?: Element | null, children: Child }): ChildWithMetadata<{ portal: HTMLElement }> => {
+const Portal = ({ when = true, mount, children }: { mount?: FunctionMaybe<Element | null>, when?: FunctionMaybe<boolean>, children: Child }): ChildWithMetadata<{ portal: HTMLElement }> => {
 
-  const parent = mount || document.body;
   const portal = createHTMLNode ( 'div' );
+  const boolean = useBoolean ( when );
 
-  parent.insertBefore ( portal, null );
+  useEffect ( () => {
 
-  const dispose = render ( children, portal );
+    if ( !$$(boolean) ) return;
 
-  useCleanup ( () => {
+    const parent = $$(mount) || document.body;
 
-    parent.removeChild ( portal );
+    parent.insertBefore ( portal, null );
 
-    dispose ();
+    return () => {
+
+      parent.removeChild ( portal );
+
+    };
 
   });
 
-  return assign ( () => null, { metadata: { portal } } );
+  useEffect ( () => {
+
+    if ( !$$(boolean) ) return;
+
+    return render ( children, portal );
+
+  });
+
+  return assign ( () => $$(boolean) || children, { metadata: { portal } } );
 
 };
 
