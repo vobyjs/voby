@@ -17,7 +17,8 @@ import renderToString from '~/methods/render_to_string';
 import resolve from '~/methods/resolve';
 import store from '~/methods/store';
 import template from '~/methods/template';
+import untrack from '~/methods/untrack';
 
 /* EXPORT */
 
-export {$, $$, batch, createContext, createDirective, createElement, h, html, isObservable, isStore, lazy, render, renderToString, resolve, store, template};
+export {$, $$, batch, createContext, createDirective, createElement, h, html, isObservable, isStore, lazy, render, renderToString, resolve, store, template, untrack};
