@@ -10,12 +10,12 @@ import type {Child, ChildWithMetadata, FunctionMaybe, ObservableReadonly} from '
 //TODO: Enforce children of Switch to be of type Switch.Case or Switch.Default
 //TODO: Support function-form children
 
-const Switch = <T> ({ when, children }: { when: FunctionMaybe<T>, children: Child }): ObservableReadonly<Child> => {
+const Switch = <T> ({ when, fallback, children }: { when: FunctionMaybe<T>, fallback?: Child, children: Child }): ObservableReadonly<Child> => {
 
   const childrenWithValues = castArray ( children ) as (() => ChildWithMetadata<[T, Child] | [Child]>)[]; //TSC
   const values = childrenWithValues.map ( child => child ().metadata );
 
-  return _switch ( when, values as any ); //TSC
+  return _switch ( when, values as any, fallback ); //TSC
 
 };
 

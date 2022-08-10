@@ -3663,6 +3663,60 @@ TestSwitchDefaultFunction.test = {
   ]
 };
 
+const TestSwitchFallbackObservableStatic = (): JSX.Element => {
+  const Fallback = () => {
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return <p>Fallback: {o ()}</p>
+  };
+  return (
+    <>
+      <h3>Switch - Fallback Observable Static</h3>
+      <Switch when={-1} fallback={<Fallback />}>
+        <Switch.Case when={0}>
+          <p>case</p>
+        </Switch.Case>
+      </Switch>
+    </>
+  );
+};
+
+TestSwitchFallbackObservableStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
+};
+
+const TestSwitchFallbackFunction = (): JSX.Element => {
+  const Fallback = () => {
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return <p>Fallback: {o ()}</p>
+  };
+  return (
+    <>
+      <h3>Switch - Fallback Function</h3>
+      <Switch when={-1} fallback={Fallback}>
+        <Switch.Case when={0}>
+          <p>case</p>
+        </Switch.Case>
+      </Switch>
+    </>
+  );
+};
+
+TestSwitchFallbackFunction.test = {
+  static: false,
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
+};
+
 class TestableComponent<P> extends Component<P> {
   static test = {
     static: true,
@@ -5577,6 +5631,8 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestSwitchCaseFunction} />
       <TestSnapshots Component={TestSwitchDefaultObservableStatic} />
       <TestSnapshots Component={TestSwitchDefaultFunction} />
+      <TestSnapshots Component={TestSwitchFallbackObservableStatic} />
+      <TestSnapshots Component={TestSwitchFallbackFunction} />
       <TestSnapshots Component={TestComponentStatic} />
       <TestSnapshots Component={TestComponentStaticProps} props={{ value: random () }} />
       <TestSnapshots Component={TestComponentStaticRenderProps} props={{ value: random () }} />

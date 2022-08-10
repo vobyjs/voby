@@ -965,7 +965,7 @@ This component is the reactive alternative to the native `switch`.
 Interface:
 
 ```ts
-function Switch <T> ( props: { when: FunctionMaybe<T>, children: JSX.Element }): ObservableReadonly<JSX.Element>;
+function Switch <T> ( props: { when: FunctionMaybe<T>, fallback?: JSX.Element, children: JSX.Element }): ObservableReadonly<JSX.Element>;
 
 Switch.Case = function <T> ( props: { when: T, children: JSX.Element } ): (() => JSX.Element) & ({ metadata: [T, JSX.Element] });
 Switch.Default = function ( props: { children: JSX.Element } ): (() => JSX.Element) & ({ metadata: [JSX.Element] });
