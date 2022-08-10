@@ -5,7 +5,8 @@ import {SYMBOL_ELEMENT, SYMBOL_OBSERVABLE_FROZEN} from '~/constants';
 import useReaction from '~/hooks/use_reaction';
 import isObservable from '~/methods/is_observable';
 import $$ from '~/methods/SS';
-import {flatten, isArray, isFunction, isString, isVoidChild} from '~/utils/lang';
+import {createText} from '~/utils/creators';
+import {isArray, isFunction, isString, isVoidChild} from '~/utils/lang';
 import type {Classes, ObservableMaybe} from '~/types';
 
 /* MAIN */
@@ -30,7 +31,7 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T | T[] 
 
   } else if ( isArray ( value ) ) {
 
-    const values = flatten ( value );
+    const values = resolveStatics ( value.flat ( Infinity ) ); // Makig a clone at the same time too //TODO: Combine the recursive flattening and the static resolution into a single pass
 
     if ( values.some ( isObservable ) ) {
 
@@ -121,6 +122,25 @@ const resolveResolved = <T> ( value: T, values: any[] ): any => {
 
 };
 
+const resolveStatics = ( values: any[] ): any => { // It's important to resolve these soon enough or they will be re-created multiple times
+
+  for ( let i = 0, l = values.length; i < l; i++ ) {
+
+    const value = values[i];
+    const type = typeof value;
+
+    if ( type === 'string' || type === 'number' || type === 'bigint' ) {
+
+      values[i] = createText ( value );
+
+    }
+
+  }
+
+  return values;
+
+};
+
 /* EXPORT */
 
-export {resolveChild, resolveClass, resolveResolved};
+export {resolveChild, resolveClass, resolveResolved, resolveStatics};
