@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import {SYMBOLS_DIRECTIVES} from '~/constants';
+import {DIRECTIVE_OUTSIDE_SUPER_ROOT, SYMBOLS_DIRECTIVES} from '~/constants';
 import useMemo from '~/hooks/use_memo';
 import resolve from '~/methods/resolve';
-import {context} from '~/oby';
+import {context, owner} from '~/oby';
 import type {Child, DirectiveFunction, Directive, DirectiveData, DirectiveOptions} from '~/types';
 
 /* MAIN */
@@ -38,6 +38,8 @@ const createDirective = <T extends unknown[] = []> ( name: string, fn: Directive
   };
 
   const register = (): void => {
+
+    DIRECTIVE_OUTSIDE_SUPER_ROOT.current ||= !owner ().isSuperRoot;
 
     context ( symbol, data );
 

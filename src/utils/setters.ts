@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {SYMBOLS_DIRECTIVES} from '~/constants';
+import {DIRECTIVE_OUTSIDE_SUPER_ROOT, SYMBOLS_DIRECTIVES} from '~/constants';
 import useMicrotask from '~/hooks/use_microtask';
 import useReaction from '~/hooks/use_reaction';
 import isObservable from '~/methods/is_observable';
@@ -9,7 +9,7 @@ import isStore from '~/methods/is_store';
 import $$ from '~/methods/SS';
 import store from '~/methods/store';
 import untrack from '~/methods/untrack';
-import {context} from '~/oby';
+import {context, with as _with} from '~/oby';
 import {SYMBOL_STORE_OBSERVABLE} from '~/oby';
 import {CallableAttributeStatic, CallableChildStatic, CallableClassStatic, CallableClassBooleanStatic, CallableEventStatic, CallablePropertyStatic, CallableStyleStatic, CallableStylesStatic} from '~/utils/callables';
 import {classesToggle} from '~/utils/classlist';
@@ -599,26 +599,32 @@ const setClasses = ( element: HTMLElement, object: Classes ): void => {
 
 };
 
-const setDirective = <T extends unknown[]> ( element: HTMLElement, directive: string, args: T ): void => {
+const setDirective = (() => {
 
-  const symbol = SYMBOLS_DIRECTIVES[directive] || Symbol ();
-  const data = context<DirectiveData<T>> ( symbol );
+  const runWithSuperRoot = _with ();
 
-  if ( !data ) throw new Error ( `Directive "${directive}" not found` );
+  return <T extends unknown[]> ( element: HTMLElement, directive: string, args: T ): void => {
 
-  const call = () => data.fn ( element, ...castArray ( args ) as any ); //TSC
+    const symbol = SYMBOLS_DIRECTIVES[directive] || Symbol ();
+    const data = DIRECTIVE_OUTSIDE_SUPER_ROOT.current ? context<DirectiveData<T>> ( symbol ) : runWithSuperRoot ( () => context<DirectiveData<T>> ( symbol ) );
 
-  if ( data.immediate ) {
+    if ( !data ) throw new Error ( `Directive "${directive}" not found` );
 
-    call ();
+    const call = () => data.fn ( element, ...castArray ( args ) as any ); //TSC
 
-  } else {
+    if ( data.immediate ) {
 
-    useMicrotask ( call );
+      call ();
 
-  }
+    } else {
 
-};
+      useMicrotask ( call );
+
+    }
+
+  };
+
+})();
 
 const setEventStatic = (() => {
 
