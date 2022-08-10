@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import {switch as _switch} from '~/oby';
-import {assign} from '~/utils/lang';
+import {assign, castArray} from '~/utils/lang';
 import type {Child, ChildWithMetadata, FunctionMaybe, ObservableReadonly} from '~/types';
 
 /* MAIN */
@@ -12,7 +12,7 @@ import type {Child, ChildWithMetadata, FunctionMaybe, ObservableReadonly} from '
 
 const Switch = <T> ({ when, children }: { when: FunctionMaybe<T>, children: Child }): ObservableReadonly<Child> => {
 
-  const childrenWithValues = children as (() => ChildWithMetadata<[T, Child] | [Child]>)[]; //TSC
+  const childrenWithValues = castArray ( children ) as (() => ChildWithMetadata<[T, Child] | [Child]>)[]; //TSC
   const values = childrenWithValues.map ( child => child ().metadata );
 
   return _switch ( when, values as any ); //TSC
