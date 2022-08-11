@@ -5056,6 +5056,24 @@ TestPortalWhenObservable.test = {
   ]
 };
 
+const TestPortalWrapperStatic = (): JSX.Element => {
+  return (
+    <>
+      <h3>Portal - Wrapper Static</h3>
+      <Portal wrapper={<div class="custom-wrapper" />}>
+        <p>content</p>
+      </Portal>
+    </>
+  );
+};
+
+TestPortalWrapperStatic.test = {
+  static: true,
+  snapshots: [
+    '<!---->'
+  ]
+};
+
 const TestSuspenseAlways = (): JSX.Element => {
   const Fallback = () => {
     return <p>Loading...</p>;
@@ -5684,6 +5702,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestPortalRemoval} />
       <TestSnapshots Component={TestPortalMountObservable} />
       <TestSnapshots Component={TestPortalWhenObservable} />
+      <TestSnapshots Component={TestPortalWrapperStatic} />
       <TestSnapshots Component={TestSuspenseAlways} />
       <TestSnapshots Component={TestSuspenseNever} />
       <TestSnapshots Component={TestSuspenseObservable} />

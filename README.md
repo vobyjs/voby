@@ -896,7 +896,7 @@ Events will propagate natively, according to the resulting DOM hierarchy, not th
 Interface:
 
 ```ts
-function Portal ( props: { when: boolean, mount?: FunctionMaybe<HTMLElement | null>, children: JSX.Element }): (() => JSX.Element | null) & ({ metadata: { portal: HTMLDivElement } });
+function Portal ( props: { when: boolean, mount?: FunctionMaybe<HTMLElement | null>, wrapper?: FunctionMaybe<HTMLElement | null>, children: JSX.Element }): (() => JSX.Element | null) & ({ metadata: { portal: HTMLDivElement } });
 ```
 
 Usage:

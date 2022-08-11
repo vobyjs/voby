@@ -11,9 +11,9 @@ import type {Child, ChildWithMetadata, FunctionMaybe} from '~/types';
 
 /* MAIN */
 
-const Portal = ({ when = true, mount, children }: { mount?: FunctionMaybe<Element | null>, when?: FunctionMaybe<boolean>, children: Child }): ChildWithMetadata<{ portal: HTMLElement }> => {
+const Portal = ({ when = true, mount, wrapper, children }: { mount?: FunctionMaybe<Element | null>, when?: FunctionMaybe<boolean>, wrapper?: FunctionMaybe<HTMLElement | null>, children: Child }): ChildWithMetadata<{ portal: HTMLElement }> => {
 
-  const portal = createHTMLNode ( 'div' );
+  const portal = $$(wrapper) || createHTMLNode ( 'div' );
   const boolean = useBoolean ( when );
 
   useEffect ( () => {
