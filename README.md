@@ -56,10 +56,10 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [Methods](#methods)                   | [Components](#components)         | [Hooks](#hooks)                             | [Types](#types)                             | [Extras](#extras)               |
 | ------------------------------------- | --------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------- |
 | [`$`](#methods)                       | [`Component`](#component)         | [`useAbortController`](#useabortcontroller) | [`Context`](#context)                       | [`Contributing`](#contributing) |
-| [`$$`](#methods)                      | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`DirectiveOptions`](#directiveoptions)     | [`JSX`](#jsx)                   |
-| [`batch`](#batch)                     | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`FunctionMaybe`](#functionmaybe)           | [`Tree Shaking`](#tree-shaking) |
-| [`createContext`](#createcontext)     | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`Observable`](#observable)                 | [`TypeScript`](#typescript)     |
-| [`createDirective`](#createdirective) | [`ForIndex`](#forindex)           | [`useCleanup`](#usecleanup)                 | [`ObservableReadonly`](#observablereadonly) |                                 |
+| [`$$`](#methods)                      | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`DirectiveOptions`](#directiveoptions)     | [`Globals`](#globals)           |
+| [`batch`](#batch)                     | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`FunctionMaybe`](#functionmaybe)           | [`JSX`](#jsx)                   |
+| [`createContext`](#createcontext)     | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`Observable`](#observable)                 | [`Tree Shaking`](#tree-shaking) |
+| [`createDirective`](#createdirective) | [`ForIndex`](#forindex)           | [`useCleanup`](#usecleanup)                 | [`ObservableReadonly`](#observablereadonly) | [`TypeScript`](#typescript)     |
 | [`createElement`](#createelement)     | [`ForValue`](#forvalue)           | [`useContext`](#usecontext)                 | [`ObservableMaybe`](#observablemaybe)       |                                 |
 | [`h`](#h)                             | [`Fragment`](#fragment)           | [`useDisposed`](#usedisposed)               | [`ObservableOptions`](#observableoptions)   |                                 |
 | [`html`](#html)                       | [`If`](#if)                       | [`useEffect`](#useeffect)                   | [`Resource`](#resource)                     |                                 |
@@ -1803,6 +1803,12 @@ npm run dev:counter
 # Benchmark
 npm run dev:benchmark
 ```
+
+#### `Globals`
+
+The following globals can be used to tweak how the framework works internally.
+
+- `VOBY_HMR`: If `true`, then Voby will catch errors that happen during diffing and log them to the console instead, keeping your page working after an HMR update event in some case. Fine-grainined support for HMR is not implemented (yet?).
 
 #### `JSX`
 

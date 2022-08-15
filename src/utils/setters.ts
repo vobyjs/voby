@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {DIRECTIVE_OUTSIDE_SUPER_ROOT, SYMBOLS_DIRECTIVES} from '~/constants';
+import {DIRECTIVE_OUTSIDE_SUPER_ROOT, HMR, SYMBOLS_DIRECTIVES} from '~/constants';
 import useMicrotask from '~/hooks/use_microtask';
 import useReaction from '~/hooks/use_reaction';
 import isObservable from '~/methods/is_observable';
@@ -341,7 +341,23 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
   }
 
-  diff ( parent, prev, next, prevSibling );
+  try {
+
+    diff ( parent, prev, next, prevSibling );
+
+  } catch ( error: unknown ) {
+
+    if ( HMR ) { // Suppressing error during HMR, to try to keep the page working
+
+      console.error ( error );
+
+    } else {
+
+      throw error;
+
+    }
+
+  }
 
   FragmentUtils.replaceWithFragment ( fragment, fragmentNext );
 
