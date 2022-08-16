@@ -103,13 +103,13 @@ type Props = Record<string, any>;
 
 type Ref<T = unknown> = ( value: T ) => void;
 
-type ResourceStaticPending = { pending: true, error?: never, value?: never };
+type ResourceStaticPending<T = unknown> = { pending: true, error?: never, value?: never, latest?: T };
 
-type ResourceStaticRejected = { pending: false, error: Error, value?: never };
+type ResourceStaticRejected = { pending: false, error: Error, value?: never, latest?: never };
 
-type ResourceStaticResolved<T = unknown> = { pending: false, error?: never, value: T };
+type ResourceStaticResolved<T = unknown> = { pending: false, error?: never, value: T, latest: T };
 
-type ResourceStatic<T = unknown> = ResourceStaticPending | ResourceStaticRejected | ResourceStaticResolved<T>;
+type ResourceStatic<T = unknown> = ResourceStaticPending<T> | ResourceStaticRejected | ResourceStaticResolved<T>;
 
 type ResourceFunction<T = unknown> = { pending (): boolean, error (): Error | undefined, value (): T | undefined };
 

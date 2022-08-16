@@ -9,6 +9,7 @@ import useReadonly from '~/hooks/use_readonly';
 import $ from '~/methods/S';
 import $$ from '~/methods/SS';
 import batch from '~/methods/batch';
+import untrack from '~/methods/untrack';
 import {assign, castError, isPromise, noop, once} from '~/utils/lang';
 import type {ObservableMaybe, PromiseMaybe, ResourceStatic, Resource} from '~/types';
 
@@ -30,7 +31,10 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): R
 
     const onInit = (): void => {
 
-      resource ({ pending: true });
+      const resourcePrev = untrack ( resource );
+      const latest = resourcePrev.error ? undefined : resourcePrev.latest;
+
+      resource ({ pending: true, latest });
 
     };
 
@@ -40,7 +44,7 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): R
 
       suspenseDecrement ();
 
-      resource ({ pending: false, value });
+      resource ({ pending: false, value, latest: value });
 
     };
 
@@ -52,7 +56,7 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): R
 
       const error = castError ( exception );
 
-      resource ({ pending: false, error, get value (): undefined { throw error } });
+      resource ({ pending: false, error, get value (): undefined { throw error }, get latest (): undefined { throw error } });
 
     };
 
@@ -92,7 +96,8 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): R
   return assign ( useReadonly ( resource ), {
     pending: useLazyMemo ( () => resource ().pending ),
     error: useLazyMemo ( () => resource ().error ),
-    value: useLazyMemo ( () => resource ().value )
+    value: useLazyMemo ( () => resource ().value ),
+    latest: useLazyMemo ( () => resource ().latest )
   });
 
 };

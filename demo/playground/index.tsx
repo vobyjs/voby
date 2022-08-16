@@ -5100,6 +5100,32 @@ TestResourceFallbackValue.test = {
   ]
 };
 
+const TestResourceFallbackLatest = (): JSX.Element => {
+  const resource = useResource ( () => { throw new Error ( 'Some error' ); } );
+  return (
+    <>
+      <h3>Resource - Fallback Latest</h3>
+      <ErrorBoundary fallback={<p>Error!</p>}>
+        <If when={() => resource ().latest} fallback={<p>Loading!</p>}>
+          <p>Loaded!</p>
+        </If>
+      </ErrorBoundary>
+      <ErrorBoundary fallback={<p>Error!</p>}>
+        <If when={resource.latest} fallback={<p>Loading!</p>}>
+          <p>Loaded!</p>
+        </If>
+      </ErrorBoundary>
+    </>
+  );
+};
+
+TestResourceFallbackLatest.test = {
+  static: true,
+  snapshots: [
+    '<p>Error!</p><p>Error!</p>'
+  ]
+};
+
 const TestSuspenseAlways = (): JSX.Element => {
   const Fallback = () => {
     return <p>Loading...</p>;
@@ -5730,6 +5756,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestPortalWhenObservable} />
       <TestSnapshots Component={TestPortalWrapperStatic} />
       <TestSnapshots Component={TestResourceFallbackValue} />
+      <TestSnapshots Component={TestResourceFallbackLatest} />
       <TestSnapshots Component={TestSuspenseAlways} />
       <TestSnapshots Component={TestSuspenseNever} />
       <TestSnapshots Component={TestSuspenseObservable} />

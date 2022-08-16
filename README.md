@@ -1729,12 +1729,12 @@ Helper methods are memoized automatically for you.
 Interface:
 
 ```ts
-type ResourceStaticPending = { pending: true, error?: never, value?: never };
-type ResourceStaticRejected = { pending: false, error: Error, value?: never };
-type ResourceStaticResolved<T = unknown> = { pending: false, error?: never, value: T };
-type ResourceStatic<T = unknown> = ResourceStaticPending | ResourceStaticRejected | ResourceStaticResolved<T>;
-type ResourceFunction<T = unknown> = { pending (): boolean, error (): Error | undefined, value (): T | undefined };
-type Resource<T = unknown> = ObservableReadonly<ResourceStatic<T>> & ResourceFunction<T>;
+type ResourceStaticPending<T> = { pending: true, error?: never, value?: never, latest?: T };
+type ResourceStaticRejected = { pending: false, error: Error, value?: never, latest?: never };
+type ResourceStaticResolved<T> = { pending: false, error?: never, value: T, latest: T };
+type ResourceStatic<T> = ResourceStaticPending<T> | ResourceStaticRejected | ResourceStaticResolved<T>;
+type ResourceFunction<T> = { pending (): boolean, error (): Error | undefined, value (): T | undefined, latest (): T | undefined };
+type Resource<T> = ObservableReadonly<ResourceStatic<T>> & ResourceFunction<T>;
 ```
 
 Usage:
@@ -1749,12 +1749,14 @@ const resource: Resource<Response> = useResource ( () => fetch ( 'https://my.api
 resource ().pending; // => true | false
 resource ().error; // => Error | undefined
 resource ().value; // => Whatever the resource will resolve to
+resource ().latest; // => Whatever the resource will resolve to, or the previous known resolved value if the resource is pending
 
 // Using helper methods
 
 resource.pending (); // => true | false
 resource.error (); // => Error | undefined
 resource.value (); // => Whatever the resource will resolve to
+resource.latest (); // => Whatever the resource will resolve to, or the previous known resolved value if the resource is pending
 ```
 
 #### `StoreOptions`
