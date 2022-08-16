@@ -111,7 +111,7 @@ type ResourceStaticResolved<T = unknown> = { pending: false, error?: never, valu
 
 type ResourceStatic<T = unknown> = ResourceStaticPending<T> | ResourceStaticRejected | ResourceStaticResolved<T>;
 
-type ResourceFunction<T = unknown> = { pending (): boolean, error (): Error | undefined, value (): T | undefined };
+type ResourceFunction<T = unknown> = { pending (): boolean, error (): Error | undefined, value (): T | undefined, latest (): T | undefined };
 
 type Resource<T = unknown> = ObservableReadonly<ResourceStatic<T>> & ResourceFunction<T>;
 
