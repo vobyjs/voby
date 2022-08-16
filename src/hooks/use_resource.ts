@@ -3,6 +3,7 @@
 
 import SuspenseContext from '~/components/suspense.context';
 import useDisposed from '~/hooks/use_disposed';
+import useLazyMemo from '~/hooks/use_lazy_memo';
 import useReaction from '~/hooks/use_reaction';
 import useReadonly from '~/hooks/use_readonly';
 import $ from '~/methods/S';
@@ -83,9 +84,9 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): R
   });
 
   return assign ( useReadonly ( resource ), {
-    pending: () => resource ().pending,
-    error: () => resource ().error,
-    value: () => resource ().value
+    pending: useLazyMemo ( () => resource ().pending ),
+    error: useLazyMemo ( () => resource ().error ),
+    value: useLazyMemo ( () => resource ().value )
   });
 
 };

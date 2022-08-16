@@ -1724,6 +1724,8 @@ It's an object that tells if whether the resource is loading or not, whether an 
 
 It's a read-only observable that holds the resulting object, but it also comes with helper methods for retrieving specific keys out of the object, which can make some code much cleaner.
 
+Helper methods are memoized automatically for you.
+
 Interface:
 
 ```ts
