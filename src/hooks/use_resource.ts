@@ -46,7 +46,7 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): R
 
       const error = castError ( exception );
 
-      resource ({ pending: false, error });
+      resource ({ pending: false, error, get value (): undefined { throw error } });
 
     };
 
