@@ -8,6 +8,7 @@ import useReaction from '~/hooks/use_reaction';
 import useReadonly from '~/hooks/use_readonly';
 import $ from '~/methods/S';
 import $$ from '~/methods/SS';
+import batch from '~/methods/batch';
 import {assign, castError, isPromise, noop, once} from '~/utils/lang';
 import type {ObservableMaybe, PromiseMaybe, ResourceStatic, Resource} from '~/types';
 
@@ -27,7 +28,11 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): R
     const suspenseDecrement = once ( suspense?.decrement || noop );
     const suspenseIncrement = once ( suspense?.increment || noop );
 
-    resource ({ pending: true });
+    const onInit = (): void => {
+
+      resource ({ pending: true });
+
+    };
 
     const onResolve = ( value: T ): void => {
 
@@ -55,6 +60,7 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): R
 
       try {
 
+        onInit ();
         suspenseIncrement ();
 
         const value = $$(fetcher ());
@@ -77,7 +83,7 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): R
 
     };
 
-    fetch ();
+    batch ( fetch );
 
     return suspenseDecrement;
 
