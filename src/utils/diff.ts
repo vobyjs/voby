@@ -53,8 +53,15 @@ const diff = ( parent: Node, before: Node | Node[], after: Node | Node[], nextSi
           (after[bStart - 1].nextSibling) :
           after[bEnd - bStart]) :
         nextSibling;
-      while (bStart < bEnd)
-        parent.insertBefore(after[bStart++], node);
+      if (bStart < bEnd) {
+        // parent.insertBefore(after[bStart++], node);
+        if ( node ) {
+          ( node as ChildNode ).before.apply ( node, after.slice ( bStart, bEnd ) );
+        } else {
+          ( parent as ParentNode ).append.apply ( parent, after.slice ( bStart, bEnd ) );
+        }
+        bStart = bEnd;
+      }
     }
     // remove head or tail: fast path
     else if (bEnd === bStart) {
@@ -140,8 +147,15 @@ const diff = ( parent: Node, before: Node | Node[], after: Node | Node[], nextSi
           // will be processed at zero cost
           if (sequence > (index - bStart)) {
             const node = before[aStart];
-            while (bStart < index)
-              parent.insertBefore(after[bStart++], node);
+            if (bStart < index) {
+              // parent.insertBefore(after[bStart++], node);
+              if ( node ) {
+                ( node as ChildNode ).before.apply ( node, after.slice ( bStart, index ) );
+              } else {
+                ( parent as ParentNode ).append.apply ( parent, after.slice ( bStart, index ) );
+              }
+              bStart = index;
+            }
           }
           // if the effort wasn't good enough, fallback to a replace,
           // moving both source and target indexes forward, hoping that some

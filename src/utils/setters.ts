@@ -288,11 +288,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
         if ( next instanceof Array ) {
 
-          for ( let i = 0, l = next.length; i < l; i++ ) {
-
-            parent.insertBefore ( next[i], prevSibling );
-
-          }
+          prevSibling.before.apply ( prevSibling, next );
 
         } else {
 
@@ -304,11 +300,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child )
 
         if ( next instanceof Array ) {
 
-          for ( let i = 0, l = next.length; i < l; i++ ) {
-
-            parent.append ( next[i] );
-
-          }
+          parent.append.apply ( parent, next );
 
         } else {
 
