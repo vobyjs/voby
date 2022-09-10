@@ -3849,6 +3849,63 @@ TestComponentFunction.test = {
   ]
 };
 
+const TestTabIndexBooleanStatic = (): JSX.Element => {
+  return (
+    <>
+      <h3>TabIndex - Boolean - Static</h3>
+      <p tabIndex={true}>true</p>
+      <p tabIndex={false}>false</p>
+    </>
+  );
+};
+
+TestTabIndexBooleanStatic.test = {
+  static: true,
+  snapshots: [
+    '<p tabindex="0">true</p><p>false</p>'
+  ]
+};
+
+const TestTabIndexBooleanObservable = (): JSX.Element => {
+  const o = $( true );
+  const toggle = () => o ( prev => !prev );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>TabIndex - Boolean - Observable</h3>
+      <p tabIndex={o}>content</p>
+    </>
+  );
+};
+
+TestTabIndexBooleanObservable.test = {
+  static: false,
+  snapshots: [
+    '<p tabindex="0">content</p>',
+    '<p>content</p>'
+  ]
+};
+
+const TestTabIndexBooleanFunction = (): JSX.Element => {
+  const o = $( true );
+  const toggle = () => o ( prev => !prev );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>TabIndex - Boolean - Function</h3>
+      <p tabIndex={() => o ()}>content</p>
+    </>
+  );
+};
+
+TestTabIndexBooleanFunction.test = {
+  static: false,
+  snapshots: [
+    '<p tabindex="0">content</p>',
+    '<p>content</p>'
+  ]
+};
+
 const TestForStatic = (): JSX.Element => {
   const values = [1, 2, 3];
   return (
@@ -5709,6 +5766,9 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestComponentStaticRenderState} props={{ value: random () }} />
       <TestSnapshots Component={TestComponentObservable} />
       <TestSnapshots Component={TestComponentFunction} />
+      <TestSnapshots Component={TestTabIndexBooleanStatic} />
+      <TestSnapshots Component={TestTabIndexBooleanObservable} />
+      <TestSnapshots Component={TestTabIndexBooleanFunction} />
       <TestSnapshots Component={TestForStatic} />
       <TestSnapshots Component={TestForObservables} />
       <TestSnapshots Component={TestForObservablesStatic} />

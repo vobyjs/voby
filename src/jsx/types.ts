@@ -520,7 +520,7 @@ declare namespace JSX {
     step?: FunctionMaybe<Nullable<number | string>>,
     style?: FunctionMaybe<Nullable<string | StyleProperties>>,
     summary?: FunctionMaybe<Nullable<string>>,
-    tabIndex?: FunctionMaybe<Nullable<number>>,
+    tabIndex?: FunctionMaybe<Nullable<boolean | number>>,
     target?: FunctionMaybe<Nullable<string>>,
     title?: FunctionMaybe<Nullable<string>>,
     type?: FunctionMaybe<Nullable<string>>,

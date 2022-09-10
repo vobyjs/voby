@@ -16,7 +16,7 @@ import {classesToggle} from '~/utils/classlist';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import FragmentUtils from '~/utils/fragment';
-import {castArray, flatten, isArray, isFunction, isNil, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
+import {castArray, flatten, isArray, isBoolean, isFunction, isNil, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
 import {resolveChild, resolveClass} from '~/utils/resolvers';
 import type {Child, Classes, DirectiveData, EventListener, Fragment, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 
@@ -772,6 +772,12 @@ const setHTML = ( element: HTMLElement, value: FunctionMaybe<{ __html: FunctionM
 };
 
 const setPropertyStatic = ( element: HTMLElement, key: string, value: null | undefined | boolean | number | string ): void => {
+
+  if ( key === 'tabIndex' && isBoolean ( value ) ) {
+
+    value = value ? 0 : undefined;
+
+  }
 
   element[key] = value;
 
