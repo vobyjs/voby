@@ -25,11 +25,15 @@ const classesToggle = ( element: HTMLElement, classes: string, force: null | und
 
   if ( isString ( className ) ) {
 
-    if ( !className ) { // Optimized addition
+    if ( !className ) { // Optimized addition/deletion
 
-      if ( force ) {
+      if ( force ) { // Optimized addition
 
         element.className = classes;
+
+        return;
+
+      } else { // Optimized deletion, nothing to do really
 
         return;
 
