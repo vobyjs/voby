@@ -24,6 +24,7 @@ import type {Child, Classes, DirectiveData, EventListener, Fragment, FunctionMay
 
 const setAttributeStatic = (() => {
 
+  const attributesBoolean = new Set (['allowfullscreen', 'async', 'autofocus', 'autoplay', 'checked', 'controls', 'default', 'disabled', 'formnovalidate', 'hidden', 'indeterminate', 'ismap', 'loop', 'multiple', 'muted', 'nomodule', 'novalidate', 'open', 'playsinline', 'readonly', 'required', 'reversed', 'seamless', 'selected']);
   const attributeCamelCasedRe = /e(r[HRWrv]|[Vawy])|Con|l(e[Tcs]|c)|s(eP|y)|a(t[rt]|u|v)|Of|Ex|f[XYa]|gt|hR|d[Pg]|t[TXYd]|[UZq]/; //URL: https://regex101.com/r/I8Wm4S/1
   const attributesCache: Record<string, string> = {};
   const uppercaseRe = /[A-Z]/g;
@@ -46,7 +47,7 @@ const setAttributeStatic = (() => {
 
     } else {
 
-      if ( isNil ( value ) ) {
+      if ( isNil ( value ) || ( value === false && attributesBoolean.has ( key ) ) ) {
 
         element.removeAttribute ( key );
 

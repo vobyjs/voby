@@ -796,6 +796,23 @@ TestAttributeRemoval.test = {
   ]
 };
 
+const TestAttributeBooleanStatic = (): JSX.Element => {
+  return (
+    <>
+      <h3>Attribute Boolan - Static</h3>
+      <p disabled={true}>content</p>
+      <p disabled={false}>content</p>
+    </>
+  );
+};
+
+TestAttributeBooleanStatic.test = {
+  static: true,
+  snapshots: [
+    '<p disabled="">content</p><p>content</p>'
+  ]
+};
+
 const TestPropertyCheckedStatic = (): JSX.Element => {
   return (
     <>
@@ -5620,6 +5637,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestAttributeFunction} />
       <TestSnapshots Component={TestAttributeFunctionBoolean} />
       <TestSnapshots Component={TestAttributeRemoval} />
+      <TestSnapshots Component={TestAttributeBooleanStatic} />
       <TestPropertyCheckedStatic />
       <TestPropertyCheckedObservable />
       <TestPropertyCheckedFunction />
