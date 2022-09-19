@@ -4841,6 +4841,28 @@ TestSVGClassNameString.test = {
   ]
 };
 
+const TestSVGAttributeRemoval = (): JSX.Element => {
+  const o = $<string | null>( 'red' );
+  const toggle = () => o ( prev => ( prev === 'red' ) ? null : 'red' );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>SVG - Attribute Removal</h3>
+      <svg className="red" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white">
+        <circle cx="25" cy="25" r="20" r2={o} />
+      </svg>
+    </>
+  );
+};
+
+TestSVGAttributeRemoval.test = {
+  static: false,
+  snapshots: [
+    '<svg class="red" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white"><circle cx="25" cy="25" r="20" r2="red"></circle></svg>',
+    '<svg class="red" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white"><circle cx="25" cy="25" r="20"></circle></svg>'
+  ]
+};
+
 const TestTemplateExternal = (): JSX.Element => {
   const Templated = template<{ class: string, color: string }> ( props => {
     return (
@@ -5823,6 +5845,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestSVGClassObject} />
       <TestSnapshots Component={TestSVGClassString} />
       <TestSnapshots Component={TestSVGClassNameString} />
+      <TestSnapshots Component={TestSVGAttributeRemoval} />
       <TestSnapshots Component={TestTemplateExternal} />
       <TestSnapshots Component={TestTemplateSVG} />
       <TestSnapshots Component={TestContextComponents} />

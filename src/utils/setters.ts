@@ -43,7 +43,15 @@ const setAttributeStatic = (() => {
 
       key = ( key === 'xlinkHref' || key === 'xlink:href' ) ? 'href' : normalizeKeySvg ( key );
 
-      element.setAttribute ( key, String ( value ) );
+      if ( isNil ( value ) || ( value === false && attributesBoolean.has ( key ) ) ) {
+
+        element.removeAttribute ( key );
+
+      } else {
+
+        element.setAttribute ( key, String ( value ) );
+
+      }
 
     } else {
 
