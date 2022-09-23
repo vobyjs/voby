@@ -59,15 +59,15 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [Methods](#methods)                   | [Components](#components)         | [Hooks](#hooks)                             | [Types](#types)                             | [Extras](#extras)               |
 | ------------------------------------- | --------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------- |
 | [`$`](#methods)                       | [`Component`](#component)         | [`useAbortController`](#useabortcontroller) | [`Context`](#context)                       | [`Contributing`](#contributing) |
-| [`$$`](#methods)                      | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`DirectiveOptions`](#directiveoptions)     | [`Globals`](#globals)           |
-| [`batch`](#batch)                     | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`FunctionMaybe`](#functionmaybe)           | [`JSX`](#jsx)                   |
-| [`createContext`](#createcontext)     | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`Observable`](#observable)                 | [`Tree Shaking`](#tree-shaking) |
-| [`createDirective`](#createdirective) | [`ForIndex`](#forindex)           | [`useCleanup`](#usecleanup)                 | [`ObservableReadonly`](#observablereadonly) | [`TypeScript`](#typescript)     |
-| [`createElement`](#createelement)     | [`ForValue`](#forvalue)           | [`useContext`](#usecontext)                 | [`ObservableMaybe`](#observablemaybe)       |                                 |
-| [`h`](#h)                             | [`Fragment`](#fragment)           | [`useDisposed`](#usedisposed)               | [`ObservableOptions`](#observableoptions)   |                                 |
-| [`html`](#html)                       | [`If`](#if)                       | [`useEffect`](#useeffect)                   | [`Resource`](#resource)                     |                                 |
-| [`isObservable`](#isobservable)       | [`Portal`](#portal)               | [`useError`](#useerror)                     | [`StoreOptions`](#storeoptions)             |                                 |
-| [`isStore`](#isstore)                 | [`Suspense`](#suspense)           | [`useEventListener`](#useeventlistener)     |                                             |                                 |
+| [`$$`](#methods)                      | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`Directive`](#directive)                   | [`Globals`](#globals)           |
+| [`batch`](#batch)                     | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`DirectiveOptions`](#directiveoptions)     | [`JSX`](#jsx)                   |
+| [`createContext`](#createcontext)     | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`FunctionMaybe`](#functionmaybe)           | [`Tree Shaking`](#tree-shaking) |
+| [`createDirective`](#createdirective) | [`ForIndex`](#forindex)           | [`useCleanup`](#usecleanup)                 | [`Observable`](#observable)                 | [`TypeScript`](#typescript)     |
+| [`createElement`](#createelement)     | [`ForValue`](#forvalue)           | [`useContext`](#usecontext)                 | [`ObservableReadonly`](#observablereadonly) |                                 |
+| [`h`](#h)                             | [`Fragment`](#fragment)           | [`useDisposed`](#usedisposed)               | [`ObservableMaybe`](#observablemaybe)       |                                 |
+| [`html`](#html)                       | [`If`](#if)                       | [`useEffect`](#useeffect)                   | [`ObservableOptions`](#observableoptions)   |                                 |
+| [`isObservable`](#isobservable)       | [`Portal`](#portal)               | [`useError`](#useerror)                     | [`Resource`](#resource)                     |                                 |
+| [`isStore`](#isstore)                 | [`Suspense`](#suspense)           | [`useEventListener`](#useeventlistener)     | [`StoreOptions`](#storeoptions)             |                                 |
 | [`lazy`](#lazy)                       | [`Switch`](#switch)               | [`useFetch`](#usefetch)                     |                                             |                                 |
 | [`render`](#render)                   | [`Ternary`](#ternary)             | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
 | [`renderToString`](#rendertostring)   |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
@@ -1567,6 +1567,39 @@ const useNonNullableContext = <T> ( context: Context<T> ): NonNullable<T> => {
   const value = useContext ( context );
   if ( value === null || value === undefined ) throw new Error ( 'Missing context' );
   return value;
+};
+```
+
+#### `Directive`
+
+This type describes the object that `createDirective` gives you.
+
+Interface:
+
+```ts
+type Directive<Arguments extends unknown[] = []> = {
+  Provider: ( props: { children: JSX.Element } ) => JSX.Element,
+  ref: ( ...args: Arguments ) => (( ref: Element ) => void),
+  register: () => void
+};
+```
+
+Usage:
+
+```ts
+import {$$, useEffect} from 'voby';
+import type {Directive, FunctionMaybe} from 'voby';
+
+// Example hook for turning a directive into a hook
+
+const useDirective = <T extends unknown[] = []> ( directive: Directive<T> ) => {
+  return ( ref: FunctionMaybe<Element | undefined>, ...args: T ): void => {
+    useEffect ( () => {
+      const target = $$(ref);
+      if ( !target ) return;
+      directive.ref ( ...args )( target );
+    });
+  };
 };
 ```
 
