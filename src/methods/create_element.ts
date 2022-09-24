@@ -39,7 +39,7 @@ const createElement = <P = {}> ( component: Component<P>, props?: P | null, ..._
 
       if ( !isNil ( children ) ) props.children = children;
 
-      return wrapElement.bind ( (): Child => {
+      return wrapElement ( (): Child => {
 
         const instance = new component ( props );
         const child = instance.render ( instance.props, instance.state );
@@ -57,7 +57,7 @@ const createElement = <P = {}> ( component: Component<P>, props?: P | null, ..._
       if ( !isNil ( children ) ) props.children = children;
       if ( !isNil ( ref ) ) props.ref = ref;
 
-      return wrapElement.bind ( component.bind ( undefined, props as P ) ); //TSC
+      return wrapElement ( component.bind ( undefined, props as P ) ); //TSC
 
     }
 
@@ -70,7 +70,7 @@ const createElement = <P = {}> ( component: Component<P>, props?: P | null, ..._
     if ( !isVoidChild ( children ) ) props.children = children;
     if ( !isNil ( ref ) ) props.ref = ref;
 
-    return wrapElement.bind ( (): Child => {
+    return wrapElement ( (): Child => {
 
       const child = createNode ( component ) as HTMLElement; //TSC
 
@@ -84,7 +84,7 @@ const createElement = <P = {}> ( component: Component<P>, props?: P | null, ..._
 
   } else if ( isNode ( component ) ) {
 
-    return wrapElement.bind ( component );
+    return wrapElement ( component );
 
   } else {
 

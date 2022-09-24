@@ -3,22 +3,27 @@
 
 import {SYMBOL_ELEMENT, SYMBOL_RESOLVE_UNWRAPPED, SYMBOL_UNTRACKED} from '~/constants';
 import untrack from '~/methods/untrack';
-import type {Child, FunctionMaybe} from '~/types';
-
-/* HELPERS */
-
-const {prototype} = Function;
-const {setPrototypeOf} = Object;
+import type {Child, Element, FunctionMaybe} from '~/types';
 
 /* MAIN */
 
-function wrapElement ( this: FunctionMaybe<Child> ): Child {
+function untrackThis ( this: FunctionMaybe<Child> ): Child {
 
   return untrack ( this );
 
 }
 
-setPrototypeOf ( wrapElement, setPrototypeOf ( { [SYMBOL_ELEMENT]: true, [SYMBOL_RESOLVE_UNWRAPPED]: true, [SYMBOL_UNTRACKED]: true }, prototype ) );
+function wrapElement ( element: FunctionMaybe<Child> ): Element {
+
+  const wrapped = untrackThis.bind ( element );
+
+  wrapped[SYMBOL_ELEMENT] = true;
+  wrapped[SYMBOL_RESOLVE_UNWRAPPED] = true;
+  wrapped[SYMBOL_UNTRACKED] = true;
+
+  return wrapped;
+
+}
 
 /* EXPORT */
 
