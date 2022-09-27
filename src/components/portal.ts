@@ -11,9 +11,12 @@ import type {Child, ChildWithMetadata, FunctionMaybe} from '~/types';
 
 /* MAIN */
 
-const Portal = ({ when = true, mount, wrapper, children }: { mount?: FunctionMaybe<Element | null>, when?: FunctionMaybe<boolean>, wrapper?: FunctionMaybe<HTMLElement | null>, children: Child }): ChildWithMetadata<{ portal: HTMLElement }> => {
+const Portal = ({ when = true, mount, wrapper, children }: { mount?: Child, when?: FunctionMaybe<boolean>, wrapper?: Child, children: Child }): ChildWithMetadata<{ portal: HTMLElement }> => {
 
   const portal = $$(wrapper) || createHTMLNode ( 'div' );
+
+  if ( !( portal instanceof HTMLElement ) ) throw new Error ( 'Invalid wrapper node' );
+
   const boolean = useBoolean ( when );
 
   useEffect ( () => {
@@ -21,6 +24,8 @@ const Portal = ({ when = true, mount, wrapper, children }: { mount?: FunctionMay
     if ( !$$(boolean) ) return;
 
     const parent = $$(mount) || document.body;
+
+    if ( !( parent instanceof Element ) ) throw new Error ( 'Invalid mount node' );
 
     parent.insertBefore ( portal, null );
 
