@@ -372,9 +372,9 @@ declare namespace JSX {
 
   interface ViewAttributes {
     children?: Children,
-    textContent?: FunctionMaybe<Nullable<string>>,
-    innerHTML?: FunctionMaybe<Nullable<string>>,
-    outerHTML?: FunctionMaybe<Nullable<string>>,
+    textContent?: never,
+    innerHTML?: never,
+    outerHTML?: never,
     dangerouslySetInnerHTML?: FunctionMaybe<{
       __html: FunctionMaybe<Nullable<string>>
     }>
