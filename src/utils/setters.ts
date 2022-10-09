@@ -842,7 +842,15 @@ const setStyleStatic = (() => {
 
     if ( key.charCodeAt ( 0 ) === 45 ) { // /^-/
 
-      element.style.setProperty ( key, String ( value ) );
+      if ( isNil ( value ) ) {
+
+        element.style.removeProperty ( key );
+
+      } else {
+
+        element.style.setProperty ( key, String ( value ) );
+
+      }
 
     } else if ( isNil ( value ) ) {
 
