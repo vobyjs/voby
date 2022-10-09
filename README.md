@@ -1464,6 +1464,8 @@ This basically provides a unified way to handle sync and async results, observab
 
 This function is also the mechanism through which `Suspense` understands if there are things loading under the hood or not.
 
+The passed function is tracked and it will be automatically re-executed whenever any of the observables it reads change.
+
 Interface:
 
 ```ts
