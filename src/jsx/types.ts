@@ -1189,7 +1189,7 @@ declare namespace JSX {
     width?: FunctionMaybe<Nullable<number | string>>
   }
 
-  interface TextareaHTMLAttributes<T extends EventTarget> extends HTMLAttributes<T> {
+  interface TextareaHTMLAttributes<T extends EventTarget> extends VoidHTMLAttributes<T> {
     autoComplete?: FunctionMaybe<Nullable<string>>,
     autoFocus?: FunctionMaybe<Nullable<boolean>>,
     cols?: FunctionMaybe<Nullable<number>>,
