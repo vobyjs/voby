@@ -3036,6 +3036,32 @@ TestIfFunction.test = {
   ]
 };
 
+const TestIfFunctionUntracked = (): JSX.Element => {
+  const o = $( true );
+  const toggle = () => o ( prev => !prev );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <If when={true}>
+      Noop
+      <If when={o} fallback="fallback">
+        {() => (
+          <button onClick={() => o ( false )}>
+            Close {o ()}
+          </button>
+        )}
+      </If>
+    </If>
+  );
+};
+
+TestIfFunctionUntracked.test = {
+  static: false,
+  snapshots: [
+    'Noop<button>Close </button>',
+    'Noopfallback'
+  ]
+};
+
 const TestIfChildrenObservableStatic = (): JSX.Element => {
   const Content = () => {
     const o = $( String ( random () ) );
@@ -3060,7 +3086,7 @@ TestIfChildrenObservableStatic.test = {
 };
 
 const TestIfChildrenFunction = (): JSX.Element => {
-  const Content = () => {
+  const Content = value => {
     const o = $( String ( random () ) );
     const randomize = () => o ( String ( random () ) );
     useInterval ( randomize, TEST_INTERVAL );
@@ -5790,6 +5816,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestIfStatic} />
       <TestSnapshots Component={TestIfObservable} />
       <TestSnapshots Component={TestIfFunction} />
+      <TestSnapshots Component={TestIfFunctionUntracked} />
       <TestSnapshots Component={TestIfChildrenObservableStatic} />
       <TestSnapshots Component={TestIfChildrenFunction} />
       <TestSnapshots Component={TestIfChildrenFunctionObservable} />

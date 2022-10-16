@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import useTruthy from '~/hooks/use_truthy';
-import {ternary} from '~/oby';
+import {ternary, untrack} from '~/oby';
 import {isFunction} from '~/utils/lang';
 import type {Child, FunctionMaybe, ObservableReadonly, Truthy} from '~/types';
 
@@ -14,11 +14,11 @@ const If = <T> ({ when, fallback, children }: { when: FunctionMaybe<T>, fallback
 
     const truthy = useTruthy ( when );
 
-    return ternary ( when, () => children ( truthy ), fallback );
+    return ternary ( when, () => untrack ( children ( truthy ) ), fallback );
 
   } else { // Just passing the children along
 
-    return ternary ( when, children as Child, fallback ); //TSC
+    return ternary ( when, () => untrack ( children as Child ), fallback ); //TSC
 
   }
 
