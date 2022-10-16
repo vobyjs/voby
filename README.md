@@ -58,18 +58,18 @@ You can find some demos and benchmarks below, more demos are contained inside th
 
 | [Methods](#methods)                   | [Components](#components)         | [Hooks](#hooks)                             | [Types](#types)                             | [Extras](#extras)               |
 | ------------------------------------- | --------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------- |
-| [`$`](#methods)                       | [`Component`](#component)         | [`useAbortController`](#useabortcontroller) | [`Context`](#context)                       | [`Contributing`](#contributing) |
-| [`$$`](#methods)                      | [`Dynamic`](#dynamic)             | [`useAbortSignal`](#useabortsignal)         | [`Directive`](#directive)                   | [`Globals`](#globals)           |
-| [`batch`](#batch)                     | [`ErrorBoundary`](#errorboundary) | [`useAnimationFrame`](#useanimationframe)   | [`DirectiveOptions`](#directiveoptions)     | [`JSX`](#jsx)                   |
-| [`createContext`](#createcontext)     | [`For`](#for)                     | [`useAnimationLoop`](#useanimationloop)     | [`FunctionMaybe`](#functionmaybe)           | [`Tree Shaking`](#tree-shaking) |
-| [`createDirective`](#createdirective) | [`ForIndex`](#forindex)           | [`useCleanup`](#usecleanup)                 | [`Observable`](#observable)                 | [`TypeScript`](#typescript)     |
-| [`createElement`](#createelement)     | [`ForValue`](#forvalue)           | [`useContext`](#usecontext)                 | [`ObservableReadonly`](#observablereadonly) |                                 |
-| [`h`](#h)                             | [`Fragment`](#fragment)           | [`useDisposed`](#usedisposed)               | [`ObservableMaybe`](#observablemaybe)       |                                 |
-| [`html`](#html)                       | [`If`](#if)                       | [`useEffect`](#useeffect)                   | [`ObservableOptions`](#observableoptions)   |                                 |
-| [`isObservable`](#isobservable)       | [`Portal`](#portal)               | [`useError`](#useerror)                     | [`Resource`](#resource)                     |                                 |
-| [`isStore`](#isstore)                 | [`Suspense`](#suspense)           | [`useEventListener`](#useeventlistener)     | [`StoreOptions`](#storeoptions)             |                                 |
-| [`lazy`](#lazy)                       | [`Switch`](#switch)               | [`useFetch`](#usefetch)                     |                                             |                                 |
-| [`render`](#render)                   | [`Ternary`](#ternary)             | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
+| [`$`](#methods)                       | [`Dynamic`](#dynamic)             | [`useAbortController`](#useabortcontroller) | [`Context`](#context)                       | [`Contributing`](#contributing) |
+| [`$$`](#methods)                      | [`ErrorBoundary`](#errorboundary) | [`useAbortSignal`](#useabortsignal)         | [`Directive`](#directive)                   | [`Globals`](#globals)           |
+| [`batch`](#batch)                     | [`For`](#for)                     | [`useAnimationFrame`](#useanimationframe)   | [`DirectiveOptions`](#directiveoptions)     | [`JSX`](#jsx)                   |
+| [`createContext`](#createcontext)     | [`ForIndex`](#forindex)           | [`useAnimationLoop`](#useanimationloop)     | [`FunctionMaybe`](#functionmaybe)           | [`Tree Shaking`](#tree-shaking) |
+| [`createDirective`](#createdirective) | [`ForValue`](#forvalue)           | [`useCleanup`](#usecleanup)                 | [`Observable`](#observable)                 | [`TypeScript`](#typescript)     |
+| [`createElement`](#createelement)     | [`Fragment`](#fragment)           | [`useContext`](#usecontext)                 | [`ObservableReadonly`](#observablereadonly) |                                 |
+| [`h`](#h)                             | [`If`](#if)                       | [`useDisposed`](#usedisposed)               | [`ObservableMaybe`](#observablemaybe)       |                                 |
+| [`html`](#html)                       | [`Portal`](#portal)               | [`useEffect`](#useeffect)                   | [`ObservableOptions`](#observableoptions)   |                                 |
+| [`isObservable`](#isobservable)       | [`Suspense`](#suspense)           | [`useError`](#useerror)                     | [`Resource`](#resource)                     |                                 |
+| [`isStore`](#isstore)                 | [`Switch`](#switch)               | [`useEventListener`](#useeventlistener)     | [`StoreOptions`](#storeoptions)             |                                 |
+| [`lazy`](#lazy)                       | [`Ternary`](#ternary)             | [`useFetch`](#usefetch)                     |                                             |                                 |
+| [`render`](#render)                   |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
 | [`renderToString`](#rendertostring)   |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
 | [`resolve`](#resolve)                 |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
 | [`store`](#store)                     |                                   | [`useMemo`](#usememo)                       |                                             |                                 |
@@ -459,7 +459,7 @@ Interface:
 
 ```ts
 type LazyComponent<P = {}> = ( props: P ) => ObservableReadonly<Child>;
-type LazyFetcher<P = {}> = () => Promise<{ default: ComponentClass<P> | ComponentFunction<P> } | ComponentClass<P> | ComponentFunction<P>>;
+type LazyFetcher<P = {}> = () => Promise<{ default: JSX.Component<P> } | JSX.Component<P>>;
 type LazyResult<P = {}> = LazyComponent<P> & ({ preload: () => Promise<void> });
 
 function lazy <P = {}> ( fetcher: LazyFetcher<P> ): LazyResult<P>;
@@ -470,7 +470,7 @@ Usage:
 ```ts
 import {lazy} from 'voby';
 
-const LazyComponent = lazy ( () => import ( './Component' ) );
+const LazyComponent = lazy ( () => import ( './component' ) );
 ```
 
 #### `render`
@@ -635,33 +635,6 @@ untrack // => Same as require ( 'oby' ).untrack
 The following components are provided.
 
 Crucially some components are provided for control flow, since regular JavaScript control flow primitives are not reactive, and we need to have reactive alternatives to them to have great performance.
-
-#### `Component`
-
-This is the base class for your class-based components, if you are into that.
-
-The nice thing about class-based components is that you get ref assignment for free, the eventual ref passed to a class component will automatically receive the class instance corresponding to the component. The class component itself doesn't even need to know about this, but automatically it is able to provide access to its public API to however asks for it.
-
-Interface:
-
-```ts
-class Component<P = {}> {
-  props: P;
-  render ( props: P ): JSX.Element;
-}
-```
-
-Usage:
-
-```tsx
-import {Component} from 'voby';
-
-class App extends Component<{ value: number }> {
-  render ( ({ value }) ): JSX.Element {
-    return <p>Value: {value}</p>;
-  }
-};
-```
 
 #### `Dynamic`
 

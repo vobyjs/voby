@@ -1,11 +1,10 @@
 
 /* IMPORT */
 
-import BaseComponent from '~/components/component';
 import wrapElement from '~/methods/wrap_element';
 import {createHTMLNode, createSVGNode} from '~/utils/creators';
 import {isFunction, isNil, isNode, isString, isSVGElement, isVoidChild} from '~/utils/lang';
-import {setProps, setRef} from '~/utils/setters';
+import {setProps} from '~/utils/setters';
 import type {Child, Component, Element, Props} from '~/types';
 
 /* MAIN */
@@ -33,33 +32,12 @@ const createElement = <P = {}> ( component: Component<P>, props?: P | null, ..._
 
   if ( isFunction ( component ) ) {
 
-    if ( BaseComponent.isPrototypeOf ( component ) ) { //TODO: Maybe replace this with a Symbol check, which allows for Component to be tree-shaken off
+    const props = rest;
 
-      const props = rest;
+    if ( !isNil ( children ) ) props.children = children;
+    if ( !isNil ( ref ) ) props.ref = ref;
 
-      if ( !isNil ( children ) ) props.children = children;
-
-      return wrapElement ( (): Child => {
-
-        const instance = new component ( props );
-        const child = instance.render ( instance.props, instance.state );
-
-        if ( !isNil ( ref ) ) setRef ( instance, ref );
-
-        return child;
-
-      });
-
-    } else {
-
-      const props = rest;
-
-      if ( !isNil ( children ) ) props.children = children;
-      if ( !isNil ( ref ) ) props.ref = ref;
-
-      return wrapElement ( component.bind ( undefined, props as P ) ); //TSC
-
-    }
+    return wrapElement ( () => component.call ( component, props as P ) ); //TSC
 
   } else if ( isString ( component ) ) {
 

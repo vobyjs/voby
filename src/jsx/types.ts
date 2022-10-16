@@ -55,11 +55,7 @@ declare namespace JSX {
 
   type Component<P = {}> = ( props: P ) => Child;
 
-  type ComponentClass<P = {}, S = {}> = { new ( props: P ): { render: ( props: P, state: S ) => Child } };
-
   type Element = Child;
-
-  type ElementClass<P = {}> = ComponentClass<P>;
 
   type Ref<T = unknown> = (( value: T ) => void);
 

@@ -3,7 +3,7 @@
 
 import * as Voby from 'voby';
 import {Observable} from 'voby';
-import {Component, Dynamic, ErrorBoundary, For, If, Portal, Suspense, Switch, Ternary} from 'voby';
+import {Dynamic, ErrorBoundary, For, If, Portal, Suspense, Switch, Ternary} from 'voby';
 import {useContext, useEffect, useInterval, useMemo, usePromise, useResource, useTimeout} from 'voby';
 import {$, batch, createContext, createDirective, html, lazy, render, renderToString, store, template} from 'voby';
 
@@ -45,7 +45,7 @@ const randomColor = (): string => {
 
 };
 
-const TestSnapshots = ({ Component, props }: { Component: ( JSX.Component | JSX.ComponentClass ) & { test: { static?: boolean, snapshots: string[] } }, props?: Record<any, any> }): JSX.Element => {
+const TestSnapshots = ({ Component, props }: { Component: JSX.Component & { test: { static?: boolean, snapshots: string[] } }, props?: Record<any, any> }): JSX.Element => {
   const ref = $<HTMLDivElement>();
   let index = -1;
   let htmlPrev = '';
@@ -3733,6 +3733,21 @@ TestSwitchFallbackFunction.test = {
     '<p>Fallback: {random}</p>'
   ]
 };
+
+class Component<P = {}> {
+  props: P;
+  constructor ( props: P ) {
+    this.props = props;
+    this.state = {};
+  }
+  render ( props: P ): Child {
+    throw new Error ( 'Missing render function' );
+  }
+  static call ( thiz: Component, props: P ) {
+    const instance = new thiz ( props );
+    return instance.render ( instance.props, instance.state );
+  }
+}
 
 class TestableComponent<P> extends Component<P> {
   static test = {

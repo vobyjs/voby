@@ -15,19 +15,15 @@ type ChildWithMetadata<T = unknown> = (() => Child) & { metadata: T };
 
 type Classes = FunctionMaybe<null | undefined | string | Record<string, FunctionMaybe<null | undefined | boolean>> | (FunctionMaybe<null | undefined | boolean | string> | Classes)[]>;
 
-type ComponentCallable<P = {}> = ComponentClass<P> | ComponentFunction<P>;
-
-type ComponentClass<P = {}> = ConstructorWith<import ( '~/components/component' ).default<P>, [P]>;
-
 type ComponentFunction<P = {}> = ( props: P ) => Child;
 
 type ComponentIntrinsicElement = keyof JSX.IntrinsicElements;
 
 type ComponentNode = Node;
 
-type Component<P = {}> = ComponentClass<P> | ComponentFunction<P> | ComponentIntrinsicElement | ComponentNode;
+type Component<P = {}> = ComponentFunction<P> | ComponentIntrinsicElement | ComponentNode;
 
-type ComponentsMap = Record<string, ComponentCallable<any>>;
+type ComponentsMap = Record<string, ComponentFunction<any>>;
 
 type Constructor<T = unknown> = { new (): T };
 
@@ -85,7 +81,7 @@ type FunctionMaybe<T = unknown> = (() => T) | T;
 
 type LazyComponent<P = {}> = ( props: P ) => ObservableReadonly<Child>;
 
-type LazyFetcher<P = {}> = () => Promise<{ default: ComponentCallable<P> } | ComponentCallable<P>>;
+type LazyFetcher<P = {}> = () => Promise<{ default: ComponentFunction<P> } | ComponentFunction<P>>;
 
 type LazyResult<P = {}> = LazyComponent<P> & ({ preload: () => Promise<void> });
 
@@ -137,4 +133,4 @@ type Truthy<T = unknown> = Exclude<T, 0 | -0 | 0n | -0n | '' | false | null | un
 
 /* EXPORT */
 
-export type {ArrayMaybe, Callback, Child, ChildWithMetadata, Classes, ComponentCallable, ComponentClass, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, ComponentsMap, Constructor, ConstructorWith, ContextData, ContextProvider, ContextRegister, Context, ContextWithDefault, DirectiveFunction, DirectiveProvider, DirectiveRef, DirectiveRegister, Directive, DirectiveData, DirectiveOptions, Disposer, Element, EventListener, Falsy, FN, FragmentUndefined, FragmentNode, FragmentFragment, FragmentNodes, FragmentFragments, FragmentMixed, Fragment, FunctionMaybe, LazyComponent, LazyFetcher, LazyResult, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceStaticPending, ResourceStaticRejected, ResourceStaticResolved, ResourceStatic, ResourceFunction, Resource, StoreOptions, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap, Truthy};
+export type {ArrayMaybe, Callback, Child, ChildWithMetadata, Classes, ComponentFunction, ComponentIntrinsicElement, ComponentNode, Component, ComponentsMap, Constructor, ConstructorWith, ContextData, ContextProvider, ContextRegister, Context, ContextWithDefault, DirectiveFunction, DirectiveProvider, DirectiveRef, DirectiveRegister, Directive, DirectiveData, DirectiveOptions, Disposer, Element, EventListener, Falsy, FN, FragmentUndefined, FragmentNode, FragmentFragment, FragmentNodes, FragmentFragments, FragmentMixed, Fragment, FunctionMaybe, LazyComponent, LazyFetcher, LazyResult, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, PromiseMaybe, Props, Ref, ResourceStaticPending, ResourceStaticRejected, ResourceStaticResolved, ResourceStatic, ResourceFunction, Resource, StoreOptions, SuspenseData, TemplateActionPath, TemplateActionProxy, TemplateActionWithNodes, TemplateActionWithPaths, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap, Truthy};

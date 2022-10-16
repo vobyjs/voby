@@ -1,7 +1,6 @@
 
 /* IMPORT */
 
-import Component from '~/components/component';
 import Dynamic from '~/components/dynamic';
 import ErrorBoundary from '~/components/error_boundary';
 import For from '~/components/for';
@@ -16,4 +15,4 @@ import Ternary from '~/components/ternary';
 
 /* EXPORT */
 
-export {Component, Dynamic, ErrorBoundary, For, ForIndex, ForValue, Fragment, If, Portal, Suspense, Switch, Ternary};
+export {Dynamic, ErrorBoundary, For, ForIndex, ForValue, Fragment, If, Portal, Suspense, Switch, Ternary};
