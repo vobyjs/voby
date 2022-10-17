@@ -9,8 +9,6 @@ import type {Child, Component, Element, Props} from '~/types';
 
 /* MAIN */
 
-//TODO: Resolve ahead of time If's and other components that have static conditions
-
 // It's important to wrap components, so that they can be executed in the right order, from parent to child, rather than from child to parent in some cases
 
 const createElement = <P = {}> ( component: Component<P>, props?: P | null, ..._children: Child[] ): Element => {
