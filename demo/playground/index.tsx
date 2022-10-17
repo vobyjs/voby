@@ -3062,20 +3062,82 @@ TestIfFunctionUntracked.test = {
   ]
 };
 
-const TestIfNestedFunction = (): JSX.Element => {
+const TestIfFunctionUntrackedUnnarrowed = (): JSX.Element => {
   const o = $( true );
   const content = $( 0 );
   const increment = () => content ( prev => ( prev + 1 ) % 3 );
   useInterval ( increment, TEST_INTERVAL );
   return (
     <>
-      <h3>If - Nested Function</h3>
+      <h3>If - Function Untracked Unnarrowed</h3>
+      <p>(<If when={o}>{() => content ()}</If>)</p>
+    </>
+  );
+};
+
+TestIfFunctionUntrackedUnnarrowed.test = {
+  static: true,
+  snapshots: [
+    '<p>(0)</p>'
+  ]
+};
+
+const TestIfFunctionUntrackedNarrowed = (): JSX.Element => {
+  const o = $( true );
+  const content = $( 0 );
+  const increment = () => content ( prev => ( prev + 1 ) % 3 );
+  useInterval ( increment, TEST_INTERVAL );
+  return (
+    <>
+      <h3>If - Function Untracked Narrowed</h3>
+      <p>(<If when={o}>{value => content ()}</If>)</p>
+    </>
+  );
+};
+
+TestIfFunctionUntrackedNarrowed.test = {
+  static: true,
+  snapshots: [
+    '<p>(0)</p>'
+  ]
+};
+
+const TestIfNestedFunctionUnnarrowed = (): JSX.Element => {
+  const o = $( true );
+  const content = $( 0 );
+  const increment = () => content ( prev => ( prev + 1 ) % 3 );
+  useInterval ( increment, TEST_INTERVAL );
+  return (
+    <>
+      <h3>If - Nested Function Unnarrowed</h3>
       <p>(<If when={o}>{() => () => content ()}</If>)</p>
     </>
   );
 };
 
-TestIfNestedFunction.test = {
+TestIfNestedFunctionUnnarrowed.test = {
+  static: false,
+  snapshots: [
+    '<p>(0)</p>',
+    '<p>(1)</p>',
+    '<p>(2)</p>'
+  ]
+};
+
+const TestIfNestedFunctionNarrowed = (): JSX.Element => {
+  const o = $( true );
+  const content = $( 0 );
+  const increment = () => content ( prev => ( prev + 1 ) % 3 );
+  useInterval ( increment, TEST_INTERVAL );
+  return (
+    <>
+      <h3>If - Nested Function Narrowed</h3>
+      <p>(<If when={o}>{value => () => content ()}</If>)</p>
+    </>
+  );
+};
+
+TestIfNestedFunctionNarrowed.test = {
   static: false,
   snapshots: [
     '<p>(0)</p>',
@@ -3124,7 +3186,7 @@ const TestIfChildrenFunction = (): JSX.Element => {
 };
 
 TestIfChildrenFunction.test = {
-  static: false,
+  static: true,
   snapshots: [
     '<p>{random}</p>'
   ]
@@ -5839,7 +5901,10 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestIfObservable} />
       <TestSnapshots Component={TestIfFunction} />
       <TestSnapshots Component={TestIfFunctionUntracked} />
-      <TestSnapshots Component={TestIfNestedFunction} />
+      <TestSnapshots Component={TestIfFunctionUntrackedUnnarrowed} />
+      <TestSnapshots Component={TestIfFunctionUntrackedNarrowed} />
+      <TestSnapshots Component={TestIfNestedFunctionUnnarrowed} />
+      <TestSnapshots Component={TestIfNestedFunctionNarrowed} />
       <TestSnapshots Component={TestIfChildrenObservableStatic} />
       <TestSnapshots Component={TestIfChildrenFunction} />
       <TestSnapshots Component={TestIfChildrenFunctionObservable} />

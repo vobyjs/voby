@@ -14,7 +14,7 @@ const If = <T> ({ when, fallback, children }: { when: FunctionMaybe<T>, fallback
 
     const truthy = useTruthy ( when );
 
-    return ternary ( when, () => untrack ( children ( truthy ) ), fallback );
+    return ternary ( when, () => untrack ( () => children ( truthy ) ), fallback );
 
   } else { // Just passing the children along
 
