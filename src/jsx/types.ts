@@ -13,10 +13,6 @@ interface SVGElement {
   cloneNode ( deep?: boolean ): SVGElement
 }
 
-interface Object {
-  isPrototypeOf<T extends Object> ( this: T, object: Object ): object is T
-}
-
 /* JSX */
 
 declare namespace JSX {
