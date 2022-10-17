@@ -3,7 +3,7 @@
 
 import useReaction from '~/hooks/use_reaction';
 import $ from '~/methods/S';
-import {isFunction} from '~/utils/lang';
+import {isFunction, isNil} from '~/utils/lang';
 import type {FunctionMaybe} from '~/types';
 
 /* MAIN */
@@ -28,7 +28,7 @@ const useGuarded = <T, U extends T> ( value: FunctionMaybe<T>, guard: (( value: 
 
     const current = guarded ();
 
-    if ( !current ) throw new Error ( 'The value never passed the type guard' );
+    if ( isNil ( current ) ) throw new Error ( 'The value never passed the type guard' );
 
     return current;
 
