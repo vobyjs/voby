@@ -3062,6 +3062,28 @@ TestIfFunctionUntracked.test = {
   ]
 };
 
+const TestIfNestedFunction = (): JSX.Element => {
+  const o = $( true );
+  const content = $( 0 );
+  const increment = () => content ( prev => ( prev + 1 ) % 3 );
+  useInterval ( increment, TEST_INTERVAL );
+  return (
+    <>
+      <h3>If - Nested Function</h3>
+      <p>(<If when={o}>{() => () => content ()}</If>)</p>
+    </>
+  );
+};
+
+TestIfNestedFunction.test = {
+  static: false,
+  snapshots: [
+    '<p>(0)</p>',
+    '<p>(1)</p>',
+    '<p>(2)</p>'
+  ]
+};
+
 const TestIfChildrenObservableStatic = (): JSX.Element => {
   const Content = () => {
     const o = $( String ( random () ) );
@@ -5817,6 +5839,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestIfObservable} />
       <TestSnapshots Component={TestIfFunction} />
       <TestSnapshots Component={TestIfFunctionUntracked} />
+      <TestSnapshots Component={TestIfNestedFunction} />
       <TestSnapshots Component={TestIfChildrenObservableStatic} />
       <TestSnapshots Component={TestIfChildrenFunction} />
       <TestSnapshots Component={TestIfChildrenFunctionObservable} />
