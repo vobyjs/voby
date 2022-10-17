@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import useBoolean from '~/hooks/use_boolean';
 import useEffect from '~/hooks/use_effect';
 import render from '~/methods/render';
 import $$ from '~/methods/SS';
+import {boolean} from '~/oby';
 import {createHTMLNode} from '~/utils/creators';
 import {assign} from '~/utils/lang';
 import type {Child, ChildWithMetadata, FunctionMaybe} from '~/types';
@@ -17,11 +17,11 @@ const Portal = ({ when = true, mount, wrapper, children }: { mount?: Child, when
 
   if ( !( portal instanceof HTMLElement ) ) throw new Error ( 'Invalid wrapper node' );
 
-  const boolean = useBoolean ( when );
+  const condition = boolean ( when );
 
   useEffect ( () => {
 
-    if ( !$$(boolean) ) return;
+    if ( !$$(condition) ) return;
 
     const parent = $$(mount) || document.body;
 
@@ -39,13 +39,13 @@ const Portal = ({ when = true, mount, wrapper, children }: { mount?: Child, when
 
   useEffect ( () => {
 
-    if ( !$$(boolean) ) return;
+    if ( !$$(condition) ) return;
 
     return render ( children, portal );
 
   });
 
-  return assign ( () => $$(boolean) || children, { metadata: { portal } } );
+  return assign ( () => $$(condition) || children, { metadata: { portal } } );
 
 };
 
