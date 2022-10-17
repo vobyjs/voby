@@ -11,19 +11,19 @@ import type {Classes, ObservableMaybe} from '~/types';
 
 /* MAIN */
 
-const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T | T[] ) => void) ): void => {
+const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T | T[], dynamic: boolean ) => void), _dynamic: boolean = false ): void => {
 
   if ( isFunction ( value ) ) {
 
     if ( SYMBOL_ELEMENT in value || SYMBOL_OBSERVABLE_FROZEN in value ) {
 
-      resolveChild ( value (), setter );
+      resolveChild ( value (), setter, _dynamic );
 
     } else {
 
       useReaction ( () => {
 
-        resolveChild ( value (), setter );
+        resolveChild ( value (), setter, true );
 
       });
 
@@ -37,19 +37,19 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T | T[] 
 
       useReaction ( () => {
 
-        setter ( resolveResolved ( values, [] ) );
+        setter ( resolveResolved ( values, [] ), true );
 
       });
 
     } else {
 
-      setter ( values );
+      setter ( values, _dynamic );
 
     }
 
   } else {
 
-    setter ( value );
+    setter ( value, _dynamic );
 
   }
 

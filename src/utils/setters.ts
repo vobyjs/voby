@@ -117,7 +117,7 @@ const setChildReplacementFunction = ( parent: HTMLElement, fragment: Fragment, c
 
       }
 
-      setChildStatic ( parent, fragment, valueNext );
+      setChildStatic ( parent, fragment, valueNext, true );
 
     });
 
@@ -179,7 +179,9 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
 };
 
-const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child ): void => {
+const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, dynamic: boolean ): void => {
+
+  if ( !dynamic && child === undefined ) return; // Ignoring static undefined children, avoiding inserting some useless placeholder nodes
 
   const prev = FragmentUtils.getChildren ( fragment );
   const prevIsArray = ( prev instanceof Array );

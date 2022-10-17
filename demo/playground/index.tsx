@@ -2992,7 +2992,7 @@ const TestIfStatic = (): JSX.Element => {
 TestIfStatic.test = {
   static: true,
   snapshots: [
-    '<p>true</p><!---->'
+    '<p>true</p>'
   ]
 };
 

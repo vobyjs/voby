@@ -117,7 +117,7 @@ class CallableChildStatic extends Callable<Child> {
 
   update ( value: Child ): void {
 
-    setChildStatic ( this.parent, this.fragment, value );
+    setChildStatic ( this.parent, this.fragment, value, true );
 
   }
 
