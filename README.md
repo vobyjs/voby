@@ -66,16 +66,16 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`createElement`](#createelement)     | [`Fragment`](#fragment)           | [`useContext`](#usecontext)                 | [`ObservableReadonly`](#observablereadonly) |                                 |
 | [`h`](#h)                             | [`If`](#if)                       | [`useDisposed`](#usedisposed)               | [`ObservableMaybe`](#observablemaybe)       |                                 |
 | [`html`](#html)                       | [`Portal`](#portal)               | [`useEffect`](#useeffect)                   | [`ObservableOptions`](#observableoptions)   |                                 |
-| [`isObservable`](#isobservable)       | [`Suspense`](#suspense)           | [`useError`](#useerror)                     | [`Resource`](#resource)                     |                                 |
-| [`isStore`](#isstore)                 | [`Switch`](#switch)               | [`useEventListener`](#useeventlistener)     | [`StoreOptions`](#storeoptions)             |                                 |
-| [`lazy`](#lazy)                       | [`Ternary`](#ternary)             | [`useFetch`](#usefetch)                     |                                             |                                 |
-| [`render`](#render)                   |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
-| [`renderToString`](#rendertostring)   |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
-| [`resolve`](#resolve)                 |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
-| [`store`](#store)                     |                                   | [`useMemo`](#usememo)                       |                                             |                                 |
-| [`template`](#template)               |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
-| [`untrack`](#untrack)                 |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
-|                                       |                                   | [`useReaction`](#usereaction)               |                                             |                                 |
+| [`isBatching`](#isbatching)           | [`Suspense`](#suspense)           | [`useError`](#useerror)                     | [`Resource`](#resource)                     |                                 |
+| [`isObservable`](#isobservable)       | [`Switch`](#switch)               | [`useEventListener`](#useeventlistener)     | [`StoreOptions`](#storeoptions)             |                                 |
+| [`isStore`](#isstore)                 | [`Ternary`](#ternary)             | [`useFetch`](#usefetch)                     |                                             |                                 |
+| [`lazy`](#lazy)                       |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
+| [`render`](#render)                   |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
+| [`renderToString`](#rendertostring)   |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
+| [`resolve`](#resolve)                 |                                   | [`useMemo`](#usememo)                       |                                             |                                 |
+| [`store`](#store)                     |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
+| [`template`](#template)               |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
+| [`untrack`](#untrack)                 |                                   | [`useReaction`](#usereaction)               |                                             |                                 |
 |                                       |                                   | [`useReadonly`](#usereadonly)               |                                             |                                 |
 |                                       |                                   | [`useResolved`](#useresolved)               |                                             |                                 |
 |                                       |                                   | [`useResource`](#useresource)               |                                             |                                 |
@@ -409,6 +409,34 @@ const NoRegistration = (): JSX.Element => {
     </If>
   `;
 };
+```
+
+#### `isBatching`
+
+This function tells you if batching is currently active or not.
+
+Interface:
+
+```ts
+function isBatching (): boolean;
+```
+
+Usage:
+
+```tsx
+import {batch, isBatching} from 'voby';
+
+// Checking if currently batching
+
+isBatching (); // => false
+
+batch ( () => {
+
+  isBatching (); // => true
+
+});
+
+isBatching (); // => false
 ```
 
 #### `isObservable`
