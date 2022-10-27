@@ -2829,6 +2829,42 @@ TestCleanupInnerPortal.test = {
   ]
 };
 
+const TestContextDynamicContext = () => {
+
+  const Context = createContext ( 'default' );
+
+  const DynamicFragment = props => {
+    const ctx = useContext(Context);
+    return (
+      <>
+        <p>{ctx}</p>
+        <p>{props.children}</p>
+        <Dynamic component="p">{props.children}</Dynamic>
+        <Dynamic component="p" children={props.children} />
+      </>
+    );
+  };
+
+  return (
+    <>
+      <h3>Dynamic - Context</h3>
+      <Context.Provider value="context">
+        <DynamicFragment>
+          <DynamicFragment />
+        </DynamicFragment>
+      </Context.Provider>
+    </>
+  );
+
+};
+
+TestContextDynamicContext.test = {
+  static: true,
+  snapshots: [
+    '<p>context</p><p><p>context</p><p></p><p></p><p></p></p><p><p>context</p><p></p><p></p><p></p></p><p><p>context</p><p></p><p></p><p></p></p>'
+  ]
+};
+
 const TestDynamicHeading = (): JSX.Element => {
   const level = $<1 | 2 | 3 | 4 | 5 | 6>(1);
   const increment = () => level ( ( level () + 1 ) % 7 || 1 );
@@ -5891,6 +5927,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestChildrenSymbol} />
       <TestSnapshots Component={TestCleanupInner} />
       <TestSnapshots Component={TestCleanupInnerPortal} />
+      <TestSnapshots Component={TestContextDynamicContext} />
       <TestSnapshots Component={TestDynamicHeading} />
       <TestSnapshots Component={TestDynamicObservableComponent} />
       <TestSnapshots Component={TestDynamicFunctionComponent} />
