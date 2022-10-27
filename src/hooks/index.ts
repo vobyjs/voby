@@ -5,6 +5,7 @@ import useAbortController from '~/hooks/use_abort_controller';
 import useAbortSignal from '~/hooks/use_abort_signal';
 import useAnimationFrame from '~/hooks/use_animation_frame';
 import useAnimationLoop from '~/hooks/use_animation_loop';
+import useBoolean from '~/hooks/use_boolean';
 import useCleanup from '~/hooks/use_cleanup';
 import useContext from '~/hooks/use_context';
 import useDisposed from '~/hooks/use_disposed';
@@ -28,4 +29,4 @@ import useTimeout from '~/hooks/use_timeout';
 
 /* EXPORT */
 
-export {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useCleanup, useContext, useDisposed, useEffect, useError, useEventListener, useFetch, useIdleCallback, useIdleLoop, useInterval, useMemo, useMicrotask, usePromise, useReaction, useReadonly, useResolved, useResource, useRoot, useSelector, useTimeout};
+export {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useBoolean, useCleanup, useContext, useDisposed, useEffect, useError, useEventListener, useFetch, useIdleCallback, useIdleLoop, useInterval, useMemo, useMicrotask, usePromise, useReaction, useReadonly, useResolved, useResource, useRoot, useSelector, useTimeout};

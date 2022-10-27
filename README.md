@@ -62,20 +62,21 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`$$`](#methods)                      | [`ErrorBoundary`](#errorboundary) | [`useAbortSignal`](#useabortsignal)         | [`Directive`](#directive)                   | [`Globals`](#globals)           |
 | [`batch`](#batch)                     | [`For`](#for)                     | [`useAnimationFrame`](#useanimationframe)   | [`DirectiveOptions`](#directiveoptions)     | [`JSX`](#jsx)                   |
 | [`createContext`](#createcontext)     | [`ForIndex`](#forindex)           | [`useAnimationLoop`](#useanimationloop)     | [`FunctionMaybe`](#functionmaybe)           | [`Tree Shaking`](#tree-shaking) |
-| [`createDirective`](#createdirective) | [`ForValue`](#forvalue)           | [`useCleanup`](#usecleanup)                 | [`Observable`](#observable)                 | [`TypeScript`](#typescript)     |
-| [`createElement`](#createelement)     | [`Fragment`](#fragment)           | [`useContext`](#usecontext)                 | [`ObservableReadonly`](#observablereadonly) |                                 |
-| [`h`](#h)                             | [`If`](#if)                       | [`useDisposed`](#usedisposed)               | [`ObservableMaybe`](#observablemaybe)       |                                 |
-| [`html`](#html)                       | [`Portal`](#portal)               | [`useEffect`](#useeffect)                   | [`ObservableOptions`](#observableoptions)   |                                 |
-| [`isBatching`](#isbatching)           | [`Suspense`](#suspense)           | [`useError`](#useerror)                     | [`Resource`](#resource)                     |                                 |
-| [`isObservable`](#isobservable)       | [`Switch`](#switch)               | [`useEventListener`](#useeventlistener)     | [`StoreOptions`](#storeoptions)             |                                 |
-| [`isStore`](#isstore)                 | [`Ternary`](#ternary)             | [`useFetch`](#usefetch)                     |                                             |                                 |
-| [`lazy`](#lazy)                       |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
-| [`render`](#render)                   |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
-| [`renderToString`](#rendertostring)   |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
-| [`resolve`](#resolve)                 |                                   | [`useMemo`](#usememo)                       |                                             |                                 |
-| [`store`](#store)                     |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
-| [`template`](#template)               |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
-| [`untrack`](#untrack)                 |                                   | [`useReaction`](#usereaction)               |                                             |                                 |
+| [`createDirective`](#createdirective) | [`ForValue`](#forvalue)           | [`useBoolean`](#useboolean)                 | [`Observable`](#observable)                 | [`TypeScript`](#typescript)     |
+| [`createElement`](#createelement)     | [`Fragment`](#fragment)           | [`useCleanup`](#usecleanup)                 | [`ObservableReadonly`](#observablereadonly) |                                 |
+| [`h`](#h)                             | [`If`](#if)                       | [`useContext`](#usecontext)                 | [`ObservableMaybe`](#observablemaybe)       |                                 |
+| [`html`](#html)                       | [`Portal`](#portal)               | [`useDisposed`](#usedisposed)               | [`ObservableOptions`](#observableoptions)   |                                 |
+| [`isBatching`](#isbatching)           | [`Suspense`](#suspense)           | [`useEffect`](#useeffect)                   | [`Resource`](#resource)                     |                                 |
+| [`isObservable`](#isobservable)       | [`Switch`](#switch)               | [`useError`](#useerror)                     | [`StoreOptions`](#storeoptions)             |                                 |
+| [`isStore`](#isstore)                 | [`Ternary`](#ternary)             | [`useEventListener`](#useeventlistener)     |                                             |                                 |
+| [`lazy`](#lazy)                       |                                   | [`useFetch`](#usefetch)                     |                                             |                                 |
+| [`render`](#render)                   |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
+| [`renderToString`](#rendertostring)   |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
+| [`resolve`](#resolve)                 |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
+| [`store`](#store)                     |                                   | [`useMemo`](#usememo)                       |                                             |                                 |
+| [`template`](#template)               |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
+| [`untrack`](#untrack)                 |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
+|                                       |                                   | [`useReaction`](#usereaction)               |                                             |                                 |
 |                                       |                                   | [`useReadonly`](#usereadonly)               |                                             |                                 |
 |                                       |                                   | [`useResolved`](#useresolved)               |                                             |                                 |
 |                                       |                                   | [`useResource`](#useresource)               |                                             |                                 |
@@ -1112,6 +1113,26 @@ Usage:
 import {useAnimationLoop} from 'voby';
 
 useAnimationLoop ( () => console.log ( 'called' ) );
+```
+
+#### `useBoolean`
+
+This hook is like the reactive equivalent of the `!!` operator, it returns you a boolean, or a function to a boolean, depending on the input that you give it.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#boolean).
+
+Interface:
+
+```ts
+function useBoolean ( value: FunctionMaybe<unknown> ): FunctionMaybe<boolean>;
+```
+
+Usage:
+
+```tsx
+import {useBoolean} from 'voby';
+
+useBoolean // => Same as require ( 'oby' ).boolean
 ```
 
 #### `useCleanup`
