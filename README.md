@@ -193,7 +193,7 @@ $$ ( 123 ); // => 123
 
 #### `batch`
 
-This function holds onto updates within its scope and flushes them out at once once it exits.
+This function holds onto updates within its scope and flushes them out once it exits.
 
 [Read upstream documentation](https://github.com/fabiospampinato/oby#batch).
 
