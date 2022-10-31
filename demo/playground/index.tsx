@@ -1005,7 +1005,7 @@ const TestClassNameStatic = (): JSX.Element => {
 TestClassNameStatic.test = {
   static: true,
   snapshots: [
-    '<p class="red">content</p>'
+    '<p>content</p>'
   ]
 };
 
@@ -1022,10 +1022,9 @@ const TestClassNameObservable = (): JSX.Element => {
 };
 
 TestClassNameObservable.test = {
-  static: false,
+  static: true,
   snapshots: [
-    '<p class="red">content</p>',
-    '<p class="blue">content</p>'
+    '<p>content</p>'
   ]
 };
 
@@ -1042,29 +1041,8 @@ const TestClassNameFunction = (): JSX.Element => {
 };
 
 TestClassNameFunction.test = {
-  static: false,
+  static: true,
   snapshots: [
-    '<p class="red">content</p>',
-    '<p class="blue">content</p>'
-  ]
-};
-
-const TestClassNameRemoval = (): JSX.Element => {
-  const o = $<string | null>( 'red' );
-  const toggle = () => o ( prev => prev ? null : 'red' );
-  useInterval ( toggle, TEST_INTERVAL );
-  return (
-    <>
-      <h3>ClassName - Removal</h3>
-      <p className={o}>content</p>
-    </>
-  );
-};
-
-TestClassNameRemoval.test = {
-  static: false,
-  snapshots: [
-    '<p class="red">content</p>',
     '<p>content</p>'
   ]
 };
@@ -4962,7 +4940,7 @@ const TestSVGClassObject = (): JSX.Element => {
 TestSVGClassObject.test = {
   static: true,
   snapshots: [
-    '<svg viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white" class="red"><circle cx="25" cy="25" r="20"></circle></svg>'
+    '<svg class="red" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white"><circle cx="25" cy="25" r="20"></circle></svg>'
   ]
 };
 
@@ -4980,24 +4958,6 @@ const TestSVGClassString = (): JSX.Element => {
 TestSVGClassString.test = {
   static: true,
   snapshots: [
-    '<svg viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white" class="red"><circle cx="25" cy="25" r="20"></circle></svg>'
-  ]
-};
-
-const TestSVGClassNameString = (): JSX.Element => {
-  return (
-    <>
-      <h3>SVG - ClassName String</h3>
-      <svg className="red" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white">
-        <circle cx="25" cy="25" r="20" />
-      </svg>
-    </>
-  );
-};
-
-TestSVGClassNameString.test = {
-  static: true,
-  snapshots: [
     '<svg class="red" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white"><circle cx="25" cy="25" r="20"></circle></svg>'
   ]
 };
@@ -5009,7 +4969,7 @@ const TestSVGAttributeRemoval = (): JSX.Element => {
   return (
     <>
       <h3>SVG - Attribute Removal</h3>
-      <svg className="red" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white">
+      <svg class="red" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white">
         <circle cx="25" cy="25" r="20" r2={o} />
       </svg>
     </>
@@ -5837,7 +5797,6 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestClassNameStatic} />
       <TestSnapshots Component={TestClassNameObservable} />
       <TestSnapshots Component={TestClassNameFunction} />
-      <TestSnapshots Component={TestClassNameRemoval} />
       <TestSnapshots Component={TestClassStatic} />
       <TestSnapshots Component={TestClassStaticString} />
       <TestSnapshots Component={TestClassObservable} />
@@ -6011,7 +5970,6 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestSVGStyleString} />
       <TestSnapshots Component={TestSVGClassObject} />
       <TestSnapshots Component={TestSVGClassString} />
-      <TestSnapshots Component={TestSVGClassNameString} />
       <TestSnapshots Component={TestSVGAttributeRemoval} />
       <TestSnapshots Component={TestTemplateExternal} />
       <TestSnapshots Component={TestTemplateSVG} />

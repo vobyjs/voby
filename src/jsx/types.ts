@@ -399,7 +399,6 @@ declare namespace JSX {
     checked?: FunctionMaybe<Nullable<boolean>>,
     cite?: FunctionMaybe<Nullable<string>>,
     class?: Class,
-    className?: FunctionMaybe<Nullable<string>>,
     cols?: FunctionMaybe<Nullable<number>>,
     colSpan?: FunctionMaybe<Nullable<number>>,
     content?: FunctionMaybe<Nullable<string>>,

@@ -13,20 +13,8 @@ import type {Child, Component, Element, Props} from '~/types';
 
 const createElement = <P = {}> ( component: Component<P>, props?: P | null, ..._children: Child[] ): Element => {
 
-  const { children: __children, key, ref, class: cls, ...rest } = ( props || {} ) as Props; //TSC
+  const { children: __children, key, ref, ...rest } = ( props || {} ) as Props; //TSC
   const children = ( _children.length === 1 ) ? _children[0] : ( _children.length === 0 ) ? __children : _children;
-
-  if ( !isNil ( cls ) ) {
-
-    rest.class = cls; // Ensuring "class" is always set after "className"
-
-  }
-
-  if ( !isNil ( rest.className ) && isString ( rest.class ) ) {
-
-    throw new Error ( 'Invalid class prop, it can only be null, undefined, an array or an object when className is provided too' );
-
-  }
 
   if ( isFunction ( component ) ) {
 

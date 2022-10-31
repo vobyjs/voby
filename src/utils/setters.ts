@@ -37,8 +37,6 @@ const setAttributeStatic = (() => {
 
   return ( element: HTMLElement, key: string, value: null | undefined | boolean | number | string ): void => {
 
-    key = ( key === 'className' ) ? 'class' : key;
-
     if ( isSVG ( element ) ) {
 
       key = ( key === 'xlinkHref' || key === 'xlink:href' ) ? 'href' : normalizeKeySvg ( key );
@@ -1012,10 +1010,6 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
     value ( element, 'setClasses' );
 
-  } else if ( key === 'innerHTML' || key === 'outerHTML' || key === 'textContent' ) {
-
-    // Forbidden props
-
   } else if ( key === 'dangerouslySetInnerHTML' ) {
 
     value ( element, 'setHTML' );
@@ -1028,13 +1022,11 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
     value ( element, 'setDirective', key.slice ( 4 ) );
 
+  } else if ( key === 'innerHTML' || key === 'outerHTML' || key === 'textContent' || key === 'className' ) {
+
+    // Forbidden props
+
   } else if ( key in element && !isSVG ( element ) ) {
-
-    if ( key === 'className' ) { // Ensuring the attribute is present
-
-      element.className = '';
-
-    }
 
     value ( element, 'setProperty', key );
 
@@ -1070,10 +1062,6 @@ const setProp = ( element: HTMLElement, key: string, value: any ): void => {
 
     setClasses ( element, value );
 
-  } else if ( key === 'innerHTML' || key === 'outerHTML' || key === 'textContent' ) {
-
-    // Forbidden props
-
   } else if ( key === 'dangerouslySetInnerHTML' ) {
 
     setHTML ( element, value );
@@ -1085,6 +1073,10 @@ const setProp = ( element: HTMLElement, key: string, value: any ): void => {
   } else if ( key.charCodeAt ( 0 ) === 117 && key.charCodeAt ( 3 ) === 58 ) { // /^u..:/
 
     setDirective ( element, key.slice ( 4 ), value );
+
+  } else if ( key === 'innerHTML' || key === 'outerHTML' || key === 'textContent' || key === 'className' ) {
+
+    // Forbidden props
 
   } else if ( key in element && !isSVG ( element ) ) {
 
