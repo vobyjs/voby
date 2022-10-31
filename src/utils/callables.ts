@@ -3,6 +3,7 @@
 
 import {SYMBOL_OBSERVABLE, SYMBOL_OBSERVABLE_FROZEN} from '~/constants';
 import useCleanup from '~/hooks/use_cleanup';
+import untrack from '~/methods/untrack';
 import {on, off} from '~/oby';
 import {setAttributeStatic, setChildStatic, setClassStatic, setClassBooleanStatic, setClassesStatic, setEventStatic, setPropertyStatic, setStyleStatic, setStylesStatic} from '~/utils/setters';
 import type {Child, EventListener, Fragment, FunctionMaybe, ObservableReadonly} from '~/types';
@@ -31,9 +32,11 @@ abstract class Callable<T> {
 
   /* API */
 
-  init (): void {
+  init ( observable: ObservableReadonly<T> ): void {
 
     on ( this.observable, this );
+
+    this.call ( observable, untrack ( observable ) );
 
     useCleanup ( this );
 
@@ -79,7 +82,7 @@ class CallableAttributeStatic extends Callable<null | undefined | boolean | numb
     this.element = element;
     this.key = key;
 
-    this.init ();
+    this.init ( observable );
 
   }
 
@@ -109,7 +112,7 @@ class CallableChildStatic extends Callable<Child> {
     this.parent = parent;
     this.fragment = fragment;
 
-    this.init ();
+    this.init ( observable );
 
   }
 
@@ -139,7 +142,7 @@ class CallableClassStatic extends Callable<null | undefined | boolean> {
     this.element = element;
     this.key = key;
 
-    this.init ();
+    this.init ( observable );
 
   }
 
@@ -169,7 +172,7 @@ class CallableClassBooleanStatic extends Callable<null | undefined | boolean | s
     this.element = element;
     this.value = value;
 
-    this.init ();
+    this.init ( observable );
 
   }
 
@@ -197,7 +200,7 @@ class CallableClassesStatic extends Callable<null | undefined | string | Functio
 
     this.element = element;
 
-    this.init ();
+    this.init ( observable );
 
   }
 
@@ -227,7 +230,7 @@ class CallableEventStatic extends Callable<null | undefined | EventListener> {
     this.element = element;
     this.event = event;
 
-    this.init ();
+    this.init ( observable );
 
   }
 
@@ -257,7 +260,7 @@ class CallablePropertyStatic extends Callable<null | undefined | boolean | numbe
     this.element = element;
     this.key = key;
 
-    this.init ();
+    this.init ( observable );
 
   }
 
@@ -287,7 +290,7 @@ class CallableStyleStatic extends Callable<null | undefined | number | string> {
     this.element = element;
     this.key = key;
 
-    this.init ();
+    this.init ( observable );
 
   }
 
@@ -315,7 +318,7 @@ class CallableStylesStatic extends Callable<null | undefined | string | Record<s
 
     this.element = element;
 
-    this.init ();
+    this.init ( observable );
 
   }
 
