@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {SYMBOL_ELEMENT, SYMBOL_OBSERVABLE_FROZEN} from '~/constants';
+import {SYMBOL_OBSERVABLE_FROZEN, SYMBOL_UNTRACKED} from '~/constants';
 import useReaction from '~/hooks/use_reaction';
 import isObservable from '~/methods/is_observable';
 import $$ from '~/methods/SS';
@@ -15,7 +15,7 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T | T[],
 
   if ( isFunction ( value ) ) {
 
-    if ( SYMBOL_ELEMENT in value || SYMBOL_OBSERVABLE_FROZEN in value ) {
+    if ( SYMBOL_UNTRACKED in value || SYMBOL_OBSERVABLE_FROZEN in value ) {
 
       resolveChild ( value (), setter, _dynamic );
 

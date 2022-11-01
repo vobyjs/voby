@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {SYMBOL_ELEMENT, SYMBOL_RESOLVE_UNWRAPPED, SYMBOL_UNTRACKED} from '~/constants';
+import {SYMBOL_RESOLVE_UNWRAPPED, SYMBOL_UNTRACKED} from '~/constants';
 import untrack from '~/methods/untrack';
 import type {Child, Element, FunctionMaybe} from '~/types';
 
@@ -17,7 +17,6 @@ function wrapElement ( element: FunctionMaybe<Child> ): Element {
 
   const wrapped = untrackThis.bind ( element );
 
-  wrapped[SYMBOL_ELEMENT] = true;
   wrapped[SYMBOL_RESOLVE_UNWRAPPED] = true;
   wrapped[SYMBOL_UNTRACKED] = true;
 
