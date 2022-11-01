@@ -699,7 +699,21 @@ const setEventStatic = (() => {
 
   return ( element: HTMLElement, event: string, value: null | undefined | EventListener ): void => {
 
-    if ( event.endsWith ( 'passive' ) ) {
+    if ( event in delegatedEvents ) {
+
+      if ( !( event in delegatedEventsListening ) ) {
+
+        delegatedEventsListening[event] = true;
+
+        delegate ( event );
+
+      }
+
+      const delegated = delegatedEvents[event];
+
+      element[delegated] = value;
+
+    } else if ( event.endsWith ( 'passive' ) ) {
 
       const isCapture = event.endsWith ( 'capturepassive' );
       const type = event.slice ( 2, -7 - ( isCapture ? 7 : 0 ) );
@@ -725,20 +739,6 @@ const setEventStatic = (() => {
       if ( value ) element.addEventListener ( type, value, { capture: true } );
 
       element[key] = value;
-
-    } else if ( event in delegatedEvents ) {
-
-      if ( !( event in delegatedEventsListening ) ) {
-
-        delegatedEventsListening[event] = true;
-
-        delegate ( event );
-
-      }
-
-      const delegated = delegatedEvents[event];
-
-      element[delegated] = value;
 
     } else {
 
