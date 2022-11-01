@@ -2,26 +2,17 @@
 /* IMPORT */
 
 import {SYMBOL_UNTRACKED_UNWRAPPED} from '~/constants';
-import untrack from '~/methods/untrack';
-import type {Child, Element, FunctionMaybe} from '~/types';
+import type {Child, Element} from '~/types';
 
 /* MAIN */
 
-function untrackThis ( this: FunctionMaybe<Child> ): Child {
+const wrapElement = ( element: () => Child ): Element => {
 
-  return untrack ( this );
+  element[SYMBOL_UNTRACKED_UNWRAPPED] = true;
 
-}
+  return element;
 
-function wrapElement ( element: FunctionMaybe<Child> ): Element {
-
-  const wrapped = untrackThis.bind ( element );
-
-  wrapped[SYMBOL_UNTRACKED_UNWRAPPED] = true;
-
-  return wrapped;
-
-}
+};
 
 /* EXPORT */
 

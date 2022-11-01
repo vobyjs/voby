@@ -1,6 +1,7 @@
 
 /* IMPORT */
 
+import untrack from '~/methods/untrack';
 import wrapElement from '~/methods/wrap_element';
 import {createHTMLNode, createSVGNode} from '~/utils/creators';
 import {isFunction, isNil, isNode, isString, isSVGElement, isVoidChild} from '~/utils/lang';
@@ -23,7 +24,11 @@ const createElement = <P = {}> ( component: Component<P>, props?: P | null, ..._
     if ( !isNil ( children ) ) props.children = children;
     if ( !isNil ( ref ) ) props.ref = ref;
 
-    return wrapElement ( () => component.call ( component, props as P ) ); //TSC
+    return wrapElement ( () => {
+
+      return untrack ( () => component.call ( component, props as P ) ); //TSC
+
+    });
 
   } else if ( isString ( component ) ) {
 
@@ -40,7 +45,7 @@ const createElement = <P = {}> ( component: Component<P>, props?: P | null, ..._
 
       if ( isSVG ) child['isSVG'] = true;
 
-      setProps ( child, props );
+      untrack ( () => setProps ( child, props ) );
 
       return child;
 
@@ -48,7 +53,7 @@ const createElement = <P = {}> ( component: Component<P>, props?: P | null, ..._
 
   } else if ( isNode ( component ) ) {
 
-    return wrapElement ( component );
+    return wrapElement ( () => component );
 
   } else {
 
