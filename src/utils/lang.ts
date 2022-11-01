@@ -113,7 +113,9 @@ const isSVGElement = (() => {
 
   return ( element: string ): boolean => {
 
-    return ( element in svgCache ) ? svgCache[element] : ( svgCache[element] = svgRe.test ( element ) && element.indexOf ( '-' ) === -1 );
+    const cached = svgCache[element];
+
+    return ( cached !== undefined ) ? cached : ( svgCache[element] = !element.includes ( '-' ) && svgRe.test ( element ) );
 
   };
 
