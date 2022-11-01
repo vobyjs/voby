@@ -1,7 +1,8 @@
 
 /* IMPORT */
 
-import {SYMBOL_TEMPLATE_ACCESSOR, SYMBOL_UNTRACKED_UNWRAPPED} from '~/constants';
+import {SYMBOL_TEMPLATE_ACCESSOR} from '~/constants';
+import wrapElement from '~/methods/wrap_element';
 import {assign, indexOf, isFunction, isString} from '~/utils/lang';
 import {setAttribute, setChildReplacement, setClasses, setEvent, setHTML, setProperty, setRef, setStyles} from '~/utils/setters';
 import type {Child, TemplateActionPath, TemplateActionWithNodes, TemplateActionWithPaths, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap} from '~/types';
@@ -285,8 +286,6 @@ const template = <P = {}> ( fn: (( props: P ) => Child) ): (( props: P ) => () =
     const apis = {setAttribute, setChildReplacement, setClasses, setEvent, setHTML, setProperty, setRef, setStyles};
     const reviver = fn.bind ( apis );
 
-    reviver[SYMBOL_UNTRACKED_UNWRAPPED] = true;
-
     return reviver;
 
   };
@@ -301,7 +300,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child) ): (( props: P ) => () =
 
       const clone = root.cloneNode ( true );
 
-      return reviver.bind ( undefined, clone, props );
+      return wrapElement ( reviver.bind ( undefined, clone, props ) );
 
     };
 
