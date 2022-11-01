@@ -648,26 +648,22 @@ const setEventStatic = (() => {
   //TODO: Maybe delegate more events: [onmousemove, onmouseout, onmouseover, onpointerdown, onpointermove, onpointerout, onpointerover, onpointerup, ontouchend, ontouchmove, ontouchstart]
 
   const delegatedEvents = <const> {
-    onauxclick: '_onauxclick',
-    onbeforeinput: '_onbeforeinput',
-    onclick: '_onclick',
-    ondblclick: '_ondblclick',
-    onfocusin: '_onfocusin',
-    onfocusout: '_onfocusout',
-    oninput: '_oninput',
-    onkeydown: '_onkeydown',
-    onkeyup: '_onkeyup',
-    onmousedown: '_onmousedown',
-    onmouseup: '_onmouseup'
+    onauxclick: ['_onauxclick', false],
+    onbeforeinput: ['_onbeforeinput', false],
+    onclick: ['_onclick', false],
+    ondblclick: ['_ondblclick', false],
+    onfocusin: ['_onfocusin', false],
+    onfocusout: ['_onfocusout', false],
+    oninput: ['_oninput', false],
+    onkeydown: ['_onkeydown', false],
+    onkeyup: ['_onkeyup', false],
+    onmousedown: ['_onmousedown', false],
+    onmouseup: ['_onmouseup', false]
   };
-
-  const delegatedEventsListening: Record<string, boolean> = {};
 
   const delegate = ( event: string ): void => {
 
-    const key: string | undefined = delegatedEvents[event];
-
-    if ( !key ) return;
+    const key = `_${event}`;
 
     document.addEventListener ( event.slice ( 2 ), event => {
 
@@ -699,19 +695,19 @@ const setEventStatic = (() => {
 
   return ( element: HTMLElement, event: string, value: null | undefined | EventListener ): void => {
 
-    if ( event in delegatedEvents ) {
+    const delegated = delegatedEvents[event];
 
-      if ( !( event in delegatedEventsListening ) ) {
+    if ( delegated ) {
 
-        delegatedEventsListening[event] = true;
+      if ( !delegated[1] ) { // Not actually delegating yet
+
+        delegated[1] = true;
 
         delegate ( event );
 
       }
 
-      const delegated = delegatedEvents[event];
-
-      element[delegated] = value;
+      element[delegated[0]] = value;
 
     } else if ( event.endsWith ( 'passive' ) ) {
 
