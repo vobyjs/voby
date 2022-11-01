@@ -3,16 +3,6 @@
 
 import {isString} from '~/utils/lang';
 
-/* HELPERS */
-
-const split = ( str: string ): string[] => {
-
-  if ( !str.includes ( ' ' ) ) return [str];
-
-  return str.split ( ' ' ).filter ( Boolean );
-
-};
-
 /* MAIN */
 
 // This function exists to optimize memory usage in some cases, where the classList API won't be touched without sacrificing performance
@@ -51,11 +41,21 @@ const classesToggle = ( element: HTMLElement, classes: string, force: null | und
 
   /* REGULAR PATH */
 
-  split ( classes ).forEach ( cls => {
+  if ( classes.includes ( ' ' ) ) {
 
-    element.classList.toggle ( cls, !!force );
+    classes.split ( ' ' ).forEach ( cls => {
 
-  });
+      if ( !cls.length ) return;
+
+      element.classList.toggle ( cls, !!force );
+
+    });
+
+  } else {
+
+    element.classList.toggle ( classes, !!force );
+
+  }
 
 };
 
