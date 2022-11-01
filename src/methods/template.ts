@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {SYMBOL_RESOLVE_UNWRAPPED, SYMBOL_TEMPLATE_ACCESSOR, SYMBOL_UNTRACKED} from '~/constants';
+import {SYMBOL_TEMPLATE_ACCESSOR, SYMBOL_UNTRACKED_UNWRAPPED} from '~/constants';
 import {assign, indexOf, isFunction, isString} from '~/utils/lang';
 import {setAttribute, setChildReplacement, setClasses, setEvent, setHTML, setProperty, setRef, setStyles} from '~/utils/setters';
 import type {Child, TemplateActionPath, TemplateActionWithNodes, TemplateActionWithPaths, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap} from '~/types';
@@ -285,8 +285,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child) ): (( props: P ) => () =
     const apis = {setAttribute, setChildReplacement, setClasses, setEvent, setHTML, setProperty, setRef, setStyles};
     const reviver = fn.bind ( apis );
 
-    reviver[SYMBOL_RESOLVE_UNWRAPPED] = true;
-    reviver[SYMBOL_UNTRACKED] = true;
+    reviver[SYMBOL_UNTRACKED_UNWRAPPED] = true;
 
     return reviver;
 
