@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {DIRECTIVE_OUTSIDE_SUPER_ROOT, HMR, SYMBOLS_DIRECTIVES} from '~/constants';
+import {DIRECTIVE_OUTSIDE_SUPER_ROOT, HMR, SYMBOLS_DIRECTIVES, SYMBOL_UNCACHED} from '~/constants';
 import useMicrotask from '~/hooks/use_microtask';
 import useReaction from '~/hooks/use_reaction';
 import isObservable from '~/methods/is_observable';
@@ -270,7 +270,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, 
 
   }
 
-  if ( nextLength === 0 || ( prevLength === 1 && prevFirst.nodeType === 8 ) ) { // Fast path for removing all children and/or replacing the placeholder
+  if ( nextLength === 0 || ( prevLength === 1 && prevFirst.nodeType === 8 ) || children[SYMBOL_UNCACHED] ) { // Fast path for removing all children and/or replacing the placeholder
 
     const {childNodes} = parent;
 

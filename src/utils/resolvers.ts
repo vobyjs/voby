@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {SYMBOL_OBSERVABLE_FROZEN, SYMBOL_UNTRACKED_UNWRAPPED} from '~/constants';
+import {SYMBOL_OBSERVABLE_FROZEN, SYMBOL_UNCACHED, SYMBOL_UNTRACKED_UNWRAPPED} from '~/constants';
 import useReaction from '~/hooks/use_reaction';
 import isObservable from '~/methods/is_observable';
 import $$ from '~/methods/SS';
@@ -32,6 +32,8 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T | T[],
   } else if ( isArray ( value ) ) {
 
     const values = resolveStatics ( value.flat ( Infinity ) ); // Makig a clone at the same time too //TODO: Combine the recursive flattening and the static resolution into a single pass
+
+    values[SYMBOL_UNCACHED] = value[SYMBOL_UNCACHED]; // Preserving this special symbol
 
     if ( values.some ( isObservable ) ) {
 
