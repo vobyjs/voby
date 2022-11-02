@@ -177,6 +177,10 @@ const App = ({ state }: { state: State }): JSX.Element => {
 
 const Results = ({ results }: { results: Results }): JSX.Element => {
 
+  const elapsed = Object.values ( results ).flat ().reduce ( ( acc, elapsed ) => acc + elapsed, 0 );
+
+  console.log ( elapsed );
+
   return (
     <pre>
       {JSON.stringify ( results, undefined, 2 )}
