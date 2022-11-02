@@ -195,7 +195,19 @@ render ( <App state={state} />, document.body );
 
 /* UI BENCH */
 
-const normalize = value => JSON.parse ( JSON.stringify ( value ) );
+const normalize = value => ({ // Removing major custom classes, which won't be reconciled properly
+  location: value.location,
+  anim: {
+    items: value.anim.items
+  },
+  table: {
+    items: value.table.items
+  },
+  tree: {
+    root: value.tree.root
+  }
+});
+
 const onUpdate = stateNext => store.reconcile ( state, normalize ( stateNext ) );
 const onFinish = results => render ( <Results results={results} />, document.body );
 
