@@ -1,15 +1,16 @@
 
 /* IMPORT */
 
-// import {createElement, Fragment} from 'voby';
+import {createElement, Fragment} from 'voby';
 import {$, render, template, useSelector, For} from 'voby';
 import type {FunctionMaybe, Observable, ObservableMaybe} from 'voby';
 
 /* TYPES */
 
-type IDatum = { id: number, label: Observable<string> };
-
-type IData = IDatum[];
+type IDatum = {
+  id: number,
+  label: Observable<string>
+};
 
 /* HELPERS */
 
@@ -22,8 +23,8 @@ const buildData = (() => {
   const colors = ['red', 'yellow', 'blue', 'green', 'pink', 'brown', 'purple', 'brown', 'white', 'black', 'orange'];
   const nouns = ['table', 'chair', 'house', 'bbq', 'desk', 'car', 'pony', 'cookie', 'sandwich', 'burger', 'pizza', 'mouse', 'keyboard'];
   let uuid = 1;
-  return ( length: number ): IData => {
-    const data: IData = new Array ( length );
+  return ( length: number ): IDatum[] => {
+    const data: IDatum[] = new Array ( length );
     for ( let i = 0; i < length; i++ ) {
       const id = uuid++;
       const adjective = adjectives[rand ( adjectives.length )];
@@ -98,26 +99,32 @@ const Model = new class {
 
 };
 
-/* MAIN */
+/* COMPONENTS */
 
-const Button = ({ id, text, onClick }: { id: string | number, text: string, onClick: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
+const Button = ({ id, text, onClick }: { id: FunctionMaybe<string | number>, text: FunctionMaybe<string>, onClick: ObservableMaybe<(( event: MouseEvent ) => void)> }): JSX.Element => (
   <div class="col-sm-6 smallpad">
-    <button id={id} class="btn btn-primary btn-block" type="button" onClick={onClick}>{text}</button>
+    <button id={id} class="btn btn-primary btn-block" type="button" onClick={onClick}>
+      {text}
+    </button>
   </div>
 );
 
-const Row = template (({ id, label, className, onSelect, onRemove }: { id: FunctionMaybe<string | number>, label: FunctionMaybe<string>, className: FunctionMaybe<Record<string, FunctionMaybe<boolean>>>, onSelect: ObservableMaybe<(( event: MouseEvent ) => any)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => any)> }): JSX.Element => (
+const Row = template (({ id, label, className, onSelect, onRemove }: { id: FunctionMaybe<string | number>, label: FunctionMaybe<string>, className: FunctionMaybe<Record<string, FunctionMaybe<boolean>>>, onSelect: ObservableMaybe<(( event: MouseEvent ) => void)>, onRemove: ObservableMaybe<(( event: MouseEvent ) => void)> }): JSX.Element => (
   <tr class={className}>
-    <td class="col-md-1">{id}</td>
+    <td class="col-md-1">
+      {id}
+    </td>
     <td class="col-md-4">
-      <a onClick={onSelect}>{label}</a>
+      <a onClick={onSelect}>
+        {label}
+      </a>
     </td>
     <td class="col-md-1">
       <a onClick={onRemove}>
-        <span class="glyphicon glyphicon-remove" ariaHidden={true}></span>
+        <span class="glyphicon glyphicon-remove" ariaHidden={true} />
       </a>
     </td>
-    <td class="col-md-6"></td>
+    <td class="col-md-6" />
   </tr>
 ));
 
@@ -159,8 +166,10 @@ const App = (): JSX.Element => (
         <Rows data={Model.data} isSelected={useSelector ( Model.selected )} />
       </tbody>
     </table>
-    <span class="preloadicon glyphicon glyphicon-remove" ariaHidden={true}></span>
+    <span class="preloadicon glyphicon glyphicon-remove" ariaHidden={true} />
   </div>
 );
+
+/* RENDER */
 
 render ( <App />, document.getElementById ( 'app' ) );
