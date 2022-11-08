@@ -82,7 +82,7 @@ const Model = (() => {
   };
 
   const clear = (): void => {
-    $data ( [] );
+    runWith ( 0 );
   };
 
   const remove = ( id: number ): void  => {
