@@ -44,9 +44,9 @@ const Model = new class {
 
   /* STATE */
 
+  selected: Observable<number>;
   data: Observable<IDatum[]>;
   page: Observable<Observable<IDatum[]>>;
-  selected: Observable<number>;
 
   /* CONSTRUCTOR */
 
@@ -57,15 +57,15 @@ const Model = new class {
   /* API */
 
   init = (): void => {
+    this.selected = $( -1 );
     this.data = $<IDatum[]>( [] );
     this.page = $( this.data );
-    this.selected = $( -1 );
   };
 
   reset = (): void => {
+    this.selected = $( -1 );
     this.data = $<IDatum[]>( [] );
     this.page ( () => this.data );
-    this.selected = $( -1 );
   };
 
   run0 = (): void => {
