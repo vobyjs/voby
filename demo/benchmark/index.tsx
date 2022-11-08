@@ -139,38 +139,32 @@ const Rows = ({ data }: { data: FunctionMaybe<IDatum[]> }): JSX.Element => (
   </For>
 );
 
-const App = (): JSX.Element => {
-
-  const {$data, run, runLots, add, update, swapRows, clear, remove, select} = Model;
-
-  return (
-    <div class="container">
-      <div class="jumbotron">
-        <div class="row">
-          <div class="col-md-6">
-            <h1>Voby</h1>
-          </div>
-          <div class="col-md-6">
-            <div class="row">
-              <Button id="run" text="Create 1,000 rows" onClick={run} />
-              <Button id="runlots" text="Create 10,000 rows" onClick={runLots} />
-              <Button id="add" text="Append 1,000 rows" onClick={add} />
-              <Button id="update" text="Update every 10th row" onClick={update} />
-              <Button id="clear" text="Clear" onClick={clear} />
-              <Button id="swaprows" text="Swap Rows" onClick={swapRows} />
-            </div>
+const App = (): JSX.Element => (
+  <div class="container">
+    <div class="jumbotron">
+      <div class="row">
+        <div class="col-md-6">
+          <h1>Voby</h1>
+        </div>
+        <div class="col-md-6">
+          <div class="row">
+            <Button id="run" text="Create 1,000 rows" onClick={Model.run} />
+            <Button id="runlots" text="Create 10,000 rows" onClick={Model.runLots} />
+            <Button id="add" text="Append 1,000 rows" onClick={Model.add} />
+            <Button id="update" text="Update every 10th row" onClick={Model.update} />
+            <Button id="clear" text="Clear" onClick={Model.clear} />
+            <Button id="swaprows" text="Swap Rows" onClick={Model.swapRows} />
           </div>
         </div>
       </div>
-      <table class="table table-hover table-striped test-data">
-        <tbody>
-          <Rows data={$data} />
-        </tbody>
-      </table>
-      <span class="preloadicon glyphicon glyphicon-remove" ariaHidden={true}></span>
     </div>
-  );
-
-};
+    <table class="table table-hover table-striped test-data">
+      <tbody>
+        <Rows data={Model.$data} />
+      </tbody>
+    </table>
+    <span class="preloadicon glyphicon glyphicon-remove" ariaHidden={true}></span>
+  </div>
+);
 
 render ( <App />, document.getElementById ( 'app' ) );
