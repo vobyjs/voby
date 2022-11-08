@@ -44,8 +44,15 @@ const Model = new class {
 
   /* STATE */
 
-  data = $<IDatum[]>( [] );
-  selected = $( -1 );
+  data: Observable<IDatum[]>;
+  selected: Observable<number>;
+
+  /* CONSTRUCTOR */
+
+  constructor () {
+    this.data = $<IDatum[]>( [] );
+    this.selected = $( -1 );
+  }
 
   /* API */
 
