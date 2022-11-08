@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import {createElement, Fragment} from 'voby';
-import {$, render, template, useSelector, For} from 'voby';
+import {$, render, resolve, template, useRoot, useSelector, For} from 'voby';
 import type {FunctionMaybe, Observable, ObservableMaybe} from 'voby';
 
 /* TYPES */
@@ -45,6 +45,7 @@ const Model = new class {
   /* STATE */
 
   data: Observable<IDatum[]>;
+  page: Observable<Observable<IDatum[]>>;
   selected: Observable<number>;
 
   /* CONSTRUCTOR */
@@ -57,6 +58,13 @@ const Model = new class {
 
   init = (): void => {
     this.data = $<IDatum[]>( [] );
+    this.page = $( this.data );
+    this.selected = $( -1 );
+  };
+
+  reset = (): void => {
+    this.data = $<IDatum[]>( [] );
+    this.page ( () => this.data );
     this.selected = $( -1 );
   };
 
@@ -73,6 +81,7 @@ const Model = new class {
   };
 
   runWith = ( length: number ): void => {
+    this.reset ();
     this.data ( buildData ( length ) );
   };
 
@@ -153,6 +162,14 @@ const Rows = ({ data, isSelected }: { data: FunctionMaybe<IDatum[]>, isSelected:
   </For>
 );
 
+const RowsWithOptimizedCleanup = ({ page }: { page: () => FunctionMaybe<IDatum[]> }): JSX.Element => {
+  return (): JSX.Element => {
+    const data = page ();
+    const isSelected = useSelector ( Model.selected );
+    return useRoot ( () => resolve ( <Rows data={data} isSelected={isSelected} /> ) );
+  }
+};
+
 const App = (): JSX.Element => (
   <div class="container">
     <div class="jumbotron">
@@ -174,7 +191,8 @@ const App = (): JSX.Element => (
     </div>
     <table class="table table-hover table-striped test-data">
       <tbody>
-        <Rows data={Model.data} isSelected={useSelector ( Model.selected )} />
+        {/* <Rows data={() => Model.page ()()} isSelected={useSelector ( Model.selected )} /> */}
+        <RowsWithOptimizedCleanup page={Model.page} />
       </tbody>
     </table>
     <span class="preloadicon glyphicon glyphicon-remove" ariaHidden={true} />
