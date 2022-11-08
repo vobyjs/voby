@@ -125,9 +125,23 @@ const Row = template (({ id, label, className, onSelect, onRemove }: { id: Funct
   </tr>
 ));
 
+const Rows = ({ data }: { data: FunctionMaybe<IDatum[]> }): JSX.Element => (
+  <For values={data}>
+    {( datum: IDatum ) => {
+      const {id, label} = datum;
+      const selected = Model.isSelected ( id );
+      const className = { danger: selected };
+      const onSelect = Model.select.bind ( undefined, id );
+      const onRemove = Model.remove.bind ( undefined, id );
+      const props = {id, label, className, onSelect, onRemove};
+      return Row ( props );
+    }}
+  </For>
+);
+
 const App = (): JSX.Element => {
 
-  const {$data, run, runLots, add, update, swapRows, clear, remove, select, isSelected} = Model;
+  const {$data, run, runLots, add, update, swapRows, clear, remove, select} = Model;
 
   return (
     <div class="container">
@@ -150,17 +164,7 @@ const App = (): JSX.Element => {
       </div>
       <table class="table table-hover table-striped test-data">
         <tbody>
-          <For values={$data}>
-            {( datum: IDatum ) => {
-              const {id, label} = datum;
-              const selected = isSelected ( id );
-              const className = { danger: selected };
-              const onSelect = select.bind ( undefined, id );
-              const onRemove = remove.bind ( undefined, id );
-              const props = {id, label, className, onSelect, onRemove};
-              return Row ( props );
-            }}
-          </For>
+          <Rows data={$data} />
         </tbody>
       </table>
       <span class="preloadicon glyphicon glyphicon-remove" ariaHidden={true}></span>
