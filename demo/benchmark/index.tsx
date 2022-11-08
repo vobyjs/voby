@@ -1,9 +1,9 @@
 
 /* IMPORT */
 
-import {FunctionMaybe, Observable, ObservableMaybe} from 'voby';
-import {$, render, template, useSelector, For} from 'voby';
 // import {createElement, Fragment} from 'voby';
+import {$, render, template, useSelector, For} from 'voby';
+import type {FunctionMaybe, Observable, ObservableMaybe} from 'voby';
 
 /* TYPES */
 
@@ -39,68 +39,64 @@ const buildData = (() => {
 
 /* MODEL */
 
-const Model = (() => {
+const Model = new class {
 
   /* STATE */
 
-  const $data = $<IDatum[]>( [] );
-  const $selected = $( -1 );
+  data = $<IDatum[]>( [] );
+  selected = $( -1 );
 
   /* API */
 
-  const run = (): void => {
-    runWith ( 1000 );
+  run0 = (): void => {
+    this.runWith ( 0 );
   };
 
-  const runLots = (): void => {
-    runWith ( 10000 );
+  run1000 = (): void => {
+    this.runWith ( 1000 );
   };
 
-  const runWith = ( length: number ): void => {
-    $data ( buildData ( length ) );
+  run10000 = (): void => {
+    this.runWith ( 10000 );
   };
 
-  const add = (): void => {
-    $data ( data => [...data, ...buildData ( 1000 )] );
+  runWith = ( length: number ): void => {
+    this.data ( buildData ( length ) );
   };
 
-  const update = (): void => {
-    const data = $data ();
+  add = (): void => {
+    this.data ( data => [...data, ...buildData ( 1000 )] );
+  };
+
+  update = (): void => {
+    const data = this.data ();
     for ( let i = 0, l = data.length; i < l; i += 10 ) {
       data[i].label ( label => label + ' !!!' );
     }
   };
 
-  const swapRows = (): void => {
-    const data = $data ().slice ();
+  swapRows = (): void => {
+    const data = this.data ().slice ();
     if ( data.length <= 998 ) return;
     const datum1 = data[1];
     const datum998 = data[998];
     data[1] = datum998;
     data[998] = datum1;
-    $data ( data );
+    this.data ( data );
   };
 
-  const clear = (): void => {
-    runWith ( 0 );
-  };
-
-  const remove = ( id: number ): void  => {
-    $data ( data => {
+  remove = ( id: number ): void  => {
+    this.data ( data => {
       const idx = data.findIndex ( datum => datum.id === id );
       return [...data.slice ( 0, idx ), ...data.slice ( idx + 1 )];
     });
   };
 
-  const select = ( id: number ): void => {
-    $selected ( id );
+  select = ( id: number ): void => {
+    this.selected ( id );
   };
 
-  const isSelected = useSelector ( $selected );
-
-  return { $data, $selected, run, runLots, runWith, add, update, swapRows, clear, remove, select, isSelected };
-
-})();
+};
 
 /* MAIN */
 
@@ -125,11 +121,11 @@ const Row = template (({ id, label, className, onSelect, onRemove }: { id: Funct
   </tr>
 ));
 
-const Rows = ({ data }: { data: FunctionMaybe<IDatum[]> }): JSX.Element => (
+const Rows = ({ data, isSelected }: { data: FunctionMaybe<IDatum[]>, isSelected: ( id: number ) => FunctionMaybe<boolean> }): JSX.Element => (
   <For values={data}>
     {( datum: IDatum ) => {
       const {id, label} = datum;
-      const selected = Model.isSelected ( id );
+      const selected = isSelected ( id );
       const className = { danger: selected };
       const onSelect = Model.select.bind ( undefined, id );
       const onRemove = Model.remove.bind ( undefined, id );
@@ -148,11 +144,11 @@ const App = (): JSX.Element => (
         </div>
         <div class="col-md-6">
           <div class="row">
-            <Button id="run" text="Create 1,000 rows" onClick={Model.run} />
-            <Button id="runlots" text="Create 10,000 rows" onClick={Model.runLots} />
+            <Button id="run" text="Create 1,000 rows" onClick={Model.run1000} />
+            <Button id="runlots" text="Create 10,000 rows" onClick={Model.run10000} />
             <Button id="add" text="Append 1,000 rows" onClick={Model.add} />
             <Button id="update" text="Update every 10th row" onClick={Model.update} />
-            <Button id="clear" text="Clear" onClick={Model.clear} />
+            <Button id="clear" text="Clear" onClick={Model.run0} />
             <Button id="swaprows" text="Swap Rows" onClick={Model.swapRows} />
           </div>
         </div>
@@ -160,7 +156,7 @@ const App = (): JSX.Element => (
     </div>
     <table class="table table-hover table-striped test-data">
       <tbody>
-        <Rows data={Model.$data} />
+        <Rows data={Model.data} isSelected={useSelector ( Model.selected )} />
       </tbody>
     </table>
     <span class="preloadicon glyphicon glyphicon-remove" ariaHidden={true}></span>
