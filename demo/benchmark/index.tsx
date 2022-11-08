@@ -50,11 +50,15 @@ const Model = new class {
   /* CONSTRUCTOR */
 
   constructor () {
-    this.data = $<IDatum[]>( [] );
-    this.selected = $( -1 );
+    this.init ();
   }
 
   /* API */
+
+  init = (): void => {
+    this.data = $<IDatum[]>( [] );
+    this.selected = $( -1 );
+  };
 
   run0 = (): void => {
     this.runWith ( 0 );
