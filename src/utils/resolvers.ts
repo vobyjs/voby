@@ -31,11 +31,11 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T | T[],
 
   } else if ( isArray ( value ) ) {
 
-    const values = resolveStatics ( value.flat ( Infinity ) ); // Makig a clone at the same time too //TODO: Combine the recursive flattening and the static resolution into a single pass
+    const [values, hasObservables] = resolveArraysAndStatics ( value );
 
     values[SYMBOL_UNCACHED] = value[SYMBOL_UNCACHED]; // Preserving this special symbol
 
-    if ( values.some ( isObservable ) ) {
+    if ( hasObservables ) {
 
       useReaction ( () => {
 
@@ -124,25 +124,62 @@ const resolveResolved = <T> ( value: T, values: any[] ): any => {
 
 };
 
-const resolveStatics = ( values: any[] ): any => { // It's important to resolve these soon enough or they will be re-created multiple times
+const resolveArraysAndStatics = (() => {
 
-  for ( let i = 0, l = values.length; i < l; i++ ) {
+  // This function does 3 things:
+  // 1. It deeply flattens the array, only if actually needed though (!)
+  // 2. It resolves statics, it's important to resolve them soon enough or they will be re-created multiple times (!)
+  // 3. It checks if we found any Observables along the way, avoiding looping over the array another time in the future
 
-    const value = values[i];
-    const type = typeof value;
+  const DUMMY_RESOLVED = [];
 
-    if ( type === 'string' || type === 'number' || type === 'bigint' ) {
+  const resolveArraysAndStaticsInner = ( values: any[], resolved: any[], hasObservables: boolean ): [any[], boolean] => {
 
-      values[i] = createText ( value );
+    for ( let i = 0, l = values.length; i < l; i++ ) {
+
+      const value = values[i];
+      const type = typeof value;
+
+      if ( type === 'string' || type === 'number' || type === 'bigint' ) { // Static
+
+        if ( resolved === DUMMY_RESOLVED ) resolved = values.slice ( 0, i );
+
+        resolved.push ( createText ( value ) );
+
+      } else if ( type === 'object' && isArray ( value ) ) { // Array
+
+        if ( resolved === DUMMY_RESOLVED ) resolved = values.slice ( 0, i );
+
+        hasObservables = resolveArraysAndStaticsInner ( value, resolved, hasObservables )[1];
+
+      } else if ( type === 'function' && isObservable ( value ) ) { // Observable
+
+        if ( resolved !== DUMMY_RESOLVED ) resolved.push ( value );
+
+        hasObservables = true;
+
+      } else { // Something else
+
+        if ( resolved !== DUMMY_RESOLVED ) resolved.push ( value );
+
+      }
 
     }
 
-  }
+    if ( resolved === DUMMY_RESOLVED ) resolved = values;
 
-  return values;
+    return [resolved, hasObservables];
 
-};
+  };
+
+  return ( values: any[] ): [any[], boolean] => {
+
+    return resolveArraysAndStaticsInner ( values, DUMMY_RESOLVED, false );
+
+  };
+
+})();
 
 /* EXPORT */
 
-export {resolveChild, resolveClass, resolveResolved, resolveStatics};
+export {resolveChild, resolveClass, resolveResolved, resolveArraysAndStatics};
