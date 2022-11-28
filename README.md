@@ -945,9 +945,9 @@ const App = () => {
   const Content = () => {
     const resource = useResource ( () => makeSomePromise () );
     return (
-      <Show when={() => !resource ().pending && !resource ().error}>
+      <If when={() => !resource ().pending && !resource ().error}>
         {resource ().value}
-      </Show>
+      </If>
     );
   };
   const Spinner = () => {
