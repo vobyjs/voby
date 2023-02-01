@@ -1155,7 +1155,7 @@ declare namespace JSX {
     name?: FunctionMaybe<Nullable<string>>,
     required?: FunctionMaybe<Nullable<boolean>>,
     size?: FunctionMaybe<Nullable<number>>,
-    value?: FunctionMaybe<Nullable<string | ReadonlyArray<string> | number>>,
+    value?: FunctionMaybe<Nullable<string>>,
     onChange?: ObservableMaybe<Nullable<KeyboardEventHandler<T>>>
   }
 
