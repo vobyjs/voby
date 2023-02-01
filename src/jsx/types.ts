@@ -345,6 +345,8 @@ declare namespace JSX {
     onScrollPassive?: ObservableMaybe<Nullable<UIEventHandler<T>>>,
     onScrollCapture?: ObservableMaybe<Nullable<UIEventHandler<T>>>,
     onScrollCapturePassive?: ObservableMaybe<Nullable<UIEventHandler<T>>>,
+    onScrollEnd?: ObservableMaybe<Nullable<UIEventHandler<T>>>,
+    onScrollEndPassive?: ObservableMaybe<Nullable<UIEventHandler<T>>>,
     /* WHEEL EVENTS */
     onWheel?: ObservableMaybe<Nullable<WheelEventHandler<T>>>,
     onWheelPassive?: ObservableMaybe<Nullable<WheelEventHandler<T>>>,
