@@ -402,7 +402,7 @@ declare namespace JSX {
     cols?: FunctionMaybe<Nullable<number>>,
     colSpan?: FunctionMaybe<Nullable<number>>,
     content?: FunctionMaybe<Nullable<string>>,
-    contentEditable?: FunctionMaybe<Nullable<boolean | 'true' | 'false' | 'inherit'>>,
+    contentEditable?: FunctionMaybe<Nullable<boolean | 'caret' | 'events' | 'plaintext-only' | 'typing' | 'inherit'>>,
     contextMenu?: FunctionMaybe<Nullable<string>>,
     controls?: FunctionMaybe<Nullable<boolean>>,
     controlsList?: FunctionMaybe<Nullable<string>>,
