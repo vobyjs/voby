@@ -236,6 +236,8 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, 
 
   const children = ( Array.isArray ( child ) ? child : [child] ) as Node[]; //TSC
 
+  let nextHasStaticChildren = false;
+
   for ( let i = 0, l = children.length; i < l; i++ ) {
 
     const child = children[i];
@@ -243,9 +245,13 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, 
 
     if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
+      nextHasStaticChildren = true;
+
       FragmentUtils.pushNode ( fragmentNext, createText ( child ) );
 
     } else if ( type === 'object' && child !== null && typeof child.nodeType === 'number' ) {
+
+      nextHasStaticChildren = true;
 
       FragmentUtils.pushNode ( fragmentNext, child );
 
@@ -263,6 +269,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, 
 
   let next = FragmentUtils.getChildren ( fragmentNext );
   let nextLength = fragmentNext.length;
+  let nextHasDynamicChildren = !nextHasStaticChildren && nextLength > 0; // Just a heuristic, not exact, good enough
 
   if ( nextLength === 0 && prevLength === 1 && prevFirst.nodeType === 8 ) { // It's a placeholder already, no need to replace it
 
@@ -342,19 +349,23 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, 
 
   }
 
-  try {
+  if ( prevLength > 0 || nextHasStaticChildren || !nextHasDynamicChildren ) { // Some diffs can be safely skipped, if we only added some dynamic children already //FIXME: Children added dynamically must be taken into account perfectly though, this most probably isn't perfect, "prev" may not be representative of the current state, when dynamic children are added
 
-    diff ( parent, prev, next, prevSibling );
+    try {
 
-  } catch ( error: unknown ) {
+      diff ( parent, prev, next, prevSibling );
 
-    if ( HMR ) { // Suppressing error during HMR, to try to keep the page working
+    } catch ( error: unknown ) {
 
-      console.error ( error );
+      if ( HMR ) { // Suppressing error during HMR, to try to keep the page working
 
-    } else {
+        console.error ( error );
 
-      throw error;
+      } else {
+
+        throw error;
+
+      }
 
     }
 
