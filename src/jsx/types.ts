@@ -530,6 +530,7 @@ declare namespace JSX {
     suppressHydrationWarning?: FunctionMaybe<Nullable<boolean>>,
     translate?: FunctionMaybe<Nullable<'yes' | 'no'>>,
     unselectable?: FunctionMaybe<Nullable<'on' | 'off'>>,
+    virtualKeyboardPolicy?: FunctionMaybe<Nullable<'auto' | 'manual'>>,
 
     // RDFa Attributes
     about?: FunctionMaybe<Nullable<string>>,
