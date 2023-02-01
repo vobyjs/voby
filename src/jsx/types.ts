@@ -440,6 +440,7 @@ declare namespace JSX {
     httpEquiv?: FunctionMaybe<Nullable<string>>,
     icon?: FunctionMaybe<Nullable<string>>,
     id?: FunctionMaybe<Nullable<string | number>>,
+    inert?: FunctionMaybe<Nullable<boolean>>,
     inputMode?: FunctionMaybe<Nullable<'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search'>>,
     integrity?: FunctionMaybe<Nullable<string>>,
     is?: FunctionMaybe<Nullable<string>>,
