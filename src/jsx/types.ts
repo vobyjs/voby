@@ -528,8 +528,6 @@ declare namespace JSX {
     disablePictureInPicture?: FunctionMaybe<Nullable<boolean>>,
     results?: FunctionMaybe<Nullable<number>>,
     security?: FunctionMaybe<Nullable<string>>,
-    suppressContentEditableWarning?: FunctionMaybe<Nullable<boolean>>,
-    suppressHydrationWarning?: FunctionMaybe<Nullable<boolean>>,
     translate?: FunctionMaybe<Nullable<'yes' | 'no'>>,
     unselectable?: FunctionMaybe<Nullable<'on' | 'off'>>,
     virtualKeyboardPolicy?: FunctionMaybe<Nullable<'auto' | 'manual'>>,
