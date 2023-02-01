@@ -77,12 +77,12 @@
   ],
   "dependencies": {
     "htm": "^3.1.1",
-    "oby": "^12.5.0"
+    "oby": "^12.5.4"
   },
   "devDependencies": {
-    "@types/node": "^18.11.9",
-    "tsex": "^1.1.2",
-    "typescript": "^4.9.3",
+    "@types/node": "^18.11.18",
+    "tsex": "^1.1.5",
+    "typescript": "^4.9.5",
     "voby-vite": "^1.0.1"
   }
 }
