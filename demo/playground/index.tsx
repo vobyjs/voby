@@ -917,6 +917,110 @@ const TestInputLabelFor = (): JSX.Element => {
   );
 };
 
+const TestSelectStaticOption = (): JSX.Element => {
+  const ref = $<HTMLSelectElement>();
+  const assert = () => console.assert ( ref ()?.value === 'bar' );
+  setTimeout ( assert, 1 );
+  return (
+    <>
+      <h3>Select - Static Option</h3>
+      <select ref={ref} name="select-static-option">
+        <option value="foo" selected={false}>foo</option>
+        <option value="bar" selected={true}>bar</option>
+        <option value="baz" selected={false}>baz</option>
+        <option value="qux" selected={false}>qux</option>
+      </select>
+    </>
+  );
+};
+
+TestSelectStaticOption.test = {
+  static: true,
+  snapshots: [
+    '<select name="select-static-option"><option value="foo">foo</option><option value="bar">bar</option><option value="baz">baz</option><option value="qux">qux</option></select>'
+  ]
+};
+
+// const TestSelectStaticValue = (): JSX.Element => {
+//   const ref = $<HTMLSelectElement>();
+//   const assert = () => console.assert ( ref ()?.value === 'bar' );
+//   setTimeout ( assert, 1 );
+//   return (
+//     <>
+//       <h3>Select - Static Value</h3>
+//       <select ref={ref} name="select-static-value" value="bar">
+//         <option value="foo">foo</option>
+//         <option value="bar">bar</option>
+//         <option value="baz">baz</option>
+//         <option value="qux">qux</option>
+//       </select>
+//     </>
+//   );
+// };
+
+// TestSelectStaticValue.test = {
+//   static: true,
+//   snapshots: [
+//     '<select name="select-static-value"><option value="foo">foo</option><option value="bar">bar</option><option value="baz">baz</option><option value="qux">qux</option></select>'
+//   ]
+// };
+
+const TestSelectObservableOption = (): JSX.Element => {
+  const ref = $<HTMLSelectElement>();
+  const branch = $(true);
+  const assert = () => console.assert ( ref ()?.value === ( branch () ? 'bar' : 'qux' ) );
+  const toggle = () => branch ( prev => !prev );
+  useInterval ( toggle, TEST_INTERVAL );
+  useInterval ( assert, TEST_INTERVAL );
+  setTimeout ( assert, 1 );
+  return (
+    <>
+      <h3>Select - Observable Option</h3>
+      <select ref={ref} name="select-observable-option">
+        <option value="foo" selected={false}>foo</option>
+        <option value="bar" selected={branch}>bar</option>
+        <option value="baz" selected={false}>baz</option>
+        <option value="qux" selected={() => !branch ()}>qux</option>
+      </select>
+    </>
+  );
+};
+
+TestSelectObservableOption.test = {
+  static: true,
+  snapshots: [
+    '<select name="select-observable-option"><option value="foo">foo</option><option value="bar">bar</option><option value="baz">baz</option><option value="qux">qux</option></select>'
+  ]
+};
+
+// const TestSelectObservableValue = (): JSX.Element => {
+//   const ref = $<HTMLSelectElement>();
+//   const value = $('bar');
+//   const assert = () => console.assert ( ref ()?.value === value () );
+//   const toggle = () => value ( prev => prev === 'bar' ? 'qux' : 'bar' );
+//   useInterval ( toggle, TEST_INTERVAL );
+//   useInterval ( assert, TEST_INTERVAL );
+//   setTimeout ( assert, 1 );
+//   return (
+//     <>
+//       <h3>Select - Observable Value</h3>
+//       <select ref={ref} name="select-observable-value" value={value}>
+//         <option value="foo">foo</option>
+//         <option value="bar">bar</option>
+//         <option value="baz">baz</option>
+//         <option value="qux">qux</option>
+//       </select>
+//     </>
+//   );
+// };
+
+// TestSelectObservableValue.test = {
+//   static: true,
+//   snapshots: [
+//     '<select name="select-observable-value"><option value="foo">foo</option><option value="bar">bar</option><option value="baz">baz</option><option value="qux">qux</option></select>'
+//   ]
+// };
+
 const TestIdStatic = (): JSX.Element => {
   return (
     <>
@@ -5790,6 +5894,10 @@ const Test = (): JSX.Element => {
       <TestPropertyValueFunction />
       <TestPropertyValueRemoval />
       <TestInputLabelFor />
+      <TestSnapshots Component={TestSelectStaticOption} />
+      {/* <TestSnapshots Component={TestSelectStaticValue} /> */}
+      <TestSnapshots Component={TestSelectObservableOption} />
+      {/* <TestSnapshots Component={TestSelectObservableValue} /> */}
       <TestSnapshots Component={TestIdStatic} />
       <TestSnapshots Component={TestIdObservable} />
       <TestSnapshots Component={TestIdFunction} />
