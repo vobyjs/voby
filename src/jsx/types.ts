@@ -470,6 +470,7 @@ declare namespace JSX {
     noValidate?: FunctionMaybe<Nullable<boolean>>,
     open?: FunctionMaybe<Nullable<boolean>>,
     optimum?: FunctionMaybe<Nullable<number>>,
+    part?: FunctionMaybe<Nullable<string>>,
     pattern?: FunctionMaybe<Nullable<string>>,
     ping?: FunctionMaybe<Nullable<string>>,
     placeholder?: FunctionMaybe<Nullable<string>>,
