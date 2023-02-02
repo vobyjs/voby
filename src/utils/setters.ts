@@ -795,6 +795,14 @@ const setPropertyStatic = ( element: HTMLElement, key: string, value: null | und
 
   }
 
+  if ( key === 'value' && element.tagName === 'SELECT' && !element['_$inited'] ) {
+
+    element['_$inited'] = true;
+
+    queueMicrotask ( () => element[key] = value );
+
+  }
+
   element[key] = value;
 
   if ( isNil ( value ) ) {
