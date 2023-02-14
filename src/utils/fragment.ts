@@ -1,152 +1,152 @@
 
 /* IMPORT */
 
-import type {FragmentNode, FragmentFragment, Fragment} from '~/types';
+import type { FragmentNode, FragmentFragment, Fragment } from '../types'
 
 /* HELPERS */
 
-const NOOP_CHILDREN: Node[] = [];
+const NOOP_CHILDREN: Node[] = []
 
 /* MAIN */
 
 const FragmentUtils = {
 
-  make: (): Fragment => {
+    make: (): Fragment => {
 
-    return {
-      values: undefined,
-      length: 0
-    };
+        return {
+            values: undefined,
+            length: 0
+        }
 
-  },
+    },
 
-  makeWithNode: ( node: Node ): FragmentNode => {
+    makeWithNode: (node: Node): FragmentNode => {
 
-    return {
-      values: node,
-      length: 1
-    };
+        return {
+            values: node,
+            length: 1
+        }
 
-  },
+    },
 
-  makeWithFragment: ( fragment: Fragment ): FragmentFragment => {
+    makeWithFragment: (fragment: Fragment): FragmentFragment => {
 
-    return {
-      values: fragment,
-      fragmented: true,
-      length: 1
-    };
+        return {
+            values: fragment,
+            fragmented: true,
+            length: 1
+        }
 
-  },
+    },
 
-  getChildrenFragmented: ( thiz: Fragment, children: Node[] = [] ): Node[] => {
+    getChildrenFragmented: (thiz: Fragment, children: Node[] = []): Node[] => {
 
-    const {values, length} = thiz;
+        const { values, length } = thiz
 
-    if ( !length ) return children;
+        if (!length) return children
 
-    if ( values instanceof Array ) {
+        if (values instanceof Array) {
 
-      for ( let i = 0, l = values.length; i < l; i++ ) {
+            for (let i = 0, l = values.length; i < l; i++) {
 
-        const value = values[i];
+                const value = values[i]
 
-        if ( value instanceof Node ) {
+                if (value instanceof Node) {
 
-          children.push ( value );
+                    children.push(value)
+
+                } else {
+
+                    FragmentUtils.getChildrenFragmented(value, children)
+
+                }
+
+            }
 
         } else {
 
-          FragmentUtils.getChildrenFragmented ( value, children );
+            if (values instanceof Node) {
+
+                children.push(values)
+
+            } else {
+
+                FragmentUtils.getChildrenFragmented(values, children)
+
+            }
 
         }
 
-      }
+        return children
 
-    } else {
+    },
 
-      if ( values instanceof Node ) {
+    getChildren: (thiz: Fragment): Node | Node[] => {
 
-        children.push ( values );
+        if (!thiz.length) return NOOP_CHILDREN
 
-      } else {
+        if (!thiz.fragmented) return thiz.values as any
 
-        FragmentUtils.getChildrenFragmented ( values, children );
+        if (thiz.length === 1) return FragmentUtils.getChildren(thiz.values)
 
-      }
+        return FragmentUtils.getChildrenFragmented(thiz)
+
+    },
+
+    pushFragment: (thiz: Fragment, fragment: Fragment): void => {
+
+        FragmentUtils.pushValue(thiz, fragment)
+
+        thiz.fragmented = true
+
+    },
+
+    pushNode: (thiz: Fragment, node: Node): void => {
+
+        FragmentUtils.pushValue(thiz, node)
+
+    },
+
+    pushValue: (thiz: Fragment, value: Node | Fragment): void => {
+
+        const { values, length } = thiz as any //TSC
+
+        if (length === 0) {
+
+            thiz.values = value
+
+        } else if (length === 1) {
+
+            thiz.values = [values, value]
+
+        } else {
+
+            values.push(value)
+
+        }
+
+        thiz.length += 1
+
+    },
+
+    replaceWithNode: (thiz: Fragment, node: Node): void => {
+
+        thiz.values = node
+        delete thiz.fragmented
+        thiz.length = 1
+
+    },
+
+    replaceWithFragment: (thiz: Fragment, fragment: Fragment): void => {
+
+        thiz.values = fragment.values
+        thiz.fragmented = fragment.fragmented
+        thiz.length = fragment.length
 
     }
 
-    return children;
-
-  },
-
-  getChildren: ( thiz: Fragment ): Node | Node[] => {
-
-    if ( !thiz.length ) return NOOP_CHILDREN;
-
-    if ( !thiz.fragmented ) return thiz.values;
-
-    if ( thiz.length === 1 ) return FragmentUtils.getChildren ( thiz.values );
-
-    return FragmentUtils.getChildrenFragmented ( thiz );
-
-  },
-
-  pushFragment: ( thiz: Fragment, fragment: Fragment ): void => {
-
-    FragmentUtils.pushValue ( thiz, fragment );
-
-    thiz.fragmented = true;
-
-  },
-
-  pushNode: ( thiz: Fragment, node: Node ): void => {
-
-    FragmentUtils.pushValue ( thiz, node );
-
-  },
-
-  pushValue: ( thiz: Fragment, value: Node | Fragment ): void => {
-
-    const {values, length} = thiz as any; //TSC
-
-    if ( length === 0 ) {
-
-      thiz.values = value;
-
-    } else if ( length === 1 ) {
-
-      thiz.values = [values, value];
-
-    } else {
-
-      values.push ( value );
-
-    }
-
-    thiz.length += 1;
-
-  },
-
-  replaceWithNode: ( thiz: Fragment, node: Node ): void => {
-
-    thiz.values = node;
-    delete thiz.fragmented;
-    thiz.length = 1;
-
-  },
-
-  replaceWithFragment: ( thiz: Fragment, fragment: Fragment ): void => {
-
-    thiz.values = fragment.values;
-    thiz.fragmented = fragment.fragmented;
-    thiz.length = fragment.length;
-
-  }
-
-};
+}
 
 /* EXPORT */
 
-export default FragmentUtils;
+export default FragmentUtils

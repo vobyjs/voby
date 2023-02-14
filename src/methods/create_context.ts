@@ -1,46 +1,46 @@
 
 /* IMPORT */
 
-import {CONTEXTS_DATA} from '~/constants';
-import useMemo from '~/hooks/use_memo';
-import resolve from '~/methods/resolve';
-import {context} from '~/oby';
-import type {Child, Context, ContextWithDefault} from '~/types';
+import { CONTEXTS_DATA } from '../constants'
+import useMemo from '../hooks/use_memo'
+import resolve from '../methods/resolve'
+import { context } from '../oby'
+import type { Child, Context, ContextWithDefault } from '../types'
 
 /* MAIN */
 
-function createContext <T> ( defaultValue: T ): ContextWithDefault<T>;
-function createContext <T> ( defaultValue?: T ): Context<T>;
-function createContext <T> ( defaultValue?: T ): ContextWithDefault<T> | Context<T> {
+function createContext<T>(defaultValue: T): ContextWithDefault<T>
+function createContext<T>(defaultValue?: T): Context<T>
+function createContext<T>(defaultValue?: T): ContextWithDefault<T> | Context<T> {
 
-  const symbol = Symbol ();
+    const symbol = Symbol()
 
-  const Provider = ({ value, children }: { value: T, children: Child }): Child => {
+    const Provider = ({ value, children }: { value: T, children?: Child }): Child => {
 
-    return useMemo ( () => {
+        return useMemo(() => {
 
-      register ( value );
+            register(value)
 
-      return resolve ( children );
+            return resolve(children)
 
-    });
+        })
 
-  };
+    }
 
-  const register = ( value: T ): void => {
+    const register = (value: T): void => {
 
-    context ( symbol, value );
+        context(symbol, value)
 
-  };
+    }
 
-  const Context = {Provider, register};
+    const Context = { Provider, register }
 
-  CONTEXTS_DATA.set ( Context, { symbol, defaultValue } );
+    CONTEXTS_DATA.set(Context, { symbol, defaultValue })
 
-  return Context;
+    return Context
 
 }
 
 /* EXPORT */
 
-export default createContext;
+export default createContext

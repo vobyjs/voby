@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import {root} from '~/oby';
+import { root } from '../oby'
 
 /* EXPORT */
 
-export default root;
+export default root

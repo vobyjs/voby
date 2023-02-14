@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import {reaction} from '~/oby';
+import { reaction } from '../oby'
 
 /* EXPORT */
 
-export default reaction;
+export default reaction

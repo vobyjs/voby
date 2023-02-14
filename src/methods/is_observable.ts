@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import {isObservable} from '~/oby';
+import { isObservable } from '../oby'
 
 /* EXPORT */
 
-export default isObservable;
+export default isObservable

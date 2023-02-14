@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import {store} from '~/oby';
+import { store } from '../oby'
 
 /* EXPORT */
 
-export default store;
+export default store

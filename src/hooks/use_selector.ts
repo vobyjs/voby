@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import {selector} from '~/oby';
+import { selector } from '../oby'
 
 /* EXPORT */
 
-export default selector;
+export default selector

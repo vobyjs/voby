@@ -1,16 +1,16 @@
 
 /* IMPORT */
 
-import type {Child} from '~/types';
+import type { Child } from '../types'
 
 /* MAIN */
 
-const Fragment = ({ children }: { children: Child }): Child => {
+const Fragment = ({ children }: { children?: Child }): Child => {
 
-  return children;
+  return children
 
-};
+}
 
 /* EXPORT */
 
-export default Fragment;
+export default Fragment

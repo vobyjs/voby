@@ -1,34 +1,36 @@
 
 /* IMPORT */
 
-import useRoot from '~/hooks/use_root';
-import {setChild} from '~/utils/setters';
-import type {Child, Disposer} from '~/types';
+import useRoot from '../hooks/use_root'
+import { setChild } from '../utils/setters'
+import type { Child, Disposer } from '../types'
+import { isFunction } from '../utils/lang'
 
 /* MAIN */
 
-const render = ( child: Child, parent?: Element | null ): Disposer => {
+const render = (child: Child, parent?: Element | null): Disposer => {
 
-  if ( !parent || !( parent instanceof HTMLElement ) ) throw new Error ( 'Invalid parent node' );
+    if (!parent || !(parent instanceof HTMLElement)) throw new Error('Invalid parent node')
 
-  parent.textContent = '';
+    parent.textContent = ''
 
-  return useRoot ( dispose => {
+    return useRoot(dispose => {
 
-    setChild ( parent, child );
+        setChild(parent, child)
 
-    return (): void => {
+        return (): void => {
 
-      dispose ();
+            if (isFunction(dispose))
+                dispose()
 
-      parent.textContent = '';
+            parent.textContent = ''
 
-    };
+        }
 
-  });
+    })
 
-};
+}
 
 /* EXPORT */
 
-export default render;
+export default render

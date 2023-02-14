@@ -32,36 +32,11 @@
     }
   },
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "clean": "tsex clean",
-    "compile": "tsex compile",
-    "compile:watch": "tsex compile --watch",
-    "dev:benchmark": "cd demo/benchmark && npm i && npm update && npm run dev",
-    "prod:benchmark": "cd demo/benchmark && npm i && npm update && npm run prod",
-    "dev:boxes": "cd demo/boxes && npm i && npm update && npm run dev",
-    "prod:boxes": "cd demo/boxes && npm i && npm update && npm run prod",
-    "dev:clock": "cd demo/clock && npm i && npm update && npm run dev",
-    "prod:clock": "cd demo/clock && npm i && npm update && npm run prod",
-    "dev:counter": "cd demo/counter && npm i && npm update && npm run dev",
-    "prod:counter": "cd demo/counter && npm i && npm update && npm run prod",
-    "dev:emoji_counter": "cd demo/emoji_counter && npm i && npm update && npm run dev",
-    "prod:emoji_counter": "cd demo/emoji_counter && npm i && npm update && npm run prod",
-    "dev:html": "cd demo/html && npm i && npm update && npm run dev",
-    "prod:html": "cd demo/html && npm i && npm update && npm run prod",
-    "dev:hyperscript": "cd demo/hyperscript && npm i && npm update && npm run dev",
-    "prod:hyperscript": "cd demo/hyperscript && npm i && npm update && npm run prod",
-    "dev:playground": "cd demo/playground && npm i && npm update && npm run dev",
-    "prod:playground": "cd demo/playground && npm i && npm update && npm run prod",
-    "dev:spiral": "cd demo/spiral && npm i && npm update && npm run dev",
-    "prod:spiral": "cd demo/spiral && npm i && npm update && npm run prod",
-    "dev:store_counter": "cd demo/store_counter && npm i && npm update && npm run dev",
-    "prod:store_counter": "cd demo/store_counter && npm i && npm update && npm run prod",
-    "dev:triangle": "cd demo/triangle && npm i && npm update && npm run dev",
-    "prod:triangle": "cd demo/triangle && npm i && npm update && npm run prod",
-    "dev:uibench": "cd demo/uibench && npm i && npm update && npm run dev",
-    "prod:uibench": "cd demo/uibench && npm i && npm update && npm run prod",
-    "dev": "npm run dev:playground",
-    "prod": "npm run prod:playground",
-    "prepublishOnly": "npm run clean && npm run compile"
+    "compile": "tsc",
+    "compile:watch": "tsc --watch",
+    "prepublishOnly": "pnpm run clean && pnpm run compile"
   },
   "keywords": [
     "ui",
@@ -80,9 +55,7 @@
     "oby": "^12.5.4"
   },
   "devDependencies": {
-    "@types/node": "^18.11.18",
-    "tsex": "^1.1.5",
-    "typescript": "^4.9.5",
-    "voby-vite": "^1.0.1"
+    "@types/node": "^18.13.0",
+    "typescript": "^4.9.5"
   }
 }

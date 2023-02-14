@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import {memo} from '~/oby';
+import { memo } from '../oby'
 
 /* EXPORT */
 
-export default memo;
+export default memo

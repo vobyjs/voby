@@ -1,41 +1,41 @@
 
 /* IMPORT */
 
-import useReaction from '~/hooks/use_reaction';
-import $ from '~/methods/S';
-import {isFunction, isNil} from '~/utils/lang';
-import type {FunctionMaybe} from '~/types';
+import useReaction from '../hooks/use_reaction'
+import $ from '../methods/S'
+import { isFunction, isNil } from '../utils/lang'
+import type { FunctionMaybe } from '../types'
 
 /* MAIN */
 
 //TODO: Maybe port this to oby
 
-const useGuarded = <T, U extends T> ( value: FunctionMaybe<T>, guard: (( value: T ) => value is U) ): (() => U) => {
+const useGuarded = <T, U extends T>(value: FunctionMaybe<T>, guard: ((value: T) => value is U)): (() => U) => {
 
-  const guarded = $<U | undefined> ();
+    const guarded = $<U | undefined>()
 
-  useReaction ( () => {
+    useReaction(() => {
 
-    const current = isFunction ( value ) ? value () : value;
+        const current = isFunction(value) ? value() : value
 
-    if ( !guard ( current ) ) return;
+        if (!guard(current)) return
 
-    guarded ( () => current );
+        guarded(() => current)
 
-  });
+    })
 
-  return (): U => {
+    return (): U => {
 
-    const current = guarded ();
+        const current = guarded()
 
-    if ( isNil ( current ) ) throw new Error ( 'The value never passed the type guard' );
+        if (isNil(current)) throw new Error('The value never passed the type guard')
 
-    return current;
+        return current
 
-  };
+    }
 
-};
+}
 
 /* EXPORT */
 
-export default useGuarded;
+export default useGuarded

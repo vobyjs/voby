@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import {cleanup} from '~/oby';
+import { cleanup } from '../oby'
 
 /* EXPORT */
 
-export default cleanup;
+export default cleanup

@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import {boolean} from '~/oby';
+import { boolean } from '../oby'
 
 /* EXPORT */
 
-export default boolean;
+export default boolean

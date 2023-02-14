@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import {disposed} from '~/oby';
+import { disposed } from '../oby'
 
 /* EXPORT */
 
-export default disposed;
+export default disposed

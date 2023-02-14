@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import {batch} from '~/oby';
+import { batch } from '../oby'
 
 /* EXPORT */
 
-export default batch;
+export default batch

@@ -1,37 +1,37 @@
 
 /* IMPORT */
 
-import useCleanup from '~/hooks/use_cleanup';
-import useEventListener from '~/hooks/use_event_listener';
-import {castArray} from '~/utils/lang';
-import type {ArrayMaybe} from '~/types';
+import useCleanup from '../hooks/use_cleanup'
+import useEventListener from '../hooks/use_event_listener'
+import { castArray } from '../utils/lang'
+import type { ArrayMaybe } from '../types'
 
 /* MAIN */
 
-const useAbortController = ( signals: ArrayMaybe<AbortSignal> = [] ): AbortController => {
+const useAbortController = (signals: ArrayMaybe<AbortSignal> = []): AbortController => {
 
-  signals = castArray ( signals );
+    signals = castArray(signals)
 
-  const controller = new AbortController ();
-  const abort = controller.abort.bind ( controller );
-  const aborted = signals.some ( signal => signal.aborted );
+    const controller = new AbortController()
+    const abort = controller.abort.bind(controller)
+    const aborted = signals.some(signal => signal.aborted)
 
-  if ( aborted ) {
+    if (aborted) {
 
-    abort ();
+        abort()
 
-  } else {
+    } else {
 
-    signals.forEach ( signal => useEventListener ( signal, 'abort', abort ) );
+        signals.forEach(signal => useEventListener(signal, 'abort', abort))
 
-    useCleanup ( abort );
+        useCleanup(abort)
 
-  }
+    }
 
-  return controller;
+    return controller
 
-};
+}
 
 /* EXPORT */
 
-export default useAbortController;
+export default useAbortController

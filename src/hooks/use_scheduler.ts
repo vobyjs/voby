@@ -1,45 +1,45 @@
 
 /* IMPORT */
 
-import useCleanup from '~/hooks/use_cleanup';
-import $$ from '~/methods/SS';
-import untrack from '~/methods/untrack';
-import type {Disposer, FN, FunctionMaybe, ObservableMaybe} from '~/types';
+import useCleanup from '../hooks/use_cleanup'
+import $$ from '../methods/SS'
+import untrack from '../methods/untrack'
+import type { Disposer, FN, FunctionMaybe, ObservableMaybe } from '../types'
 
 /* MAIN */
 
-const useScheduler = <T, U> ({ loop, callback, cancel, schedule }: { loop?: FunctionMaybe<boolean>, callback: ObservableMaybe<FN<[U]>>, cancel: FN<[T]>, schedule: (( callback: FN<[U]> ) => T) }) : Disposer => {
+const useScheduler = <T, U>({ loop, callback, cancel, schedule }: { loop?: FunctionMaybe<boolean>, callback: ObservableMaybe<FN<[U]>>, cancel: FN<[T]>, schedule: ((callback: FN<[U]>) => T) }): Disposer => {
 
-  let tickId: T;
+    let tickId: T
 
-  const work = ( value: U ): void => {
+    const work = (value: U): void => {
 
-    if ( $$(loop) ) tick ();
+        if ($$(loop)) tick()
 
-    $$(callback, false)( value );
+        $$(callback, false)(value)
 
-  };
+    }
 
-  const tick = (): void => {
+    const tick = (): void => {
 
-    tickId = untrack ( () => schedule ( work ) );
+        tickId = untrack(() => schedule(work))
 
-  };
+    }
 
-  const dispose = (): void => {
+    const dispose = (): void => {
 
-    untrack ( () => cancel ( tickId ) );
+        untrack(() => cancel(tickId))
 
-  };
+    }
 
-  tick ();
+    tick()
 
-  useCleanup ( dispose );
+    useCleanup(dispose)
 
-  return dispose;
+    return dispose
 
-};
+}
 
 /* EXPORT */
 
-export default useScheduler;
+export default useScheduler

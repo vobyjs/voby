@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import {error} from '~/oby';
+import { error } from '../oby'
 
 /* EXPORT */
 
-export default error;
+export default error

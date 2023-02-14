@@ -1,16 +1,16 @@
 
 /* IMPORT */
 
-import {SYMBOL_OBSERVABLE, SYMBOL_OBSERVABLE_FROZEN} from '~/constants';
-import useCleanup from '~/hooks/use_cleanup';
-import untrack from '~/methods/untrack';
-import {on, off} from '~/oby';
-import {setAttributeStatic, setChildStatic, setClassStatic, setClassBooleanStatic, setClassesStatic, setEventStatic, setPropertyStatic, setStyleStatic, setStylesStatic} from '~/utils/setters';
-import type {Child, EventListener, Fragment, FunctionMaybe, ObservableReadonly} from '~/types';
+import { SYMBOL_OBSERVABLE, SYMBOL_OBSERVABLE_FROZEN } from '../constants'
+import useCleanup from '../hooks/use_cleanup'
+import untrack from '../methods/untrack'
+import { on, off } from '../oby'
+import { setAttributeStatic, setChildStatic, setClassStatic, setClassBooleanStatic, setClassesStatic, setEventStatic, setPropertyStatic, setStyleStatic, setStylesStatic } from '../utils/setters'
+import type { Child, EventListener, Fragment, FunctionMaybe, ObservableReadonly } from '../types'
 
 /* HELPERS */
 
-const target = <T> ( observable: ObservableReadonly<T> ): ObservableReadonly<T> => ( SYMBOL_OBSERVABLE_FROZEN in observable ) ? observable : ( observable as any )( SYMBOL_OBSERVABLE ); //TSC
+const target = <T>(observable: ObservableReadonly<T>): ObservableReadonly<T> => (SYMBOL_OBSERVABLE_FROZEN in observable) ? observable : (observable as any)(SYMBOL_OBSERVABLE) //TSC
 
 /* MAIN */
 
@@ -18,320 +18,320 @@ const target = <T> ( observable: ObservableReadonly<T> ): ObservableReadonly<T> 
 
 abstract class Callable<T> {
 
-  /* VARIABLES */
+    /* VARIABLES */
 
-  protected observable: ObservableReadonly<T>;
+    protected observable: ObservableReadonly<T>
 
-  /* CONSTRUCTOR */
+    /* CONSTRUCTOR */
 
-  constructor ( observable: ObservableReadonly<T> ) {
+    constructor(observable: ObservableReadonly<T>) {
 
-    this.observable = target ( observable );
-
-  }
-
-  /* API */
-
-  init ( observable: ObservableReadonly<T> ): void {
-
-    on ( this.observable, this );
-
-    this.call ( observable, untrack ( observable ) );
-
-    useCleanup ( this );
-
-  }
-
-  call (): void {
-
-    if ( arguments.length === 1 ) {
-
-      this.cleanup ();
-
-    } else {
-
-      this.update ( arguments[1], arguments[2] );
+        this.observable = target(observable)
 
     }
 
-  }
+    /* API */
 
-  cleanup (): void {
+    init(observable: ObservableReadonly<T>): void {
 
-    off ( this.observable, this );
+        on(this.observable, this)
 
-  }
+        this.call(observable, untrack(observable))
 
-  abstract update ( value: T, valuePrev?: T ): void;
+        useCleanup(this)
+
+    }
+
+    call(...args: any[]): void {
+
+        if (args.length === 1) {
+
+            this.cleanup()
+
+        } else {
+
+            this.update(args[1], args[2])
+
+        }
+
+    }
+
+    cleanup(): void {
+
+        off(this.observable, this)
+
+    }
+
+    abstract update(value: T, valuePrev?: T): void
 
 }
 
 class CallableAttributeStatic extends Callable<null | undefined | boolean | number | string> {
 
-  /* VARIABLES */
+    /* VARIABLES */
 
-  private element: HTMLElement;
-  private key: string;
+    private element: HTMLElement
+    private key: string
 
-  /* CONSTRUCTOR */
+    /* CONSTRUCTOR */
 
-  constructor ( observable: ObservableReadonly<null | undefined | boolean | number | string>, element: HTMLElement, key: string ) {
+    constructor(observable: ObservableReadonly<null | undefined | boolean | number | string>, element: HTMLElement, key: string) {
 
-    super ( observable );
+        super(observable)
 
-    this.element = element;
-    this.key = key;
+        this.element = element
+        this.key = key
 
-    this.init ( observable );
+        this.init(observable)
 
-  }
+    }
 
-  /* API */
+    /* API */
 
-  update ( value: null | undefined | boolean | number | string ): void {
+    update(value: null | undefined | boolean | number | string): void {
 
-    setAttributeStatic ( this.element, this.key, value );
+        setAttributeStatic(this.element, this.key, value)
 
-  }
+    }
 
 }
 
 class CallableChildStatic extends Callable<Child> {
 
-  /* VARIABLES */
+    /* VARIABLES */
 
-  private parent: HTMLElement;
-  private fragment: Fragment;
+    private parent: HTMLElement
+    private fragment: Fragment
 
-  /* CONSTRUCTOR */
+    /* CONSTRUCTOR */
 
-  constructor ( observable: ObservableReadonly<Child>, parent: HTMLElement, fragment: Fragment ) {
+    constructor(observable: ObservableReadonly<Child>, parent: HTMLElement, fragment: Fragment) {
 
-    super ( observable );
+        super(observable)
 
-    this.parent = parent;
-    this.fragment = fragment;
+        this.parent = parent
+        this.fragment = fragment
 
-    this.init ( observable );
+        this.init(observable)
 
-  }
+    }
 
-  /* API */
+    /* API */
 
-  update ( value: Child ): void {
+    update(value: Child): void {
 
-    setChildStatic ( this.parent, this.fragment, value, true );
+        setChildStatic(this.parent, this.fragment, value, true)
 
-  }
+    }
 
 }
 
 class CallableClassStatic extends Callable<null | undefined | boolean> {
 
-  /* VARIABLES */
+    /* VARIABLES */
 
-  private element: HTMLElement;
-  private key: string;
+    private element: HTMLElement
+    private key: string
 
-  /* CONSTRUCTOR */
+    /* CONSTRUCTOR */
 
-  constructor ( observable: ObservableReadonly<null | undefined | boolean>, element: HTMLElement, key: string ) {
+    constructor(observable: ObservableReadonly<null | undefined | boolean>, element: HTMLElement, key: string) {
 
-    super ( observable );
+        super(observable)
 
-    this.element = element;
-    this.key = key;
+        this.element = element
+        this.key = key
 
-    this.init ( observable );
+        this.init(observable)
 
-  }
+    }
 
-  /* API */
+    /* API */
 
-  update ( value: null | undefined | boolean ): void {
+    update(value: null | undefined | boolean): void {
 
-    setClassStatic ( this.element, this.key, value );
+        setClassStatic(this.element, this.key, value)
 
-  }
+    }
 
 }
 
 class CallableClassBooleanStatic extends Callable<null | undefined | boolean | string> {
 
-  /* VARIABLES */
+    /* VARIABLES */
 
-  private element: HTMLElement;
-  private value: boolean;
+    private element: HTMLElement
+    private value: boolean
 
-  /* CONSTRUCTOR */
+    /* CONSTRUCTOR */
 
-  constructor ( observable: ObservableReadonly<null | undefined | boolean | string>, element: HTMLElement, value: boolean ) {
+    constructor(observable: ObservableReadonly<null | undefined | boolean | string>, element: HTMLElement, value: boolean) {
 
-    super ( observable );
+        super(observable)
 
-    this.element = element;
-    this.value = value;
+        this.element = element
+        this.value = value
 
-    this.init ( observable );
+        this.init(observable)
 
-  }
+    }
 
-  /* API */
+    /* API */
 
-  update ( key: null | undefined | boolean | string, keyPrev?: null | undefined | boolean | string ): void {
+    update(key: null | undefined | boolean | string, keyPrev?: null | undefined | boolean | string): void {
 
-    setClassBooleanStatic ( this.element, this.value, key, keyPrev );
+        setClassBooleanStatic(this.element, this.value, key, keyPrev)
 
-  }
+    }
 
 }
 
 class CallableClassesStatic extends Callable<null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>>> {
 
-  /* VARIABLES */
+    /* VARIABLES */
 
-  private element: HTMLElement;
+    private element: HTMLElement
 
-  /* CONSTRUCTOR */
+    /* CONSTRUCTOR */
 
-  constructor ( observable: ObservableReadonly<null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>>>, element: HTMLElement ) {
+    constructor(observable: ObservableReadonly<null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>>>, element: HTMLElement) {
 
-    super ( observable );
+        super(observable)
 
-    this.element = element;
+        this.element = element
 
-    this.init ( observable );
+        this.init(observable)
 
-  }
+    }
 
-  /* API */
+    /* API */
 
-  update ( object: null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>>, objectPrev?: null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>> ): void {
+    update(object: null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>>, objectPrev?: null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>>): void {
 
-    setClassesStatic ( this.element, object, objectPrev );
+        setClassesStatic(this.element, object, objectPrev)
 
-  }
+    }
 
 }
 
 class CallableEventStatic extends Callable<null | undefined | EventListener> {
 
-  /* VARIABLES */
+    /* VARIABLES */
 
-  private element: HTMLElement;
-  private event: string;
+    private element: HTMLElement
+    private event: string
 
-  /* CONSTRUCTOR */
+    /* CONSTRUCTOR */
 
-  constructor ( observable: ObservableReadonly<null | undefined | EventListener>, element: HTMLElement, event: string ) {
+    constructor(observable: ObservableReadonly<null | undefined | EventListener>, element: HTMLElement, event: string) {
 
-    super ( observable );
+        super(observable)
 
-    this.element = element;
-    this.event = event;
+        this.element = element
+        this.event = event
 
-    this.init ( observable );
+        this.init(observable)
 
-  }
+    }
 
-  /* API */
+    /* API */
 
-  update ( value: null | undefined | EventListener ): void {
+    update(value: null | undefined | EventListener): void {
 
-    setEventStatic ( this.element, this.event, value );
+        setEventStatic(this.element, this.event, value)
 
-  }
+    }
 
 }
 
 class CallablePropertyStatic extends Callable<null | undefined | boolean | number | string> {
 
-  /* VARIABLES */
+    /* VARIABLES */
 
-  private element: HTMLElement;
-  private key: string;
+    private element: HTMLElement
+    private key: string
 
-  /* CONSTRUCTOR */
+    /* CONSTRUCTOR */
 
-  constructor ( observable: ObservableReadonly<null | undefined | boolean | number | string>, element: HTMLElement, key: string ) {
+    constructor(observable: ObservableReadonly<null | undefined | boolean | number | string>, element: HTMLElement, key: string) {
 
-    super ( observable );
+        super(observable)
 
-    this.element = element;
-    this.key = key;
+        this.element = element
+        this.key = key
 
-    this.init ( observable );
+        this.init(observable)
 
-  }
+    }
 
-  /* API */
+    /* API */
 
-  update ( value: null | undefined | boolean | number | string ): void {
+    update(value: null | undefined | boolean | number | string): void {
 
-    setPropertyStatic ( this.element, this.key, value );
+        setPropertyStatic(this.element, this.key, value)
 
-  }
+    }
 
 }
 
 class CallableStyleStatic extends Callable<null | undefined | number | string> {
 
-  /* VARIABLES */
+    /* VARIABLES */
 
-  private element: HTMLElement;
-  private key: string;
+    private element: HTMLElement
+    private key: string
 
-  /* CONSTRUCTOR */
+    /* CONSTRUCTOR */
 
-  constructor ( observable: ObservableReadonly<null | undefined | number | string>, element: HTMLElement, key: string ) {
+    constructor(observable: ObservableReadonly<null | undefined | number | string>, element: HTMLElement, key: string) {
 
-    super ( observable );
+        super(observable)
 
-    this.element = element;
-    this.key = key;
+        this.element = element
+        this.key = key
 
-    this.init ( observable );
+        this.init(observable)
 
-  }
+    }
 
-  /* API */
+    /* API */
 
-  update ( value: null | undefined | number | string ): void {
+    update(value: null | undefined | number | string): void {
 
-    setStyleStatic ( this.element, this.key, value );
+        setStyleStatic(this.element, this.key, value)
 
-  }
+    }
 
 }
 
 class CallableStylesStatic extends Callable<null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>> {
 
-  /* VARIABLES */
+    /* VARIABLES */
 
-  private element: HTMLElement;
+    private element: HTMLElement
 
-  /* CONSTRUCTOR */
+    /* CONSTRUCTOR */
 
-  constructor ( observable: ObservableReadonly<null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>>, element: HTMLElement ) {
+    constructor(observable: ObservableReadonly<null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>>, element: HTMLElement) {
 
-    super ( observable );
+        super(observable)
 
-    this.element = element;
+        this.element = element
 
-    this.init ( observable );
+        this.init(observable)
 
-  }
+    }
 
-  /* API */
+    /* API */
 
-  update ( object: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>, objectPrev?: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>> ): void {
+    update(object: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>, objectPrev?: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>): void {
 
-    setStylesStatic ( this.element, object, objectPrev );
+        setStylesStatic(this.element, object, objectPrev)
 
-  }
+    }
 
 }
 
 /* EXPORT */
 
-export {Callable, CallableAttributeStatic, CallableChildStatic, CallableClassStatic, CallableClassBooleanStatic, CallableClassesStatic, CallableEventStatic, CallablePropertyStatic, CallableStyleStatic, CallableStylesStatic};
+export { Callable, CallableAttributeStatic, CallableChildStatic, CallableClassStatic, CallableClassBooleanStatic, CallableClassesStatic, CallableEventStatic, CallablePropertyStatic, CallableStyleStatic, CallableStylesStatic }
