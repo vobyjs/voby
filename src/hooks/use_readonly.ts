@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import { readonly } from '../oby'
+import { readonly } from 'oby'
 
 /* EXPORT */
 

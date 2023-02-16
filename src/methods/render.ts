@@ -10,24 +10,24 @@ import { isFunction } from '../utils/lang'
 
 const render = (child: Child, parent?: Element | null): Disposer => {
 
-    if (!parent || !(parent instanceof HTMLElement)) throw new Error('Invalid parent node')
+  if (!parent || !(parent instanceof HTMLElement)) throw new Error('Invalid parent node')
 
-    parent.textContent = ''
+  parent.textContent = ''
 
-    return useRoot(dispose => {
+  return useRoot(dispose => {
 
-        setChild(parent, child)
+    setChild(parent, child)
 
-        return (): void => {
+    return (): void => {
 
-            if (isFunction(dispose))
-                dispose()
+      if (isFunction(dispose))
+        dispose()
 
-            parent.textContent = ''
+      parent.textContent = ''
 
-        }
+    }
 
-    })
+  })
 
 }
 

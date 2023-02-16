@@ -67,7 +67,7 @@ const useResource = <T>(fetcher: (() => ObservableMaybe<PromiseMaybe<T>>)): Reso
                 onInit()
                 suspenseIncrement()
 
-                const value = $$(fetcher())
+                const value: T | Promise<T> = $$(fetcher())
 
                 if (isPromise(value)) {
 

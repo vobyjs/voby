@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import { isStore } from '../oby'
+import { isStore } from 'oby'
 
 /* EXPORT */
 

@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import { memo } from '../oby'
+import { memo } from 'oby'
 
 /* EXPORT */
 

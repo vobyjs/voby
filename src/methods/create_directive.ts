@@ -4,7 +4,7 @@
 import { DIRECTIVE_OUTSIDE_SUPER_ROOT, SYMBOLS_DIRECTIVES } from '../constants'
 import useMemo from '../hooks/use_memo'
 import resolve from '../methods/resolve'
-import { context, owner } from '../oby'
+import { context, owner } from 'oby'
 import type { Child, DirectiveFunction, Directive, DirectiveData, DirectiveOptions } from '../types'
 
 /* MAIN */

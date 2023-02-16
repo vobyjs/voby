@@ -1,67 +1,84 @@
 {
-  "compilerOptions": {
-    "allowJs": false,
-    "allowSyntheticDefaultImports": true,
-    "allowUnreachableCode": false,
-    "allowUnusedLabels": false,
-    "alwaysStrict": true,
-    "declaration": true,
-    "disableSizeLimit": true,
-    "esModuleInterop": false,
-    "forceConsistentCasingInFileNames": true,
-    "importsNotUsedAsValues": "error",
-    "inlineSourceMap": false,
-    "inlineSources": false,
-    // "isolatedModules": true,
-    "jsx": "preserve",
-    "lib": [
-      "dom",
-      "esnext"
-    ],
-    "module": "es2020",
-    "moduleResolution": "node",
-    "newLine": "lf",
-    "noEmitOnError": false,
-    // "noFallthroughCasesInSwitch": true,
-    // "noImplicitOverride": false,
-    // "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noPropertyAccessFromIndexSignature": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": false,
-    "outDir": "./dist/",
-    "preserveValueImports": true,
-    "pretty": true,
-    // "resolveJsonModule": true,
-    "skipDefaultLibCheck": true,
-    "skipLibCheck": true,
-    "sourceMap": false,
-    "strict": true,
-    "strictBindCallApply": true,
-    "strictFunctionTypes": true,
-    "strictNullChecks": false,
-    // "strictPropertyInitialization": true,
-    "target": "es2020",
-    "useDefineForClassFields": false,
-    "useUnknownInCatchVariables": true,
-    "noImplicitAny": false,
-    "noUncheckedIndexedAccess": false,
-    "baseUrl": ".",
-    "rootDir": "./src",
-    "paths": {
-      // "~": [
-      //   "./src"
-      // ],
-      // "~/*": [
-      //   "./src/*"
-      // ],
-      "voby": [
-        "./dist"
-      ],
-      "voby/*": [
-        "./dist/*"
-      ]
+    "compilerOptions": {
+        "allowJs": false,
+        "allowSyntheticDefaultImports": true,
+        "allowUnreachableCode": false,
+        "allowUnusedLabels": false,
+        "alwaysStrict": true,
+        "declaration": true,
+        "disableSizeLimit": true,
+        "esModuleInterop": false,
+        "forceConsistentCasingInFileNames": true,
+        "importsNotUsedAsValues": "error",
+        "inlineSourceMap": false,
+        "inlineSources": false,
+        // "isolatedModules": true,
+        "jsx": "preserve",
+        "lib": [
+            "dom",
+            "esnext",
+            "WebWorker"
+        ],
+        "module": "es2020",
+        "moduleResolution": "node",
+        "newLine": "lf",
+        "noEmitOnError": false,
+        // "noFallthroughCasesInSwitch": true,
+        // "noImplicitOverride": false,
+        // "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noPropertyAccessFromIndexSignature": false,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "outDir": "dist",
+        "preserveValueImports": true,
+        "pretty": true,
+        // "resolveJsonModule": true,
+        "skipDefaultLibCheck": true,
+        "skipLibCheck": true,
+        "sourceMap": false,
+        "strict": true,
+        "strictBindCallApply": true,
+        "strictFunctionTypes": true,
+        "strictNullChecks": false,
+        // "strictPropertyInitialization": true,
+        "target": "es2020",
+        "useDefineForClassFields": false,
+        "useUnknownInCatchVariables": true,
+        "noImplicitAny": false,
+        "noUncheckedIndexedAccess": false,
+        "baseUrl": ".",
+        "rootDir": "./src",
+        "paths": {
+            // "~": [
+            //   "./src"
+            // ],
+            // "~/*": [
+            //   "./src/*"
+            // ],
+            // "voby": [
+            //   "./dist"
+            // ],
+            // "voby/*": [
+            //   "./dist/*"
+            // ]
+            "via": [
+                "../via"
+            ],
+            "via/*": [
+                "../via/*"
+            ],
+        },
+        "composite": true,
+        // "typeRoots": [
+        //   "../via.js/dist/controller"
+        // ],
     },
-    "composite": true
-  }
+    // "include": [
+    //   "../via/src/**/*.*"
+    // ]
+    "exclude": [
+        "vite.config.ts",
+        "dist/"
+    ]
 }

@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import { selector } from '../oby'
+import { selector } from 'oby'
 
 /* EXPORT */
 

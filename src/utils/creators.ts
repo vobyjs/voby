@@ -1,18 +1,25 @@
+/// <reference path="../../../via/dist/controller/index.d.ts" />
 
 /* IMPORT */
 
 import type { ComponentIntrinsicElement, FN } from '../types'
+// import { isWorker } from '../jsx/worker-type'
+
+// import '../../../via.js/dist/controller/index.d.ts'
+import 'via'
 
 /* MAIN */
+if (typeof via !== 'undefined')
+  var document = via.document
 
-const createComment: FN<[], Comment> = document.createComment.bind(document, '')
+console.log("creators")
 
-const createHTMLNode: FN<[ComponentIntrinsicElement], HTMLElement> = document.createElement.bind(document)
+const createComment = document.createComment.bind(document, '') as FN<[], Comment>
+const createHTMLNode = document.createElement.bind(document) as FN<[ComponentIntrinsicElement], HTMLElement>
+const createSVGNode = document.createElementNS.bind(document, 'http://www.w3.org/2000/svg') as FN<[ComponentIntrinsicElement], Element>
+const createText = document.createTextNode.bind(document) as FN<[any], Text>
 
-const createSVGNode: FN<[ComponentIntrinsicElement], Element> = document.createElementNS.bind(document, 'http://www.w3.org/2000/svg')
-
-const createText: FN<[any], Text> = document.createTextNode.bind(document)
+export { createComment, createHTMLNode, createSVGNode, createText, }
 
 /* EXPORT */
 
-export { createComment, createHTMLNode, createSVGNode, createText }

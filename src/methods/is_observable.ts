@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import { isObservable } from '../oby'
+import { isObservable } from 'oby'
 
 /* EXPORT */
 

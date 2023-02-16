@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import untrack from '../methods/untrack'
-import { tryCatch } from '../oby'
+import { tryCatch } from 'oby'
 import { isFunction } from '../utils/lang'
 import type { /* Callback, */ Child, FN, ObservableReadonly } from '../types'
 import type { DisposeFunction } from 'oby/dist/types'

@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import { forValue } from '../oby'
+import { forValue } from 'oby'
 import type { Child, FunctionMaybe, ObservableReadonly } from '../types'
 
 /* HELPERS */

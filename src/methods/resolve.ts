@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import { resolve } from '../oby'
+import { resolve } from 'oby'
 
 /* EXPORT */
 

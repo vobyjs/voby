@@ -10,6 +10,9 @@ declare global {
   export interface HTMLElement {
     cloneNode(deep?: boolean): HTMLElement
     innerText: string
+    innerHTML: string
+    outerText: string
+    outerHTML: string
     className: string
   }
 
@@ -558,7 +561,12 @@ export namespace JSX {
   }
 
   export interface HTMLAttributes<T extends EventTarget> extends VoidHTMLAttributes<T>, ViewAttributes {
-
+    innerText?: string | (() => string)
+    innerHTML?: string | (() => string)
+    outerText?: string | (() => string)
+    outerHTML?: string | (() => string)
+    textContent?: string | (() => string)
+    className?: string | (() => string)
   }
 
   export interface SVGAttributes<T extends EventTarget = SVGElement> extends HTMLAttributes<T>, DirectiveAttributes {

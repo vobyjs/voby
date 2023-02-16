@@ -9,7 +9,6 @@ import type { Component, Element } from '../types'
 /* MAIN */
 
 const jsx = <P = {}>(component: Component<P>, props?: P | null): Element => {
-
   return createElement<P>(component, props)
 
 }

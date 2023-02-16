@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import { error } from '../oby'
+import { error } from 'oby'
 
 /* EXPORT */
 

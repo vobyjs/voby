@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import useDisposed from '../hooks/use_disposed'
-import { with as _with } from '../oby'
+import { with as _with } from 'oby'
 import type { Callback } from '../types'
 
 /* MAIN */

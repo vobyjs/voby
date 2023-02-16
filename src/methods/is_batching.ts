@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import { isBatching } from '../oby'
+import { isBatching } from 'oby'
 
 /* EXPORT */
 

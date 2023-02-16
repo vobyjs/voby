@@ -4,7 +4,7 @@
 import { SYMBOL_SUSPENSE } from '../constants'
 import useMemo from '../hooks/use_memo'
 import $ from '../methods/S'
-import { context } from '../oby'
+import { context } from 'oby'
 import type { SuspenseData } from '../types'
 
 /* MAIN */

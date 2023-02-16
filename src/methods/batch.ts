@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import { batch } from '../oby'
+import { batch } from 'oby'
 
 /* EXPORT */
 

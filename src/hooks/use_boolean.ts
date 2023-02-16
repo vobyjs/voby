@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import { boolean } from '../oby'
+import { boolean } from 'oby'
 
 /* EXPORT */
 

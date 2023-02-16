@@ -4,7 +4,7 @@
 import { CONTEXTS_DATA } from '../constants'
 import useMemo from '../hooks/use_memo'
 import resolve from '../methods/resolve'
-import { context } from '../oby'
+import { context } from 'oby'
 import type { Child, Context, ContextWithDefault } from '../types'
 
 /* MAIN */

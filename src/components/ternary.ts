@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import { ternary } from '../oby'
+import { ternary } from 'oby'
 import type { Child, FunctionMaybe, ObservableReadonly } from '../types'
 
 /* MAIN */
@@ -10,7 +10,7 @@ import type { Child, FunctionMaybe, ObservableReadonly } from '../types'
 
 const Ternary = ({ when, children }: { when: FunctionMaybe<unknown>, children?: [Child, Child] }): ObservableReadonly<Child> => {
 
-  return ternary(when, children[0], children[1])
+    return ternary(when, children[0], children[1])
 
 }
 

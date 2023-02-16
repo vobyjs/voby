@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import { observable } from '../oby'
+import { observable } from 'oby'
 
 /* EXPORT */
 
