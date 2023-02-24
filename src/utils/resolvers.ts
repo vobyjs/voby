@@ -6,7 +6,7 @@ import useReaction from '~/hooks/use_reaction';
 import isObservable from '~/methods/is_observable';
 import $$ from '~/methods/SS';
 import {createText} from '~/utils/creators';
-import {isArray, isFunction, isString, isVoidChild} from '~/utils/lang';
+import {isArray, isFunction, isString} from '~/utils/lang';
 import type {Classes, ObservableMaybe} from '~/types';
 
 /* MAIN */
@@ -35,19 +35,7 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T | T[],
 
     values[SYMBOL_UNCACHED] = value[SYMBOL_UNCACHED]; // Preserving this special symbol
 
-    if ( hasObservables ) {
-
-      useReaction ( () => {
-
-        setter ( resolveResolved ( values, [] ), true );
-
-      });
-
-    } else {
-
-      setter ( values, _dynamic );
-
-    }
+    setter ( values, hasObservables || _dynamic );
 
   } else {
 
@@ -95,32 +83,6 @@ const resolveClass = ( classes: Classes, resolved: Record<string, true> = {} ): 
   }
 
   return resolved;
-
-};
-
-const resolveResolved = <T> ( value: T, values: any[] ): any => {
-
-  while ( isObservable<T> ( value ) ) {
-
-    value = value ();
-
-  }
-
-  if ( isArray ( value ) ) {
-
-    for ( let i = 0, l = value.length; i < l; i++ ) {
-
-      resolveResolved ( value[i], values );
-
-    }
-
-  } else if ( !isVoidChild ( value ) ) { // It's cheaper to discard void children here
-
-    values.push ( value );
-
-  }
-
-  return values;
 
 };
 
@@ -182,4 +144,4 @@ const resolveArraysAndStatics = (() => {
 
 /* EXPORT */
 
-export {resolveChild, resolveClass, resolveResolved, resolveArraysAndStatics};
+export {resolveChild, resolveClass, resolveArraysAndStatics};

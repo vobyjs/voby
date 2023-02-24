@@ -676,7 +676,7 @@ TestStringRemoval.test = {
   static: false,
   snapshots: [
     '<p>({random})</p>',
-    '<p>()</p>'
+    '<p>(<!---->)</p>'
   ]
 };
 
@@ -2843,6 +2843,33 @@ TestChildrenSymbol.test = {
   static: true,
   snapshots: [
     '<p>symbol</p>'
+  ]
+};
+
+const TestChildOverReexecution = (): JSX.Element => {
+  const count = $(0);
+  const increment = () => count ( prev => Math.min ( 3, prev + 1 ) );
+  let executions = 0;
+  useTimeout ( increment, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Child - OverReexecution</h3>
+      <div>
+        {() => executions += 1}
+      </div>
+      {count}
+    </>
+  );
+
+};
+
+TestChildOverReexecution.test = {
+  static: false,
+  snapshots: [
+    '<div>1</div>0',
+    '<div>1</div>1',
+    '<div>1</div>2',
+    '<div>1</div>3'
   ]
 };
 
@@ -5816,9 +5843,9 @@ const TestNestedArrays = (): JSX.Element => {
 TestNestedArrays.test = {
   static: false,
   snapshots: [
-    '<button>Increment</button><ul><li>0</li><li>test</li><li>1</li><li>2</li></ul>',
-    '<button>Increment</button><ul><li>0</li><li>1</li><li>test</li><li>2</li><li>3</li></ul>',
-    '<button>Increment</button><ul><li>0</li><li>1</li><li>2</li><li>test</li><li>3</li><li>4</li></ul>'
+    '<button>Increment</button><ul><!----><li>0</li><li>test</li><li>1</li><!----><li>2</li></ul>',
+    '<button>Increment</button><ul><!----><li>0</li><li>1</li><li>test</li><!----><li>2</li><!----><li>3</li></ul>',
+    '<button>Increment</button><ul><!----><li>0</li><!----><li>1</li><li>2</li><li>test</li><!----><li>3</li><!----><li>4</li></ul>'
   ]
 };
 
@@ -5992,6 +6019,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestABCD} />
       <TestSnapshots Component={TestChildrenBoolean} />
       <TestSnapshots Component={TestChildrenSymbol} />
+      <TestSnapshots Component={TestChildOverReexecution} />
       <TestSnapshots Component={TestCleanupInner} />
       <TestSnapshots Component={TestCleanupInnerPortal} />
       <TestSnapshots Component={TestContextDynamicContext} />
