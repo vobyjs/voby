@@ -20,12 +20,11 @@
 
 // This is just a slightly customized version of udomdiff: with types, no accessor function and support for diffing unwrapped nodes
 
-if (via) {
-    var document = via.document
+if (typeof via !== 'undefined') {
     var Node = class { }
 }
+const document = (typeof via !== 'undefined') ? via.document : self.document
 
-console.log('dummyNode')
 const dummyNode = document.createComment('')
 const beforeDummyWrapper: [Node] = [dummyNode]
 const afterDummyWrapper: [Node] = [dummyNode]

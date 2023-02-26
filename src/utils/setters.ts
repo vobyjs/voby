@@ -9,7 +9,7 @@ import isStore from '../methods/is_store'
 import $$ from '../methods/SS'
 import store from '../methods/store'
 import untrack from '../methods/untrack'
-import { context, with as _with } from 'oby'
+import { Box, context, with as _with } from 'oby'
 import { SYMBOL_STORE_OBSERVABLE } from 'oby'
 import { CallableAttributeStatic, CallableChildStatic, CallableClassStatic, CallableClassBooleanStatic, CallableEventStatic, CallablePropertyStatic, CallableStyleStatic, CallableStylesStatic } from '../utils/callables'
 import { classesToggle } from '../utils/classlist'
@@ -188,6 +188,8 @@ const setChildStatic = (parent: HTMLElement, fragment: Fragment, child: Child, d
     const prevLast = prevIsArray ? prev[prevLength - 1] : prev
     const prevSibling = prevLast?.nextSibling || null
 
+    child = child instanceof Box ? child.value : child
+
     if (prevLength === 0) { // Fast path for appending a node the first time
 
         const type = typeof child
@@ -287,8 +289,6 @@ const setChildStatic = (parent: HTMLElement, fragment: Fragment, child: Child, d
 
             if (nextLength === 0) { // Placeholder, to keep the right spot in the array of children
 
-                console.log('createComment setChildStatic 2')
-
                 const placeholder = createComment()
 
                 FragmentUtils.pushNode(fragmentNext, placeholder)
@@ -338,7 +338,6 @@ const setChildStatic = (parent: HTMLElement, fragment: Fragment, child: Child, d
 
     if (nextLength === 0) { // Placeholder, to keep the right spot in the array of children
 
-        console.log('createComment setStaticChild')
         const placeholder = createComment()
 
         FragmentUtils.pushNode(fragmentNext, placeholder)

@@ -1,18 +1,9 @@
-/// <reference path="../../../via/dist/controller/index.d.ts" />
-
 /* IMPORT */
 
 import type { ComponentIntrinsicElement, FN } from '../types'
-// import { isWorker } from '../jsx/worker-type'
-
-// import '../../../via.js/dist/controller/index.d.ts'
-import 'via'
 
 /* MAIN */
-if (typeof via !== 'undefined')
-  var document = via.document
-
-console.log("creators")
+const document = (typeof via !== 'undefined') ? via.document : self.document
 
 const createComment = document.createComment.bind(document, '') as FN<[], Comment>
 const createHTMLNode = document.createElement.bind(document) as FN<[ComponentIntrinsicElement], HTMLElement>
