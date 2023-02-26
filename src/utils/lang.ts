@@ -70,7 +70,7 @@ const isFalsy = <T>(value: T): value is Falsy<T> => {
 
 }
 
-const isFunction = (value: unknown): value is ((...args: any[]) => any) => {
+const isFunction = <R,>(value: unknown): value is ((...args: any[]) => R) => {
 
     return typeof value === 'function'
 
@@ -92,6 +92,10 @@ const isPromise = (value: unknown): value is Promise<unknown> => {
 
     return value instanceof Promise
 
+}
+
+const isProxy = (proxy): proxy is typeof Proxy => {
+    return proxy == null ? false : !!proxy[Symbol.for("__isProxy")]
 }
 
 const isString = (value: unknown): value is string => {
@@ -163,4 +167,4 @@ const once = <T>(fn: () => T): (() => T) => {
 
 /* EXPORT */
 
-export { assign, castArray, castError, flatten, indexOf, isArray, isBoolean, isError, isFalsy, isFunction, isNil, isNode, isPromise, isString, isSVG, isSVGElement, isTemplateAccessor, isTruthy, isVoidChild, noop, once }
+export { assign, castArray, castError, flatten, indexOf, isArray, isBoolean, isError, isFalsy, isFunction, isNil, isNode, isPromise, isProxy, isString, isSVG, isSVGElement, isTemplateAccessor, isTruthy, isVoidChild, noop, once }

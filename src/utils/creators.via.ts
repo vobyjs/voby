@@ -3,16 +3,11 @@
 /* IMPORT */
 
 import type { ComponentIntrinsicElement, FN } from '../types'
-// import { isWorker } from '../jsx/worker-type'
-
-// import '../../../via.js/dist/controller/index.d.ts'
 import 'via'
 
 /* MAIN */
 if (typeof via !== 'undefined')
     var document = via.document
-
-console.log("creators.via")
 
 const createComment = document.createComment/* .bind(document, '') */ as any as FN<[], Comment>
 const createHTMLNode = document.createElement/* .bind(document) */ as any as FN<[ComponentIntrinsicElement], HTMLElement>

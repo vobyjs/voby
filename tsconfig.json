@@ -62,12 +62,12 @@
             // "voby/*": [
             //   "./dist/*"
             // ]
-            "via": [
-                "../via"
-            ],
-            "via/*": [
-                "../via/*"
-            ],
+            // "via": [
+            //     "../via"
+            // ],
+            // "via/*": [
+            //     "../via/*"
+            // ],
         },
         "composite": true,
         // "typeRoots": [

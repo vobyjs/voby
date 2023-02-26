@@ -30,7 +30,7 @@ const createElement = <P = {}>(component: Component<P> | keyof JSX.IntrinsicElem
         if (!isNil(ref)) props.ref = ref
 
         // return wrapElement(() => untrack(() => component.call(component, props as P)))
-        return wrapElement(() => component.call(component, props as P))
+        return wrapElement(() => component.call(component, props as P) as any)
 
     } else if (isString(component)) {
 

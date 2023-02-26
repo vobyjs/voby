@@ -64,7 +64,7 @@
     "dependencies": {
         "esbuild-ifdef": "^0.2.0",
         "htm": "^3.1.1",
-        "oby": "^12.5.4",
+        "oby": "workspace:*",
         "via": "workspace:*"
     },
     "devDependencies": {

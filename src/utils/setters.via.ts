@@ -1,11 +1,13 @@
 
 /* IMPORT */
 
-import { DIRECTIVE_OUTSIDE_SUPER_ROOT, HMR, SYMBOLS_DIRECTIVES, SYMBOL_UNCACHED } from '../constants'
+import { DIRECTIVE_OUTSIDE_SUPER_ROOT, HMR, SYMBOLS_DIRECTIVES, SYMBOL_PARENT, SYMBOL_UNCACHED } from '../constants'
 import useMicrotask from '../hooks/use_microtask'
 import useReaction from '../hooks/use_reaction'
+import useRoot from '../hooks/use_root'
 import isObservable from '../methods/is_observable'
 import isStore from '../methods/is_store'
+import $, { Box } from 'oby'
 import $$ from '../methods/SS'
 import store from '../methods/store'
 import untrack from '../methods/untrack'
@@ -19,6 +21,7 @@ import FragmentUtils from '../utils/fragment'
 import { castArray, flatten, isArray, isBoolean, isFunction, isNil, isString, isSVG, isTemplateAccessor } from '../utils/lang'
 import { resolveChild, resolveClass } from '../utils/resolvers'
 import type { Child, Classes, DirectiveData, EventListener, Fragment, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy } from '../types'
+import { isProxy } from './lang'
 
 /* MAIN */
 
@@ -202,7 +205,7 @@ const setChildStatic = (parent: HTMLElement, fragment: Fragment, child: Child, d
 
             return
 
-        } else if (type === 'object' && child !== null && typeof (child as Node).nodeType === 'number') { //TSC
+        } else if (type === 'object' && child !== null && typeof (child as Node).nodeType === 'number' || isProxy(child)) { //TSC
 
             const node = child as Node
 
@@ -249,7 +252,7 @@ const setChildStatic = (parent: HTMLElement, fragment: Fragment, child: Child, d
 
             FragmentUtils.pushNode(fragmentNext, createText(child))
 
-        } else if (type === 'object' && child !== null && typeof child.nodeType === 'number') {
+        } else if (type === 'object' && child !== null && typeof child.nodeType === 'number' || isProxy(child)) {
 
             nextHasStaticChildren = true
 
@@ -287,8 +290,6 @@ const setChildStatic = (parent: HTMLElement, fragment: Fragment, child: Child, d
             parent.textContent = ''
 
             if (nextLength === 0) { // Placeholder, to keep the right spot in the array of children
-                console.log('createComment setChildStatic 3')
-
                 const placeholder = createComment()
 
                 FragmentUtils.pushNode(fragmentNext, placeholder)
@@ -331,14 +332,11 @@ const setChildStatic = (parent: HTMLElement, fragment: Fragment, child: Child, d
             FragmentUtils.replaceWithFragment(fragment, fragmentNext)
 
             return
-
         }
 
     }
 
     if (nextLength === 0) { // Placeholder, to keep the right spot in the array of children
-        console.log('createComment setChildStatic 4')
-
         const placeholder = createComment()
 
         FragmentUtils.pushNode(fragmentNext, placeholder)
@@ -379,9 +377,7 @@ const setChildStatic = (parent: HTMLElement, fragment: Fragment, child: Child, d
 }
 
 const setChild = (parent: HTMLElement, child: Child, fragment: Fragment = FragmentUtils.make()): void => {
-    //@ts-ignore
     resolveChild(child, setChildStatic.bind(undefined, parent, fragment))
-
 }
 
 const setClassStatic = classesToggle
@@ -1055,25 +1051,24 @@ const setTemplateAccessor = async (element: HTMLElement, key: string, value: Tem
         value(element, 'setProperty', key)
 
     } else {
-
         element.setAttribute(key, '') // Ensuring the attribute is present
-
         value(element, 'setAttribute', key)
-
     }
-
 }
 
 const setProp = (element: HTMLElement, key: string, value: any): void => {
+    if (value instanceof Box)
+        value = value.valueOf()
 
     if (isTemplateAccessor(value)) {
 
         setTemplateAccessor(element, key, value)
 
     } else if (key === 'children') {
-        element.replaceChildren(...value)
-        // setChild(element, value)
-
+        if (Array.isArray(value))
+            element.replaceChildren(...value)
+        else
+            element.replaceChildren(value)
     } else if (key === 'ref') {
 
         setRef(element, value)
@@ -1091,10 +1086,13 @@ const setProp = (element: HTMLElement, key: string, value: any): void => {
         setHTML(element, value)
 
     } else if (key.charCodeAt(0) === 111 && key.charCodeAt(1) === 110) { // /^on/
-
         // setEvent(element, key.toLowerCase(), value)
-
-        element.addEventListener(key.substring(2).toLowerCase(), value)
+        $.root(() => {
+            // $.context(SYMBOL_PARENT)
+            // const w = $.with()
+            // element.addEventListener(key.substring(2).toLowerCase(), () => w(value))
+            element.addEventListener(key.substring(2).toLowerCase(), value as any)
+        })
 
     } else if (key.charCodeAt(0) === 117 && key.charCodeAt(3) === 58) { // /^u..:/
 

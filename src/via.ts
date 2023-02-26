@@ -8,7 +8,8 @@ import type { Context, Directive, DirectiveOptions, FunctionMaybe, Observable, O
 /* EXPORT */
 
 export * from './components/index.via'
-export * from './jsx/jsx-runtime'
+export * from './jsx/jsx-runtime.via'
 export * from './hooks'
 export * from './methods/index.via'
 export type { Context, Directive, DirectiveOptions, FunctionMaybe, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, Resource, StoreOptions }
+export * from './constants'

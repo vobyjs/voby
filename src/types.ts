@@ -9,7 +9,7 @@ type ArrayMaybe<T = unknown> = T[] | T
 
 type Callback = () => void
 
-type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | (() => Child)
+type Child = null | undefined | boolean | bigint | number | string | symbol | Node | Array<Child> | ((...args: any[]) => Child)
 
 type ChildWithMetadata<T = unknown> = (() => Child) & { metadata: T }
 

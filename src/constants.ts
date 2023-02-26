@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import { SYMBOL_OBSERVABLE, SYMBOL_OBSERVABLE_FROZEN, SYMBOL_UNCACHED, SYMBOL_UNTRACKED_UNWRAPPED } from 'oby'
+import { context, SYMBOL_OBSERVABLE, SYMBOL_OBSERVABLE_FROZEN, SYMBOL_UNCACHED, SYMBOL_UNTRACKED_UNWRAPPED } from 'oby'
 import type { ContextData, Context } from './types'
 
 /* MAIN */
@@ -15,6 +15,9 @@ const HMR = !!globalThis.VOBY_HMR
 const SYMBOL_SUSPENSE = Symbol('Suspense')
 
 const SYMBOL_TEMPLATE_ACCESSOR = Symbol('Template Accessor')
+
+export const SYMBOL_PARENT = Symbol('Parent')
+context(SYMBOL_PARENT, { func: null })
 
 const SYMBOLS_DIRECTIVES: Record<string, symbol> = {}
 

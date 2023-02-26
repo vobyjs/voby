@@ -28,7 +28,7 @@ const createElement = <P = {}>(component: Component<P> | keyof JSX.IntrinsicElem
 
             return untrack(() => component.call(component, props as P)) //TSC
 
-        })
+        }) as any
 
     } else if (isString(component)) {
 
