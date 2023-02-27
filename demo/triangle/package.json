@@ -7,7 +7,7 @@
     "prod": "vite --force --config vite.ts"
   },
   "dependencies": {
-    "vite": "^2.9.7",
+    "vite": "^4.1.4",
     "voby": "*"
   }
 }

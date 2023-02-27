@@ -82,7 +82,6 @@
   "devDependencies": {
     "@types/node": "^18.14.2",
     "tsex": "^2.2.1",
-    "typescript": "^4.9.5",
-    "voby-vite": "^1.0.1"
+    "typescript": "^4.9.5"
   }
 }

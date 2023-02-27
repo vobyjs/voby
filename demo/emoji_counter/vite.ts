@@ -2,19 +2,17 @@
 /* IMPORT */
 
 import path from 'node:path';
+import process from 'node:process';
 import {defineConfig} from 'vite';
-import voby from 'voby-vite';
 
 /* MAIN */
 
 const config = defineConfig ({
-  plugins: [
-    voby ()
-  ],
   resolve: {
     alias: {
-      '~': path.resolve ( __dirname, '../../src' ),
-      voby: process.argv.includes ( 'dev' ) ? path.resolve ( __dirname, '../../src' ) : 'voby'
+      '~': path.resolve ( process.cwd (), 'src' ),
+      'voby/jsx-runtime': process.argv.includes ( 'dev' ) ? path.resolve ( process.cwd (), 'src/jsx/runtime' ) : 'voby/jsx-runtime',
+      'voby': process.argv.includes ( 'dev' ) ? path.resolve ( process.cwd (), 'src' ) : 'voby'
     }
   }
 });

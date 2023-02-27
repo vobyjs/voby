@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "three": "0.111.0",
-    "vite": "^2.9.7",
+    "vite": "^4.1.4",
     "voby": "*"
   }
 }
