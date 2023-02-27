@@ -2,10 +2,10 @@
 /* IMPORT */
 
 import * as Voby from 'voby';
-import {Observable} from 'voby';
 import {Dynamic, ErrorBoundary, For, If, Portal, Suspense, Switch, Ternary} from 'voby';
 import {useContext, useEffect, useInterval, useMemo, usePromise, useResource, useTimeout} from 'voby';
 import {$, batch, createContext, createDirective, html, lazy, render, renderToString, store, template} from 'voby';
+import type {Observable} from 'voby';
 
 globalThis.Voby = Voby;
 
@@ -6136,5 +6136,7 @@ const Test = (): JSX.Element => {
     </>
   );
 };
+
+/* RENDER */
 
 render ( Test, document.getElementById ( 'app' ) );

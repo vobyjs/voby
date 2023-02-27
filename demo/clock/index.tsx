@@ -1,16 +1,21 @@
 
 /* IMPORT */
 
-import {$, render, useAnimationLoop, Observable} from 'voby';
+import {$, render, useAnimationLoop} from 'voby';
+import type {Observable} from 'voby';
 
 /* HELPERS */
 
 const mapRange = <T extends unknown> ( start: number, end: number, increment: number, callback: (( nr: number ) => T) ): T[] => {
+
   const results: T[] = [];
+
   for ( let i = start; i < end; i += increment ) {
     results.push ( callback ( i ) );
   }
+
   return results;
+
 };
 
 const getMillisecondsSinceMidnight = (): number => {
@@ -75,5 +80,7 @@ const Clock = (): JSX.Element => {
   );
 
 };
+
+/* RENDER */
 
 render ( <Clock />, document.getElementById ( 'app' ) );

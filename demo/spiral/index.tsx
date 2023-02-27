@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import {Observable, ObservableReadonly} from 'voby';
 import {$, render, untrack, For, If, useAnimationLoop, useMemo} from 'voby';
+import type {Observable, ObservableReadonly} from 'voby';
 
 /* HELPERS */
 
@@ -82,5 +82,7 @@ const Spiral = (): JSX.Element => {
   );
 
 };
+
+/* RENDER */
 
 render ( <Spiral />, document.getElementById ( 'app' ) );

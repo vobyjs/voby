@@ -189,7 +189,7 @@ const Results = ({ results }: { results: Results }): JSX.Element => {
 
 };
 
-/* INIT */
+/* RENDER */
 
 render ( <App state={state} />, document.body );
 

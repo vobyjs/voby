@@ -1,7 +1,8 @@
 
 /* IMPORT */
 
-import {$, render, Observable} from 'voby';
+import {$, render} from 'voby';
+import type {Observable} from 'voby';
 
 /* HELPERS */
 
@@ -84,5 +85,7 @@ const EmojiCounter = (): JSX.Element => {
   );
 
 };
+
+/* RENDER */
 
 render ( <EmojiCounter />, document.getElementById ( 'app' ) );

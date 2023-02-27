@@ -10,9 +10,9 @@ import {defineConfig} from 'vite';
 const config = defineConfig ({
   resolve: {
     alias: {
-      '~': path.resolve ( process.cwd (), 'src' ),
-      'voby/jsx-runtime': process.argv.includes ( 'dev' ) ? path.resolve ( process.cwd (), 'src/jsx/runtime' ) : 'voby/jsx-runtime',
-      'voby': process.argv.includes ( 'dev' ) ? path.resolve ( process.cwd (), 'src' ) : 'voby'
+      '~': path.resolve ( '../../src' ),
+      'voby/jsx-runtime': process.argv.includes ( 'dev' ) ? path.resolve ( '../../src/jsx/runtime' ) : 'voby/jsx-runtime',
+      'voby': process.argv.includes ( 'dev' ) ? path.resolve ( '../../src' ) : 'voby'
     }
   }
 });

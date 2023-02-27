@@ -53,6 +53,8 @@
     "prod:playground": "cd demo/playground && npm i && npm update && npm run prod",
     "dev:spiral": "cd demo/spiral && npm i && npm update && npm run dev",
     "prod:spiral": "cd demo/spiral && npm i && npm update && npm run prod",
+    "dev:standalone": "cd demo/standalone && open index.html",
+    "prod:standalone": "cd demo/standalone && open index.html",
     "dev:store_counter": "cd demo/store_counter && npm i && npm update && npm run dev",
     "prod:store_counter": "cd demo/store_counter && npm i && npm update && npm run prod",
     "dev:triangle": "cd demo/triangle && npm i && npm update && npm run dev",
@@ -61,7 +63,7 @@
     "prod:uibench": "cd demo/uibench && npm i && npm update && npm run prod",
     "dev": "npm run dev:playground",
     "prod": "npm run prod:playground",
-    "prepublishOnly": "npm run clean && npm run compile"
+    "prepublishOnly": "tsex prepare"
   },
   "keywords": [
     "ui",

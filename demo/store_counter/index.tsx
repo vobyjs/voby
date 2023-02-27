@@ -25,4 +25,6 @@ const Counter = (): JSX.Element => {
 
 };
 
+/* RENDER */
+
 render ( <Counter />, document.getElementById ( 'app' ) );

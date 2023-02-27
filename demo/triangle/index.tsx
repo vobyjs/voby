@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import {Observable, ObservableReadonly} from 'voby';
 import {$, render, useInterval, useAnimationLoop, useMemo} from 'voby';
+import type {Observable, ObservableReadonly} from 'voby';
 
 /* HELPERS */
 
@@ -114,5 +114,7 @@ const SierpinskiTriangle = (): JSX.Element => {
   );
 
 };
+
+/* RENDER */
 
 render ( <SierpinskiTriangle />, document.getElementById ( 'app' ) );

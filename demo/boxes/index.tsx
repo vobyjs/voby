@@ -9,7 +9,8 @@ import {PerspectiveCamera} from 'three/src/cameras/PerspectiveCamera';
 import {Scene} from 'three/src/scenes/Scene';
 import {WebGLRenderer} from 'three/src/renderers/WebGLRenderer';
 
-import {$, render, useAnimationLoop, useEffect, useMemo, Observable, ObservableReadonly} from 'voby';
+import {$, render, useAnimationLoop, useEffect, useMemo} from 'voby';
+import type {Observable, ObservableReadonly} from 'voby';
 
 /* TYPES */
 
@@ -203,5 +204,7 @@ const App = (): JSX.Element => {
   );
 
 };
+
+/* RENDER */
 
 render ( <App />, document.getElementById ( 'app' ) );
