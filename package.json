@@ -47,7 +47,8 @@
         "//dev": "vite --force --mode dev",
         "//prod": "vite --force",
         "//build": "vite build",
-        "prepublishOnly": "pnpm run clean && pnpm run compile"
+        "prepublishOnly": "pnpm run clean && pnpm run compile",
+        "bump": "pnpm version patch"
     },
     "keywords": [
         "ui",
