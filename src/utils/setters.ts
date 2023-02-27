@@ -493,7 +493,7 @@ const setClassesStatic = ( element: HTMLElement, object: null | undefined | stri
 
       } else if ( isArray ( objectPrev ) ) {
 
-        objectPrev = store ( objectPrev, { unwrap: true } );
+        objectPrev = store.unwrap ( objectPrev );
 
         for ( let i = 0, l = objectPrev.length; i < l; i++ ) {
 
@@ -505,7 +505,7 @@ const setClassesStatic = ( element: HTMLElement, object: null | undefined | stri
 
       } else {
 
-        objectPrev = store ( objectPrev, { unwrap: true } );
+        objectPrev = store.unwrap ( objectPrev );
 
         for ( const key in objectPrev ) {
 
@@ -931,7 +931,7 @@ const setStylesStatic = ( element: HTMLElement, object: null | undefined | strin
 
       } else {
 
-        objectPrev = store ( objectPrev, { unwrap: true } );
+        objectPrev = store.unwrap ( objectPrev );
 
         for ( const key in objectPrev ) {
 
