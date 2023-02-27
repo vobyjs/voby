@@ -11,6 +11,8 @@ globalThis.Voby = Voby;
 
 /* TYPE */
 
+type Constructor<T, Args extends unknown[] = unknown[]> = new ( ...args: Args ) => T;
+
 type FunctionUnwrap<T> = T extends ({ (): infer U }) ? U : T;
 
 /* HELPERS */
@@ -45,7 +47,7 @@ const randomColor = (): string => {
 
 };
 
-const TestSnapshots = ({ Component, props }: { Component: JSX.Component & { test: { static?: boolean, snapshots: string[] } }, props?: Record<any, any> }): JSX.Element => {
+const TestSnapshots = ({ Component, props }: { Component: ( JSX.Component | Constructor<Component> ) & { test: { static?: boolean, snapshots: string[] } }, props?: Record<any, any> }): JSX.Element => {
   const ref = $<HTMLDivElement>();
   let index = -1;
   let htmlPrev = '';
@@ -3991,14 +3993,15 @@ TestSwitchFallbackFunction.test = {
 
 class Component<P = {}> {
   props: P;
+  state: {};
   constructor ( props: P ) {
     this.props = props;
     this.state = {};
   }
-  render ( props: P ): Child {
+  render ( props: P ): JSX.Child {
     throw new Error ( 'Missing render function' );
   }
-  static call ( thiz: Component, props: P ) {
+  static call ( thiz: Constructor<Component>, props: {} ) {
     const instance = new thiz ( props );
     return instance.render ( instance.props, instance.state );
   }
@@ -5101,7 +5104,7 @@ const TestSVGAttributeRemoval = (): JSX.Element => {
     <>
       <h3>SVG - Attribute Removal</h3>
       <svg class="red" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white">
-        <circle cx="25" cy="25" r="20" r2={o} />
+        <circle cx="25" cy="25" r="20" version={o} />
       </svg>
     </>
   );
@@ -5110,7 +5113,7 @@ const TestSVGAttributeRemoval = (): JSX.Element => {
 TestSVGAttributeRemoval.test = {
   static: false,
   snapshots: [
-    '<svg class="red" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white"><circle cx="25" cy="25" r="20" r2="red"></circle></svg>',
+    '<svg class="red" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white"><circle cx="25" cy="25" r="20" version="red"></circle></svg>',
     '<svg class="red" viewBox="0 0 50 50" width="50px" stroke-width="3" fill="white"><circle cx="25" cy="25" r="20"></circle></svg>'
   ]
 };
