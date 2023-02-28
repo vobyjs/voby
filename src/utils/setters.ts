@@ -679,7 +679,8 @@ const setEventStatic = (() => {
     document.addEventListener ( event.slice ( 2 ), event => {
 
       const targets = event.composedPath ();
-      const target = targets[0] || document;
+
+      let target: EventTarget | null = null;
 
       Object.defineProperty ( event, 'currentTarget', {
         configurable: true,
@@ -690,7 +691,9 @@ const setEventStatic = (() => {
 
       for ( let i = 0, l = targets.length; i < l; i++ ) {
 
-        const handler = targets[i][key];
+        target = targets[i];
+
+        const handler = target[key];
 
         if ( !handler ) continue;
 
@@ -699,6 +702,8 @@ const setEventStatic = (() => {
         if ( event.cancelBubble ) break;
 
       }
+
+      target = null;
 
     });
 
