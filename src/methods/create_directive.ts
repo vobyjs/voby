@@ -9,7 +9,7 @@ import type {Child, DirectiveFunction, Directive, DirectiveData, DirectiveOption
 
 /* MAIN */
 
-const createDirective = <T extends unknown[] = []> ( name: string, fn: DirectiveFunction<T>, options?: DirectiveOptions ): Directive<T> => {
+const createDirective = <T extends keyof JSX.Directives> ( name: T, fn: DirectiveFunction<JSX.Directives[T]>, options?: DirectiveOptions ): Directive<T> => {
 
   const immediate = !!options?.immediate;
   const data: DirectiveData<T> = { fn, immediate };
