@@ -88,6 +88,12 @@ const isNode = ( value: unknown ): value is Node => {
 
 };
 
+const isObject = ( value: unknown ): value is object => {
+
+  return typeof value === 'object' && value !== null;
+
+};
+
 const isPromise = ( value: unknown ): value is Promise<unknown> => {
 
   return value instanceof Promise;
@@ -163,4 +169,4 @@ const once = <T> ( fn: () => T ): (() => T) => {
 
 /* EXPORT */
 
-export {assign, castArray, castError, flatten, indexOf, isArray, isBoolean, isError, isFalsy, isFunction, isNil, isNode, isPromise, isString, isSVG, isSVGElement, isTemplateAccessor, isTruthy, isVoidChild, noop, once};
+export {assign, castArray, castError, flatten, indexOf, isArray, isBoolean, isError, isFalsy, isFunction, isNil, isNode, isObject, isPromise, isString, isSVG, isSVGElement, isTemplateAccessor, isTruthy, isVoidChild, noop, once};

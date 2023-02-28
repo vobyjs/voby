@@ -13,8 +13,8 @@ const Counter = (): JSX.Element => {
   const decrement = () => value ( prev => prev - 1 );
 
   return [
-    h ( 'h1', null, 'Counter' ),
-    h ( 'p', null, value ),
+    h ( 'h1', 'Counter' ),
+    h ( 'p', value ),
     h ( 'button', { onClick: increment }, '+' ),
     h ( 'button', { onClick: decrement }, '-' )
   ];
