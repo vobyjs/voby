@@ -10,7 +10,7 @@
     "start": "node ./dist/server/index.cjs"
   },
   "dependencies": {
-    "happy-dom-global": "^1.0.0",
+    "linkedom-global": "^1.0.0",
     "noren": "^0.2.0",
     "voby": "*",
     "voby-simple-router": "^1.0.0"

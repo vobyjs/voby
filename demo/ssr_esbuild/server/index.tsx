@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import 'happy-dom-global'; //TODO: Delete this dependency
+import 'linkedom-global'; //TODO: Delete this dependency
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
