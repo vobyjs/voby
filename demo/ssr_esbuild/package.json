@@ -17,7 +17,8 @@
   },
   "dependencies": {
     "linkedom-global": "^1.0.0",
-    "noren": "^0.3.0",
+    "noren": "^0.4.1",
+    "tiny-livereload": "^1.0.3",
     "voby": "*",
     "voby-simple-router": "^1.0.0"
   },

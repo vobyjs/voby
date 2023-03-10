@@ -7,6 +7,7 @@ import path from 'node:path';
 import process from 'node:process';
 import {favicon, serveStatic} from 'noren/middlewares';
 import Server from 'noren/node';
+import livereload from 'tiny-livereload/express';
 import {renderToString} from 'voby';
 import Root from '../src/pages/root';
 
@@ -22,6 +23,7 @@ const app = new Server ();
 app.use ( favicon ( './public/favicon.ico' ) );
 app.use ( serveStatic ( './dist/client' ) );
 app.use ( serveStatic ( './public' ) );
+app.use ( livereload ( './dist/client' ) );
 
 app.get ( '*', async ( req, res ) => {
 
