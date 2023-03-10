@@ -5,10 +5,10 @@
   "scripts": {
     "clean": "rm -rf dist",
     "dev:build:client": "esbuild ./src/index.tsx --bundle --outfile=dist/client/index.js --format=esm",
-    "dev:build:server": "esbuild ./server/index.tsx --bundle --outfile=dist/server/index.js --format=esm --platform=node",
+    "dev:build:server": "esbuild ./server/index.tsx --bundle --outfile=dist/server/index.js --format=esm --platform=node --packages=external",
     "dev:build": "scex -bs dev:build:client dev:build:server",
     "dev:start": "node ./dist/server/index.js",
-    "dev": "monex --delay 50 --watch server src --exec 'scex -bs dev:build:client dev:build:server dev:start'",
+    "dev": "monex --delay 50 --name client server start --watch src server server --exec npm:dev:build:client npm:dev:build:server npm:dev:start",
     "prod:build:client": "esbuild ./src/index.tsx --bundle --outfile=dist/client/index.js --format=esm --minify",
     "prod:build:server": "esbuild ./server/index.tsx --bundle --outfile=dist/server/index.js --format=esm --platform=node --minify",
     "prod:build": "scex -bs clean prod:build:client prod:build:server",
@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "esbuild": "0.17.11",
-    "monex": "^2.1.0",
+    "monex": "^2.1.1",
     "scex": "^1.1.0"
   }
 }
