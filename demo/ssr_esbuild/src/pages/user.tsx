@@ -5,7 +5,7 @@ import {useParams} from 'voby-simple-router';
 
 /* MAIN */
 
-const User = (): JSX.Element => {
+const PageUser = (): JSX.Element => {
 
   const params = useParams ();
   const name = () => params ().name;
@@ -16,4 +16,4 @@ const User = (): JSX.Element => {
 
 /* EXPORT */
 
-export default User;
+export default PageUser;

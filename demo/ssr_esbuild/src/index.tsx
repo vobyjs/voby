@@ -3,10 +3,10 @@
 
 import livereload from 'tiny-livereload/fetch';
 import {render} from 'voby';
-import Root from './pages/root';
+import App from './app';
 
 /* MAIN */
 
 livereload ( 200 );
 
-render ( <Root />, document.getElementById ( 'app' ) );
+render ( <App />, document.getElementById ( 'app' ) );

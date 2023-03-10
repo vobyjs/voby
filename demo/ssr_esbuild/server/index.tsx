@@ -9,16 +9,20 @@ import {favicon, serveStatic} from 'noren/middlewares';
 import Server from 'noren/node';
 import livereload from 'tiny-livereload/express';
 import {renderToString} from 'voby';
-import Root from '../src/pages/root';
+import {useRouter} from 'voby-simple-router';
+import Routes from '../src/app/routes';
+import App from '../src/app';
 
 /* HELPERS */
 
 const INDEX_PATH = path.join ( process.cwd (), 'public', 'index.html' );
 const INDEX_CONTENT = fs.readFileSync ( INDEX_PATH, 'utf8' );
+const IS_PRODUCTION = ( process.env.NODE_ENV === 'production' );
 
 /* MAIN */
 
 const app = new Server ();
+const router = useRouter ( Routes );
 
 app.use ( favicon ( './public/favicon.ico' ) );
 app.use ( serveStatic ( './dist/client' ) );
@@ -27,18 +31,34 @@ app.use ( livereload ( './dist/client' ) );
 
 app.get ( '*', async ( req, res ) => {
 
-  try {
+  if ( router.route ( req.path ) ) { // Route found
 
-    const app = await renderToString ( <Root path={`/${req.url.pathname}`} /> );
-    const page = INDEX_CONTENT.replace ( '<div id="app"></div>', `<div id="app">${app}</div>` );
+    if ( IS_PRODUCTION ) { // Using SSR
 
-    res.html ( page );
+      try {
 
-  } catch ( error: unknown ) {
+        const app = await renderToString ( <App path={`/${req.url.pathname}`} /> );
+        const page = INDEX_CONTENT.replace ( '<div id="app"></div>', `<div id="app">${app}</div>` );
 
-    res.status ( 500 );
+        res.html ( page );
 
-    console.error ( error );
+      } catch ( error: unknown ) {
+
+        res.status ( 500 );
+
+        console.error ( error );
+
+      }
+
+    } else { // Not using SSR
+
+      res.html ( INDEX_CONTENT );
+
+    }
+
+  } else { // Route not found
+
+    res.status ( 404 );
 
   }
 

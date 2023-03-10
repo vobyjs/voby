@@ -1,7 +1,7 @@
 
 /* MAIN */
 
-const PageHome = () => {
+const PageHome = (): JSX.Element => {
 
   return <h1>Home</h1>;
 
