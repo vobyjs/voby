@@ -1940,7 +1940,7 @@ There are two main actions needed to make Voby work with TypeScript.
 ## Thanks
 
 - **[S](https://github.com/adamhaile/S)**: for paving the way to this awesome reactive way of writing software.
-- **[sinuous/observable](https://github.com/luwes/sinuous/tree/master/packages/sinuous/observable)**: for making me fall in love with Observables and providing a good implementation that this library is based of.
+- **[sinuous/observable](https://github.com/luwes/sinuous/tree/master/packages/sinuous/observable)**: for making me fall in love with Observables and providing a good implementation that this library was originally based on.
 - **[solid](https://www.solidjs.com)**: for being a great sort of reference implementation, popularizing Signal-based reactivity, and having built a great community.
 - **[trkl](https://github.com/jbreckmckye/trkl)**: for being so inspiringly small.
 
