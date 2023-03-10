@@ -25,8 +25,8 @@ const app = new Server ();
 const router = useRouter ( Routes );
 
 app.use ( favicon ( './public/favicon.ico' ) );
-app.use ( serveStatic ( './dist/client' ) );
 app.use ( serveStatic ( './public' ) );
+app.use ( serveStatic ( './dist/client' ) );
 app.use ( livereload ( './dist/client' ) );
 
 app.get ( '*', async ( req, res ) => {

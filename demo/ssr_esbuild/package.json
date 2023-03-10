@@ -6,25 +6,28 @@
     "clean": "rm -rf dist",
     "dev:build:client": "esbuild ./src/index.tsx --bundle --outfile=dist/client/index.js --format=esm",
     "dev:build:server": "esbuild ./server/index.tsx --bundle --outfile=dist/server/index.js --format=esm --platform=node --packages=external",
-    "dev:build": "scex -bs dev:build:client dev:build:server",
+    "dev:build:style": "sass ./public/scss/index.scss ./public/css/index.css --watch --no-source-map",
+    "dev:build": "scex -bs dev:build:client dev:build:server dev:build:style",
     "dev:start": "node ./dist/server/index.js",
-    "dev": "monex --delay 50 --name client server start --watch src server server --exec npm:dev:build:client npm:dev:build:server npm:dev:start",
+    "dev": "monex --delay 50 --name client server style start --watch src server none server --exec npm:dev:build:client npm:dev:build:server npm:dev:build:style npm:dev:start",
     "prod:build:client": "esbuild ./src/index.tsx --bundle --outfile=dist/client/index.js --format=esm --minify",
     "prod:build:server": "esbuild ./server/index.tsx --bundle --outfile=dist/server/index.js --format=esm --platform=node --minify",
-    "prod:build": "scex -bs clean prod:build:client prod:build:server",
+    "prod:build:style": "sass ./public/scss/index.scss ./public/css/index.css --no-source-map --style compressed",
+    "prod:build": "scex -bs clean prod:build:client prod:build:server prod:build:style",
     "prod:start": "NODE_ENV=production node ./dist/server/index.js",
-    "prod": "scex -bs clean prod:build:client prod:build:server prod:start"
+    "prod": "scex -bs clean prod:build:client prod:build:server prod:build:style prod:start"
   },
   "dependencies": {
     "linkedom-global": "^1.0.0",
     "noren": "^0.4.1",
-    "tiny-livereload": "^1.0.3",
+    "tiny-livereload": "^1.1.0",
     "voby": "*",
     "voby-simple-router": "^1.1.2"
   },
   "devDependencies": {
     "esbuild": "0.17.11",
     "monex": "^2.1.1",
+    "sass": "^1.58.3",
     "scex": "^1.1.0"
   }
 }

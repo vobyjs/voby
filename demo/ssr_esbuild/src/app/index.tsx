@@ -30,7 +30,9 @@ const App = ({ path }: { path?: RouterPath }): JSX.Element => {
           </li>
         </ul>
       </nav>
-      <Route />
+      <main>
+        <Route />
+      </main>
     </Router>
   );
 
