@@ -2,13 +2,18 @@
 /* IMPORT */
 
 import 'linkedom-global'; //TODO: Delete this dependency
-import fs from 'node:fs/promises';
+import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 import {serveStatic} from 'noren/middlewares';
 import Server from 'noren/node';
 import {renderToString} from 'voby';
 import Root from '../src/pages/root';
+
+/* HELPERS */
+
+const INDEX_PATH = path.join ( process.cwd (), 'public', 'index.html' );
+const INDEX_CONTENT = fs.readFileSync ( INDEX_PATH, 'utf8' );
 
 /* MAIN */
 
@@ -21,10 +26,8 @@ app.get ( '*', async ( req, res ) => {
 
   try {
 
-    const indexPath = path.join ( process.cwd (), 'public', 'index.html' );
-    const index = await fs.readFile ( indexPath, 'utf8' );
     const app = await renderToString ( <Root path={`/${req.url.pathname}`} /> );
-    const page = index.replace ( '<div id="app"></div>', `<div id="app">${app}</div>` );
+    const page = INDEX_CONTENT.replace ( '<div id="app"></div>', `<div id="app">${app}</div>` );
 
     res.html ( page );
 
