@@ -5,7 +5,7 @@ import 'linkedom-global'; //TODO: Delete this dependency
 import fs from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
-import {serveStatic} from 'noren/middlewares';
+import {favicon, serveStatic} from 'noren/middlewares';
 import Server from 'noren/node';
 import {renderToString} from 'voby';
 import Root from '../src/pages/root';
@@ -19,6 +19,7 @@ const INDEX_CONTENT = fs.readFileSync ( INDEX_PATH, 'utf8' );
 
 const app = new Server ();
 
+app.use ( favicon ( './public/favicon.ico' ) );
 app.use ( serveStatic ( './dist/client' ) );
 app.use ( serveStatic ( './public' ) );
 
