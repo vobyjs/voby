@@ -1903,7 +1903,7 @@ JSX is supported out of the box, as a rule of thumb it's very similar to how Rea
 - You can simply just use "class" instead of "className".
 - The "class" attribute can also accept an object of classes or an array of classes, for convenience.
 - SVGs are supported out of the box and will also be updated in a fine-grained manner.
-- The "innerHTML", "outerHTML" and "textContent" attributes are forbidden, as they are largely just footguns.
+- The "innerHTML", "outerHTML" and "textContent" attributes are forbidden, as they are largely just footguns or non-idiomatic.
 - A React-like "dangerouslySetInnerHTML" attribute is supported for setting some raw HTML.
 - Numbers set as values for style properties that require a unit to be provided will automatically be suffixed with "px".
 - Using CSS variables in the "style" object is supported out of the box.
