@@ -68,15 +68,15 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`html`](#html)                       | [`Portal`](#portal)               | [`useDisposed`](#usedisposed)               | [`ObservableOptions`](#observableoptions)   |                                 |
 | [`isBatching`](#isbatching)           | [`Suspense`](#suspense)           | [`useEffect`](#useeffect)                   | [`Resource`](#resource)                     |                                 |
 | [`isObservable`](#isobservable)       | [`Switch`](#switch)               | [`useError`](#useerror)                     | [`StoreOptions`](#storeoptions)             |                                 |
-| [`isStore`](#isstore)                 | [`Ternary`](#ternary)             | [`useEventListener`](#useeventlistener)     |                                             |                                 |
-| [`lazy`](#lazy)                       |                                   | [`useFetch`](#usefetch)                     |                                             |                                 |
-| [`render`](#render)                   |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
-| [`renderToString`](#rendertostring)   |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
-| [`resolve`](#resolve)                 |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
-| [`store`](#store)                     |                                   | [`useMemo`](#usememo)                       |                                             |                                 |
-| [`template`](#template)               |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
-| [`untrack`](#untrack)                 |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
-|                                       |                                   | [`useReaction`](#usereaction)               |                                             |                                 |
+| [`isServer`](#isserver)               | [`Ternary`](#ternary)             | [`useEventListener`](#useeventlistener)     |                                             |                                 |
+| [`isStore`](#isstore)                 |                                   | [`useFetch`](#usefetch)                     |                                             |                                 |
+| [`lazy`](#lazy)                       |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
+| [`render`](#render)                   |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
+| [`renderToString`](#rendertostring)   |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
+| [`resolve`](#resolve)                 |                                   | [`useMemo`](#usememo)                       |                                             |                                 |
+| [`store`](#store)                     |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
+| [`template`](#template)               |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
+| [`untrack`](#untrack)                 |                                   | [`useReaction`](#usereaction)               |                                             |                                 |
 |                                       |                                   | [`useReadonly`](#usereadonly)               |                                             |                                 |
 |                                       |                                   | [`useResolved`](#useresolved)               |                                             |                                 |
 |                                       |                                   | [`useResource`](#useresource)               |                                             |                                 |
@@ -457,6 +457,24 @@ import {$, isObservable} from 'voby';
 
 isObservable ( 123 ); // => false
 isObservable ( $(123) ); // => true
+```
+
+#### `isServer`
+
+This function tells you if your code is executing in a browser environment or not.
+
+Interface:
+
+```ts
+function isServer (): boolean;
+```
+
+Usage:
+
+```tsx
+import {isServer} from 'voby';
+
+isServer (); // => true or false
 ```
 
 #### `isStore`
