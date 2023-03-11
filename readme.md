@@ -1504,6 +1504,10 @@ This basically provides a unified way to handle sync and async results, observab
 
 This function is also the mechanism through which `Suspense` understands if there are things loading under the hood or not.
 
+When the `value` property is read while fetching, or when the `latest` property is read the first time, or after an error, while fetching, then `Suspense` boundaries will be triggered.
+
+When the `value` property or the `latest` property are read after the fetch errored they will throw, triggering `ErrorBoundary`.
+
 The passed function is tracked and it will be automatically re-executed whenever any of the observables it reads change.
 
 Interface:

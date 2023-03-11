@@ -113,7 +113,7 @@ type Resource<T = unknown> = ObservableReadonly<ResourceStatic<T>> & ResourceFun
 
 type StoreOptions = import ( 'oby' ).StoreOptions;
 
-type SuspenseData = { active: Observable<boolean>, increment: Callback, decrement: Callback };
+type SuspenseData = { active: Observable<boolean>, increment: ( nr?: number ) => void, decrement: ( nr?: number ) => void };
 
 type TemplateActionPath = number[];
 

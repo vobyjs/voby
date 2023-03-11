@@ -5268,14 +5268,14 @@ const TestRenderToStringSuspense = async (): Promise<void> => {
   const App = (): JSX.Element => {
     const o = $(0);
     const Content = () => {
-      useResource ( () => {
+      const resource = useResource ( () => {
         return new Promise<number> ( resolve => {
           setTimeout ( () => {
             resolve ( o ( 123 ) );
           }, TEST_INTERVAL );
         });
       });
-      return <p>{o}</p>;
+      return <p>{o}{resource.value}</p>;
     };
     return (
       <div>
@@ -5284,7 +5284,7 @@ const TestRenderToStringSuspense = async (): Promise<void> => {
       </div>
     );
   };
-  const expected = '<div><h3>renderToString - Suspense</h3><p>123</p></div>';
+  const expected = '<div><h3>renderToString - Suspense</h3><p>123123</p></div>';
   const actual = await renderToString ( <App /> );
   assert ( actual === expected, `[TestRenderToStringSuspense]: Expected '${actual}' to be equal to '${expected}'` );
 };
@@ -5499,19 +5499,19 @@ TestResourceFallbackLatest.test = {
   ]
 };
 
-const TestSuspenseAlways = (): JSX.Element => {
+const TestSuspenseAlwaysValue = (): JSX.Element => {
   const Fallback = () => {
     return <p>Loading...</p>;
   };
   const Content = () => {
-    useResource ( () => {
-      return new Promise ( () => {} );
+    const resource = useResource ( () => {
+      return new Promise<undefined> ( () => {} );
     });
-    return <p>Content!</p>;
+    return <p>Content! {resource.value}</p>;
   };
   return (
     <>
-      <h3>Suspense - Always</h3>
+      <h3>Suspense - Always Value</h3>
       <Suspense fallback={<Fallback />}>
         <Content />
       </Suspense>
@@ -5519,7 +5519,34 @@ const TestSuspenseAlways = (): JSX.Element => {
   );
 };
 
-TestSuspenseAlways.test = {
+TestSuspenseAlwaysValue.test = {
+  static: true,
+  snapshots: [
+    '<p>Loading...</p>'
+  ]
+};
+
+const TestSuspenseAlwaysLatest = (): JSX.Element => {
+  const Fallback = () => {
+    return <p>Loading...</p>;
+  };
+  const Content = () => {
+    const resource = useResource ( () => {
+      return new Promise<undefined> ( () => {} );
+    });
+    return <p>Content! {resource.latest}</p>;
+  };
+  return (
+    <>
+      <h3>Suspense - Always Latest</h3>
+      <Suspense fallback={<Fallback />}>
+        <Content />
+      </Suspense>
+    </>
+  );
+};
+
+TestSuspenseAlwaysLatest.test = {
   static: true,
   snapshots: [
     '<p>Loading...</p>'
@@ -5550,23 +5577,90 @@ TestSuspenseNever.test = {
   ]
 };
 
+const TestSuspenseNeverRead = (): JSX.Element => {
+  const Fallback = () => {
+    return <p>Loading...</p>;
+  };
+  const Content = () => {
+    const resource = useResource ( () => {
+      return new Promise<undefined> ( () => {} );
+    });
+    return <p>Content!</p>;
+  };
+  return (
+    <>
+      <h3>Suspense - Never Read</h3>
+      <Suspense fallback={<Fallback />}>
+        <Content />
+      </Suspense>
+    </>
+  );
+};
+
+TestSuspenseNeverRead.test = {
+  static: true,
+  snapshots: [
+    '<p>Content!</p>'
+  ]
+};
+
+const TestSuspenseMiddleman = (): JSX.Element => {
+  const Fallback = () => {
+    return <p>Loading...</p>;
+  };
+  const Content = () => {
+    const o = $(0);
+    const branch = $(false);
+    const resource = useResource ( () => {
+      o ();
+      return new Promise<number> ( resolve => {
+        setTimeout ( () => {
+          branch ( true );
+        }, TEST_INTERVAL / 2 );
+      });
+    });
+    const refetch = () => o ( prev => prev + 1 );
+    useInterval ( refetch, TEST_INTERVAL );
+    return () => {
+      if ( branch () ) return <p>Middleman!</p>;
+      return <p>Content! {resource.value}</p>;
+    };
+  };
+  return (
+    <>
+      <h3>Suspense - Middleman</h3>
+      <Suspense fallback={<Fallback />}>
+        <Content />
+      </Suspense>
+    </>
+  );
+};
+
+TestSuspenseMiddleman.test = {
+  static: false,
+  snapshots: [
+    '<p>Loading...</p>',
+    '<p>Middleman!</p>'
+  ]
+};
+
 const TestSuspenseObservable = (): JSX.Element => {
   const Fallback = () => {
     return <p>Loading...</p>;
   };
   const Content = () => {
     const o = $(0);
-    useResource ( () => {
+    const resource = useResource ( () => {
       o ();
-      return new Promise<void> ( resolve => {
+      return new Promise<number> ( resolve => {
         setTimeout ( () => {
-          resolve ();
+          resolve ( 123 );
         }, TEST_INTERVAL / 2 );
       });
     });
     const refetch = () => o ( prev => prev + 1 );
     useInterval ( refetch, TEST_INTERVAL );
-    return <p>Content!</p>;
+    return <p>Content! {resource.value}</p>;
   };
   return (
     <>
@@ -5582,7 +5676,7 @@ TestSuspenseObservable.test = {
   static: false,
   snapshots: [
     '<p>Loading...</p>',
-    '<p>Content!</p>'
+    '<p>Content! 123</p>'
   ]
 };
 
@@ -5700,10 +5794,10 @@ TestSuspenseChildrenFunction.test = {
 
 const TestSuspenseFallbackObservableStatic = (): JSX.Element => {
   const Children = (): JSX.Element => {
-    useResource ( () => {
-      return new Promise ( () => {} );
+    const resource = useResource ( () => {
+      return new Promise<undefined> ( () => {} );
     });
-    return <p>children</p>;
+    return <p>children {resource.value}</p>;
   };
   const Fallback = (): JSX.Element => {
     const o = $( String ( random () ) );
@@ -5731,10 +5825,10 @@ TestSuspenseFallbackObservableStatic.test = {
 
 const TestSuspenseFallbackFunction = (): JSX.Element => {
   const Children = (): JSX.Element => {
-    useResource ( () => {
-      return new Promise ( () => {} );
+    const resource = useResource ( () => {
+      return new Promise<undefined> ( () => {} );
     });
-    return <p>children</p>;
+    return <p>children {resource.value}</p>;
   };
   const Fallback = (): JSX.Element => {
     const o = $( String ( random () ) );
@@ -5762,10 +5856,10 @@ TestSuspenseFallbackFunction.test = {
 
 const TestSuspenseCleanup = (): JSX.Element => {
   const ChildrenLoop = () => {
-    useResource ( () => {
-      return new Promise ( () => {} );
+    const resource = useResource ( () => {
+      return new Promise<undefined> ( () => {} );
     });
-    return <p>Loop!</p>;
+    return <p>Loop! {resource.value}</p>;
   };
   const ChildrenPlain = () => {
     return <p>Loaded!</p>;
@@ -6145,8 +6239,11 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestPortalWrapperStatic} />
       <TestSnapshots Component={TestResourceFallbackValue} />
       <TestSnapshots Component={TestResourceFallbackLatest} />
-      <TestSnapshots Component={TestSuspenseAlways} />
+      <TestSnapshots Component={TestSuspenseAlwaysValue} />
+      <TestSnapshots Component={TestSuspenseAlwaysLatest} />
       <TestSnapshots Component={TestSuspenseNever} />
+      <TestSnapshots Component={TestSuspenseNeverRead} />
+      <TestSnapshots Component={TestSuspenseMiddleman} />
       <TestSnapshots Component={TestSuspenseObservable} />
       <TestSnapshots Component={TestSuspenseWhen} />
       <TestSnapshots Component={TestSuspenseAlive} />

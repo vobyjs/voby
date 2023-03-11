@@ -26,8 +26,8 @@ const SuspenseContext = {
     const parent = SuspenseContext.get ();
     const count = $(0);
     const active = useMemo ( () => !!count () );
-    const increment = () => { parent?.increment (); count ( prev => prev + 1 ); };
-    const decrement = () => queueMicrotask ( () => { parent?.decrement (); count ( prev => prev - 1 ); } );
+    const increment = ( nr: number = 1 ) => { parent?.increment ( nr ); count ( prev => prev + nr ); };
+    const decrement = ( nr: number = -1 ) => queueMicrotask ( () => { parent?.decrement ( nr ); count ( prev => prev + nr ); } );
     const data = { active, increment, decrement };
 
     return data;
