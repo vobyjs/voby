@@ -20,13 +20,19 @@ const App = ({ path }: { path?: RouterPath }): JSX.Element => {
             <Link to="/counter">Counter</Link>
           </li>
           <li>
+            <Link to="/loader">Loader</Link>
+          </li>
+          <li>
             <Link to="/redirect">Redirect</Link>
           </li>
           <li>
-            <Link to="/user/alice">User:Alice</Link>
+            <Link to="/user/Alice">User:Alice</Link>
           </li>
           <li>
-            <Link to="/user/bob">User:Bob</Link>
+            <Link to="/user/Bob">User:Bob</Link>
+          </li>
+          <li>
+            <Link to="/search?q=something">Search:something</Link>
           </li>
         </ul>
       </nav>

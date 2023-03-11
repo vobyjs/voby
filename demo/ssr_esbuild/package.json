@@ -19,10 +19,10 @@
   },
   "dependencies": {
     "linkedom-global": "^1.0.0",
-    "noren": "^0.4.1",
+    "noren": "^0.4.2",
     "tiny-livereload": "^1.1.0",
     "voby": "*",
-    "voby-simple-router": "^1.1.2"
+    "voby-simple-router": "^1.2.1"
   },
   "devDependencies": {
     "esbuild": "0.17.11",
