@@ -336,10 +336,9 @@ const TestBooleanRemoval = (): JSX.Element => {
 };
 
 TestBooleanRemoval.test = {
-  static: false,
+  static: true,
   snapshots: [
-    '<p>(<!---->)</p>',
-    '<p>()</p>'
+    '<p>(<!---->)</p>'
   ]
 };
 
@@ -410,10 +409,9 @@ const TestSymbolRemoval = (): JSX.Element => {
 };
 
 TestSymbolRemoval.test = {
-  static: false,
+  static: true,
   snapshots: [
-    '<p>(<!---->)</p>',
-    '<p>()</p>'
+    '<p>(<!---->)</p>'
   ]
 };
 
@@ -486,8 +484,8 @@ const TestNumberRemoval = (): JSX.Element => {
 TestNumberRemoval.test = {
   static: false,
   snapshots: [
-    '<p>(<!---->)</p>',
-    '<p>()</p>'
+    '<p>({random})</p>',
+    '<p>(<!---->)</p>'
   ]
 };
 
@@ -561,7 +559,7 @@ TestBigIntRemoval.test = {
   static: false,
   snapshots: [
     '<p>({random-bigint}n)</p>',
-    '<p>(n)</p>'
+    '<p>(<!---->n)</p>'
   ]
 };
 
@@ -3483,6 +3481,14 @@ const TestIfRace = () => {
   );
 };
 
+TestIfRace.test = {
+  static: false,
+  snapshots: [
+    '<div>hi</div>',
+    ''
+  ]
+};
+
 const TestTernaryStatic = (): JSX.Element => {
   return (
     <>
@@ -5897,27 +5903,27 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestNullStatic} />
       <TestSnapshots Component={TestNullObservable} />
       <TestSnapshots Component={TestNullFunction} />
-      {/* <TestSnapshots Component={TestNullRemoval} /> */}
+      <TestSnapshots Component={TestNullRemoval} />
       <TestSnapshots Component={TestUndefinedStatic} />
       <TestSnapshots Component={TestUndefinedObservable} />
       <TestSnapshots Component={TestUndefinedFunction} />
-      {/* <TestSnapshots Component={TestUndefinedRemoval} /> */}
+      <TestSnapshots Component={TestUndefinedRemoval} />
       <TestSnapshots Component={TestBooleanStatic} />
       <TestSnapshots Component={TestBooleanObservable} />
       <TestSnapshots Component={TestBooleanFunction} />
-      {/* <TestSnapshots Component={TestBooleanRemoval} /> */}
+      <TestSnapshots Component={TestBooleanRemoval} />
       <TestSnapshots Component={TestSymbolStatic} />
       <TestSnapshots Component={TestSymbolObservable} />
       <TestSnapshots Component={TestSymbolFunction} />
-      {/* <TestSnapshots Component={TestSymbolRemoval} /> */}
+      <TestSnapshots Component={TestSymbolRemoval} />
       <TestSnapshots Component={TestNumberStatic} />
       <TestSnapshots Component={TestNumberObservable} />
       <TestSnapshots Component={TestNumberFunction} />
-      {/* <TestSnapshots Component={TestNumberRemoval} /> */}
+      <TestSnapshots Component={TestNumberRemoval} />
       <TestSnapshots Component={TestBigIntStatic} />
       <TestSnapshots Component={TestBigIntObservable} />
       <TestSnapshots Component={TestBigIntFunction} />
-      {/* <TestSnapshots Component={TestBigIntRemoval} /> */}
+      <TestSnapshots Component={TestBigIntRemoval} />
       <TestSnapshots Component={TestStringStatic} />
       <TestSnapshots Component={TestStringObservable} />
       <TestSnapshots Component={TestStringObservableStatic} />
