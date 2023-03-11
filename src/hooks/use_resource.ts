@@ -17,10 +17,10 @@ import type {ObservableMaybe, PromiseMaybe, ResourceStaticPending, ResourceStati
 
 const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): Resource<T> => {
 
-  let pending = $(true);
-  let error = $<Error>();
-  let value = $<T>();
-  let latest = $<T>();
+  const pending = $(true);
+  const error = $<Error>();
+  const value = $<T>();
+  const latest = $<T>();
 
   const {suspend, unsuspend} = new SuspenseManager ();
   const resourcePending: ResourceStaticPending<T> = { pending: true, get value (): undefined { return void suspend () }, get latest (): T | undefined { return latest () ?? void suspend () } };
