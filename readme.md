@@ -1892,9 +1892,10 @@ npm run dev:benchmark
 
 #### `Globals`
 
-The following globals can be used to tweak how the framework works internally.
+The following globals are supported, some of them can be used to tweak how the framework works internally.
 
-- `VOBY_HMR`: If `true`, then Voby will catch errors that happen during diffing and log them to the console instead, keeping your page working after an HMR update event in some case. Fine-grainined support for HMR is not implemented (yet?).
+- `VOBY`: if `true`, then Voby is used in the current client page. This is also used internally to detect if Voby has been loaded multiple times within the same page, which is not supported.
+- `VOBY_HMR`: if `true`, then Voby will catch errors that happen during diffing and log them to the console instead, keeping your page working after an HMR update event in some case. Fine-grainined support for HMR is not implemented (yet?).
 
 #### `JSX`
 

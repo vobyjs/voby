@@ -1,6 +1,7 @@
 
 /* IMPORT */
 
+import '~/singleton';
 import '~/jsx/types';
 import type {Context, Directive, DirectiveOptions, FunctionMaybe, Observable, ObservableReadonly, ObservableMaybe, ObservableOptions, Resource, StoreOptions} from '~/types';
 
