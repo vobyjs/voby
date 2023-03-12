@@ -10,7 +10,7 @@ import type {RouterPath} from 'voby-simple-router';
 const App = ({ path }: { path?: RouterPath }): JSX.Element => {
 
   return (
-    <Router routes={Routes} path={path}>
+    <Router backend="path" routes={Routes} path={path}>
       <nav>
         <ul>
           <li>
