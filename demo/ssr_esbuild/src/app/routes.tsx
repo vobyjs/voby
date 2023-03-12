@@ -4,6 +4,7 @@
 import Page404 from '../pages/404';
 import PageCounter from '../pages/counter';
 import PageHome from '../pages/home';
+import PageLoader from '../pages/loader';
 import PageSearch from '../pages/search';
 import PageUser from '../pages/user';
 import {lazy} from 'voby';
@@ -23,7 +24,8 @@ const Routes: RouterRoute[] = [
   },
   {
     path: '/loader',
-    to: lazy ( () => import ( '../pages/loader' ) ),
+    // to: lazy ( () => import ( '../pages/loader' ) ), //FIXME: https://github.com/evanw/esbuild/issues/2983
+    to: PageLoader,
     loader: () => new Promise ( resolve => setTimeout ( resolve, 1000, 123 ) )
   },
   {
