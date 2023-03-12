@@ -5,6 +5,7 @@ import Page404 from '../pages/404';
 import PageCounter from '../pages/counter';
 import PageHome from '../pages/home';
 import PageLoader from '../pages/loader';
+import PageScrolling from '../pages/scrolling';
 import PageSearch from '../pages/search';
 import PageUser from '../pages/user';
 import {lazy} from 'voby';
@@ -31,6 +32,10 @@ const Routes: RouterRoute[] = [
   {
     path: '/redirect',
     to: <Navigate to="/counter" />
+  },
+  {
+    path: '/scrolling',
+    to: PageScrolling
   },
   {
     path: '/search',

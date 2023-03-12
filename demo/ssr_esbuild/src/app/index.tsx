@@ -26,6 +26,9 @@ const App = ({ path }: { path?: RouterPath }): JSX.Element => {
             <Link to="/redirect">Redirect</Link>
           </li>
           <li>
+            <Link to="/scrolling">Scrolling</Link>
+          </li>
+          <li>
             <Link to="/search?q=something">Search:something</Link>
           </li>
           <li>
