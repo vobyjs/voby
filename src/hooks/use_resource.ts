@@ -14,6 +14,7 @@ import type {ObservableMaybe, PromiseMaybe, ResourceStaticPending, ResourceStati
 /* MAIN */
 
 //TODO: Option for returning the resource as a store, where also the returned value gets wrapped in a store
+//FIXME: SSR demo: toggling back and forth between /home and /loader is buggy, /loader gets loaded with no data, which is wrong
 
 const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): Resource<T> => {
 
