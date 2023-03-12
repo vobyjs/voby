@@ -105,7 +105,7 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): R
 
     };
 
-    batch ( fetch );
+    fetch ();
 
   });
 
