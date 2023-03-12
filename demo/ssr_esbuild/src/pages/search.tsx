@@ -10,7 +10,7 @@ const PageSearch = (): JSX.Element => {
   const params = useSearchParams ();
   const query = () => params ().get ( 'q' );
 
-  return <h1>Query: {query}</h1>;
+  return <h1>Search: {query}</h1>;
 
 };
 

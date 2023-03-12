@@ -10,7 +10,7 @@ const PageUser = (): JSX.Element => {
   const params = useParams ();
   const name = () => params ().name;
 
-  return <h1>Hello {name}</h1>;
+  return <h1>User: {name}</h1>;
 
 };
 
