@@ -1,19 +1,17 @@
-
 /* IMPORT */
 
 import untrack from '../methods/untrack'
 import wrapElement from '../methods/wrap_element'
-import { createHTMLNode, createSVGNode } from '../utils/creators'
 import { isFunction, isNil, isNode, isString, isSVGElement, isVoidChild } from '../utils/lang'
-import { setProps } from '../utils/setters'
 import type { Child, Component, Element, Props } from '../types'
+import { setProps } from '../utils/setters'
+import { createHTMLNode, createSVGNode } from '../utils/creators'
 
 /* MAIN */
 
 // It's important to wrap components, so that they can be executed in the right order, from parent to child, rather than from child to parent in some cases
 
 const createElement = <P = {}>(component: Component<P> | keyof JSX.IntrinsicElements | string, props?: P | null, ..._children: Child[]): Element => {
-
     const { children: __children, key, ref, ...rest } = (props || {}) as Props //TSC
     const children = (_children.length === 1) ? _children[0] : (_children.length === 0) ? __children : _children
 
@@ -60,9 +58,7 @@ const createElement = <P = {}>(component: Component<P> | keyof JSX.IntrinsicElem
         throw new Error('Invalid component')
 
     }
-
 }
 
-/* EXPORT */
 
 export default createElement

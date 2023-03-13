@@ -1,5 +1,6 @@
 
 /* IMPORT */
+console.log('index.ts')
 
 import './jsx/types'
 export type { JSX } from './jsx/types'

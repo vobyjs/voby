@@ -19,7 +19,7 @@
             "esnext",
             "WebWorker"
         ],
-        "module": "es2020",
+        "module": "esnext",
         "moduleResolution": "node",
         "newLine": "lf",
         "noEmitOnError": false,

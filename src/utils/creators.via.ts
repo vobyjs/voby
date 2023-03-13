@@ -9,12 +9,11 @@ import 'via'
 if (typeof via !== 'undefined')
     var document = via.document
 
-const createComment = document.createComment/* .bind(document, '') */ as any as FN<[], Comment>
-const createHTMLNode = document.createElement/* .bind(document) */ as any as FN<[ComponentIntrinsicElement], HTMLElement>
-const createSVGNode = document.createElementNS/* .bind(document, 'http://www.w3.org/2000/svg') */ as any as FN<[ComponentIntrinsicElement], Element>
-const createText = document.createTextNode/* .bind(document) */ as any as FN<[any], Text>
-
-export { createComment, createHTMLNode, createSVGNode, createText, }
+export const createComment = document.createComment as any as FN<[any], Comment>
+export const createHTMLNode = document.createElement as any as FN<[ComponentIntrinsicElement], HTMLElement>
+export const createSVGNode = (name: string) => document.createElementNS('http://www.w3.org/2000/svg', name) as any as FN<[ComponentIntrinsicElement], SVGElement>
+export const createText = document.createTextNode as any as FN<[any], Text>
+export const createDocumentFragment = document.createDocumentFragment as any as FN<[], DocumentFragment>
 
 /* EXPORT */
 

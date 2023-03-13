@@ -13,39 +13,39 @@ import type { Child, ChildWithMetadata, FunctionMaybe } from '../types'
 
 const Portal = ({ when = true, mount, wrapper, children }: { mount?: Child, when?: FunctionMaybe<boolean>, wrapper?: Child, children?: Child }): ChildWithMetadata<{ portal: HTMLElement }> => {
 
-  const portal = $$(wrapper) || createHTMLNode('div')
+    const portal = $$(wrapper) || createHTMLNode('div')
 
-  if (!(portal instanceof HTMLElement)) throw new Error('Invalid wrapper node')
+    if (!(portal instanceof HTMLElement)) throw new Error('Invalid wrapper node')
 
-  const condition = boolean(when)
+    const condition = boolean(when)
 
-  useEffect(() => {
+    useEffect(() => {
 
-    if (!$$(condition)) return
+        if (!$$(condition)) return
 
-    const parent = $$(mount) || document.body
+        const parent = $$(mount) || document.body
 
-    if (!(parent instanceof Element)) throw new Error('Invalid mount node')
+        if (!(parent instanceof Element)) throw new Error('Invalid mount node')
 
-    parent.insertBefore(portal, null)
+        parent.insertBefore(portal, null)
 
-    return () => {
+        return () => {
 
-      parent.removeChild(portal)
+            parent.removeChild(portal)
 
-    }
+        }
 
-  })
+    })
 
-  useEffect(() => {
+    useEffect(() => {
 
-    if (!$$(condition)) return
+        if (!$$(condition)) return
 
-    return render(children, portal)
+        return render(children, portal as any)
 
-  })
+    })
 
-  return assign(() => $$(condition) || children, { metadata: { portal } })
+    return assign(() => $$(condition) || children, { metadata: { portal } })
 
 }
 

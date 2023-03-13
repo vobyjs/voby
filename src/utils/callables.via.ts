@@ -1,10 +1,11 @@
 
 /* IMPORT */
+
 import { SYMBOL_OBSERVABLE, SYMBOL_OBSERVABLE_FROZEN } from '../constants'
 import useCleanup from '../hooks/use_cleanup'
 import untrack from '../methods/untrack'
 import { on, off } from 'oby'
-import { setAttributeStatic, setChildStatic, setClassStatic, setClassBooleanStatic, setClassesStatic, setEventStatic, setPropertyStatic, setStyleStatic, setStylesStatic } from '../utils/setters'
+import { setAttributeStatic, setChildStatic, setClassStatic, setClassBooleanStatic, setClassesStatic, setEventStatic, setPropertyStatic, setStyleStatic, setStylesStatic } from '../utils/setters.via'
 import type { Child, EventListener, Fragment, FunctionMaybe, ObservableReadonly } from '../types'
 
 /* HELPERS */
@@ -65,6 +66,16 @@ abstract class Callable<T> {
 
 }
 
+const debugHTML = (p: HTMLElement, name: string) => {
+    if (p)
+        (async () => {
+            const nn = await get(p.nodeName)
+            const nt = await get(p.nodeType)
+            const html = await get(p.parentElement.outerHTML)
+            console.log(name, p, nn, nt, html)
+        })()
+}
+
 class CallableAttributeStatic extends Callable<null | undefined | boolean | number | string> {
 
     /* VARIABLES */
@@ -82,34 +93,25 @@ class CallableAttributeStatic extends Callable<null | undefined | boolean | numb
         this.key = key
 
         this.init(observable)
-
     }
 
     /* API */
 
     update(value: null | undefined | boolean | number | string): void {
-
         setAttributeStatic(this.element, this.key, value)
-
     }
-
 }
 
 class CallableChildStatic extends Callable<Child> {
 
     /* VARIABLES */
 
-    private parent: HTMLElement
-    private fragment: Fragment
 
     /* CONSTRUCTOR */
 
-    constructor(observable: ObservableReadonly<Child>, parent: HTMLElement, fragment: Fragment) {
+    constructor(observable: ObservableReadonly<Child>, private parent: HTMLElement/* , fragment: Fragment */) {
 
         super(observable)
-
-        this.parent = parent
-        this.fragment = fragment
 
         this.init(observable)
 
@@ -118,9 +120,7 @@ class CallableChildStatic extends Callable<Child> {
     /* API */
 
     update(value: Child): void {
-
-        setChildStatic(this.parent, this.fragment, value, true)
-
+        setChildStatic(this.parent, value, true)
     }
 
 }
@@ -215,19 +215,11 @@ class CallableClassesStatic extends Callable<null | undefined | string | Functio
 
 class CallableEventStatic extends Callable<null | undefined | EventListener> {
 
-    /* VARIABLES */
-
-    private element: HTMLElement
-    private event: string
-
     /* CONSTRUCTOR */
 
-    constructor(observable: ObservableReadonly<null | undefined | EventListener>, element: HTMLElement, event: string) {
+    constructor(observable: ObservableReadonly<null | undefined | EventListener>, private element: HTMLElement, private event: string) {
 
         super(observable)
-
-        this.element = element
-        this.event = event
 
         this.init(observable)
 
@@ -236,9 +228,8 @@ class CallableEventStatic extends Callable<null | undefined | EventListener> {
     /* API */
 
     update(value: null | undefined | EventListener): void {
-
-        setEventStatic(this.element, this.event, value)
-
+        const { element, event } = this
+        setEventStatic(element, event, value)
     }
 
 }

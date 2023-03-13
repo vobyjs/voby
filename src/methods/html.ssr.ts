@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import htm from 'htm'
-import createElement from '../methods/create_element'
+import createElement from '../methods/create_element.ssr'
 import { assign } from '../utils/lang'
 import type { Child, ComponentsMap, Element, Props } from '../types'
 

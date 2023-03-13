@@ -2,10 +2,10 @@
 /* IMPORT */
 
 import useEffect from '../hooks/use_effect'
-import render from '../methods/render'
+import render from '../methods/render_to_string.ssr'
 import $$ from '../methods/SS'
 import { boolean } from 'oby'
-import { createHTMLNode } from '../utils/creators'
+import { createHTMLNode } from '../utils/creators.ssr'
 import { assign } from '../utils/lang'
 import type { Child, ChildWithMetadata, FunctionMaybe } from '../types'
 

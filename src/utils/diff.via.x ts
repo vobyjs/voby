@@ -25,11 +25,11 @@ if (typeof via !== 'undefined') {
 }
 const document = (typeof via !== 'undefined') ? via.document : self.document
 
-const dummyNode = document?.createComment('')
+const dummyNode = document.createComment('')
 const beforeDummyWrapper: [Node] = [dummyNode]
 const afterDummyWrapper: [Node] = [dummyNode]
 
-const diff = (parent: Node, before: Node | Node[], after: Node | Node[], nextSibling: Node | null): void => {
+const diff = async (parent: Node, before: Node | Node[], after: Node | Node[], nextSibling: Node | null) => {
     if (before === after) return
     if (before && !Array.isArray(before)) {  // before instanceof Node) {
         beforeDummyWrapper[0] = before as any
@@ -64,7 +64,7 @@ const diff = (parent: Node, before: Node | Node[], after: Node | Node[], nextSib
             // must be retrieved, otherwise it's gonna be the first item.
             const node = bEnd < bLength ?
                 (bStart ?
-                    (after[bStart - 1].nextSibling) :
+                    await get(after[bStart - 1].nextSibling) :
                     after[bEnd - bStart]) :
                 nextSibling
             if (bStart < bEnd) {
@@ -113,10 +113,10 @@ const diff = (parent: Node, before: Node | Node[], after: Node | Node[], nextSib
             // or asymmetric too
             // [1, 2, 3, 4, 5]
             // [1, 2, 3, 5, 6, 4]
-            const node = before[--aEnd].nextSibling
+            const node = await get(before[--aEnd].nextSibling) as Node
             parent.insertBefore(
                 after[bStart++],
-                before[aStart++].nextSibling
+                await get(before[aStart++].nextSibling)
             )
             parent.insertBefore(after[--bEnd], node)
             // mark the future index as identical (yeah, it's dirty, but cheap 👍)

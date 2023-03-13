@@ -1,59 +1,53 @@
 
 /* IMPORT */
+
 import { SYMBOL_OBSERVABLE_FROZEN, SYMBOL_UNCACHED, SYMBOL_UNTRACKED_UNWRAPPED } from '../constants'
 import useReaction from '../hooks/use_reaction'
 import isObservable from '../methods/is_observable'
 import $$ from '../methods/SS'
-import { createText } from '../utils/creators'
+import { createText } from '../utils/creators.ssr'
 import { fixBigInt, isArray, isFunction, isString, isVoidChild } from '../utils/lang'
 import type { Classes, ObservableMaybe } from '../types'
+import { createHTMLNode } from './creators.ssr'
 
 /* MAIN */
 
-const resolveChild = <T>(value: ObservableMaybe<T>, setter: ((value: T | T[], dynamic: boolean) => void), _dynamic: boolean = false): void => {
+console.log('resolveChild')
+const resolveChild = <T>(value: ObservableMaybe<T>, _dynamic: boolean = false): T | T[] => {
+
     //Observable
     if (isFunction(value)) {
-
         if (SYMBOL_UNTRACKED_UNWRAPPED in value || SYMBOL_OBSERVABLE_FROZEN in value) {
-
-            resolveChild(value(), setter, _dynamic)
-
+            return resolveChild(value())
         } else {
-
+            let v
             useReaction(() => {
-
-                resolveChild(value(), setter, true)
-
+                v = resolveChild(value()) as any
             })
-
+            return [v].flat(Infinity) as any
         }
-
     } else if (isArray(value)) {
-
         const [values, hasObservables] = resolveArraysAndStatics(value)
 
         values[SYMBOL_UNCACHED] = value[SYMBOL_UNCACHED] // Preserving this special symbol
 
         if (hasObservables) {
-
+            const p = { children: null }
             useReaction(() => {
-
-                setter(resolveResolved(values, []), true)
-
+                const v = values.map(v => resolveChild(v)) //, true)
+                if (Array.isArray(v)) {
+                    p.children = v
+                }
+                else
+                    p.children = v
             })
-
+            return createText(p[0]) as any
         } else {
-
-            setter(values, _dynamic)
-
+            return values.map(v => resolveChild(v))
         }
-
-    } else {
-
-        setter(value, _dynamic)
-
     }
-
+    else
+        return value
 }
 
 const resolveClass = (classes: Classes, resolved: Record<string, true> = {}): Record<string, true> => {
@@ -90,11 +84,8 @@ const resolveClass = (classes: Classes, resolved: Record<string, true> = {}): Re
             resolved[key] = true
 
         }
-
     }
-
     return resolved
-
 }
 
 const resolveResolved = <T>(value: T, values: any[]): any => {
@@ -131,7 +122,6 @@ const resolveArraysAndStatics = (() => {
     // 3. It checks if we found any Observables along the way, avoiding looping over the array another time in the future
 
     const DUMMY_RESOLVED = []
-
     const resolveArraysAndStaticsInner = (values: any[], resolved: any[], hasObservables: boolean): [any[], boolean] => {
 
         for (let i = 0, l = values.length; i < l; i++) {

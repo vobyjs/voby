@@ -3,8 +3,8 @@
 
 import { SYMBOL_TEMPLATE_ACCESSOR } from '../constants'
 import wrapElement from '../methods/wrap_element'
-import { assign, indexOf, isFunction, isString } from '../utils/lang'
-import { setAttribute, setChildReplacement, setClasses, setEvent, setHTML, setProperty, setRef, setStyles } from '../utils/setters.via'
+import { assign, indexOf, isFunction, isProxy, isString } from '../utils/lang'
+import { /* setAttribute, */ /* setChildReplacement, */ setClasses, setEvent, setHTML, setProperty, setRef, setStyles } from '../utils/setters.via'
 import type { Child, TemplateActionPath, TemplateActionWithNodes, TemplateActionWithPaths, TemplateVariableProperties, TemplateVariableData, TemplateVariablesMap } from '../types'
 
 /* MAIN */
@@ -50,7 +50,7 @@ const template = <P = {}>(fn: ((props: P) => Child)): ((props: P) => () => Child
 
     }
 
-    const makeActionsWithNodesAndTemplate = (): { actionsWithNodes: TemplateActionWithNodes[], root: Element } => {
+    const makeActionsWithNodesAndTemplate = (): { actionsWithNodes: TemplateActionWithNodes[], root: typeof Proxy } => {
 
         const actionsWithNodes: TemplateActionWithNodes[] = []
         const accessor = makeAccessor(actionsWithNodes)
@@ -60,7 +60,7 @@ const template = <P = {}>(fn: ((props: P) => Child)): ((props: P) => () => Child
 
             const root = component()
 
-            if (root instanceof Element) {
+            if (isProxy(root)) {
 
                 return { actionsWithNodes, root }
 
@@ -106,6 +106,7 @@ const template = <P = {}>(fn: ((props: P) => Child)): ((props: P) => () => Child
             let parent = child.parentNode
 
             while (parent) {
+                debugger
 
                 const index = !child.previousSibling ? 0 : !child.nextSibling ? -0 : indexOf(parent.childNodes, child)
 
@@ -148,6 +149,7 @@ const template = <P = {}>(fn: ((props: P) => Child)): ((props: P) => () => Child
                 properties.push('firstChild')
 
                 for (let nsi = 0; nsi < part; nsi++) {
+                    debugger
 
                     properties.push('nextSibling')
 
@@ -283,7 +285,7 @@ const template = <P = {}>(fn: ((props: P) => Child)): ((props: P) => () => Child
         const { assignments, map } = makeReviverVariables(actionsWithPaths)
         const actions = makeReviverActions(actionsWithPaths, map)
         const fn = new Function('root', 'props', `${assignments.join('')}${actions.join('')}return root;`)
-        const apis = { setAttribute, setChildReplacement, setClasses, setEvent, setHTML, setProperty, setRef, setStyles }
+        const apis = { /* setAttribute, */ /* setChildReplacement, */ setClasses, setEvent, setHTML, setProperty, setRef, setStyles }
         const reviver = fn.bind(apis)
 
         return reviver
@@ -298,7 +300,7 @@ const template = <P = {}>(fn: ((props: P) => Child)): ((props: P) => () => Child
 
         return (props: P): (() => Child) => {
 
-            const clone = root.cloneNode(true)
+            const clone = (root as any).cloneNode(true)
 
             return wrapElement(reviver.bind(undefined, clone, props))
 

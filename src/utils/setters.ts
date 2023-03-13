@@ -1,6 +1,5 @@
 
 /* IMPORT */
-
 import { DIRECTIVE_OUTSIDE_SUPER_ROOT, HMR, SYMBOLS_DIRECTIVES, SYMBOL_UNCACHED } from '../constants'
 import useMicrotask from '../hooks/use_microtask'
 import useReaction from '../hooks/use_reaction'
@@ -9,14 +8,14 @@ import isStore from '../methods/is_store'
 import $$ from '../methods/SS'
 import store from '../methods/store'
 import untrack from '../methods/untrack'
-import { Box, context, with as _with } from 'oby'
+import { context, with as _with } from 'oby'
 import { SYMBOL_STORE_OBSERVABLE } from 'oby'
 import { CallableAttributeStatic, CallableChildStatic, CallableClassStatic, CallableClassBooleanStatic, CallableEventStatic, CallablePropertyStatic, CallableStyleStatic, CallableStylesStatic } from '../utils/callables'
 import { classesToggle } from '../utils/classlist'
 import { createText, createComment } from '../utils/creators'
 import diff from '../utils/diff'
 import FragmentUtils from '../utils/fragment'
-import { castArray, flatten, isArray, isBoolean, isFunction, isNil, isString, isSVG, isTemplateAccessor } from '../utils/lang'
+import { castArray, fixBigInt, flatten, isArray, isBoolean, isFunction, isNil, isString, isSVG, isTemplateAccessor } from '../utils/lang'
 import { resolveChild, resolveClass } from '../utils/resolvers'
 import type { Child, Classes, DirectiveData, EventListener, Fragment, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy } from '../types'
 
@@ -153,7 +152,7 @@ const setChildReplacement = (child: Child, childPrev: Node): void => {
 
     if (type === 'string' || type === 'number' || type === 'bigint') {
 
-        setChildReplacementText(String(child), childPrev)
+        setChildReplacementText(String(fixBigInt(child)), childPrev)
 
     } else {
 
@@ -188,15 +187,13 @@ const setChildStatic = (parent: HTMLElement, fragment: Fragment, child: Child, d
     const prevLast = prevIsArray ? prev[prevLength - 1] : prev
     const prevSibling = prevLast?.nextSibling || null
 
-    child = child instanceof Box ? child.value : child
-
     if (prevLength === 0) { // Fast path for appending a node the first time
 
         const type = typeof child
 
         if (type === 'string' || type === 'number' || type === 'bigint') {
 
-            const textNode = createText(child)
+            const textNode = createText(fixBigInt(child))
 
             parent.appendChild(textNode)
 
@@ -224,7 +221,7 @@ const setChildStatic = (parent: HTMLElement, fragment: Fragment, child: Child, d
 
         if (type === 'string' || type === 'number' || type === 'bigint') {
 
-            const node = setChildReplacementText(String(child), prevFirst)
+            const node = setChildReplacementText(String(fixBigInt(child)), prevFirst)
 
             FragmentUtils.replaceWithNode(fragment, node)
 
@@ -249,7 +246,7 @@ const setChildStatic = (parent: HTMLElement, fragment: Fragment, child: Child, d
 
             nextHasStaticChildren = true
 
-            FragmentUtils.pushNode(fragmentNext, createText(child))
+            FragmentUtils.pushNode(fragmentNext, createText(String(fixBigInt(child))))
 
         } else if (type === 'object' && child !== null && typeof child.nodeType === 'number') {
 
@@ -289,7 +286,7 @@ const setChildStatic = (parent: HTMLElement, fragment: Fragment, child: Child, d
 
             if (nextLength === 0) { // Placeholder, to keep the right spot in the array of children
 
-                const placeholder = createComment()
+                const placeholder = createComment('')
 
                 FragmentUtils.pushNode(fragmentNext, placeholder)
 
@@ -338,7 +335,7 @@ const setChildStatic = (parent: HTMLElement, fragment: Fragment, child: Child, d
 
     if (nextLength === 0) { // Placeholder, to keep the right spot in the array of children
 
-        const placeholder = createComment()
+        const placeholder = createComment('')
 
         FragmentUtils.pushNode(fragmentNext, placeholder)
 

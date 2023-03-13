@@ -54,7 +54,7 @@ const { isArray } = Array
 
 const isBoolean = (value: unknown): value is boolean => {
 
-    return typeof value === 'boolean'
+    return typeof value === 'boolean' || typeof (value as any).value === 'boolean'
 
 }
 
@@ -86,6 +86,11 @@ const isNode = (value: unknown): value is Node => {
 
     return value instanceof Node
 
+}
+
+const isPrimitive = (value: unknown): value is string | number | boolean | symbol | null | undefined | bigint => {
+    const t = typeof value
+    return !(t === 'object' || t === 'function')
 }
 
 const isPromise = (value: unknown): value is Promise<unknown> => {
@@ -165,6 +170,8 @@ const once = <T>(fn: () => T): (() => T) => {
 
 }
 
+export const fixBigInt = (v: any | bigint) => typeof v === 'bigint' ? v + 'n' : v
+
 /* EXPORT */
 
-export { assign, castArray, castError, flatten, indexOf, isArray, isBoolean, isError, isFalsy, isFunction, isNil, isNode, isPromise, isProxy, isString, isSVG, isSVGElement, isTemplateAccessor, isTruthy, isVoidChild, noop, once }
+export { assign, castArray, castError, flatten, indexOf, isArray, isBoolean, isPrimitive, isError, isFalsy, isFunction, isNil, isNode, isPromise, isProxy, isString, isSVG, isSVGElement, isTemplateAccessor, isTruthy, isVoidChild, noop, once }

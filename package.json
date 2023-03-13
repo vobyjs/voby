@@ -5,8 +5,8 @@
     "version": "0.44.1",
     "type": "module",
     "sideEffects": false,
-    "main": "dist/index.js",
-    "types": "./dist/index.d.ts",
+    "//main": "dist/index.js",
+    "//types": "./dist/index.d.ts",
     "exports": {
         ".": {
             "import": "./dist/index.js",
@@ -15,6 +15,10 @@
         "./via": {
             "import": "./dist/via.js",
             "types": "./dist/via.d.ts"
+        },
+        "./ssr": {
+            "import": "./dist/ssr.js",
+            "types": "./dist/ssr.d.ts"
         },
         "./jsx-runtime": {
             "import": "./dist/jsx-runtime/index.js",
@@ -27,6 +31,10 @@
         "./via/jsx-runtime": {
             "import": "./dist/via/jsx-runtime/index.js",
             "types": "./dist/via/jsx-runtime/index.d.ts"
+        },
+        "./ssr/jsx-runtime": {
+            "import": "./dist/ssr/jsx-runtime/index.js",
+            "types": "./dist/ssr/jsx-runtime/index.d.ts"
         }
     },
     "typesVersions": {
@@ -36,6 +44,12 @@
             ],
             "jsx-dev-runtime": [
                 "./dist/jsx/runtime.d.ts"
+            ],
+            "via/jsx-runtime": [
+                "./dist/via/runtime.d.ts"
+            ],
+            "ssr/jsx-runtime": [
+                "./dist/ssr/runtime.d.ts"
             ]
         }
     },
@@ -66,6 +80,7 @@
         "esbuild-ifdef": "^0.2.0",
         "htm": "^3.1.1",
         "oby": "workspace:*",
+        "vhtml": "workspace:*",
         "via": "workspace:*"
     },
     "devDependencies": {

@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import useMemo from '../hooks/use_memo'
-import createElement from '../methods/create_element'
+import createElement from '../methods/create_element.ssr'
 import resolve from '../methods/resolve'
 import $$ from '../methods/SS'
 import type { Child, Component, FunctionMaybe } from '../types'

@@ -4,7 +4,7 @@
 import useMemo from '../hooks/use_memo'
 import useResolved from '../hooks/use_resolved'
 import useResource from '../hooks/use_resource'
-import creatElement from '../methods/create_element'
+import creatElement from '../methods/create_element.ssr'
 import resolve from '../methods/resolve'
 import { once } from '../utils/lang'
 import type { Child, LazyFetcher, LazyResult, ObservableReadonly } from '../types'

@@ -16,9 +16,6 @@ const SYMBOL_SUSPENSE = Symbol('Suspense')
 
 const SYMBOL_TEMPLATE_ACCESSOR = Symbol('Template Accessor')
 
-export const SYMBOL_PARENT = Symbol('Parent')
-context(SYMBOL_PARENT, { func: null })
-
 const SYMBOLS_DIRECTIVES: Record<string, symbol> = {}
 
 /* EXPORT */

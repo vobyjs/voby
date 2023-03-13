@@ -1,74 +1,80 @@
 
 /* IMPORT */
 
-import { DIRECTIVE_OUTSIDE_SUPER_ROOT, HMR, SYMBOLS_DIRECTIVES, SYMBOL_PARENT, SYMBOL_UNCACHED } from '../constants'
+import { DIRECTIVE_OUTSIDE_SUPER_ROOT, HMR, SYMBOLS_DIRECTIVES, SYMBOL_UNCACHED } from '../constants'
 import useMicrotask from '../hooks/use_microtask'
 import useReaction from '../hooks/use_reaction'
 import isObservable from '../methods/is_observable'
 import isStore from '../methods/is_store'
-import $, { Box } from 'oby'
 import $$ from '../methods/SS'
 import store from '../methods/store'
 import untrack from '../methods/untrack'
 import { context, with as _with } from 'oby'
 import { SYMBOL_STORE_OBSERVABLE } from 'oby'
-import { CallableAttributeStatic, CallableChildStatic, CallableClassStatic, CallableClassBooleanStatic, CallableEventStatic, CallablePropertyStatic, CallableStyleStatic, CallableStylesStatic } from '../utils/callables'
+import { CallableAttributeStatic, CallableClassStatic, CallableClassBooleanStatic, CallableEventStatic, CallablePropertyStatic, CallableStyleStatic, CallableStylesStatic } from '../utils/callables.via'
 import { classesToggle } from '../utils/classlist'
-import { createText, createComment } from '../utils/creators.via'
-import diff from '../utils/diff'
-import FragmentUtils from '../utils/fragment.via'
-import { castArray, flatten, isArray, isBoolean, isFunction, isNil, isString, isSVG, isTemplateAccessor } from '../utils/lang'
-import { resolveChild, resolveClass } from '../utils/resolvers'
+import { createText } from '../utils/creators'
+import { castArray, flatten, isArray, isBoolean, isFunction, isNil, isProxy, isString, isSVG, isTemplateAccessor } from '../utils/lang'
+import { resolveChild, resolveClass } from '../utils/resolvers.via'
 import type { Child, Classes, DirectiveData, EventListener, Fragment, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy } from '../types'
-import { isProxy } from './lang'
+import { __ArgsSymbol } from 'via'
+import { IsSvgSymbol } from '../methods/create_element.via'
+
+
+// import createElement from '../methods/create_element.via'
 
 /* MAIN */
+
+
+const debugHTML = (p: HTMLElement, name: string) => {
+    if (p)
+        (async () => {
+            const nn = await get(p.nodeName)
+            const nt = await get(p.nodeType)
+            const html = await get(p.outerHTML)
+            console.log(name, p, nn, nt, html)
+        })()
+}
 
 const setAttributeStatic = (() => {
 
     const attributesBoolean = new Set(['allowfullscreen', 'async', 'autofocus', 'autoplay', 'checked', 'controls', 'default', 'disabled', 'formnovalidate', 'hidden', 'indeterminate', 'ismap', 'loop', 'multiple', 'muted', 'nomodule', 'novalidate', 'open', 'playsinline', 'readonly', 'required', 'reversed', 'seamless', 'selected'])
-    const attributeCamelCasedRe = /e(r[HRWrv]|[Vawy])|Con|l(e[Tcs]|c)|s(eP|y)|a(t[rt]|u|v)|Of|Ex|f[XYa]|gt|hR|d[Pg]|t[TXYd]|[UZq]/ //URL: https://regex101.com/r/I8Wm4S/1
-    const attributesCache: Record<string, string> = {}
-    const uppercaseRe = /[A-Z]/g
+    // const attributeCamelCasedRe = /e(r[HRWrv]|[Vawy])|Con|l(e[Tcs]|c)|s(eP|y)|a(t[rt]|u|v)|Of|Ex|f[XYa]|gt|hR|d[Pg]|t[TXYd]|[UZq]/ //URL: https://regex101.com/r/I8Wm4S/1
+    // const attributesCache: Record<string, string> = {}
+    // const uppercaseRe = /[A-Z]/g
 
-    const normalizeKeySvg = (key: string): string => {
+    // const normalizeKeySvg = (key: string): string => {
 
-        return attributesCache[key] || (attributesCache[key] = attributeCamelCasedRe.test(key) ? key : key.replace(uppercaseRe, char => `-${char.toLowerCase()}`))
+    //     return attributesCache[key] || (attributesCache[key] = attributeCamelCasedRe.test(key) ? key : key.replace(uppercaseRe, char => `-${char.toLowerCase()}`))
 
-    }
+    // }
 
     return (element: HTMLElement, key: string, value: null | undefined | boolean | number | string): void => {
 
-        if (isSVG(element)) {
+        // put in via
+        // if (isSVG(element) && !isProxy(element)) {
 
-            key = (key === 'xlinkHref' || key === 'xlink:href') ? 'href' : normalizeKeySvg(key)
+        //     key = (key === 'xlinkHref' || key === 'xlink:href') ? 'href' : normalizeKeySvg(key)
 
-            if (isNil(value) || (value === false && attributesBoolean.has(key))) {
+        //     if (isNil(value) || ((value === false) && attributesBoolean.has(key))) {
 
-                element.removeAttribute(key)
+        //         element.removeAttribute(key)
 
-            } else {
+        //     } else {
+        //         element.setAttribute(key, String(value))
+        //     }
 
-                element.setAttribute(key, String(value))
+        // } else {
 
-            }
+        if (isNil(value) || (value === false && attributesBoolean.has(key))) {
+
+            element.removeAttribute(key)
 
         } else {
-
-            if (isNil(value) || (value === false && attributesBoolean.has(key))) {
-
-                element.removeAttribute(key)
-
-            } else {
-
-                value = (value === true) ? '' : String(value)
-
-                element.setAttribute(key, value)
-
-            }
-
+            value = (value === true) ? '' : String(value)
+            element.setAttribute(key, value)
         }
-
+        // }
     }
 
 })()
@@ -99,284 +105,26 @@ const setAttribute = (element: HTMLElement, key: string, value: FunctionMaybe<nu
 
 }
 
-const setChildReplacementFunction = (parent: HTMLElement, fragment: Fragment, child: (() => Child)): void => {
-
-    if (isObservable(child)) {
-
-        new CallableChildStatic(child, parent, fragment)
-
-    } else {
-
-        useReaction(() => {
-
-            let valueNext = child()
-
-            while (isFunction(valueNext)) {
-
-                valueNext = valueNext()
-
-            }
-
-            setChildStatic(parent, fragment, valueNext, true)
-
-        })
-
-    }
-
-}
-
-const setChildReplacementText = (child: string, childPrev: Node): Node => {
-
-    if (childPrev.nodeType === 3) {
-
-        childPrev.nodeValue = child
-
-        return childPrev
-
-    } else {
-
-        const parent = childPrev.parentElement
-
-        if (!parent) throw new Error('Invalid child replacement')
-
-        const textNode = createText(child)
-
-        parent.replaceChild(textNode, childPrev)
-
-        return textNode
-
-    }
-
-}
-
-const setChildReplacement = (child: Child, childPrev: Node): void => {
-
-    const type = typeof child
-
-    if (type === 'string' || type === 'number' || type === 'bigint') {
-
-        setChildReplacementText(String(child), childPrev)
-
-    } else {
-
-        const parent = childPrev.parentElement
-
-        if (!parent) throw new Error('Invalid child replacement')
-
-        const fragment = FragmentUtils.makeWithNode(childPrev)
-
-        if (type === 'function') {
-
-            setChildReplacementFunction(parent, fragment, child as (() => Child)) //TSC
-
-        } else {
-
-            setChild(parent, child, fragment)
-
-        }
-
-    }
-
-}
-
-const setChildStatic = (parent: HTMLElement, fragment: Fragment, child: Child, dynamic: boolean): void => {
+const setChildStatic = (parent: HTMLElement, child: Child, dynamic?: boolean) => {
 
     if (!dynamic && child === undefined) return // Ignoring static undefined children, avoiding inserting some useless placeholder nodes
 
-    const prev = FragmentUtils.getChildren(fragment)
-    const prevIsArray = (prev instanceof Array)
-    const prevLength = prevIsArray ? prev.length : 1
-    const prevFirst = prevIsArray ? prev[0] : prev
-    const prevLast = prevIsArray ? prev[prevLength - 1] : prev
-    const prevSibling = prevLast?.nextSibling || null
+    if (Array.isArray(child)) {
+        const children = (Array.isArray(child) ? child : [child]) as Node[] //TSC
 
-    if (prevLength === 0) { // Fast path for appending a node the first time
-
-        const type = typeof child
-
-        if (type === 'string' || type === 'number' || type === 'bigint') {
-
-            const textNode = createText(child)
-
-            parent.appendChild(textNode)
-
-            FragmentUtils.replaceWithNode(fragment, textNode)
-
-            return
-
-        } else if (type === 'object' && child !== null && typeof (child as Node).nodeType === 'number' || isProxy(child)) { //TSC
-
-            const node = child as Node
-
-            parent.insertBefore(node, null)
-
-            FragmentUtils.replaceWithNode(fragment, node)
-
-            return
-
-        }
-
+        const cs: any[] = children.map(c => resolveChild(c)).flat(Infinity)
+        parent.replaceChildren(...cs)
     }
-
-    if (prevLength === 1) { // Fast path for single text child
-
-        const type = typeof child
-
-        if (type === 'string' || type === 'number' || type === 'bigint') {
-
-            const node = setChildReplacementText(String(child), prevFirst)
-
-            FragmentUtils.replaceWithNode(fragment, node)
-
-            return
-
-        }
-
+    else {
+        const c = resolveChild(child)
+        // debugHTML(parent, "setChildStatic")
+        //@ts-ignore
+        parent.replaceChildren(...[c].flat(Infinity) as any)
     }
-
-    const fragmentNext = FragmentUtils.make()
-
-    const children = (Array.isArray(child) ? child : [child]) as Node[] //TSC
-
-    let nextHasStaticChildren = false
-
-    for (let i = 0, l = children.length; i < l; i++) {
-
-        const child = children[i]
-        const type = typeof child
-
-        if (type === 'string' || type === 'number' || type === 'bigint') {
-
-            nextHasStaticChildren = true
-
-            FragmentUtils.pushNode(fragmentNext, createText(child))
-
-        } else if (type === 'object' && child !== null && typeof child.nodeType === 'number' || isProxy(child)) {
-
-            nextHasStaticChildren = true
-
-            FragmentUtils.pushNode(fragmentNext, child)
-
-        } else if (type === 'function') {
-
-            const fragment = FragmentUtils.make()
-
-            FragmentUtils.pushFragment(fragmentNext, fragment)
-
-            //@ts-ignore
-            resolveChild(child, setChildStatic.bind(undefined, parent, fragment))
-
-        }
-
-    }
-
-    let next = FragmentUtils.getChildren(fragmentNext)
-    let nextLength = fragmentNext.length
-    let nextHasDynamicChildren = !nextHasStaticChildren && nextLength > 0 // Just a heuristic, not exact, good enough
-
-    if (nextLength === 0 && prevLength === 1 && prevFirst.nodeType === 8) { // It's a placeholder already, no need to replace it
-
-        return
-
-    }
-
-    if (nextLength === 0 || (prevLength === 1 && prevFirst.nodeType === 8) || children[SYMBOL_UNCACHED]) { // Fast path for removing all children and/or replacing the placeholder
-
-        const { childNodes } = parent
-
-        if (childNodes.length === prevLength) { // Maybe this fragment doesn't handle all children but only a range of them, checking for that here
-
-            parent.textContent = ''
-
-            if (nextLength === 0) { // Placeholder, to keep the right spot in the array of children
-                const placeholder = createComment()
-
-                FragmentUtils.pushNode(fragmentNext, placeholder)
-
-                if (next !== fragmentNext.values) {
-
-                    next = placeholder
-                    nextLength += 1
-
-                }
-
-            }
-
-            if (prevSibling) {
-
-                if (next instanceof Array) {
-
-                    prevSibling.before.apply(prevSibling, next)
-
-                } else {
-
-                    parent.insertBefore(next, prevSibling)
-
-                }
-
-            } else {
-
-                if (next instanceof Array) {
-
-                    parent.append.apply(parent, next)
-
-                } else {
-
-                    parent.append(next)
-
-                }
-
-            }
-
-            FragmentUtils.replaceWithFragment(fragment, fragmentNext)
-
-            return
-        }
-
-    }
-
-    if (nextLength === 0) { // Placeholder, to keep the right spot in the array of children
-        const placeholder = createComment()
-
-        FragmentUtils.pushNode(fragmentNext, placeholder)
-
-        if (next !== fragmentNext.values) {
-
-            next = placeholder
-            nextLength += 1
-
-        }
-
-    }
-
-    if (prevLength > 0 || nextHasStaticChildren || !nextHasDynamicChildren) { // Some diffs can be safely skipped, if we only added some dynamic children already //FIXME: Children added dynamically must be taken into account perfectly though, this most probably isn't perfect, "prev" may not be representative of the current state, when dynamic children are added
-
-        try {
-
-            diff(parent, prev, next, prevSibling)
-
-        } catch (error: unknown) {
-
-            if (HMR) { // Suppressing error during HMR, to try to keep the page working
-
-                console.error(error)
-
-            } else {
-
-                throw error
-
-            }
-
-        }
-
-    }
-
-    FragmentUtils.replaceWithFragment(fragment, fragmentNext)
-
 }
 
-const setChild = (parent: HTMLElement, child: Child, fragment: Fragment = FragmentUtils.make()): void => {
-    resolveChild(child, setChildStatic.bind(undefined, parent, fragment))
+const setChild = (parent: HTMLElement, child: Child) => {
+    setChildStatic(parent, child)
 }
 
 const setClassStatic = classesToggle
@@ -658,107 +406,133 @@ const setEventStatic = (() => {
 
     //TODO: Maybe delegate more events: [onmousemove, onmouseout, onmouseover, onpointerdown, onpointermove, onpointerout, onpointerover, onpointerup, ontouchend, ontouchmove, ontouchstart]
 
-    const delegatedEvents = <const>{
-        onauxclick: ['_onauxclick', false],
-        onbeforeinput: ['_onbeforeinput', false],
-        onclick: ['_onclick', false],
-        ondblclick: ['_ondblclick', false],
-        onfocusin: ['_onfocusin', false],
-        onfocusout: ['_onfocusout', false],
-        oninput: ['_oninput', false],
-        onkeydown: ['_onkeydown', false],
-        onkeyup: ['_onkeyup', false],
-        onmousedown: ['_onmousedown', false],
-        onmouseup: ['_onmouseup', false]
-    }
+    // const delegatedEvents = <const>{
+    //     onauxclick: ['_onauxclick', false],
+    //     onbeforeinput: ['_onbeforeinput', false],
+    //     onclick: ['_onclick', false],
+    //     ondblclick: ['_ondblclick', false],
+    //     onfocusin: ['_onfocusin', false],
+    //     onfocusout: ['_onfocusout', false],
+    //     oninput: ['_oninput', false],
+    //     onkeydown: ['_onkeydown', false],
+    //     onkeyup: ['_onkeyup', false],
+    //     onmousedown: ['_onmousedown', false],
+    //     onmouseup: ['_onmouseup', false]
+    // }
 
-    const delegate = (event: string): void => {
+    // const delegate = (event: string): void => {
 
-        const key = `_${event}`
+    //     const key = `_${event}`
 
-        via.document.addEventListener(event.slice(2), async event => {
+    //     via.document.addEventListener(event.slice(2), async event => {
 
-            const targets = event.composedPath()
-            const target = targets[0] || document
+    //         const targets = event.composedPath()
+    //         const target = targets[0] || document
 
-            Object.defineProperty(event, 'currentTarget', {
-                configurable: true,
-                get() {
-                    return target
-                }
-            })
+    //         Object.defineProperty(event, 'currentTarget', {
+    //             configurable: true,
+    //             get() {
+    //                 return target
+    //             }
+    //         })
 
-            for (let i = 0, l = targets.length; i < l; i++) {
+    //         for (let i = 0, l = targets.length; i < l; i++) {
 
-                const handler = targets[i][key]
+    //             const handler = targets[i][key]
 
-                if (!handler) continue
+    //             if (!handler) continue
 
-                handler(event)
+    //             handler(event)
 
-                if (event.cancelBubble) break
+    //             if (event.cancelBubble) break
+    //         }
+    //     })
+    // }
 
-            }
-
-        })
-
-    }
+    let preId = 0
 
     return (element: HTMLElement, event: string, value: null | undefined | EventListener): void => {
 
-        const delegated = delegatedEvents[event]
+        // const delegated = delegatedEvents[event]
 
-        if (delegated) {
+        // if (delegated) {
 
-            if (!delegated[1]) { // Not actually delegating yet
+        //     if (!delegated[1]) { // Not actually delegating yet
 
-                delegated[1] = true
+        //         delegated[1] = true
 
-                delegate(event)
+        //         delegate(event)
 
-            }
+        //     }
 
-            element[delegated[0]] = value
+        //     element[delegated[0]] = value
 
-        } else if (event.endsWith('passive')) {
+        // } else
+        // if (event.endsWith('passive')) {
 
-            const isCapture = event.endsWith('capturepassive')
-            const type = event.slice(2, -7 - (isCapture ? 7 : 0))
-            const key = `_${event}`
+        //     const isCapture = event.endsWith('capturepassive')
+        //     const type = event.slice(0, -7 - (isCapture ? 7 : 0)) //on already chopped
+        //     const key = `_${event}`
 
-            const valuePrev = element[key]
+        //     if (preId) {
+        //         const valuePrev = self.Via.getIdToCallback(preId)
+        //         element.removeEventListener(type, valuePrev as any, { capture: isCapture })
+        //     }
 
-            if (valuePrev) element.removeEventListener(type, valuePrev, { capture: isCapture })
+        //     if (value) {
+        //         const f = element.addEventListener
+        //         f(type, value, { passive: true, capture: isCapture })
+        //         preId = f[__ArgsSymbol][1]
+        //     }
 
-            if (value) element.addEventListener(type, value, { passive: true, capture: isCapture })
+        //     element[key] = value
 
-            element[key] = value
+        // } else if (event.endsWith('capture')) {
 
-        } else if (event.endsWith('capture')) {
+        //     const type = event.slice(0, -7) //on already chopped
+        //     const key = `_${event}`
 
-            const type = event.slice(2, -7)
-            const key = `_${event}`
+        //     if (preId) {
+        //         console.log('removeEventListener preId ', preId)
+        //         const valuePrev = self.Via.getIdToCallback(preId)
+        //         element.removeEventListener(type, valuePrev as any, { capture: true })
+        //     }
 
-            const valuePrev = element[key]
+        //     if (value) {
+        //         const f = element.addEventListener
+        //         f(type, value, { capture: true })
+        //         preId = f[__ArgsSymbol][1]
+        //     }
 
-            if (valuePrev) element.removeEventListener(type, valuePrev, { capture: true })
+        //     element[key] = value
 
-            if (value) element.addEventListener(type, value, { capture: true })
+        // } else {
+        //     if (preId) {
+        //         const valuePrev = self.Via.getIdToCallback(preId)
+        //         element.removeEventListener(event, valuePrev as any)
+        //     }
 
-            element[key] = value
+        //     if (value) {
+        //         const f = element.addEventListener
+        //         f(event, value)
+        //         preId = f[__ArgsSymbol][1]
+        //     }
 
-        } else {
+        //     element[event] = value
+        // }
 
-            element[event] = value
+        // const valuePrev = element[event]
 
-        }
+        // if (valuePrev) element.removeEventListener(event, valuePrev)
 
+        // if (value) element.addEventListener(event, value)
+
+        element[event] = value
     }
 
 })()
 
 const setEvent = (element: HTMLElement, event: string, value: ObservableMaybe<null | undefined | EventListener>): void => {
-
     if (isObservable(value)) {
 
         new CallableEventStatic(value as any, element, event)
@@ -800,16 +574,13 @@ const setPropertyStatic = (element: HTMLElement, key: string, value: null | unde
         element['_$inited'] = true
 
         queueMicrotask(() => element[key] = value)
-
     }
 
     element[key] = value
 
-    if (isNil(value)) {
-
-        setAttributeStatic(element, key, null)
-
-    }
+    // if (isNil(value)) {
+    //     setAttributeStatic(element, key, null)
+    // }
 
 }
 
@@ -819,13 +590,13 @@ const setProperty = (element: HTMLElement, key: string, value: FunctionMaybe<nul
 
         if (isObservable(value)) {
 
-            new CallablePropertyStatic(value, element, key)
+            new CallablePropertyStatic(value as any, element, key)
 
         } else {
 
             useReaction(() => {
 
-                setPropertyStatic(element, key, value())
+                setPropertyStatic(element, key, value() as any)
 
             })
 
@@ -858,31 +629,18 @@ const setStyleStatic = (() => {
     const propertyNonDimensionalCache: Partial<Record<string, boolean>> = {}
 
     return (element: HTMLElement, key: string, value: null | undefined | number | string): void => {
-
         if (key.charCodeAt(0) === 45) { // /^-/
-
-            if (isNil(value)) {
-
+            if (isNil(value))
                 element.style.removeProperty(key)
-
-            } else {
-
+            else
                 element.style.setProperty(key, String(value))
 
-            }
-
-        } else if (isNil(value)) {
-
+        } else if (isNil(value))
             element.style[key] = null
-
-        } else {
-
+        else
             element.style[key] = (isString(value) || (propertyNonDimensionalCache[key] ||= propertyNonDimensionalRe.test(key)) ? value : `${value}px`)
 
-        }
-
     }
-
 })()
 
 const setStyle = (element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | number | string>): void => {
@@ -896,7 +654,7 @@ const setStyle = (element: HTMLElement, key: string, value: FunctionMaybe<null |
         } else {
 
             useReaction(() => {
-
+                const v = value()
                 setStyleStatic(element, key, value())
 
             })
@@ -914,9 +672,7 @@ const setStyle = (element: HTMLElement, key: string, value: FunctionMaybe<null |
 const setStylesStatic = (element: HTMLElement, object: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>, objectPrev?: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>): void => {
 
     if (isString(object)) {
-
         element.setAttribute('style', object)
-
     } else {
 
         if (objectPrev) {
@@ -1055,74 +811,45 @@ const setTemplateAccessor = async (element: HTMLElement, key: string, value: Tem
     }
 }
 
-const setProp = (element: HTMLElement, key: string, value: any): void => {
-    if (value instanceof Box)
-        value = value.valueOf()
-
-    if (isTemplateAccessor(value)) {
-
+const setProp = <T>(element: HTMLElement, key: string, value: T): void => {
+    if (isTemplateAccessor(value))
         setTemplateAccessor(element, key, value)
 
-    } else if (key === 'children') {
-        if (Array.isArray(value))
-            element.replaceChildren(...value)
-        else
-            element.replaceChildren(value)
-    } else if (key === 'ref') {
-
-        setRef(element, value)
-
-    } else if (key === 'style') {
-
-        setStyles(element, value)
-
-    } else if (key === 'class') {
-
-        setClasses(element, value)
-
-    } else if (key === 'dangerouslySetInnerHTML') {
-
-        setHTML(element, value)
-
-    } else if (key.charCodeAt(0) === 111 && key.charCodeAt(1) === 110) { // /^on/
-        // setEvent(element, key.toLowerCase(), value)
-        $.root(() => {
-            // $.context(SYMBOL_PARENT)
-            // const w = $.with()
-            // element.addEventListener(key.substring(2).toLowerCase(), () => w(value))
-            element.addEventListener(key.substring(2).toLowerCase(), value as any)
-        })
-
-    } else if (key.charCodeAt(0) === 117 && key.charCodeAt(3) === 58) { // /^u..:/
-
-        setDirective(element, key.slice(4), value)
-
-    } else if (key === 'innerHTML' || key === 'outerHTML' || key === 'textContent' || key === 'className') {
-
+    else if (key === 'children')
+        setChild(element, value as any)
+    else if (key === 'ref')
+        setRef(element, value as any)
+    else if (key === 'style')
+        setStyles(element, value as any)
+    else if (key === 'class')
+        setClasses(element, value as any)
+    else if (key === 'dangerouslySetInnerHTML')
+        setHTML(element, value as any)
+    else if (key.charCodeAt(0) === 111 && key.charCodeAt(1) === 110)  // /^on/
+        setEvent(element, key.toLowerCase(), value as any)
+    // $.root(() => element.addEventListener(key.substring(2).toLowerCase(), value as any))
+    else if (key.charCodeAt(0) === 117 && key.charCodeAt(3) === 58)  // /^u..:/
+        setDirective(element, key.slice(4), value as any)
+    else if (key === 'innerHTML' || key === 'outerHTML' || key === 'textContent' || key === 'className') {
         // Forbidden props
-
-    } else if (key in element && !isSVG(element)) {
-
-        setProperty(element, key, value)
-
-    } else {
-
-        setAttribute(element, key, value)
-
+    } else {//if (key in element && !isSVG(element))
+        setProperty(element, key, value as any)
+        // else
+        setAttribute(element, key, value as any)
     }
-
 }
 
 const setProps = (element: HTMLElement, object: Record<string, unknown>): void => {
+    const { children, ...pp } = object
 
-    for (const key in object) {
+    //set children 1st, in case value refer to children
+    // if (typeof children !== 'undefined')
+    setProp(element, 'children', children)
 
+    for (const key in pp)
         setProp(element, key, object[key])
-
-    }
-
 }
 
 /* EXPORT */
 
-export { setAttributeStatic, setAttribute, setChildReplacementFunction, setChildReplacementText, setChildReplacement, setChildStatic, setChild, setClassStatic, setClass, setClassBooleanStatic, setClassesStatic, setClasses, setEventStatic, setEvent, setHTMLStatic, setHTML, setPropertyStatic, setProperty, setRef, setStyleStatic, setStyle, setStylesStatic, setStyles, setTemplateAccessor, setProp, setProps }
+export { setAttributeStatic, setAttribute, /* setChildReplacementFunction, */ /* setChildReplacementText, setChildReplacement, */ setChildStatic, setChild, setClassStatic, setClass, setClassBooleanStatic, setClassesStatic, setClasses, setEventStatic, setEvent, setHTMLStatic, setHTML, setPropertyStatic, setProperty, setRef, setStyleStatic, setStyle, setStylesStatic, setStyles, setTemplateAccessor, setProp, setProps }
