@@ -524,7 +524,7 @@ const setClassesStatic = (element: HTMLElement, object: null | undefined | strin
 
                 for (let i = 0, l = object.length; i < l; i++) {
 
-                    const fn = untrack(() => isFunction(object[i]) ? object[i] : object[SYMBOL_STORE_OBSERVABLE](String(i))) as (() => string | boolean | null | undefined) //TSC
+                    const fn = untrack(() => isFunction(object[i]) ? object[i] : (object[SYMBOL_STORE_OBSERVABLE] as Function)(String(i))) as (() => string | boolean | null | undefined) //TSC
 
                     setClassBoolean(element, true, fn)
 

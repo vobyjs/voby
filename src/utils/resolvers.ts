@@ -101,7 +101,7 @@ const resolveResolved = <T>(value: T, values: any[]): any => {
 
     while (isObservable<T>(value)) {
 
-        value = value()
+        value = (value as Function)()
 
     }
 

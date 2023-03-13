@@ -5,7 +5,7 @@ import { SYMBOL_OBSERVABLE_FROZEN, SYMBOL_UNCACHED, SYMBOL_UNTRACKED_UNWRAPPED }
 import useReaction from '../hooks/use_reaction'
 import isObservable from '../methods/is_observable'
 import $$ from '../methods/SS'
-import { isArray, isFunction, isString, isProxy, fixBigInt } from '../utils/lang'
+import { isArray, isFunction, isString, isProxy, fixBigInt, toArray } from '../utils/lang'
 import type { Classes, ObservableMaybe } from '../types'
 import { createText, createComment, createHTMLNode } from './creators'
 import { IgnoreSymbols } from 'via'
@@ -13,7 +13,6 @@ import { IgnoreSymbols } from 'via'
 const HTMLValue = Symbol('HtmlValue')
 IgnoreSymbols[HTMLValue] = HTMLValue
 
-const toArray = <T,>(v: T | T[]) => [...[v].flat(Infinity)] as T[]
 
 /* MAIN */
 console.log('resolveChild')
@@ -95,7 +94,7 @@ const resolveChild = <T>(value: ObservableMaybe<T>, _dynamic: boolean = false): 
     }
 
     if (isProxy(value)) {
-        return value
+        return value as T
     }
     //Observable
     else if (isFunction(value)) {
@@ -130,7 +129,7 @@ const resolveChild = <T>(value: ObservableMaybe<T>, _dynamic: boolean = false): 
             })
             return v //[...v] as any
         } else {
-            const vs = values.map(v => resolveChild(v)).filter(v => typeof v !== 'undefined')
+            const vs: any[] = values.map(v => resolveChild(v)).filter(v => typeof v !== 'undefined')
             return vs
         }
     }

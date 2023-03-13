@@ -172,6 +172,8 @@ const once = <T>(fn: () => T): (() => T) => {
 
 export const fixBigInt = (v: any | bigint) => typeof v === 'bigint' ? v + 'n' : v
 
+export const toArray = <T,>(v: T | T[]) => [...[v].flat(Infinity)] as T[]
+
 /* EXPORT */
 
 export { assign, castArray, castError, flatten, indexOf, isArray, isBoolean, isPrimitive, isError, isFalsy, isFunction, isNil, isNode, isPromise, isProxy, isString, isSVG, isSVGElement, isTemplateAccessor, isTruthy, isVoidChild, noop, once }

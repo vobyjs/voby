@@ -6,15 +6,13 @@ import useReaction from '../hooks/use_reaction'
 import isObservable from '../methods/is_observable'
 import $$ from '../methods/SS'
 import { createText } from '../utils/creators.ssr'
-import { fixBigInt, isArray, isFunction, isString, isVoidChild } from '../utils/lang'
+import { fixBigInt, isArray, isFunction, isString, isVoidChild, toArray } from '../utils/lang'
 import type { Classes, ObservableMaybe } from '../types'
 import { createHTMLNode } from './creators.ssr'
 
 /* MAIN */
 
-console.log('resolveChild')
 const resolveChild = <T>(value: ObservableMaybe<T>, _dynamic: boolean = false): T | T[] => {
-
     //Observable
     if (isFunction(value)) {
         if (SYMBOL_UNTRACKED_UNWRAPPED in value || SYMBOL_OBSERVABLE_FROZEN in value) {
@@ -43,7 +41,7 @@ const resolveChild = <T>(value: ObservableMaybe<T>, _dynamic: boolean = false): 
             })
             return createText(p[0]) as any
         } else {
-            return values.map(v => resolveChild(v))
+            return values.map(v => resolveChild(v)) as any
         }
     }
     else
@@ -92,7 +90,7 @@ const resolveResolved = <T>(value: T, values: any[]): any => {
 
     while (isObservable<T>(value)) {
 
-        value = value()
+        value = (value as Function)()
 
     }
 
