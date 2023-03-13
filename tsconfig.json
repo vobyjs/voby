@@ -49,34 +49,11 @@
         "noUncheckedIndexedAccess": false,
         "baseUrl": ".",
         "rootDir": "./src",
-        "paths": {
-            // "~": [
-            //   "./src"
-            // ],
-            // "~/*": [
-            //   "./src/*"
-            // ],
-            // "voby": [
-            //   "./dist"
-            // ],
-            // "voby/*": [
-            //   "./dist/*"
-            // ]
-            // "via": [
-            //     "../via"
-            // ],
-            // "via/*": [
-            //     "../via/*"
-            // ],
-        },
+        "typeRoots": [
+            "types"
+        ],
         "composite": true,
-        // "typeRoots": [
-        //   "../via.js/dist/controller"
-        // ],
     },
-    // "include": [
-    //   "../via/src/**/*.*"
-    // ]
     "exclude": [
         "vite.config.ts",
         "dist/"
