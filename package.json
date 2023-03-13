@@ -79,9 +79,9 @@
     "dependencies": {
         "esbuild-ifdef": "^0.2.0",
         "htm": "^3.1.1",
-        "oby": "workspace:*",
-        "vhtml": "workspace:*",
-        "via": "workspace:*"
+        "oby": "workspace:../oby",
+        "vhtml": "workspace:../vhtml",
+        "via": "workspace:../via"
     },
     "devDependencies": {
         "@types/node": "^18.13.0",
