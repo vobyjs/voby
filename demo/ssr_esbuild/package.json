@@ -19,15 +19,15 @@
   },
   "dependencies": {
     "linkedom-global": "^1.0.0",
-    "noren": "^0.4.2",
-    "tiny-livereload": "^1.1.0",
+    "noren": "^0.4.3",
+    "tiny-livereload": "^1.2.0",
     "voby": "*",
     "voby-simple-router": "^1.4.0"
   },
   "devDependencies": {
     "esbuild": "0.17.11",
     "monex": "^2.1.1",
-    "sass": "^1.58.3",
+    "sass": "^1.59.2",
     "scex": "^1.1.0"
   }
 }

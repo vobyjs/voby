@@ -7,6 +7,6 @@ import App from './app';
 
 /* MAIN */
 
-livereload ( 200 );
+livereload ();
 
 render ( <App />, document.getElementById ( 'app' ) );
