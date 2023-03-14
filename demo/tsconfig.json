@@ -14,23 +14,23 @@
         "inlineSources": false,
         // "isolatedModules": true,
         "jsx": "preserve",
+        "jsxImportSource": "voby",
         "lib": [
             "dom",
-            "esnext",
-            "WebWorker"
+            "esnext"
         ],
-        "module": "esnext",
+        "module": "es2020",
         "moduleResolution": "node",
         "newLine": "lf",
         "noEmitOnError": false,
-        // "noFallthroughCasesInSwitch": true,
-        // "noImplicitOverride": false,
-        // "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitOverride": false,
+        "noImplicitReturns": true,
         "noImplicitThis": true,
         "noPropertyAccessFromIndexSignature": false,
-        "noUnusedLocals": false,
+        "noUnusedLocals": true,
         "noUnusedParameters": false,
-        "outDir": "dist",
+        "outDir": "./dist/",
         "preserveValueImports": true,
         "pretty": true,
         // "resolveJsonModule": true,
@@ -48,15 +48,31 @@
         "noImplicitAny": false,
         "noUncheckedIndexedAccess": false,
         "baseUrl": ".",
-        "rootDir": "./src",
-        "typeRoots": [
-            "types"
-        ],
+        "rootDir": "./demo",
         "composite": true,
+        "paths": {
+            // "*": [
+            //   "../voby/src"
+            // ],
+            // "voby": [
+            //   "../voby/src"
+            // ],
+            // "voby/*": [
+            //   "../voby/src/*"
+            // ],
+            "voby/jsx-runtime": [
+                "../voby/dist/jsx"
+            ],
+            "voby/jsx-runtime/*": [
+                "../voby/dist/jsx/*"
+            ],
+        },
+        "typeRoots": [
+            "../voby/src",
+            "voby"
+        ],
+        "types": [
+            "jsx"
+        ]
     },
-    "exclude": [
-        "vite.config.ts",
-        "dist/",
-        "demo/"
-    ]
 }

@@ -239,7 +239,7 @@ const setClassesStatic = (element: HTMLElement, object: null | undefined | strin
 
             } else if (isArray(objectPrev)) {
 
-                objectPrev = store(objectPrev, { unwrap: true })
+                objectPrev = store(objectPrev, { unwrap: true } as any)
 
                 for (let i = 0, l = objectPrev.length; i < l; i++) {
 
@@ -251,7 +251,7 @@ const setClassesStatic = (element: HTMLElement, object: null | undefined | strin
 
             } else {
 
-                objectPrev = store(objectPrev, { unwrap: true })
+                objectPrev = store(objectPrev, { unwrap: true } as any)
 
                 for (const key in objectPrev as any) {
 
@@ -687,7 +687,7 @@ const setStylesStatic = (element: HTMLElement, object: null | undefined | string
 
             } else {
 
-                objectPrev = store(objectPrev, { unwrap: true })
+                objectPrev = store(objectPrev, { unwrap: true } as any)
 
                 for (const key in objectPrev as Record<string, FunctionMaybe<null | undefined | number | string>>) {
 

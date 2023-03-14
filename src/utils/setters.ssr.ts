@@ -131,7 +131,7 @@ const setClassesStatic = <T extends { children: any }, V>(props: T, key: string,
                 if (objectPrev)
                     props[key] = '' as any
             } else if (isArray(objectPrev)) {
-                objectPrev = store(objectPrev, { unwrap: true })
+                objectPrev = store(objectPrev, { unwrap: true } as any)
 
                 for (let i = 0, l = objectPrev.length; i < l; i++) {
                     if (!objectPrev[i]) continue
@@ -139,7 +139,7 @@ const setClassesStatic = <T extends { children: any }, V>(props: T, key: string,
                 }
             } else {
 
-                objectPrev = store(objectPrev, { unwrap: true })
+                objectPrev = store(objectPrev, { unwrap: true } as any)
 
                 for (const key in objectPrev as any) {
 
@@ -490,7 +490,7 @@ const setStylesStatic = <S extends { cssText: string }, T extends { style: S | s
                 if (objectPrev)
                     (props.style as S).cssText = ''
             } else {
-                objectPrev = store(objectPrev, { unwrap: true })
+                objectPrev = store(objectPrev, { unwrap: true } as any)
 
                 for (const key in objectPrev as Record<string, FunctionMaybe<null | undefined | number | string>>) {
 
