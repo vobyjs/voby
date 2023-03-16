@@ -55,6 +55,8 @@
     "prod:playground": "cd demo/playground && npm i && npm update && npm run prod",
     "dev:spiral": "cd demo/spiral && npm i && npm update && npm run dev",
     "prod:spiral": "cd demo/spiral && npm i && npm update && npm run prod",
+    "dev:ssr_esbuild": "cd demo/ssr_esbuild && npm i && npm update && npm run dev",
+    "prod:ssr_esbuild": "cd demo/ssr_esbuild && npm i && npm update && npm run prod",
     "dev:standalone": "cd demo/standalone && open index.html",
     "prod:standalone": "cd demo/standalone && open index.html",
     "dev:store_counter": "cd demo/store_counter && npm i && npm update && npm run dev",
