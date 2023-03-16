@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "name": "hmr",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --force --config vite.ts --mode dev",
+    "prod": "vite --force --config vite.ts"
+  },
+  "dependencies": {
+    "vite": "^4.1.4",
+    "voby": "*"
+  }
+}
