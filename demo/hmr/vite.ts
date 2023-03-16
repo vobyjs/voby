@@ -4,10 +4,18 @@
 import path from 'node:path';
 import process from 'node:process';
 import {defineConfig} from 'vite';
+// import voby from 'voby-vite';
 
 /* MAIN */
 
 const config = defineConfig ({
+  // plugins: [
+  //   voby ({
+  //     hmr: {
+  //       enabled: true
+  //     }
+  //   })
+  // ],
   resolve: {
     alias: {
       '~': path.resolve ( '../../src' ),

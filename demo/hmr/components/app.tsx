@@ -22,3 +22,4 @@ const App = (): JSX.Element => {
 /* EXPORT */
 
 export default hmr ( import.meta.hot?.accept, App );
+// export default App;

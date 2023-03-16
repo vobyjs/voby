@@ -9,5 +9,8 @@
   "dependencies": {
     "vite": "^4.1.4",
     "voby": "*"
+  },
+  "devDependencies": {
+    "voby-vite": "^1.1.0"
   }
 }
