@@ -8,6 +8,7 @@ import createContext from '~/methods/create_context';
 import createDirective from '~/methods/create_directive';
 import createElement from '~/methods/create_element';
 import h from '~/methods/h';
+import hmr from '~/methods/hmr';
 import html from '~/methods/html';
 import isBatching from '~/methods/is_batching';
 import isObservable from '~/methods/is_observable';
@@ -23,4 +24,4 @@ import untrack from '~/methods/untrack';
 
 /* EXPORT */
 
-export {$, $$, batch, createContext, createDirective, createElement, h, html, isBatching, isObservable, isServer, isStore, lazy, render, renderToString, resolve, store, template, untrack};
+export {$, $$, batch, createContext, createDirective, createElement, h, hmr, html, isBatching, isObservable, isServer, isStore, lazy, render, renderToString, resolve, store, template, untrack};
