@@ -65,19 +65,19 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`createDirective`](#createdirective) | [`ForValue`](#forvalue)           | [`useBoolean`](#useboolean)                 | [`Observable`](#observable)                 | [`TypeScript`](#typescript)     |
 | [`createElement`](#createelement)     | [`Fragment`](#fragment)           | [`useCleanup`](#usecleanup)                 | [`ObservableReadonly`](#observablereadonly) |                                 |
 | [`h`](#h)                             | [`If`](#if)                       | [`useContext`](#usecontext)                 | [`ObservableMaybe`](#observablemaybe)       |                                 |
-| [`html`](#html)                       | [`Portal`](#portal)               | [`useDisposed`](#usedisposed)               | [`ObservableOptions`](#observableoptions)   |                                 |
-| [`isBatching`](#isbatching)           | [`Suspense`](#suspense)           | [`useEffect`](#useeffect)                   | [`Resource`](#resource)                     |                                 |
-| [`isObservable`](#isobservable)       | [`Switch`](#switch)               | [`useError`](#useerror)                     | [`StoreOptions`](#storeoptions)             |                                 |
-| [`isServer`](#isserver)               | [`Ternary`](#ternary)             | [`useEventListener`](#useeventlistener)     |                                             |                                 |
-| [`isStore`](#isstore)                 |                                   | [`useFetch`](#usefetch)                     |                                             |                                 |
-| [`lazy`](#lazy)                       |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
-| [`render`](#render)                   |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
-| [`renderToString`](#rendertostring)   |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
-| [`resolve`](#resolve)                 |                                   | [`useMemo`](#usememo)                       |                                             |                                 |
-| [`store`](#store)                     |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
-| [`template`](#template)               |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
-| [`untrack`](#untrack)                 |                                   | [`useReaction`](#usereaction)               |                                             |                                 |
-|                                       |                                   | [`useReadonly`](#usereadonly)               |                                             |                                 |
+| [`hmr`](#hmr)                         | [`Portal`](#portal)               | [`useDisposed`](#usedisposed)               | [`ObservableOptions`](#observableoptions)   |                                 |
+| [`html`](#html)                       | [`Suspense`](#suspense)           | [`useEffect`](#useeffect)                   | [`Resource`](#resource)                     |                                 |
+| [`isBatching`](#isbatching)           | [`Switch`](#switch)               | [`useError`](#useerror)                     | [`StoreOptions`](#storeoptions)             |                                 |
+| [`isObservable`](#isobservable)       | [`Ternary`](#ternary)             | [`useEventListener`](#useeventlistener)     |                                             |                                 |
+| [`isServer`](#isserver)               |                                   | [`useFetch`](#usefetch)                     |                                             |                                 |
+| [`isStore`](#isstore)                 |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
+| [`lazy`](#lazy)                       |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
+| [`render`](#render)                   |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
+| [`renderToString`](#rendertostring)   |                                   | [`useMemo`](#usememo)                       |                                             |                                 |
+| [`resolve`](#resolve)                 |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
+| [`store`](#store)                     |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
+| [`template`](#template)               |                                   | [`useReaction`](#usereaction)               |                                             |                                 |
+| [`untrack`](#untrack)                 |                                   | [`useReadonly`](#usereadonly)               |                                             |                                 |
 |                                       |                                   | [`useResolved`](#useresolved)               |                                             |                                 |
 |                                       |                                   | [`useResource`](#useresource)               |                                             |                                 |
 |                                       |                                   | [`useRoot`](#useroot)                       |                                             |                                 |
@@ -358,6 +358,43 @@ Usage:
 import {h} from 'voby';
 
 const element = h ( 'div', { class: 'foo' }, 'child' ); // => () => HTMLDivElement
+```
+
+#### `hmr`
+
+This function wraps a component and makes it HMR-aware, for implementations of HMR like Vite's, this makes the component refresh itself and its children without requiring a reload of the whole page.
+
+For an automated way to make all your components HMR-aware check out [`voby-vite`](https://github.com/vobyjs/voby-vite) instead.
+
+Interface:
+
+```ts
+function hmr <T extends Function> ( accept: Function, component: T ): T;
+```
+
+Usage:
+
+```tsx
+import {hmr} from 'voby';
+
+// Define a component
+
+const Counter = ({ value }): JSX.Element => {
+  // Return something...
+};
+
+// Optionally attach components and other values to it
+
+Counter.Button = ({ onClick }): JSX.Element => {
+  // Return something...
+};
+
+Counter.INITIAL_VALUE = 0;
+
+// Lastly export it as "default", wrapped in "hmr"
+// Only components exported as "default" are supported
+
+export default hmr ( import.meta.hot?.accept, Counter );
 ```
 
 #### `html`
@@ -1895,7 +1932,7 @@ npm run dev:benchmark
 The following globals are supported, some of them can be used to tweak how the framework works internally.
 
 - `VOBY`: if `true`, then Voby is used in the current client page. This is also used internally to detect if Voby has been loaded multiple times within the same page, which is not supported.
-- `VOBY_HMR`: if `true`, then Voby will catch errors that happen during diffing and log them to the console instead, keeping your page working after an HMR update event in some case. Fine-grainined support for HMR is not implemented (yet?).
+- `VOBY_HMR`: if `true`, then Voby will catch errors that happen during diffing and log them to the console instead, keeping your page working after an HMR update event in some case. For component-level HMR check out the [`hmr](#hmr) method.
 
 #### `JSX`
 
