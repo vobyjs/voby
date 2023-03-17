@@ -1,6 +1,7 @@
 
 /* IMPORT */
 
+import {SYMBOL_HOT_COMPONENT} from '~/constants';
 import useMemo from '~/hooks/use_memo';
 import $ from '~/methods/S';
 import resolve from '~/methods/resolve';
@@ -9,23 +10,23 @@ import type {ObservableReadonly} from '~/types';
 
 /* MAIN */
 
-const hmr = <T> ( accept: Function | undefined, component: T ): T => {
+const hmr = <T extends Function> ( accept: Function | undefined, component: T ): T => {
 
-  if ( accept ) {
+  if ( accept ) { // Making the component hot
 
     /* VARIABLES */
 
-    const target = $(component);
+    const source = $(component);
 
     /* HELPERS */
 
-    const createHotComponent = ( key?: string ): any => {
+    const createHotComponent = ( path: string[] ): any => {
 
       return <A extends unknown[], R> ( ...args: A ): ObservableReadonly<R> => {
 
         return useMemo ( () => {
 
-          const component = key ? target ()[key] : target ();
+          const component = path.reduce ( ( component, key ) => component[key], source () );
           const result = resolve ( component ( ...args ) );
 
           return result;
@@ -36,9 +37,37 @@ const hmr = <T> ( accept: Function | undefined, component: T ): T => {
 
     };
 
+    const createHotComponentDeep = <T extends Function> ( component: T, path: string[] ): T => {
+
+      const cached = component[SYMBOL_HOT_COMPONENT];
+
+      if ( cached ) return cached;
+
+      const hot = component[SYMBOL_HOT_COMPONENT] = createHotComponent ( path );
+
+      for ( const key in component ) {
+
+        const value = component[key];
+
+        if ( isFunction ( value ) && /^[A-Z]([a-z0-9_]|$)/.test ( key ) ) { // A component
+
+          hot[key] = createHotComponentDeep ( value, [...path, key] );
+
+        } else { // Something else
+
+          hot[key] = value;
+
+        }
+
+      }
+
+      return hot;
+
+    };
+
     const onAccept = ( module: { default: T } ): void => {
 
-      target ( () => module.default );
+      source ( () => module.default );
 
     };
 
@@ -46,29 +75,13 @@ const hmr = <T> ( accept: Function | undefined, component: T ): T => {
 
     accept ( onAccept );
 
-    const proxy = createHotComponent ();
-
-    for ( const key in component ) {
-
-      const utility = component[key];
-
-      if ( isFunction ( utility ) && /^[A-Z]([a-z0-9_]|$)/.test ( key ) ) { // A component
-
-        proxy[key] = createHotComponent ( key );
-
-      } else { // Something else
-
-        proxy[key] = component[key];
-
-      }
-
-    }
+    const hot = createHotComponentDeep ( component, [] );
 
     /* RETURN */
 
-    return proxy;
+    return hot;
 
-  } else {
+  } else { // Returning the component as is
 
     return component;
 
