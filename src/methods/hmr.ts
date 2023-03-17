@@ -1,22 +1,33 @@
 
 /* IMPORT */
 
-import {SYMBOL_HOT_COMPONENT} from '~/constants';
 import useMemo from '~/hooks/use_memo';
 import $ from '~/methods/S';
 import resolve from '~/methods/resolve';
 import {isFunction} from '~/utils/lang';
-import type {ObservableReadonly} from '~/types';
+import type {Observable, ObservableReadonly} from '~/types';
+
+/* HELPERS */
+
+const SYMBOL_COLD_COMPONENT = Symbol ( 'Cold Component' );
+const SYMBOL_HOT_COMPONENT = Symbol ( 'Hot Component' );
+const SYMBOL_HOT_ID = Symbol ( 'Hot ID' );
+const SOURCES = new WeakMap<{}, Observable<any>>();
 
 /* MAIN */
+
+//TODO: This seems excessively complicated, maybe it can be simplified somewhat?
+//TODO: Make this work better when a nested component is added/removed too
 
 const hmr = <T extends Function> ( accept: Function | undefined, component: T ): T => {
 
   if ( accept ) { // Making the component hot
 
-    /* VARIABLES */
+    /* CHECK */
 
-    const source = $(component);
+    const cached = component[SYMBOL_HOT_COMPONENT];
+
+    if ( cached ) return cached; // Already hot
 
     /* HELPERS */
 
@@ -26,7 +37,7 @@ const hmr = <T extends Function> ( accept: Function | undefined, component: T ):
 
         return useMemo ( () => {
 
-          const component = path.reduce ( ( component, key ) => component[key], source () );
+          const component = path.reduce ( ( component, key ) => component[key], SOURCES.get ( id () )?.() || source () );
           const result = resolve ( component ( ...args ) );
 
           return result;
@@ -49,7 +60,7 @@ const hmr = <T extends Function> ( accept: Function | undefined, component: T ):
 
         const value = component[key];
 
-        if ( isFunction ( value ) && /^[A-Z]([a-z0-9_]|$)/.test ( key ) ) { // A component
+        if ( isFunction ( value ) && ( key.length > 1 ? key !== key.toUpperCase () : key === key.toUpperCase () ) ) { // A component
 
           hot[key] = createHotComponentDeep ( value, [...path, key] );
 
@@ -67,15 +78,30 @@ const hmr = <T extends Function> ( accept: Function | undefined, component: T ):
 
     const onAccept = ( module: { default: T } ): void => {
 
-      source ( () => module.default );
+      const hot = module.default;
+      const cold = hot[SYMBOL_COLD_COMPONENT] || hot;
+
+      hot[SYMBOL_HOT_ID]?.( id () );
+      SOURCES.get ( id () )?.( () => cold );
 
     };
 
     /* MAIN */
 
-    accept ( onAccept );
+    const id = $({});
+    const source = $(component);
 
+    SOURCES.set ( id (), source );
+
+    const cold = component[SYMBOL_COLD_COMPONENT] || component;
     const hot = createHotComponentDeep ( component, [] );
+
+    cold[SYMBOL_HOT_COMPONENT] = hot;
+    hot[SYMBOL_COLD_COMPONENT] = cold;
+    hot[SYMBOL_HOT_COMPONENT] = hot;
+    hot[SYMBOL_HOT_ID] = id;
+
+    accept ( onAccept );
 
     /* RETURN */
 
