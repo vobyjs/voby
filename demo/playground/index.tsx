@@ -4,7 +4,7 @@
 import * as Voby from 'voby';
 import {Dynamic, ErrorBoundary, For, If, Portal, Suspense, Switch, Ternary} from 'voby';
 import {useContext, useEffect, useInterval, useMemo, usePromise, useResource, useTimeout} from 'voby';
-import {$, batch, createContext, createDirective, html, lazy, render, renderToString, store, template} from 'voby';
+import {$, batch, createContext, createDirective, hmr, html, lazy, render, renderToString, store, template} from 'voby';
 import type {Observable} from 'voby';
 
 globalThis.Voby = Voby;
@@ -120,7 +120,7 @@ const TestSnapshots = ({ Component, props }: { Component: ( JSX.Component | Cons
 const TestNullStatic = (): JSX.Element => {
   return (
     <>
-      <h3 style={{ justifyContent: ''}}>Null - Static</h3>
+      <h3>Null - Static</h3>
       <p>{null}</p>
     </>
   );
@@ -5989,6 +5989,37 @@ TestNestedIfs.test = {
   ]
 };
 
+const TestHMRFor = () => {
+  const o = $([ 1, 2, 3 ]);
+  const update = () => o ([ 2, 3, 4 ]);
+  setTimeout ( update, TEST_INTERVAL );
+
+  const Button = hmr ( () => {}, ({ value, index }) => {
+    return <button>{value}, {index}</button>;
+  });
+
+  return (
+    <>
+      <h3>HMR - For</h3>
+      <p>prev</p>
+      <For values={o}>
+        {( item, index ) => (
+          <Button value={item} index={index} />
+        )}
+      </For>
+      <p>next</p>
+    </>
+  );
+};
+
+TestHMRFor.test = {
+  static: false,
+  snapshots: [
+    '<p>prev</p><button>1, 0</button><button>2, 1</button><button>3, 2</button><p>next</p>',
+    '<p>prev</p><button>2, 0</button><button>3, 1</button><button>4, 2</button><p>next</p>'
+  ]
+};
+
 const Test = (): JSX.Element => {
   TestRenderToString ();
   TestRenderToStringSuspense ();
@@ -6255,6 +6286,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestLazy} />
       <TestSnapshots Component={TestNestedArrays} />
       <TestSnapshots Component={TestNestedIfs} />
+      <TestSnapshots Component={TestHMRFor} />
       <hr />
     </>
   );
