@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import * as Voby from 'voby';
-import {Dynamic, ErrorBoundary, For, If, Portal, Suspense, Switch, Ternary} from 'voby';
+import {Dynamic, ErrorBoundary, For, ForIndex, If, Portal, Suspense, Switch, Ternary} from 'voby';
 import {useContext, useEffect, useInterval, useMemo, usePromise, useResource, useTimeout} from 'voby';
 import {$, batch, createContext, createDirective, hmr, html, lazy, render, renderToString, store, template} from 'voby';
 import type {Observable} from 'voby';
@@ -4376,7 +4376,7 @@ const TestForRandom = (): JSX.Element => {
   useInterval ( update, TEST_INTERVAL );
   return (
     <>
-      <h3>For - Random</h3>
+      <h3>For - Random Only Child</h3>
       <For values={values}>
         {( value: number ) => {
           return <p>Value: {value}</p>;
@@ -4390,6 +4390,29 @@ TestForRandom.test = {
   static: false,
   snapshots: [
     '<p>Value: {random}</p><p>Value: {random}</p><p>Value: {random}</p>'
+  ]
+};
+
+const TestForRandomOnlyChild = (): JSX.Element => {
+  const values = $([random (), random (), random ()]);
+  const update = () => values ( [random (), random (), random ()] );
+  useInterval ( update, TEST_INTERVAL );
+  return (
+    <>
+      <h3>For - Random</h3>
+      <For values={values}>
+        {( value: number ) => {
+          return <p>{value}</p>;
+        }}
+      </For>
+    </>
+  );
+};
+
+TestForRandomOnlyChild.test = {
+  static: false,
+  snapshots: [
+    '<p>{random}</p><p>{random}</p><p>{random}</p>'
   ]
 };
 
@@ -4499,6 +4522,316 @@ const TestForFallbackFunction = (): JSX.Element => {
 };
 
 TestForFallbackFunction.test = {
+  static: false,
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
+};
+
+const TestForIndexStatic = (): JSX.Element => {
+  const values = [1, 2, 3];
+  return (
+    <>
+      <h3>ForIndex - Static</h3>
+      <ForIndex values={values}>
+        {( value: Observable<number> ) => {
+          return <p>Value: {value}</p>
+        }}
+      </ForIndex>
+    </>
+  );
+};
+
+TestForIndexStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Value: 1</p><p>Value: 2</p><p>Value: 3</p>'
+  ]
+};
+
+const TestForIndexObservables = (): JSX.Element => {
+  const v1 = $(1);
+  const v2 = $(2);
+  const v3 = $(3);
+  const values = [v1, v2, v3];
+  useInterval ( () => {
+    batch ( () => {
+      v1 ( ( v1 () + 1 ) % 5 );
+      v2 ( ( v2 () + 1 ) % 5 );
+      v3 ( ( v3 () + 1 ) % 5 );
+    });
+  }, TEST_INTERVAL );
+  return (
+    <>
+      <h3>ForIndex - Observables</h3>
+      <ForIndex values={values}>
+        {( value: Observable<number> ) => {
+          return <p>Value: {value}</p>
+        }}
+      </ForIndex>
+    </>
+  );
+};
+
+TestForIndexObservables.test = {
+  static: false,
+  snapshots: [
+    '<p>Value: 1</p><p>Value: 2</p><p>Value: 3</p>',
+    '<p>Value: 2</p><p>Value: 3</p><p>Value: 4</p>',
+    '<p>Value: 3</p><p>Value: 4</p><p>Value: 0</p>',
+    '<p>Value: 4</p><p>Value: 0</p><p>Value: 1</p>',
+    '<p>Value: 0</p><p>Value: 1</p><p>Value: 2</p>'
+  ]
+};
+
+const TestForIndexObservablesStatic = (): JSX.Element => {
+  const v1 = $(1);
+  const v2 = $(2);
+  const v3 = $(3);
+  const values = [v1, v2, v3];
+  useInterval ( () => {
+    batch ( () => {
+      v1 ( ( v1 () + 1 ) % 5 );
+      v2 ( ( v2 () + 1 ) % 5 );
+      v3 ( ( v3 () + 1 ) % 5 );
+    });
+  }, TEST_INTERVAL );
+  return (
+    <>
+      <h3>ForIndex - Observables Static</h3>
+      <ForIndex values={values}>
+        {( value: Observable<number> ) => {
+          value ();
+          return <p>Value: {value ()}</p>
+        }}
+      </ForIndex>
+    </>
+  );
+};
+
+TestForIndexObservablesStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Value: 1</p><p>Value: 2</p><p>Value: 3</p>'
+  ]
+};
+
+const TestForIndexObservableObservables = (): JSX.Element => {
+  const v1 = $(1);
+  const v2 = $(2);
+  const v3 = $(3);
+  const v4 = $(4);
+  const v5 = $(5);
+  const values = $([v1, v2, v3, v4, v5]);
+  useInterval ( () => {
+    batch ( () => {
+      v1 ( v1 () + 1 );
+      v2 ( v2 () + 1 );
+      v3 ( v3 () + 1 );
+      v4 ( v4 () + 1 );
+      v5 ( v5 () + 1 );
+      values ( values ().slice ().sort ( () => .5 - random () ) );
+    });
+  }, TEST_INTERVAL );
+  return (
+    <>
+      <h3>ForIndex - Observable Observables</h3>
+      <ForIndex values={values}>
+        {( value: Observable<number> ) => {
+          return <p>Value: {value}</p>;
+        }}
+      </ForIndex>
+    </>
+  );
+};
+
+const TestForIndexFunctionObservables = (): JSX.Element => {
+  const v1 = $(1);
+  const v2 = $(2);
+  const v3 = $(3);
+  const values = [v1, v2, v3];
+  useInterval ( () => {
+    batch ( () => {
+      v1 ( ( v1 () + 1 ) % 5 );
+      v2 ( ( v2 () + 1 ) % 5 );
+      v3 ( ( v3 () + 1 ) % 5 );
+    });
+  }, TEST_INTERVAL );
+  return (
+    <>
+      <h3>ForIndex - Function Observables</h3>
+      <ForIndex values={() => values}>
+        {( value: Observable<number> ) => {
+          return <p>Value: {value}</p>
+        }}
+      </ForIndex>
+    </>
+  );
+};
+
+TestForIndexFunctionObservables.test = {
+  static: false,
+  snapshots: [
+    '<p>Value: 1</p><p>Value: 2</p><p>Value: 3</p>',
+    '<p>Value: 2</p><p>Value: 3</p><p>Value: 4</p>',
+    '<p>Value: 3</p><p>Value: 4</p><p>Value: 0</p>',
+    '<p>Value: 4</p><p>Value: 0</p><p>Value: 1</p>',
+    '<p>Value: 0</p><p>Value: 1</p><p>Value: 2</p>'
+  ]
+};
+
+const TestForIndexRandom = (): JSX.Element => {
+  const values = $([random (), random (), random ()]);
+  const update = () => values ( [random (), random (), random ()] );
+  useInterval ( update, TEST_INTERVAL );
+  return (
+    <>
+      <h3>ForIndex - Random</h3>
+      <ForIndex values={values}>
+        {( value: Observable<number> ) => {
+          return <p>Value: {value}</p>;
+        }}
+      </ForIndex>
+    </>
+  );
+};
+
+TestForIndexRandom.test = {
+  static: false,
+  snapshots: [
+    '<p>Value: {random}</p><p>Value: {random}</p><p>Value: {random}</p>'
+  ]
+};
+
+const TestForIndexRandomOnlyChild = (): JSX.Element => {
+  const values = $([random (), random (), random ()]);
+  const update = () => values ( [random (), random (), random ()] );
+  useInterval ( update, TEST_INTERVAL );
+  return (
+    <>
+      <h3>ForIndex - Random Only Child</h3>
+      <ForIndex values={values}>
+        {( value: Observable<number> ) => {
+          return <p>{value}</p>;
+        }}
+      </ForIndex>
+    </>
+  );
+};
+
+TestForIndexRandomOnlyChild.test = {
+  static: false,
+  snapshots: [
+    '<p>{random}</p><p>{random}</p><p>{random}</p>'
+  ]
+};
+
+const TestForIndexFallbackStatic = (): JSX.Element => {
+  return (
+    <>
+      <h3>ForIndex - Fallback Static</h3>
+      <ForIndex values={[]} fallback={<div>Fallback!</div>}>
+        {( value: Observable<number> ) => {
+          return <p>Value: {value}</p>
+        }}
+      </ForIndex>
+    </>
+  );
+};
+
+TestForIndexFallbackStatic.test = {
+  static: true,
+  snapshots: [
+    '<div>Fallback!</div>'
+  ]
+};
+
+const TestForIndexFallbackObservable = (): JSX.Element => {
+  const Fallback = () => {
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    return (
+      <>
+        <p>Fallback: {o}</p>
+      </>
+    );
+  };
+  return (
+    <>
+      <h3>ForIndex - Fallback Observable</h3>
+      <ForIndex values={[]} fallback={<Fallback />}>
+        {( value: Observable<number> ) => {
+          return <p>Value: {value}</p>
+        }}
+      </ForIndex>
+    </>
+  );
+};
+
+TestForIndexFallbackObservable.test = {
+  static: false,
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
+};
+
+const TestForIndexFallbackObservableStatic = (): JSX.Element => {
+  const Fallback = () => {
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return (
+      <>
+        <p>Fallback: {o ()}</p>
+      </>
+    );
+  };
+  return (
+    <>
+      <h3>ForIndex - Fallback Observable Static</h3>
+      <ForIndex values={[]} fallback={<Fallback />}>
+        {( value: Observable<number> ) => {
+          return <p>Value: {value}</p>
+        }}
+      </ForIndex>
+    </>
+  );
+};
+
+TestForIndexFallbackObservableStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
+};
+
+const TestForIndexFallbackFunction = (): JSX.Element => {
+  const Fallback = () => {
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return (
+      <>
+        <p>Fallback: {o ()}</p>
+      </>
+    );
+  };
+  return (
+    <>
+      <h3>ForIndex - Fallback Function</h3>
+      <ForIndex values={[]} fallback={Fallback}>
+        {( value: Observable<number> ) => {
+          return <p>Value: {value}</p>
+        }}
+      </ForIndex>
+    </>
+  );
+};
+
+TestForIndexFallbackFunction.test = {
   static: false,
   snapshots: [
     '<p>Fallback: {random}</p>'
@@ -6257,6 +6590,17 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestForFallbackObservable} />
       <TestSnapshots Component={TestForFallbackObservableStatic} />
       <TestSnapshots Component={TestForFallbackFunction} />
+      <TestSnapshots Component={TestForIndexStatic} />
+      <TestSnapshots Component={TestForIndexObservables} />
+      <TestSnapshots Component={TestForIndexObservablesStatic} />
+      <TestForIndexObservableObservables />
+      <TestSnapshots Component={TestForIndexFunctionObservables} />
+      <TestSnapshots Component={TestForIndexRandom} />
+      <TestSnapshots Component={TestForIndexRandomOnlyChild} />
+      <TestSnapshots Component={TestForIndexFallbackStatic} />
+      <TestSnapshots Component={TestForIndexFallbackObservable} />
+      <TestSnapshots Component={TestForIndexFallbackObservableStatic} />
+      <TestSnapshots Component={TestForIndexFallbackFunction} />
       <TestSnapshots Component={TestFragmentStatic} />
       <TestSnapshots Component={TestFragmentStaticComponent} />
       <TestSnapshots Component={TestFragmentStaticDeep} />
