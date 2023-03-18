@@ -850,7 +850,7 @@ const setRef = <T> ( element: T, value: null | undefined | Ref<T> | (null | unde
 
   const values = flatten ( castArray ( value ) );
 
-  useMicrotask ( () => values.forEach ( value => value?.( element ) ) );
+  useMicrotask ( () => untrack ( () => values.forEach ( value => value?.( element ) ) ) );
 
 };
 

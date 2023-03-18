@@ -4876,6 +4876,31 @@ TestRefContext.test = {
   ]
 };
 
+const TestRefUntrack = (): JSX.Element => {
+  const o = $(0);
+  const increment = () => o ( prev => prev + 1 );
+  useInterval ( increment, TEST_INTERVAL );
+
+  const Reffed = hmr ( () => {}, (): JSX.Element => {
+    const ref = element => element.textContent = o ();
+    return <p ref={ref}>content</p>;
+  });
+
+  return (
+    <>
+      <h3>Ref - Untrack</h3>
+      <Reffed />
+    </>
+  );
+};
+
+TestRefUntrack.test = {
+  static: true,
+  snapshots: [
+    '<p>0</p>'
+  ]
+};
+
 const TestPromiseResolved = (): JSX.Element => {
   const resolved = usePromise<string> ( new Promise ( resolve => setTimeout ( () => resolve ( 'Loaded!' ), TEST_INTERVAL ) ) );
   return (
@@ -6246,6 +6271,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestRefsNested} />
       <TestSnapshots Component={TestRefUnmounting} />
       <TestSnapshots Component={TestRefContext} />
+      <TestSnapshots Component={TestRefUntrack} />
       <TestSnapshots Component={TestPromiseResolved} />
       <TestSnapshots Component={TestPromiseRejected} />
       <TestSnapshots Component={TestSVGStatic} />
