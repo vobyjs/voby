@@ -14,7 +14,11 @@ const MINUS = '➖';
 
 const Button = ({ onClick, children }: { onClick: () => void, children: JSX.Children }): JSX.Element => {
 
-  return <button style={{ width: '40px', height: '40px', fontSize: '25px', borderRadius: '12px', cursor: 'pointer', backgroundColor: '#3f3f3f', color: '#f9f9f9', borderWidth: '0' }} onClick={onClick}>{children}</button>;
+  return (
+    <button style={{ width: '40px', height: '40px', fontSize: '25px', borderRadius: '12px', cursor: 'pointer', backgroundColor: '#3f3f3f', color: '#f9f9f9', borderWidth: '0' }} onClick={onClick}>
+      {children}
+    </button>
+  );
 
 };
 
