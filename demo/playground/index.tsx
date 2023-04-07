@@ -5,9 +5,9 @@
 
 import * as Voby from 'voby';
 import {Dynamic, ErrorBoundary, For, If, Portal, Suspense, Switch, Ternary} from 'voby';
-import {useContext, useEffect, useInterval, useMemo, useMicrotask, usePromise, useResource, useTimeout} from 'voby';
-import {$, createContext, createDirective, hmr, html, lazy, render, renderToString, store, template, tick,  untrack} from 'voby';
-import type {Observable} from 'voby';
+import {useContext, useEffect, useInterval, useMemo, usePromise, useResource, useTimeout} from 'voby';
+import {$, createContext, createDirective, hmr, html, lazy, render, renderToString, store, template,  untrack} from 'voby';
+import type {Observable, ObservableReadonly} from 'voby';
 
 globalThis.Voby = Voby;
 
@@ -4526,6 +4526,308 @@ TestForFallbackFunction.test = {
   ]
 };
 
+const TestForUnkeyedStatic = (): JSX.Element => {
+  const values = [1, 2, 3];
+  return (
+    <>
+      <h3>For - Unkeyed - Static</h3>
+      <For values={values} unkeyed>
+        {( value: ObservableReadonly<number> ) => {
+          return <p>Value: {value}</p>
+        }}
+      </For>
+    </>
+  );
+};
+
+TestForUnkeyedStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Value: 1</p><p>Value: 2</p><p>Value: 3</p>'
+  ]
+};
+
+const TestForUnkeyedObservables = (): JSX.Element => {
+  const v1 = $(1);
+  const v2 = $(2);
+  const v3 = $(3);
+  const values = [v1, v2, v3];
+  useInterval ( () => {
+    v1 ( ( v1 () + 1 ) % 5 );
+    v2 ( ( v2 () + 1 ) % 5 );
+    v3 ( ( v3 () + 1 ) % 5 );
+  }, TEST_INTERVAL );
+  return (
+    <>
+      <h3>For - Unkeyed - Observables</h3>
+      <For values={values} unkeyed>
+        {( value: ObservableReadonly<number> ) => {
+          return <p>Value: {value}</p>
+        }}
+      </For>
+    </>
+  );
+};
+
+TestForUnkeyedObservables.test = {
+  static: false,
+  snapshots: [
+    '<p>Value: 1</p><p>Value: 2</p><p>Value: 3</p>',
+    '<p>Value: 2</p><p>Value: 3</p><p>Value: 4</p>',
+    '<p>Value: 3</p><p>Value: 4</p><p>Value: 0</p>',
+    '<p>Value: 4</p><p>Value: 0</p><p>Value: 1</p>',
+    '<p>Value: 0</p><p>Value: 1</p><p>Value: 2</p>'
+  ]
+};
+
+const TestForUnkeyedObservablesStatic = (): JSX.Element => {
+  const v1 = $(1);
+  const v2 = $(2);
+  const v3 = $(3);
+  const values = [v1, v2, v3];
+  useInterval ( () => {
+    v1 ( ( v1 () + 1 ) % 5 );
+    v2 ( ( v2 () + 1 ) % 5 );
+    v3 ( ( v3 () + 1 ) % 5 );
+  }, TEST_INTERVAL );
+  return (
+    <>
+      <h3>For - Unkeyed - Observables Static</h3>
+      <For values={values} unkeyed>
+        {( value: ObservableReadonly<number> ) => {
+          value ();
+          return <p>Value: {value ()}</p>
+        }}
+      </For>
+    </>
+  );
+};
+
+TestForUnkeyedObservablesStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Value: 1</p><p>Value: 2</p><p>Value: 3</p>'
+  ]
+};
+
+const TestForUnkeyedObservableObservables = (): JSX.Element => {
+  const v1 = $(1);
+  const v2 = $(2);
+  const v3 = $(3);
+  const v4 = $(4);
+  const v5 = $(5);
+  const values = $([v1, v2, v3, v4, v5]);
+  useInterval ( () => {
+    v1 ( v1 () + 1 );
+    v2 ( v2 () + 1 );
+    v3 ( v3 () + 1 );
+    v4 ( v4 () + 1 );
+    v5 ( v5 () + 1 );
+    values ( values ().slice ().sort ( () => .5 - random () ) );
+  }, TEST_INTERVAL );
+  return (
+    <>
+      <h3>For - Unkeyed - Observable Observables</h3>
+      <For values={values} unkeyed>
+        {( value: ObservableReadonly<number> ) => {
+          return <p>Value: {value}</p>;
+        }}
+      </For>
+    </>
+  );
+};
+
+const TestForUnkeyedFunctionObservables = (): JSX.Element => {
+  const v1 = $(1);
+  const v2 = $(2);
+  const v3 = $(3);
+  const values = [v1, v2, v3];
+  useInterval ( () => {
+    v1 ( ( v1 () + 1 ) % 5 );
+    v2 ( ( v2 () + 1 ) % 5 );
+    v3 ( ( v3 () + 1 ) % 5 );
+  }, TEST_INTERVAL );
+  return (
+    <>
+      <h3>For - Unkeyed - Function Observables</h3>
+      <For values={() => values} unkeyed>
+        {( value: ObservableReadonly<number> ) => {
+          return <p>Value: {value}</p>
+        }}
+      </For>
+    </>
+  );
+};
+
+TestForUnkeyedFunctionObservables.test = {
+  static: false,
+  snapshots: [
+    '<p>Value: 1</p><p>Value: 2</p><p>Value: 3</p>',
+    '<p>Value: 2</p><p>Value: 3</p><p>Value: 4</p>',
+    '<p>Value: 3</p><p>Value: 4</p><p>Value: 0</p>',
+    '<p>Value: 4</p><p>Value: 0</p><p>Value: 1</p>',
+    '<p>Value: 0</p><p>Value: 1</p><p>Value: 2</p>'
+  ]
+};
+
+const TestForUnkeyedRandom = (): JSX.Element => {
+  const values = $([random (), random (), random ()]);
+  const update = () => values ( [random (), random (), random ()] );
+  useInterval ( update, TEST_INTERVAL );
+  return (
+    <>
+      <h3>For - Unkeyed - Random</h3>
+      <For values={values} unkeyed>
+        {( value: ObservableReadonly<number> ) => {
+          return <p>Value: {value}</p>;
+        }}
+      </For>
+    </>
+  );
+};
+
+TestForUnkeyedRandom.test = {
+  static: false,
+  snapshots: [
+    '<p>Value: {random}</p><p>Value: {random}</p><p>Value: {random}</p>'
+  ]
+};
+
+const TestForUnkeyedRandomOnlyChild = (): JSX.Element => {
+  const values = $([random (), random (), random ()]);
+  const update = () => values ( [random (), random (), random ()] );
+  useInterval ( update, TEST_INTERVAL );
+  return (
+    <>
+      <h3>For - Unkeyed - Random Only Child</h3>
+      <For values={values} unkeyed>
+        {( value: ObservableReadonly<number> ) => {
+          return <p>{value}</p>;
+        }}
+      </For>
+    </>
+  );
+};
+
+TestForUnkeyedRandomOnlyChild.test = {
+  static: false,
+  snapshots: [
+    '<p>{random}</p><p>{random}</p><p>{random}</p>'
+  ]
+};
+
+const TestForUnkeyedFallbackStatic = (): JSX.Element => {
+  return (
+    <>
+      <h3>For - Unkeyed - Fallback Static</h3>
+      <For values={[]} fallback={<div>Fallback!</div>} unkeyed>
+        {( value: ObservableReadonly<number> ) => {
+          return <p>Value: {value}</p>
+        }}
+      </For>
+    </>
+  );
+};
+
+TestForUnkeyedFallbackStatic.test = {
+  static: true,
+  snapshots: [
+    '<div>Fallback!</div>'
+  ]
+};
+
+const TestForUnkeyedFallbackObservable = (): JSX.Element => {
+  const Fallback = () => {
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    return (
+      <>
+        <p>Fallback: {o}</p>
+      </>
+    );
+  };
+  return (
+    <>
+      <h3>For - Unkeyed - Fallback Observable</h3>
+      <For values={[]} fallback={<Fallback />} unkeyed>
+        {( value: ObservableReadonly<number> ) => {
+          return <p>Value: {value}</p>
+        }}
+      </For>
+    </>
+  );
+};
+
+TestForUnkeyedFallbackObservable.test = {
+  static: false,
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
+};
+
+const TestForUnkeyedFallbackObservableStatic = (): JSX.Element => {
+  const Fallback = () => {
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return (
+      <>
+        <p>Fallback: {o ()}</p>
+      </>
+    );
+  };
+  return (
+    <>
+      <h3>For - Unkeyed - Fallback Observable Static</h3>
+      <For values={[]} fallback={<Fallback />} unkeyed>
+        {( value: ObservableReadonly<number> ) => {
+          return <p>Value: {value}</p>
+        }}
+      </For>
+    </>
+  );
+};
+
+TestForUnkeyedFallbackObservableStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
+};
+
+const TestForUnkeyedFallbackFunction = (): JSX.Element => {
+  const Fallback = () => {
+    const o = $( String ( random () ) );
+    const randomize = () => o ( String ( random () ) );
+    useInterval ( randomize, TEST_INTERVAL );
+    o ();
+    return (
+      <>
+        <p>Fallback: {o ()}</p>
+      </>
+    );
+  };
+  return (
+    <>
+      <h3>For - Unkeyed - Fallback Function</h3>
+      <For values={[]} fallback={Fallback} unkeyed>
+        {( value: ObservableReadonly<number> ) => {
+          return <p>Value: {value}</p>
+        }}
+      </For>
+    </>
+  );
+};
+
+TestForUnkeyedFallbackFunction.test = {
+  static: false,
+  snapshots: [
+    '<p>Fallback: {random}</p>'
+  ]
+};
+
 const TestFragmentStatic = (): JSX.Element => {
   return (
     <>
@@ -6309,6 +6611,17 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestForFallbackObservable} />
       <TestSnapshots Component={TestForFallbackObservableStatic} />
       <TestSnapshots Component={TestForFallbackFunction} />
+      <TestSnapshots Component={TestForUnkeyedStatic} />
+      <TestSnapshots Component={TestForUnkeyedObservables} />
+      <TestSnapshots Component={TestForUnkeyedObservablesStatic} />
+      <TestForUnkeyedObservableObservables />
+      <TestSnapshots Component={TestForUnkeyedFunctionObservables} />
+      <TestSnapshots Component={TestForUnkeyedRandom} />
+      <TestSnapshots Component={TestForUnkeyedRandomOnlyChild} />
+      <TestSnapshots Component={TestForUnkeyedFallbackStatic} />
+      <TestSnapshots Component={TestForUnkeyedFallbackObservable} />
+      <TestSnapshots Component={TestForUnkeyedFallbackObservableStatic} />
+      <TestSnapshots Component={TestForUnkeyedFallbackFunction} />
       <TestSnapshots Component={TestFragmentStatic} />
       <TestSnapshots Component={TestFragmentStaticComponent} />
       <TestSnapshots Component={TestFragmentStaticDeep} />
