@@ -3,16 +3,16 @@
 
 import SuspenseManager from '~/components/suspense.manager';
 import useDisposed from '~/hooks/use_disposed';
-import useReaction from '~/hooks/use_reaction';
 import useReadonly from '~/hooks/use_readonly';
+import useRenderEffect from '~/hooks/use_render_effect';
 import $ from '~/methods/S';
 import $$ from '~/methods/SS';
-import batch from '~/methods/batch';
 import {assign, castError, isPromise} from '~/utils/lang';
 import type {ObservableMaybe, PromiseMaybe, ResourceStaticPending, ResourceStaticRejected, ResourceStaticResolved, ResourceStatic, ResourceFunction, Resource} from '~/types';
 
 /* MAIN */
 
+//TODO: Maybe port this to oby, as "from"
 //TODO: Option for returning the resource as a store, where also the returned value gets wrapped in a store
 //FIXME: SSR demo: toggling back and forth between /home and /loader is buggy, /loader gets loaded with no data, which is wrong
 
@@ -30,20 +30,16 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): R
   const resourceFunction: ResourceFunction<T> = { pending: () => pending (), error: () => error (), value: () => resource ().value, latest: () => resource ().latest };
   const resource = $<ResourceStatic<T>>( resourcePending );
 
-  useReaction ( () => {
+  useRenderEffect ( () => {
 
     const disposed = useDisposed ();
 
     const onPending = (): void => {
 
-      batch ( () => {
-
-        pending ( true );
-        error ( undefined );
-        value ( undefined );
-        resource ( resourcePending );
-
-      });
+      pending ( true );
+      error ( undefined );
+      value ( undefined );
+      resource ( resourcePending );
 
     };
 
@@ -51,15 +47,11 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): R
 
       if ( disposed () ) return;
 
-      batch ( () => {
-
-        pending ( false );
-        error ( undefined );
-        value ( () => result );
-        latest ( () => result );
-        resource ( resourceResolved );
-
-      });
+      pending ( false );
+      error ( undefined );
+      value ( () => result );
+      latest ( () => result );
+      resource ( resourceResolved );
 
     };
 
@@ -67,15 +59,11 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): R
 
       if ( disposed () ) return;
 
-      batch ( () => {
-
-        pending ( false );
-        error ( castError ( exception ) );
-        value ( undefined );
-        latest ( undefined );
-        resource ( resourceRejected );
-
-      });
+      pending ( false );
+      error ( castError ( exception ) );
+      value ( undefined );
+      latest ( undefined );
+      resource ( resourceRejected );
 
     };
 

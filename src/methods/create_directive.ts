@@ -9,6 +9,8 @@ import type {Child, DirectiveFunction, Directive, DirectiveData, DirectiveOption
 
 /* MAIN */
 
+//TODO: Fix types, JSX.Directives may be collapsed as "never", due to a bug in TS
+
 const createDirective = <T extends keyof JSX.Directives> ( name: T, fn: DirectiveFunction<JSX.Directives[T]>, options?: DirectiveOptions ): Directive<T> => {
 
   const immediate = !!options?.immediate;

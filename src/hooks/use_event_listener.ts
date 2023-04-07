@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import useReaction from '~/hooks/use_reaction';
+import useEffect from '~/hooks/use_effect';
 import useResolved from '~/hooks/use_resolved';
 import $$ from '~/methods/SS';
 import {castArray} from '~/utils/lang';
@@ -65,7 +65,7 @@ function useEventListener <T extends XMLHttpRequestUpload, U extends keyof XMLHt
 function useEventListener <T extends EventSource, U extends keyof EventSourceEventMap> ( target: FunctionMaybe<ArrayMaybe<T | undefined>>, event: FunctionMaybe<U>, handler: ObservableMaybe<FN<[EventSourceEventMap[U]], void>>, options?: FunctionMaybe<true | AddEventListenerOptions> ): Disposer;
 function useEventListener <T extends EventTarget> ( target: FunctionMaybe<ArrayMaybe<T | undefined>>, event: FunctionMaybe<string>, handler: ObservableMaybe<EventListener>, options?: FunctionMaybe<true | AddEventListenerOptions> ): Disposer {
 
-  return useReaction ( () => {
+  return useEffect ( () => {
 
     const fn = $$(handler, false);
 
@@ -79,7 +79,7 @@ function useEventListener <T extends EventTarget> ( target: FunctionMaybe<ArrayM
 
       });
 
-      return () => {
+      return (): void => {
 
         targets.forEach ( target => {
 
@@ -91,7 +91,7 @@ function useEventListener <T extends EventTarget> ( target: FunctionMaybe<ArrayM
 
     });
 
-  });
+  }, { sync: 'init' } );
 
 }
 

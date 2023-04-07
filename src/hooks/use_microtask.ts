@@ -7,6 +7,8 @@ import type {Callback} from '~/types';
 
 /* MAIN */
 
+//TODO: Maybe port this to oby
+
 const useMicrotask = ( fn: Callback ): void => {
 
   const disposed = useDisposed ();

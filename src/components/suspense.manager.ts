@@ -1,8 +1,8 @@
 
 /* IMPORT */
 
-import {useCleanup} from '~/hooks';
 import SuspenseContext from '~/components/suspense.context';
+import useCleanup from '~/hooks/use_cleanup';
 import type {SuspenseData} from '~/types';
 
 /* MAIN */

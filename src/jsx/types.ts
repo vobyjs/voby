@@ -413,8 +413,6 @@ declare namespace JSX {
     data?: FunctionMaybe<Nullable<string>>,
     dateTime?: FunctionMaybe<Nullable<string>>,
     default?: FunctionMaybe<Nullable<boolean>>,
-    defaultChecked?: FunctionMaybe<Nullable<boolean>>,
-    defaultValue?: FunctionMaybe<Nullable<string>>,
     defer?: FunctionMaybe<Nullable<boolean>>,
     dir?: FunctionMaybe<Nullable<'auto' | 'rtl' | 'ltr'>>,
     disabled?: FunctionMaybe<Nullable<boolean>>,

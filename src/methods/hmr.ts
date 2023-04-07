@@ -9,9 +9,9 @@ import type {Observable, ObservableReadonly} from '~/types';
 
 /* HELPERS */
 
-const SYMBOL_COLD_COMPONENT = Symbol ( 'Cold Component' );
-const SYMBOL_HOT_COMPONENT = Symbol ( 'Hot Component' );
-const SYMBOL_HOT_ID = Symbol ( 'Hot ID' );
+const SYMBOL_COLD_COMPONENT = Symbol ( 'HMR.Cold' );
+const SYMBOL_HOT_COMPONENT = Symbol ( 'HMR.Hot' );
+const SYMBOL_HOT_ID = Symbol ( 'HMR.ID' );
 const SOURCES = new WeakMap<{}, Observable<any>>();
 
 /* MAIN */

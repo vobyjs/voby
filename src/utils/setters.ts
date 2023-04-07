@@ -1,17 +1,15 @@
 
 /* IMPORT */
 
-import {DIRECTIVE_OUTSIDE_SUPER_ROOT, HMR, SYMBOLS_DIRECTIVES, SYMBOL_UNCACHED} from '~/constants';
+import {DIRECTIVE_OUTSIDE_SUPER_ROOT, SYMBOLS_DIRECTIVES, SYMBOL_UNCACHED} from '~/constants';
 import useMicrotask from '~/hooks/use_microtask';
-import useReaction from '~/hooks/use_reaction';
-import isObservable from '~/methods/is_observable';
+import useRenderEffect from '~/hooks/use_render_effect';
 import isStore from '~/methods/is_store';
 import $$ from '~/methods/SS';
 import store from '~/methods/store';
 import untrack from '~/methods/untrack';
 import {context, with as _with} from '~/oby';
 import {SYMBOL_STORE_OBSERVABLE} from '~/oby';
-import {CallableAttributeStatic, CallableChildStatic, CallableClassStatic, CallableClassBooleanStatic, CallableEventStatic, CallablePropertyStatic, CallableStyleStatic, CallableStylesStatic} from '~/utils/callables';
 import {classesToggle} from '~/utils/classlist';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
@@ -75,19 +73,11 @@ const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<n
 
   if ( isFunction ( value ) ) {
 
-    if ( isObservable ( value ) ) {
+    useRenderEffect ( () => {
 
-      new CallableAttributeStatic ( value, element, key );
+      setAttributeStatic ( element, key, value () );
 
-    } else {
-
-      useReaction ( () => {
-
-        setAttributeStatic ( element, key, value () );
-
-      });
-
-    }
+    });
 
   } else {
 
@@ -99,27 +89,19 @@ const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<n
 
 const setChildReplacementFunction = ( parent: HTMLElement, fragment: Fragment, child: (() => Child) ): void => {
 
-  if ( isObservable ( child ) ) {
+  useRenderEffect ( () => {
 
-    new CallableChildStatic ( child, parent, fragment );
+    let valueNext = child ();
 
-  } else {
+    while ( isFunction ( valueNext ) ) {
 
-    useReaction ( () => {
+      valueNext = valueNext ();
 
-      let valueNext = child ();
+    }
 
-      while ( isFunction ( valueNext ) ) {
+    setChildStatic ( parent, fragment, valueNext, true );
 
-        valueNext = valueNext ();
-
-      }
-
-      setChildStatic ( parent, fragment, valueNext, true );
-
-    });
-
-  }
+  });
 
 };
 
@@ -351,23 +333,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, 
 
   if ( prevLength > 0 || nextHasStaticChildren || !nextHasDynamicChildren ) { // Some diffs can be safely skipped, if we only added some dynamic children already //FIXME: Children added dynamically must be taken into account perfectly though, this most probably isn't perfect, "prev" may not be representative of the current state, when dynamic children are added
 
-    try {
-
-      diff ( parent, prev, next, prevSibling );
-
-    } catch ( error: unknown ) {
-
-      if ( HMR ) { // Suppressing error during HMR, to try to keep the page working
-
-        console.error ( error );
-
-      } else {
-
-        throw error;
-
-      }
-
-    }
+    diff ( parent, prev, next, prevSibling );
 
   }
 
@@ -387,19 +353,11 @@ const setClass = ( element: HTMLElement, key: string, value: FunctionMaybe<null 
 
   if ( isFunction ( value ) ) {
 
-    if ( isObservable ( value ) ) {
+    useRenderEffect ( () => {
 
-      new CallableClassStatic ( value, element, key );
+      setClassStatic ( element, key, value () );
 
-    } else {
-
-      useReaction ( () => {
-
-        setClassStatic ( element, key, value () );
-
-      });
-
-    }
+    });
 
   } else {
 
@@ -429,25 +387,17 @@ const setClassBoolean = ( element: HTMLElement, value: boolean, key: FunctionMay
 
   if ( isFunction ( key ) ) {
 
-    if ( isObservable ( key ) ) {
+    let keyPrev: null | undefined | boolean | string;
 
-      new CallableClassBooleanStatic ( key, element, value );
+    useRenderEffect ( () => {
 
-    } else {
+      const keyNext = key ();
 
-      let keyPrev: null | undefined | boolean | string;
+      setClassBooleanStatic ( element, value, keyNext, keyPrev );
 
-      useReaction ( () => {
+      keyPrev = keyNext;
 
-        const keyNext = key ();
-
-        setClassBooleanStatic ( element, value, keyNext, keyPrev );
-
-        keyPrev = keyNext;
-
-      });
-
-    }
+    });
 
   } else {
 
@@ -579,7 +529,7 @@ const setClasses = ( element: HTMLElement, object: Classes ): void => {
 
     let objectPrev: Record<string, boolean> | undefined;
 
-    useReaction ( () => {
+    useRenderEffect ( () => {
 
       const objectNext = resolveClass ( object );
 
@@ -594,36 +544,6 @@ const setClasses = ( element: HTMLElement, object: Classes ): void => {
     setClassesStatic ( element, object );
 
   }
-
-  /* REGULAR IMPLEMENTATION */
-
-  // if ( isFunction ( object ) ) {
-
-  //   if ( isObservable ( object ) ) {
-
-  //     new CallableClassesStatic ( object, element );
-
-  //   } else {
-
-  //     let objectPrev: null | undefined | string | FunctionMaybe<null | undefined | boolean | string>[] | Record<string, FunctionMaybe<null | undefined | boolean>>;
-
-  //     useReaction ( () => {
-
-  //       const objectNext = object ();
-
-  //       setClassesStatic ( element, objectNext, objectPrev );
-
-  //       objectPrev = objectNext;
-
-  //     });
-
-  //   }
-
-  // } else {
-
-  //   setClassesStatic ( element, object );
-
-  // }
 
 };
 
@@ -656,6 +576,7 @@ const setDirective = (() => {
 
 const setEventStatic = (() => {
 
+  //TODO: Maybe delete event delegation
   //TODO: Maybe delegate more events: [onmousemove, onmouseout, onmouseover, onpointerdown, onpointermove, onpointerout, onpointerover, onpointerup, ontouchend, ontouchmove, ontouchstart]
 
   const delegatedEvents = <const> {
@@ -764,15 +685,7 @@ const setEventStatic = (() => {
 
 const setEvent = ( element: HTMLElement, event: string, value: ObservableMaybe<null | undefined | EventListener> ): void => {
 
-  if ( isObservable ( value ) ) {
-
-    new CallableEventStatic ( value, element, event );
-
-  } else {
-
-    setEventStatic ( element, event, value );
-
-  }
+  setEventStatic ( element, event, value );
 
 };
 
@@ -784,7 +697,7 @@ const setHTMLStatic = ( element: HTMLElement, value: null | undefined | number |
 
 const setHTML = ( element: HTMLElement, value: FunctionMaybe<{ __html: FunctionMaybe<null | undefined | number | string> }> ): void => {
 
-  useReaction ( () => {
+  useRenderEffect ( () => {
 
     setHTMLStatic ( element, $$( $$( value ).__html ) );
 
@@ -822,19 +735,11 @@ const setProperty = ( element: HTMLElement, key: string, value: FunctionMaybe<nu
 
   if ( isFunction ( value ) ) {
 
-    if ( isObservable ( value ) ) {
+    useRenderEffect ( () => {
 
-      new CallablePropertyStatic ( value, element, key );
+      setPropertyStatic ( element, key, value () );
 
-    } else {
-
-      useReaction ( () => {
-
-        setPropertyStatic ( element, key, value () );
-
-      });
-
-    }
+    });
 
   } else {
 
@@ -894,19 +799,11 @@ const setStyle = ( element: HTMLElement, key: string, value: FunctionMaybe<null 
 
   if ( isFunction ( value ) ) {
 
-    if ( isObservable ( value ) ) {
+    useRenderEffect ( () => {
 
-      new CallableStyleStatic ( value, element, key );
+      setStyleStatic ( element, key, value () );
 
-    } else {
-
-      useReaction ( () => {
-
-        setStyleStatic ( element, key, value () );
-
-      });
-
-    }
+    });
 
   } else {
 
@@ -978,25 +875,17 @@ const setStyles = ( element: HTMLElement, object: FunctionMaybe<null | undefined
 
   if ( isFunction ( object ) ) {
 
-    if ( isObservable ( object ) ) {
+    let objectPrev: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>;
 
-      new CallableStylesStatic ( object, element );
+    useRenderEffect ( () => {
 
-    } else {
+      const objectNext = object ();
 
-      let objectPrev: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>;
+      setStylesStatic ( element, objectNext, objectPrev );
 
-      useReaction ( () => {
+      objectPrev = objectNext;
 
-        const objectNext = object ();
-
-        setStylesStatic ( element, objectNext, objectPrev );
-
-        objectPrev = objectNext;
-
-      });
-
-    }
+    });
 
   } else {
 

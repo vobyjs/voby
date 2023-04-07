@@ -145,7 +145,11 @@ const isVoidChild = ( value: unknown ): value is null | undefined | symbol | boo
 
 };
 
-const noop = (): void => {};
+const noop = (): void => {
+
+  return;
+
+};
 
 const once = <T> ( fn: () => T ): (() => T) => {
 

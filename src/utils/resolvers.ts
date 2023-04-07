@@ -1,9 +1,9 @@
 
 /* IMPORT */
 
-import {SYMBOL_OBSERVABLE_FROZEN, SYMBOL_UNCACHED, SYMBOL_UNTRACKED_UNWRAPPED} from '~/constants';
-import useReaction from '~/hooks/use_reaction';
+import {SYMBOL_OBSERVABLE_FROZEN, SYMBOL_OBSERVABLE_READABLE, SYMBOL_UNCACHED, SYMBOL_UNTRACKED_UNWRAPPED} from '~/constants';
 import isObservable from '~/methods/is_observable';
+import useRenderEffect from '~/hooks/use_render_effect';
 import $$ from '~/methods/SS';
 import {createText} from '~/utils/creators';
 import {isArray, isFunction, isString} from '~/utils/lang';
@@ -15,13 +15,13 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T | T[],
 
   if ( isFunction ( value ) ) {
 
-    if ( SYMBOL_UNTRACKED_UNWRAPPED in value || SYMBOL_OBSERVABLE_FROZEN in value ) {
+    if ( SYMBOL_UNTRACKED_UNWRAPPED in value || SYMBOL_OBSERVABLE_FROZEN in value || value[SYMBOL_OBSERVABLE_READABLE]?.parent?.disposed ) {
 
       resolveChild ( value (), setter, _dynamic );
 
     } else {
 
-      useReaction ( () => {
+      useRenderEffect ( () => {
 
         resolveChild ( value (), setter, true );
 

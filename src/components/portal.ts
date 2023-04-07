@@ -1,10 +1,10 @@
 
 /* IMPORT */
 
-import useEffect from '~/hooks/use_effect';
+import useBoolean from '~/hooks/use_boolean';
+import useRenderEffect from '~/hooks/use_render_effect';
 import render from '~/methods/render';
 import $$ from '~/methods/SS';
-import {boolean} from '~/oby';
 import {createHTMLNode} from '~/utils/creators';
 import {assign} from '~/utils/lang';
 import type {Child, ChildWithMetadata, FunctionMaybe} from '~/types';
@@ -17,9 +17,9 @@ const Portal = ({ when = true, mount, wrapper, children }: { mount?: Child, when
 
   if ( !( portal instanceof HTMLElement ) ) throw new Error ( 'Invalid wrapper node' );
 
-  const condition = boolean ( when );
+  const condition = useBoolean ( when );
 
-  useEffect ( () => {
+  useRenderEffect ( () => {
 
     if ( !$$(condition) ) return;
 
@@ -29,7 +29,7 @@ const Portal = ({ when = true, mount, wrapper, children }: { mount?: Child, when
 
     parent.insertBefore ( portal, null );
 
-    return () => {
+    return (): void => {
 
       parent.removeChild ( portal );
 
@@ -37,7 +37,7 @@ const Portal = ({ when = true, mount, wrapper, children }: { mount?: Child, when
 
   });
 
-  useEffect ( () => {
+  useRenderEffect ( () => {
 
     if ( !$$(condition) ) return;
 

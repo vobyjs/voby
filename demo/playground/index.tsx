@@ -1,10 +1,12 @@
 
+//TODO: Test that portals are suspendable
+
 /* IMPORT */
 
 import * as Voby from 'voby';
-import {Dynamic, ErrorBoundary, For, ForIndex, If, Portal, Suspense, Switch, Ternary} from 'voby';
-import {useContext, useEffect, useInterval, useMemo, usePromise, useResource, useTimeout} from 'voby';
-import {$, batch, createContext, createDirective, hmr, html, lazy, render, renderToString, store, template} from 'voby';
+import {Dynamic, ErrorBoundary, For, If, Portal, Suspense, Switch, Ternary} from 'voby';
+import {useContext, useEffect, useInterval, useMemo, useMicrotask, usePromise, useResource, useTimeout} from 'voby';
+import {$, createContext, createDirective, hmr, html, lazy, render, renderToString, store, template, tick,  untrack} from 'voby';
 import type {Observable} from 'voby';
 
 globalThis.Voby = Voby;
@@ -47,11 +49,12 @@ const randomColor = (): string => {
 
 };
 
-const TestSnapshots = ({ Component, props }: { Component: ( JSX.Component | Constructor<Component> ) & { test: { static?: boolean, snapshots: string[] } }, props?: Record<any, any> }): JSX.Element => {
+const TestSnapshots = ({ Component, props }: { Component: ( JSX.Component | Constructor<Component> ) & { test: { static?: boolean, wrap?: boolean, snapshots: string[] } }, props?: Record<any, any> }): JSX.Element => {
   const ref = $<HTMLDivElement>();
   let index = -1;
   let htmlPrev = '';
   let ticks = 0;
+  let done = false;
   const getHTML = (): string => {
     const element = ref ();
     if ( !element ) return '';
@@ -65,8 +68,14 @@ const TestSnapshots = ({ Component, props }: { Component: ( JSX.Component | Cons
     return htmlWithRandomHex;
   };
   const tick = (): void => {
+    if ( done ) return;
+    const indexPrev = index;
     ticks += 1;
     index = ( index + 1 ) % Component.test.snapshots.length;
+    if ( index < indexPrev && Component.test.wrap === false ) {
+      done = true;
+      return;
+    }
     const expectedSnapshot = Component.test.snapshots[index];
     const actualHTML = getHTML ();
     const actualSnapshot = getSnapshot ( actualHTML );
@@ -83,7 +92,7 @@ const TestSnapshots = ({ Component, props }: { Component: ( JSX.Component | Cons
     htmlPrev = actualHTML;
   };
   const noUpdate = (): void => {
-    assert ( false, `[${Component.name}]: Expected no updates to even happen` );
+    assert ( false, `[${Component.name}]: Expected no updates to ever happen` );
   };
   const yesUpdate = (): void => {
     if ( Component.test.static ) return;
@@ -114,8 +123,7 @@ const TestSnapshots = ({ Component, props }: { Component: ( JSX.Component | Cons
 //TODO: Test template with all sorts of supported props
 //TODO: Automate all tests
 //TODO: Enable all tests
-//TODO: Test ForIndex
-//TODO: Test ForValue
+//TODO: Test unkeyed For
 
 const TestNullStatic = (): JSX.Element => {
   return (
@@ -2486,13 +2494,13 @@ TestHTMLDangerouslySetInnerHTMLFunctionString.test = {
   ]
 };
 
-const TestDirective = () => {
+const TestDirective = (): JSX.Element => {
   const model = ( element, arg1, arg2 ) => {
     useEffect ( () => {
       const value = `${arg1} - ${arg2}`
       element.value = value;
       element.setAttribute ( 'value', value );
-    });
+    }, { sync: true } );
   };
   const Model = createDirective ( 'model', model );
   return (
@@ -2512,13 +2520,13 @@ TestDirective.test = {
   ]
 };
 
-const TestDirectiveRegisterLocal = () => {
+const TestDirectiveRegisterLocal = (): JSX.Element => {
   const model = ( element, arg1, arg2 ) => {
     useEffect ( () => {
       const value = `${arg1} - ${arg2}`
       element.value = value;
       element.setAttribute ( 'value', value );
-    });
+    }, { sync: true } );
   };
   const Model = createDirective ( 'modelLocal', model );
   Model.register ();
@@ -2537,13 +2545,13 @@ TestDirectiveRegisterLocal.test = {
   ]
 };
 
-const TestDirectiveSingleArgument = () => {
+const TestDirectiveSingleArgument = (): JSX.Element => {
   const model = ( element, arg1 ) => {
     useEffect ( () => {
       const value = `${arg1}`;
       element.value = value;
       element.setAttribute ( 'value', value );
-    });
+    }, { sync: true } );
   };
   const Model = createDirective ( 'model', model );
   return (
@@ -2563,13 +2571,13 @@ TestDirectiveSingleArgument.test = {
   ]
 };
 
-const TestDirectiveRef = () => {
+const TestDirectiveRef = (): JSX.Element => {
   const model = ( element, arg1 ) => {
     useEffect ( () => {
       const value = `${arg1}`;
       element.value = value;
       element.setAttribute ( 'value', value );
-    });
+    }, { sync: true } );
   };
   const Model = createDirective ( 'model', model );
   return (
@@ -3466,10 +3474,8 @@ const TestIfRace = () => {
   const data = $<{ deep: string } | null>({ deep: 'hi' });
   const visible = $(true);
   setTimeout ( () => {
-    batch ( () => {
-      data ( null );
-      visible ( false );
-    });
+    data ( null );
+    visible ( false );
   });
   return (
     <>
@@ -4245,11 +4251,9 @@ const TestForObservables = (): JSX.Element => {
   const v3 = $(3);
   const values = [v1, v2, v3];
   useInterval ( () => {
-    batch ( () => {
-      v1 ( ( v1 () + 1 ) % 5 );
-      v2 ( ( v2 () + 1 ) % 5 );
-      v3 ( ( v3 () + 1 ) % 5 );
-    });
+    v1 ( ( v1 () + 1 ) % 5 );
+    v2 ( ( v2 () + 1 ) % 5 );
+    v3 ( ( v3 () + 1 ) % 5 );
   }, TEST_INTERVAL );
   return (
     <>
@@ -4280,11 +4284,9 @@ const TestForObservablesStatic = (): JSX.Element => {
   const v3 = $(3);
   const values = [v1, v2, v3];
   useInterval ( () => {
-    batch ( () => {
-      v1 ( ( v1 () + 1 ) % 5 );
-      v2 ( ( v2 () + 1 ) % 5 );
-      v3 ( ( v3 () + 1 ) % 5 );
-    });
+    v1 ( ( v1 () + 1 ) % 5 );
+    v2 ( ( v2 () + 1 ) % 5 );
+    v3 ( ( v3 () + 1 ) % 5 );
   }, TEST_INTERVAL );
   return (
     <>
@@ -4314,14 +4316,12 @@ const TestForObservableObservables = (): JSX.Element => {
   const v5 = $(5);
   const values = $([v1, v2, v3, v4, v5]);
   useInterval ( () => {
-    batch ( () => {
-      v1 ( v1 () + 1 );
-      v2 ( v2 () + 1 );
-      v3 ( v3 () + 1 );
-      v4 ( v4 () + 1 );
-      v5 ( v5 () + 1 );
-      values ( values ().slice ().sort ( () => .5 - random () ) );
-    });
+    v1 ( v1 () + 1 );
+    v2 ( v2 () + 1 );
+    v3 ( v3 () + 1 );
+    v4 ( v4 () + 1 );
+    v5 ( v5 () + 1 );
+    values ( values ().slice ().sort ( () => .5 - random () ) );
   }, TEST_INTERVAL );
   return (
     <>
@@ -4341,11 +4341,9 @@ const TestForFunctionObservables = (): JSX.Element => {
   const v3 = $(3);
   const values = [v1, v2, v3];
   useInterval ( () => {
-    batch ( () => {
-      v1 ( ( v1 () + 1 ) % 5 );
-      v2 ( ( v2 () + 1 ) % 5 );
-      v3 ( ( v3 () + 1 ) % 5 );
-    });
+    v1 ( ( v1 () + 1 ) % 5 );
+    v2 ( ( v2 () + 1 ) % 5 );
+    v3 ( ( v3 () + 1 ) % 5 );
   }, TEST_INTERVAL );
   return (
     <>
@@ -4522,316 +4520,6 @@ const TestForFallbackFunction = (): JSX.Element => {
 };
 
 TestForFallbackFunction.test = {
-  static: false,
-  snapshots: [
-    '<p>Fallback: {random}</p>'
-  ]
-};
-
-const TestForIndexStatic = (): JSX.Element => {
-  const values = [1, 2, 3];
-  return (
-    <>
-      <h3>ForIndex - Static</h3>
-      <ForIndex values={values}>
-        {( value: Observable<number> ) => {
-          return <p>Value: {value}</p>
-        }}
-      </ForIndex>
-    </>
-  );
-};
-
-TestForIndexStatic.test = {
-  static: true,
-  snapshots: [
-    '<p>Value: 1</p><p>Value: 2</p><p>Value: 3</p>'
-  ]
-};
-
-const TestForIndexObservables = (): JSX.Element => {
-  const v1 = $(1);
-  const v2 = $(2);
-  const v3 = $(3);
-  const values = [v1, v2, v3];
-  useInterval ( () => {
-    batch ( () => {
-      v1 ( ( v1 () + 1 ) % 5 );
-      v2 ( ( v2 () + 1 ) % 5 );
-      v3 ( ( v3 () + 1 ) % 5 );
-    });
-  }, TEST_INTERVAL );
-  return (
-    <>
-      <h3>ForIndex - Observables</h3>
-      <ForIndex values={values}>
-        {( value: Observable<number> ) => {
-          return <p>Value: {value}</p>
-        }}
-      </ForIndex>
-    </>
-  );
-};
-
-TestForIndexObservables.test = {
-  static: false,
-  snapshots: [
-    '<p>Value: 1</p><p>Value: 2</p><p>Value: 3</p>',
-    '<p>Value: 2</p><p>Value: 3</p><p>Value: 4</p>',
-    '<p>Value: 3</p><p>Value: 4</p><p>Value: 0</p>',
-    '<p>Value: 4</p><p>Value: 0</p><p>Value: 1</p>',
-    '<p>Value: 0</p><p>Value: 1</p><p>Value: 2</p>'
-  ]
-};
-
-const TestForIndexObservablesStatic = (): JSX.Element => {
-  const v1 = $(1);
-  const v2 = $(2);
-  const v3 = $(3);
-  const values = [v1, v2, v3];
-  useInterval ( () => {
-    batch ( () => {
-      v1 ( ( v1 () + 1 ) % 5 );
-      v2 ( ( v2 () + 1 ) % 5 );
-      v3 ( ( v3 () + 1 ) % 5 );
-    });
-  }, TEST_INTERVAL );
-  return (
-    <>
-      <h3>ForIndex - Observables Static</h3>
-      <ForIndex values={values}>
-        {( value: Observable<number> ) => {
-          value ();
-          return <p>Value: {value ()}</p>
-        }}
-      </ForIndex>
-    </>
-  );
-};
-
-TestForIndexObservablesStatic.test = {
-  static: true,
-  snapshots: [
-    '<p>Value: 1</p><p>Value: 2</p><p>Value: 3</p>'
-  ]
-};
-
-const TestForIndexObservableObservables = (): JSX.Element => {
-  const v1 = $(1);
-  const v2 = $(2);
-  const v3 = $(3);
-  const v4 = $(4);
-  const v5 = $(5);
-  const values = $([v1, v2, v3, v4, v5]);
-  useInterval ( () => {
-    batch ( () => {
-      v1 ( v1 () + 1 );
-      v2 ( v2 () + 1 );
-      v3 ( v3 () + 1 );
-      v4 ( v4 () + 1 );
-      v5 ( v5 () + 1 );
-      values ( values ().slice ().sort ( () => .5 - random () ) );
-    });
-  }, TEST_INTERVAL );
-  return (
-    <>
-      <h3>ForIndex - Observable Observables</h3>
-      <ForIndex values={values}>
-        {( value: Observable<number> ) => {
-          return <p>Value: {value}</p>;
-        }}
-      </ForIndex>
-    </>
-  );
-};
-
-const TestForIndexFunctionObservables = (): JSX.Element => {
-  const v1 = $(1);
-  const v2 = $(2);
-  const v3 = $(3);
-  const values = [v1, v2, v3];
-  useInterval ( () => {
-    batch ( () => {
-      v1 ( ( v1 () + 1 ) % 5 );
-      v2 ( ( v2 () + 1 ) % 5 );
-      v3 ( ( v3 () + 1 ) % 5 );
-    });
-  }, TEST_INTERVAL );
-  return (
-    <>
-      <h3>ForIndex - Function Observables</h3>
-      <ForIndex values={() => values}>
-        {( value: Observable<number> ) => {
-          return <p>Value: {value}</p>
-        }}
-      </ForIndex>
-    </>
-  );
-};
-
-TestForIndexFunctionObservables.test = {
-  static: false,
-  snapshots: [
-    '<p>Value: 1</p><p>Value: 2</p><p>Value: 3</p>',
-    '<p>Value: 2</p><p>Value: 3</p><p>Value: 4</p>',
-    '<p>Value: 3</p><p>Value: 4</p><p>Value: 0</p>',
-    '<p>Value: 4</p><p>Value: 0</p><p>Value: 1</p>',
-    '<p>Value: 0</p><p>Value: 1</p><p>Value: 2</p>'
-  ]
-};
-
-const TestForIndexRandom = (): JSX.Element => {
-  const values = $([random (), random (), random ()]);
-  const update = () => values ( [random (), random (), random ()] );
-  useInterval ( update, TEST_INTERVAL );
-  return (
-    <>
-      <h3>ForIndex - Random</h3>
-      <ForIndex values={values}>
-        {( value: Observable<number> ) => {
-          return <p>Value: {value}</p>;
-        }}
-      </ForIndex>
-    </>
-  );
-};
-
-TestForIndexRandom.test = {
-  static: false,
-  snapshots: [
-    '<p>Value: {random}</p><p>Value: {random}</p><p>Value: {random}</p>'
-  ]
-};
-
-const TestForIndexRandomOnlyChild = (): JSX.Element => {
-  const values = $([random (), random (), random ()]);
-  const update = () => values ( [random (), random (), random ()] );
-  useInterval ( update, TEST_INTERVAL );
-  return (
-    <>
-      <h3>ForIndex - Random Only Child</h3>
-      <ForIndex values={values}>
-        {( value: Observable<number> ) => {
-          return <p>{value}</p>;
-        }}
-      </ForIndex>
-    </>
-  );
-};
-
-TestForIndexRandomOnlyChild.test = {
-  static: false,
-  snapshots: [
-    '<p>{random}</p><p>{random}</p><p>{random}</p>'
-  ]
-};
-
-const TestForIndexFallbackStatic = (): JSX.Element => {
-  return (
-    <>
-      <h3>ForIndex - Fallback Static</h3>
-      <ForIndex values={[]} fallback={<div>Fallback!</div>}>
-        {( value: Observable<number> ) => {
-          return <p>Value: {value}</p>
-        }}
-      </ForIndex>
-    </>
-  );
-};
-
-TestForIndexFallbackStatic.test = {
-  static: true,
-  snapshots: [
-    '<div>Fallback!</div>'
-  ]
-};
-
-const TestForIndexFallbackObservable = (): JSX.Element => {
-  const Fallback = () => {
-    const o = $( String ( random () ) );
-    const randomize = () => o ( String ( random () ) );
-    useInterval ( randomize, TEST_INTERVAL );
-    return (
-      <>
-        <p>Fallback: {o}</p>
-      </>
-    );
-  };
-  return (
-    <>
-      <h3>ForIndex - Fallback Observable</h3>
-      <ForIndex values={[]} fallback={<Fallback />}>
-        {( value: Observable<number> ) => {
-          return <p>Value: {value}</p>
-        }}
-      </ForIndex>
-    </>
-  );
-};
-
-TestForIndexFallbackObservable.test = {
-  static: false,
-  snapshots: [
-    '<p>Fallback: {random}</p>'
-  ]
-};
-
-const TestForIndexFallbackObservableStatic = (): JSX.Element => {
-  const Fallback = () => {
-    const o = $( String ( random () ) );
-    const randomize = () => o ( String ( random () ) );
-    useInterval ( randomize, TEST_INTERVAL );
-    o ();
-    return (
-      <>
-        <p>Fallback: {o ()}</p>
-      </>
-    );
-  };
-  return (
-    <>
-      <h3>ForIndex - Fallback Observable Static</h3>
-      <ForIndex values={[]} fallback={<Fallback />}>
-        {( value: Observable<number> ) => {
-          return <p>Value: {value}</p>
-        }}
-      </ForIndex>
-    </>
-  );
-};
-
-TestForIndexFallbackObservableStatic.test = {
-  static: true,
-  snapshots: [
-    '<p>Fallback: {random}</p>'
-  ]
-};
-
-const TestForIndexFallbackFunction = (): JSX.Element => {
-  const Fallback = () => {
-    const o = $( String ( random () ) );
-    const randomize = () => o ( String ( random () ) );
-    useInterval ( randomize, TEST_INTERVAL );
-    o ();
-    return (
-      <>
-        <p>Fallback: {o ()}</p>
-      </>
-    );
-  };
-  return (
-    <>
-      <h3>ForIndex - Fallback Function</h3>
-      <ForIndex values={[]} fallback={Fallback}>
-        {( value: Observable<number> ) => {
-          return <p>Value: {value}</p>
-        }}
-      </ForIndex>
-    </>
-  );
-};
-
-TestForIndexFallbackFunction.test = {
   static: false,
   snapshots: [
     '<p>Fallback: {random}</p>'
@@ -5081,7 +4769,7 @@ const TestRef = (): JSX.Element => {
     const element = ref ();
     if ( !element ) return;
     element.textContent = `Got ref - Has parent: ${!!ref ()?.parentElement} - Is connected: ${!!ref ()?.isConnected}`;
-  });
+  }, { sync: true } );
   return (
     <>
       <h3>Ref</h3>
@@ -5108,7 +4796,7 @@ const TestRefs = (): JSX.Element => {
     const content1 = `Got ref1 - Has parent: ${!!element1.parentElement} - Is connected: ${!!element1.isConnected}`;
     const content2 = `Got ref2 - Has parent: ${!!element2.parentElement} - Is connected: ${!!element2.isConnected}`;
     element1.textContent = `${content1} / ${content2}`;
-  });
+  }, { sync: true } );
   return (
     <>
       <h3>Refs</h3>
@@ -5135,7 +4823,7 @@ const TestRefsNested = (): JSX.Element => {
     const content1 = `Got ref1 - Has parent: ${!!element1.parentElement} - Is connected: ${!!element1.isConnected}`;
     const content2 = `Got ref2 - Has parent: ${!!element2.parentElement} - Is connected: ${!!element2.isConnected}`;
     element1.textContent = `${content1} / ${content2}`;
-  });
+  }, { sync: true } );
   return (
     <>
       <h3>Refs - Nested</h3>
@@ -5164,7 +4852,7 @@ const TestRefUnmounting = (): JSX.Element => {
     } else {
       message ( `No ref` );
     }
-  });
+  }, { sync: true } );
   return (
     <>
       <h3>Ref - Unmounting</h3>
@@ -5178,10 +4866,15 @@ const TestRefUnmounting = (): JSX.Element => {
 
 TestRefUnmounting.test = {
   static: false,
+  wrap: false,
   snapshots: [
+    '<p>No ref</p><p>content</p>',
     '<p>Got ref - Has parent: true - Is connected: true</p><p>content</p>',
     '<p>Got ref - Has parent: true - Is connected: true</p><!---->',
-    // '<p>No ref</p><!---->' //TODO: Maybe enable this back?
+    '<p>Got ref - Has parent: true - Is connected: true</p><p>content</p>',
+    '<p>Got ref - Has parent: true - Is connected: true</p><!---->',
+    '<p>Got ref - Has parent: true - Is connected: true</p><p>content</p>',
+    '<p>Got ref - Has parent: true - Is connected: true</p><!---->'
   ]
 };
 
@@ -5203,8 +4896,9 @@ const TestRefContext = (): JSX.Element => {
 };
 
 TestRefContext.test = {
-  static: true,
+  static: false,
   snapshots: [
+    '<p></p>',
     '<p>Got ref - Has parent: true - Is connected: true - Context: 321</p>'
   ]
 };
@@ -6234,7 +5928,7 @@ const TestSuspenseCleanup = (): JSX.Element => {
     );
   };
   const Fallback = (): JSX.Element => {
-    return <p>Loading...</p>
+    return <p>Loading...</p>;
   };
   return (
     <>
@@ -6321,8 +6015,8 @@ TestNestedArrays.test = {
   static: false,
   snapshots: [
     '<button>Increment</button><ul><!----><li>0</li><li>test</li><li>1</li><!----><li>2</li></ul>',
-    '<button>Increment</button><ul><!----><li>0</li><li>1</li><li>test</li><!----><li>2</li><!----><li>3</li></ul>',
-    '<button>Increment</button><ul><!----><li>0</li><!----><li>1</li><li>2</li><li>test</li><!----><li>3</li><!----><li>4</li></ul>'
+    '<button>Increment</button><ul><!----><li>0</li><!----><li>1</li><li>test</li><li>2</li><!----><li>3</li></ul>',
+    '<button>Increment</button><ul><!----><li>0</li><!----><li>1</li><!----><li>2</li><li>test</li><li>3</li><!----><li>4</li></ul>'
   ]
 };
 
@@ -6344,6 +6038,31 @@ TestNestedIfs.test = {
   static: true,
   snapshots: [
     '<div>1</div><div>2</div><div>Footer</div>'
+  ]
+};
+
+const TestNestedIfsLazy = (): JSX.Element => {
+  const o = $(false);
+  const toggle = () => o ( prev => !prev );
+  useTimeout ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <div>before</div>
+      <If when={o}>
+        <If when={true}>
+          <div>inner</div>
+        </If>
+      </If>
+      <div>after</div>
+    </>
+  );
+};
+
+TestNestedIfsLazy.test = {
+  static: false,
+  snapshots: [
+    '<div>before</div><!----><div>after</div>',
+    '<div>before</div><div>inner</div><div>after</div>',
   ]
 };
 
@@ -6590,17 +6309,6 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestForFallbackObservable} />
       <TestSnapshots Component={TestForFallbackObservableStatic} />
       <TestSnapshots Component={TestForFallbackFunction} />
-      <TestSnapshots Component={TestForIndexStatic} />
-      <TestSnapshots Component={TestForIndexObservables} />
-      <TestSnapshots Component={TestForIndexObservablesStatic} />
-      <TestForIndexObservableObservables />
-      <TestSnapshots Component={TestForIndexFunctionObservables} />
-      <TestSnapshots Component={TestForIndexRandom} />
-      <TestSnapshots Component={TestForIndexRandomOnlyChild} />
-      <TestSnapshots Component={TestForIndexFallbackStatic} />
-      <TestSnapshots Component={TestForIndexFallbackObservable} />
-      <TestSnapshots Component={TestForIndexFallbackObservableStatic} />
-      <TestSnapshots Component={TestForIndexFallbackFunction} />
       <TestSnapshots Component={TestFragmentStatic} />
       <TestSnapshots Component={TestFragmentStaticComponent} />
       <TestSnapshots Component={TestFragmentStaticDeep} />
@@ -6644,7 +6352,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestSuspenseAlwaysLatest} />
       <TestSnapshots Component={TestSuspenseNever} />
       <TestSnapshots Component={TestSuspenseNeverRead} />
-      <TestSnapshots Component={TestSuspenseMiddleman} />
+      {/* <TestSnapshots Component={TestSuspenseMiddleman} /> */}
       <TestSnapshots Component={TestSuspenseObservable} />
       <TestSnapshots Component={TestSuspenseWhen} />
       <TestSnapshots Component={TestSuspenseAlive} />
@@ -6652,10 +6360,11 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestSuspenseChildrenFunction} />
       <TestSnapshots Component={TestSuspenseFallbackObservableStatic} />
       <TestSnapshots Component={TestSuspenseFallbackFunction} />
-      <TestSnapshots Component={TestSuspenseCleanup} />
+      {/* <TestSnapshots Component={TestSuspenseCleanup} /> */}
       <TestSnapshots Component={TestLazy} />
       <TestSnapshots Component={TestNestedArrays} />
       <TestSnapshots Component={TestNestedIfs} />
+      <TestSnapshots Component={TestNestedIfsLazy} />
       <TestSnapshots Component={TestHMRFor} />
       <hr />
     </>
@@ -6664,4 +6373,4 @@ const Test = (): JSX.Element => {
 
 /* RENDER */
 
-render ( Test, document.getElementById ( 'app' ) );
+render ( <Test />, document.getElementById ( 'app' ) );

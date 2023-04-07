@@ -8,7 +8,6 @@ import type {Child, ChildWithMetadata, FunctionMaybe, ObservableReadonly} from '
 /* MAIN */
 
 //TODO: Enforce children of Switch to be of type Switch.Case or Switch.Default
-//TODO: Support function-form children
 
 const Switch = <T> ({ when, fallback, children }: { when: FunctionMaybe<T>, fallback?: Child, children: Child }): ObservableReadonly<Child> => {
 

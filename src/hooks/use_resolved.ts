@@ -12,6 +12,8 @@ type O<T> = T extends ObservableReadonly<infer U> ? U : T;
 
 /* MAIN */
 
+//TODO: Maybe port this to oby, as "resolved"
+
 function useResolved<T1, T2, T3, T4, T5, T6, T7, T8, T9> ( value: readonly [T1, T2, T3, T4, T5, T6, T7, T8, T9], resolveFunction?: true ): [F<T1>, F<T2>, F<T3>, F<T4>, F<T5>, F<T6>, F<T7>, F<T8>, F<T9>];
 function useResolved<T1, T2, T3, T4, T5, T6, T7, T8> ( value: readonly [T1, T2, T3, T4, T5, T6, T7, T8], resolveFunction?: true ): [F<T1>, F<T2>, F<T3>, F<T4>, F<T5>, F<T6>, F<T7>, F<T8>];
 function useResolved<T1, T2, T3, T4, T5, T6, T7> ( value: readonly [T1, T2, T3, T4, T5, T6, T7], resolveFunction?: true ): [F<T1>, F<T2>, F<T3>, F<T4>, F<T5>, F<T6>, F<T7>];

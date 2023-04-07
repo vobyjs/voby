@@ -20,8 +20,9 @@ import renderToString from '~/methods/render_to_string';
 import resolve from '~/methods/resolve';
 import store from '~/methods/store';
 import template from '~/methods/template';
+import tick from '~/methods/tick';
 import untrack from '~/methods/untrack';
 
 /* EXPORT */
 
-export {$, $$, batch, createContext, createDirective, createElement, h, hmr, html, isBatching, isObservable, isServer, isStore, lazy, render, renderToString, resolve, store, template, untrack};
+export {$, $$, batch, createContext, createDirective, createElement, h, hmr, html, isBatching, isObservable, isServer, isStore, lazy, render, renderToString, resolve, store, template, tick, untrack};

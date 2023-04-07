@@ -1,7 +1,7 @@
 
 <p align="center">
   <a href="https://voby.dev">
-    <img src="./resources/banner/svg/banner-light-rounded.svg" alt="Voby's Banne" width="640px" height="320px">
+    <img src="./resources/banner/svg/banner-light-rounded.svg" alt="Voby's Banner" width="640px" height="320px">
   </a>
 </p>
 
@@ -19,7 +19,7 @@
 
 # [Voby](https://voby.dev)
 
-A high-performance framework with fine-grained observable-based reactivity for building rich applications.
+A high-performance framework with fine-grained observable/signal-based reactivity for building rich applications.
 
 ## Features
 
@@ -33,8 +33,8 @@ This works similarly to [Solid](https://www.solidjs.com), but without a custom B
 - **No key prop**: you can just map over arrays, or use the `For` component with an array of unique values, no need to specify keys explicitly.
 - **No Babel**: there's no need to use Babel with this framework, it works with plain old JS (plus JSX if you are into that). As a consequence we have 0 transform function bugs, because we don't have a transform function.
 - **No magic**: what you see is what you get, your code is not transformed to actually do something different than what you write, there are no surprises.
-- **No server support**: for the time being this framework is focused on local-first rich applications, ~no server-related features are implemented: no hydration, no server components, no SSR, no streaming etc.
-- **Observable-based**: observables are at the core of our reactivity system. The way it works is very different from a React-like system, it may be more challenging to learn, but it's well worth the effort.
+- **No server support**: for the time being this framework is focused on local-first rich applications, most server-related features are not implemented: no hydration, no server components, no streaming etc.
+- **Observable-based**: observables, also known as "signals", are at the core of our reactivity system. The way it works is very different from a React-like system, it may be more challenging to learn, but it's well worth the effort.
 - **Work in progress**: this is probably beta software, I'm working on it because I need something with great performance for [Notable](https://github.com/notable/notable), I'm allergic to third-party dependencies, I'd like something with an API that resonates with me, and I wanted to deeply understand how the more solid [Solid](https://www.solidjs.com), which you should also check out, works.
 
 ## Demos
@@ -56,41 +56,35 @@ You can find some demos and benchmarks below, more demos are contained inside th
 
 ## APIs
 
-| [Methods](#methods)                   | [Components](#components)         | [Hooks](#hooks)                             | [Types](#types)                             | [Extras](#extras)               |
-| ------------------------------------- | --------------------------------- | ------------------------------------------- | ------------------------------------------- | ------------------------------- |
-| [`$`](#methods)                       | [`Dynamic`](#dynamic)             | [`useAbortController`](#useabortcontroller) | [`Context`](#context)                       | [`Contributing`](#contributing) |
-| [`$$`](#methods)                      | [`ErrorBoundary`](#errorboundary) | [`useAbortSignal`](#useabortsignal)         | [`Directive`](#directive)                   | [`Globals`](#globals)           |
-| [`batch`](#batch)                     | [`For`](#for)                     | [`useAnimationFrame`](#useanimationframe)   | [`DirectiveOptions`](#directiveoptions)     | [`JSX`](#jsx)                   |
-| [`createContext`](#createcontext)     | [`ForIndex`](#forindex)           | [`useAnimationLoop`](#useanimationloop)     | [`FunctionMaybe`](#functionmaybe)           | [`Tree Shaking`](#tree-shaking) |
-| [`createDirective`](#createdirective) | [`ForValue`](#forvalue)           | [`useBoolean`](#useboolean)                 | [`Observable`](#observable)                 | [`TypeScript`](#typescript)     |
-| [`createElement`](#createelement)     | [`Fragment`](#fragment)           | [`useCleanup`](#usecleanup)                 | [`ObservableReadonly`](#observablereadonly) |                                 |
-| [`h`](#h)                             | [`If`](#if)                       | [`useContext`](#usecontext)                 | [`ObservableMaybe`](#observablemaybe)       |                                 |
-| [`hmr`](#hmr)                         | [`Portal`](#portal)               | [`useDisposed`](#usedisposed)               | [`ObservableOptions`](#observableoptions)   |                                 |
-| [`html`](#html)                       | [`Suspense`](#suspense)           | [`useEffect`](#useeffect)                   | [`Resource`](#resource)                     |                                 |
-| [`isBatching`](#isbatching)           | [`Switch`](#switch)               | [`useError`](#useerror)                     | [`StoreOptions`](#storeoptions)             |                                 |
-| [`isObservable`](#isobservable)       | [`Ternary`](#ternary)             | [`useEventListener`](#useeventlistener)     |                                             |                                 |
-| [`isServer`](#isserver)               |                                   | [`useFetch`](#usefetch)                     |                                             |                                 |
-| [`isStore`](#isstore)                 |                                   | [`useIdleCallback`](#useidlecallback)       |                                             |                                 |
-| [`lazy`](#lazy)                       |                                   | [`useIdleLoop`](#useidleloop)               |                                             |                                 |
-| [`render`](#render)                   |                                   | [`useInterval`](#useinterval)               |                                             |                                 |
-| [`renderToString`](#rendertostring)   |                                   | [`useMemo`](#usememo)                       |                                             |                                 |
-| [`resolve`](#resolve)                 |                                   | [`useMicrotask`](#usemicrotask)             |                                             |                                 |
-| [`store`](#store)                     |                                   | [`usePromise`](#usepromise)                 |                                             |                                 |
-| [`template`](#template)               |                                   | [`useReaction`](#usereaction)               |                                             |                                 |
-| [`untrack`](#untrack)                 |                                   | [`useReadonly`](#usereadonly)               |                                             |                                 |
-|                                       |                                   | [`useResolved`](#useresolved)               |                                             |                                 |
-|                                       |                                   | [`useResource`](#useresource)               |                                             |                                 |
-|                                       |                                   | [`useRoot`](#useroot)                       |                                             |                                 |
-|                                       |                                   | [`useSelector`](#useselector)               |                                             |                                 |
-|                                       |                                   | [`useTimeout`](#usetimeout)                 |                                             |                                 |
+| [Methods](#methods)                   | [Components](#components)         | [Hooks](#hooks-core) <sub>core</sub> | [Hooks](#hooks-web) <sub>web</sub>          | [Types](#types)                             | [Extras](#extras)               |
+| ------------------------------------- | --------------------------------- | ------------------------------------ | ------------------------------------------- | ------------------------------------------- | ------------------------------- |
+| [`$`](#methods)                       | [`Dynamic`](#dynamic)             | [`useBoolean`](#useboolean)          | [`useAbortController`](#useabortcontroller) | [`Context`](#context)                       | [`Contributing`](#contributing) |
+| [`$$`](#methods)                      | [`ErrorBoundary`](#errorboundary) | [`useCleanup`](#usecleanup)          | [`useAbortSignal`](#useabortsignal)         | [`Directive`](#directive)                   | [`Globals`](#globals)           |
+| [`batch`](#batch)                     | [`For`](#for)                     | [`useContext`](#usecontext)          | [`useAnimationFrame`](#useanimationframe)   | [`DirectiveOptions`](#directiveoptions)     | [`JSX`](#jsx)                   |
+| [`createContext`](#createcontext)     | [`Fragment`](#fragment)           | [`useDisposed`](#usedisposed)        | [`useAnimationLoop`](#useanimationloop)     | [`EffectOptions`](#effectoptions)           | [`Tree Shaking`](#tree-shaking) |
+| [`createDirective`](#createdirective) | [`If`](#if)                       | [`useEffect`](#useeffect)            | [`useEventListener`](#useeventlistener)     | [`FunctionMaybe`](#functionmaybe)           | [`TypeScript`](#typescript)     |
+| [`createElement`](#createelement)     | [`Portal`](#portal)               | [`useMemo`](#usememo)                | [`useFetch`](#usefetch)                     | [`Observable`](#observable)                 |                                 |
+| [`h`](#h)                             | [`Suspense`](#suspense)           | [`usePromise`](#usepromise)          | [`useIdleCallback`](#useidlecallback)       | [`ObservableReadonly`](#observablereadonly) |                                 |
+| [`hmr`](#hmr)                         | [`Switch`](#switch)               | [`useReadonly`](#usereadonly)        | [`useIdleLoop`](#useidleloop)               | [`ObservableMaybe`](#observablemaybe)       |                                 |
+| [`html`](#html)                       | [`Ternary`](#ternary)             | [`useResolved`](#useresolved)        | [`useInterval`](#useinterval)               | [`ObservableOptions`](#observableoptions)   |                                 |
+| [`isBatching`](#isbatching)           |                                   | [`useResource`](#useresource)        | [`useMicrotask`](#usemicrotask)             | [`Resource`](#resource)                     |                                 |
+| [`isObservable`](#isobservable)       |                                   | [`useRoot`](#useroot)                | [`useTimeout`](#usetimeout)                 | [`StoreOptions`](#storeoptions)             |                                 |
+| [`isServer`](#isserver)               |                                   | [`useSelector`](#useselector)        |                                             |                                             |                                 |
+| [`isStore`](#isstore)                 |                                   |                                      |                                             |                                             |                                 |
+| [`lazy`](#lazy)                       |                                   |                                      |                                             |                                             |                                 |
+| [`render`](#render)                   |                                   |                                      |                                             |                                             |                                 |
+| [`renderToString`](#rendertostring)   |                                   |                                      |                                             |                                             |                                 |
+| [`resolve`](#resolve)                 |                                   |                                      |                                             |                                             |                                 |
+| [`store`](#store)                     |                                   |                                      |                                             |                                             |                                 |
+| [`template`](#template)               |                                   |                                      |                                             |                                             |                                 |
+| [`tick`](#tick)                       |                                   |                                      |                                             |                                             |                                 |
+| [`untrack`](#untrack)                 |                                   |                                      |                                             |                                             |                                 |
 
 ## Usage
 
 This framework is simply a view layer built on top of the Observable library [`oby`](https://github.com/fabiospampinato/oby), knowing how that works is necessary to understand how this works.
 
 This framework basically re-exports everything that `oby` exports, sometimes with a slightly different interface, adjusted for usage as components or hooks, plus some additional functions.
-
-The following is going to be a very shallow documentation of the API. As I mentioned this probably isn't production-grade software, it may become that in the future though, are you interested?
 
 ### Methods
 
@@ -193,15 +187,15 @@ $$ ( 123 ); // => 123
 
 #### `batch`
 
-This function holds onto updates within its scope and flushes them out once it exits.
+This function prevents effects from firing until the function passed to it resolves. It's largely only useful when the passed function is asynchronous, as otherwise the reactivity system is lazy so effects won't be over-executed anyway.
 
 [Read upstream documentation](https://github.com/fabiospampinato/oby#batch).
 
 Interface:
 
 ```ts
-function batch <T> ( fn: () => T ): T;
-function batch <T> ( value: T ): T;
+function batch <T> ( fn: () => Promise<T> | T ): Promise<Awaited<T>>;
+function batch <T> ( value: T ): Promise<Awaited<T>>;
 ```
 
 Usage:
@@ -693,6 +687,26 @@ const Table = () => {
 };
 ```
 
+#### `tick`
+
+This function forces effects scheduled for execution to be executed immediately, bypassing automatic or manual batching.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#tick).
+
+Interface:
+
+```ts
+function tick (): void;
+```
+
+Usage:
+
+```tsx
+import {tick} from 'voby';
+
+tick // => Same as require ( 'oby' ).tick
+```
+
 #### `untrack`
 
 This function executes the provided function without creating dependencies on observables retrieved inside it.
@@ -788,10 +802,13 @@ This component is the reactive alternative to natively mapping over an array.
 
 It must be called with an array, or a function that returns an array, of _unique_ values, and each of them are passed to the child function to render something.
 
+It can be used to map over values either with a keyed (default) or unkeyed (opt-in) strategy. Read [this](https://www.stefankrause.net/wp/?p=342) for some details about the differences between those, and the [upstream documentation](https://github.com/fabiospampinato/oby#for).
+
 Interface:
 
 ```ts
-function For <T> ( props: { values: FunctionMaybe<readonly T[]>, fallback?: JSX.Element, children: (( value: T, index: ObservableReadonly<number> ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
+function For <T> ( props: { values: FunctionMaybe<readonly T[]>, fallback?: JSX.ELement, children: (( value: T, index: ObservableReadonly<number> ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
+function For <T> ( props: { values: FunctionMaybe<readonly T[]>, fallback?: JSX.ELement, unkeyed: true children: (( value: ObservableReadonly<T>, index: ObservableReadonly<number> ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
 ```
 
 Usage:
@@ -807,78 +824,6 @@ const App = () => {
         return <p>Value: {value}</p>
       }}
     </For>
-  );
-};
-```
-
-#### `ForIndex`
-
-This component is a reactive alternative to natively mapping over an array, but it takes the index as the unique key instead of the value.
-
-This is an alternative to `For` that uses the index of the value in the array for caching, rather than the value itself.
-
-It's recommended to use `ForIndex` for arrays containing duplicate values and/or arrays containing primitive values, and `For` for everything else.
-
-The passed function will always be called with a read-only observable containing the current value at the index being mapped.
-
-Interface:
-
-```ts
-type Value<T = unknown> = T extends ObservableReadonly<infer U> ? ObservableReadonly<U> : ObservableReadonly<T>;
-
-function ForIndex <T> ( props: { values: FunctionMaybe<readonly T[]>, fallback?: JSX.Element, children: (( value: Value<T>, index: number ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
-```
-
-Usage:
-
-```tsx
-import {ForIndex} from 'voby';
-
-const App = () => {
-  const numbers = [1, 2, 3, 4, 5];
-  return (
-    <ForIndex values={numbers}>
-      {( value ) => {
-        return <p>Double value: {() => value () ** 2}</p>
-      }}
-    </ForIndex>
-  );
-};
-```
-
-#### `ForValue`
-
-This component is a reactive alternative to natively mapping over an array, but it caches results for values that didn't change, _and_ repurposes results for items that got discarded for new items that need to be rendered.
-
-This is an alternative to `For` and `ForIndex` that enables reusing the same result for different items, when possible. Reusing the same result means also reusing everything in it, including DOM nodes.
-
-Basically `Array.prototype.map` doesn't wrap the value nor the index in an observable, `For` wraps the index only in an observable, `ForIndex` wraps the value only in an observable, and `ForValue` wraps both the value and the index in observables.
-
-This is useful for use cases like virtualized rendering, where `For` would cause some nodes to be discarded and others to be created, `ForIndex` would cause _all_ nodes to be repurposed, but `ForValue` allows you to only repurpose the nodes that would have been discareded by `For`, not all of them.
-
-This is a more advanced component, it's recommended to simply use `For` or `ForIndex`, until you really understand how to squeeze extra performance with this, and you actually need that performance.
-
-Interface:
-
-```ts
-type Value<T = unknown> = T extends ObservableReadonly<infer U> ? ObservableReadonly<U> : ObservableReadonly<T>;
-
-function ForValue <T> ( props: { values: FunctionMaybe<readonly T[]>, fallback?: JSX.Element, children: (( value: Value<T>, index: ObservableReadonly<number> ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
-```
-
-Usage:
-
-```tsx
-import {ForValue} from 'voby';
-
-const App = () => {
-  const numbers = [1, 2, 3, 4, 5];
-  return (
-    <ForValue values={numbers}>
-      {( value ) => {
-        return <p>Double value: {() => value () ** 2}</p>
-      }}
-    </ForValue>
   );
 };
 ```
@@ -1090,85 +1035,11 @@ const App = () => {
 };
 ```
 
-### Hooks
+### Hooks <sub>core</sub>
 
-The following hooks are provided.
+The following core hooks are provided.
 
-Many of these are just functions that `oby` provides, re-exported as `use*` functions, the rest are largely just alternatives to web built-ins that can also accept observables as arguments and can dispose of themselves automatically when the parent computation is disposed.
-
-Hooks are just regular functions, if their name starts with `use` then we call them hooks just because.
-
-#### `useAbortController`
-
-This hook is just an alternative to `new AbortController ()` that automatically aborts itself when the parent computation is disposed.
-
-Interface:
-
-```ts
-function useAbortController ( signals?: ArrayMaybe<AbortSignal> ): AbortController;
-```
-
-Usage:
-
-```tsx
-import {useAbortController} from 'voby';
-
-const controller = useAbortController ();
-```
-
-#### `useAbortSignal`
-
-This hook is just a convenient alternative to `useAbortController`, if you are only interested in its signal, which is automatically aborted when the parent computation is disposed.
-
-Interface:
-
-```ts
-function useAbortSignal ( signals?: ArrayMaybe<AbortSignal> ): AbortSignal;
-```
-
-Usage:
-
-```tsx
-import {useAbortSignal} from 'voby';
-
-const signal = useAbortSignal ();
-```
-
-#### `useAnimationFrame`
-
-This hook is just an alternative to `requestAnimationFrame` that automatically clears itself when the parent computation is disposed.
-
-Interface:
-
-```ts
-function useAnimationFrame ( callback: ObservableMaybe<FrameRequestCallback> ): Disposer;
-```
-
-Usage:
-
-```tsx
-import {useAnimationFrame} from 'voby';
-
-useAnimationFrame ( () => console.log ( 'called' ) );
-```
-
-#### `useAnimationLoop`
-
-This hook is just a version of `useAnimationFrame` that loops until the parent computation is disposed.
-
-Interface:
-
-```ts
-function useAnimationLoop ( callback: ObservableMaybe<FrameRequestCallback> ): Disposer;
-```
-
-Usage:
-
-```tsx
-import {useAnimationLoop} from 'voby';
-
-useAnimationLoop ( () => console.log ( 'called' ) );
-```
+Most of these are just functions that `oby` provides, re-exported as `use*` functions.
 
 #### `useBoolean`
 
@@ -1272,125 +1143,6 @@ import {useEffect} from 'voby';
 useEffect // => Same as require ( 'oby' ).effect
 ```
 
-#### `useError`
-
-This hook registers a function to be called when the parent computation throws.
-
-[Read upstream documentation](https://github.com/fabiospampinato/oby#error).
-
-Interface:
-
-```ts
-function useError ( fn: ( error: Error ) => void ): void;
-```
-
-Usage:
-
-```tsx
-import {useError} from 'voby';
-
-useError // => Same as require ( 'oby' ).error
-```
-
-#### `useEventListener`
-
-This hook is just an alternative to `addEventListener` that automatically clears itself when the parent computation is disposed.
-
-Interface:
-
-```ts
-function useEventListener ( target: FunctionMaybe<EventTarget>, event: FunctionMaybe<string>, handler: ObservableMaybe<( event: Event ) => void>, options?: FunctionMaybe<true | AddEventListenerOptions> ): Disposer;
-```
-
-Usage:
-
-```tsx
-import {useEventListener} from 'voby';
-
-useEventListener ( document, 'click', console.log );
-```
-
-#### `useFetch`
-
-This hook wraps the output of a fetch request in an observable, so that you can be notified when it resolves or rejects. The request is also aborted automatically when the parent computation gets disposed of.
-
-This hook uses `useResource` internally, so it's significant for `Suspense` too.
-
-Interface:
-
-```ts
-function useFetch ( request: FunctionMaybe<RequestInfo>, init?: FunctionMaybe<RequestInit> ): ObservableReadonly<Resource<Response>>;
-```
-
-Usage:
-
-```tsx
-import {useFetch} from 'voby';
-
-const App = () => {
-  const state = useFetch ( 'https://my.api' );
-  return state.on ( state => {
-    if ( state.pending ) return <p>pending...</p>;
-    if ( state.error ) return <p>{state.error.message}</p>;
-    return <p>Status: {state.value.status}</p>
-  });
-};
-```
-
-#### `useIdleCallback`
-
-This hook is just an alternative to `requestIdleCallback` that automatically clears itself when the parent computation is disposed.
-
-Interface:
-
-```ts
-function useIdleCallback ( callback: ObservableMaybe<IdleRequestCallback>, options?: FunctionMaybe<IdleRequestOptions> ): Disposer;
-```
-
-Usage:
-
-```tsx
-import {useIdleCallback} from 'voby';
-
-useIdleCallback ( () => console.log ( 'called' ) );
-```
-
-#### `useIdleLoop`
-
-This hook is just a version of `useIdleCallback` that loops until the parent computation is disposed.
-
-Interface:
-
-```ts
-function useIdleLoop ( callback: ObservableMaybe<IdleRequestCallback>, options?: FunctionMaybe<IdleRequestOptions> ): Disposer;
-```
-
-Usage:
-
-```tsx
-import {useIdleLoop} from 'voby';
-
-useIdleLoop ( () => console.log ( 'called' ) );
-```
-
-#### `useInterval`
-
-This hook is just an alternative to `setInterval` that automatically clears itself when the parent computation is disposed.
-
-Interface:
-
-```ts
-function useInterval ( callback: ObservableMaybe<Callback>, ms?: FunctionMaybe<number> ): Disposer;
-```
-
-Usage:
-
-```tsx
-import {useInterval} from 'voby';
-
-useInterval ( () => console.log ( 'called' ), 1000 );
-```
-
 #### `useMemo`
 
 This hook is the crucial other ingredient that we need, other than observables themselves, to have a powerful reactive system that can track dependencies and re-execute computations when needed.
@@ -1411,24 +1163,6 @@ Usage:
 import {useMemo} from 'voby';
 
 useMemo // => Same as require ( 'oby' ).memo
-```
-
-#### `useMicrotask`
-
-This hook is just an alternative to `queueMicrotask` that automatically clears itself when the parent computation is disposed, and that ensures things like contexts, error boundaries etc. keep working inside the microtask.
-
-Interface:
-
-```ts
-function useMicrotask ( fn: () => void ): void;
-```
-
-Usage:
-
-```tsx
-import {useMicrotask} from 'voby';
-
-useMicrotask ( () => console.log ( 'called' ) );
 ```
 
 #### `usePromise`
@@ -1457,28 +1191,6 @@ const App = () => {
     return <p>{JSON.stringify ( state.value )}</p>
   });
 };
-```
-
-#### `useReaction`
-
-This hook works just like `useEffect`, expect that it's not affected by `Suspense`.
-
-This is an advanced hook mostly useful internally, you may never need to use this, `useEffect` and `useMemo` should suffice.
-
-[Read upstream documentation](https://github.com/fabiospampinato/oby#reaction).
-
-Interface:
-
-```ts
-function useReaction ( fn: () => (() => void) | void ): (() => void);
-```
-
-Usage:
-
-```tsx
-import {useReaction} from 'voby';
-
-useReaction // => Same as require ( 'oby' ).reaction
 ```
 
 #### `useReadonly`
@@ -1605,6 +1317,201 @@ import {useSelector} from 'voby';
 useSelector // => Same as require ( 'oby' ).selector
 ```
 
+### Hooks <sub>web</sub>
+
+The following web hooks are provided.
+
+Most of these are just reactive alternatives to native web APIs.
+
+#### `useAbortController`
+
+This hook is just an alternative to `new AbortController ()` that automatically aborts itself when the parent computation is disposed.
+
+Interface:
+
+```ts
+function useAbortController ( signals?: ArrayMaybe<AbortSignal> ): AbortController;
+```
+
+Usage:
+
+```tsx
+import {useAbortController} from 'voby';
+
+const controller = useAbortController ();
+```
+
+#### `useAbortSignal`
+
+This hook is just a convenient alternative to `useAbortController`, if you are only interested in its signal, which is automatically aborted when the parent computation is disposed.
+
+Interface:
+
+```ts
+function useAbortSignal ( signals?: ArrayMaybe<AbortSignal> ): AbortSignal;
+```
+
+Usage:
+
+```tsx
+import {useAbortSignal} from 'voby';
+
+const signal = useAbortSignal ();
+```
+
+#### `useAnimationFrame`
+
+This hook is just an alternative to `requestAnimationFrame` that automatically clears itself when the parent computation is disposed.
+
+Interface:
+
+```ts
+function useAnimationFrame ( callback: ObservableMaybe<FrameRequestCallback> ): Disposer;
+```
+
+Usage:
+
+```tsx
+import {useAnimationFrame} from 'voby';
+
+useAnimationFrame ( () => console.log ( 'called' ) );
+```
+
+#### `useAnimationLoop`
+
+This hook is just a version of `useAnimationFrame` that loops until the parent computation is disposed.
+
+Interface:
+
+```ts
+function useAnimationLoop ( callback: ObservableMaybe<FrameRequestCallback> ): Disposer;
+```
+
+Usage:
+
+```tsx
+import {useAnimationLoop} from 'voby';
+
+useAnimationLoop ( () => console.log ( 'called' ) );
+```
+
+#### `useEventListener`
+
+This hook is just an alternative to `addEventListener` that automatically clears itself when the parent computation is disposed.
+
+Interface:
+
+```ts
+function useEventListener ( target: FunctionMaybe<EventTarget>, event: FunctionMaybe<string>, handler: ObservableMaybe<( event: Event ) => void>, options?: FunctionMaybe<true | AddEventListenerOptions> ): Disposer;
+```
+
+Usage:
+
+```tsx
+import {useEventListener} from 'voby';
+
+useEventListener ( document, 'click', console.log );
+```
+
+#### `useFetch`
+
+This hook wraps the output of a fetch request in an observable, so that you can be notified when it resolves or rejects. The request is also aborted automatically when the parent computation gets disposed of.
+
+This hook uses `useResource` internally, so it's significant for `Suspense` too.
+
+Interface:
+
+```ts
+function useFetch ( request: FunctionMaybe<RequestInfo>, init?: FunctionMaybe<RequestInit> ): ObservableReadonly<Resource<Response>>;
+```
+
+Usage:
+
+```tsx
+import {useFetch} from 'voby';
+
+const App = () => {
+  const state = useFetch ( 'https://my.api' );
+  return state.on ( state => {
+    if ( state.pending ) return <p>pending...</p>;
+    if ( state.error ) return <p>{state.error.message}</p>;
+    return <p>Status: {state.value.status}</p>
+  });
+};
+```
+
+#### `useIdleCallback`
+
+This hook is just an alternative to `requestIdleCallback` that automatically clears itself when the parent computation is disposed.
+
+Interface:
+
+```ts
+function useIdleCallback ( callback: ObservableMaybe<IdleRequestCallback>, options?: FunctionMaybe<IdleRequestOptions> ): Disposer;
+```
+
+Usage:
+
+```tsx
+import {useIdleCallback} from 'voby';
+
+useIdleCallback ( () => console.log ( 'called' ) );
+```
+
+#### `useIdleLoop`
+
+This hook is just a version of `useIdleCallback` that loops until the parent computation is disposed.
+
+Interface:
+
+```ts
+function useIdleLoop ( callback: ObservableMaybe<IdleRequestCallback>, options?: FunctionMaybe<IdleRequestOptions> ): Disposer;
+```
+
+Usage:
+
+```tsx
+import {useIdleLoop} from 'voby';
+
+useIdleLoop ( () => console.log ( 'called' ) );
+```
+
+#### `useInterval`
+
+This hook is just an alternative to `setInterval` that automatically clears itself when the parent computation is disposed.
+
+Interface:
+
+```ts
+function useInterval ( callback: ObservableMaybe<Callback>, ms?: FunctionMaybe<number> ): Disposer;
+```
+
+Usage:
+
+```tsx
+import {useInterval} from 'voby';
+
+useInterval ( () => console.log ( 'called' ), 1000 );
+```
+
+#### `useMicrotask`
+
+This hook is just an alternative to `queueMicrotask` that automatically clears itself when the parent computation is disposed, and that ensures things like contexts, error boundaries etc. keep working inside the microtask.
+
+Interface:
+
+```ts
+function useMicrotask ( fn: () => void ): void;
+```
+
+Usage:
+
+```tsx
+import {useMicrotask} from 'voby';
+
+useMicrotask ( () => console.log ( 'called' ) );
+```
+
 #### `useTimeout`
 
 This hook is just an alternative to `setTimeout` that automatically clears itself when the parent computation is disposed.
@@ -1714,6 +1621,49 @@ const TooltipDirective = createDirective ( 'tooltip', ( ref, title: string ) => 
 const TooltipDirectiveImmediate = createDirective ( 'tooltip', ( ref, title: string ) => {
   // Implementation...
 }, { immediate: true } );
+```
+
+#### `EffectOptions`
+
+This type describes the options object that the `useEffect` hook accepts.
+
+Interface:
+
+```ts
+type EffectOptions = {
+  suspense?: boolean,
+  sync?: boolean | 'init'
+};
+```
+
+Usage:
+
+```tsx
+import {useEffect} from 'voby';
+
+// Make a regular asynchronous effect
+
+useEffect ( () => {
+  // Do something...
+});
+
+// Make a synchronous effect, which is strongly discouraged
+
+useEffect ( () => {
+  // Do something...
+}, { sync: true } );
+
+// Make an asynchronous effect that's executed immediately on creation, which is useful in edge cases
+
+useEffect ( () => {
+  // Do something...
+}, { sync: 'init' } );
+
+// Make an effect that won't be paused by `Suspense`, which is useful in edge cases
+
+useEffect ( () => {
+  // Do something...
+}, { suspense: false } );
 ```
 
 #### `FunctionMaybe`
@@ -1929,10 +1879,9 @@ npm run dev:benchmark
 
 #### `Globals`
 
-The following globals are supported, some of them can be used to tweak how the framework works internally.
+The following globals are supported.
 
 - `VOBY`: if `true`, then Voby is used in the current client page. This is also used internally to detect if Voby has been loaded multiple times within the same page, which is not supported.
-- `VOBY_HMR`: if `true`, then Voby will catch errors that happen during diffing and log them to the console instead, keeping your page working after an HMR update event in some case. For component-level HMR check out the [`hmr](#hmr) method.
 
 #### `JSX`
 
@@ -1945,7 +1894,7 @@ JSX is supported out of the box, as a rule of thumb it's very similar to how Rea
 - You can simply just use "class" instead of "className".
 - The "class" attribute can also accept an object of classes or an array of classes, for convenience.
 - SVGs are supported out of the box and will also be updated in a fine-grained manner.
-- The "innerHTML", "outerHTML" and "textContent" attributes are forbidden, as they are largely just footguns or non-idiomatic.
+- The "innerHTML", "outerHTML", "textContent" and "className" props are forbidden on native elements, as they are largely just footguns or non-idiomatic.
 - A React-like "dangerouslySetInnerHTML" attribute is supported for setting some raw HTML.
 - Numbers set as values for style properties that require a unit to be provided will automatically be suffixed with "px".
 - Using CSS variables in the "style" object is supported out of the box.
@@ -1981,6 +1930,7 @@ There are two main actions needed to make Voby work with TypeScript.
 
 ## Thanks
 
+- **[reactively](https://github.com/modderme123/reactively)**: for teaching me the awesome push/pull hybrid algorithm that this library is currently using.
 - **[S](https://github.com/adamhaile/S)**: for paving the way to this awesome reactive way of writing software.
 - **[sinuous/observable](https://github.com/luwes/sinuous/tree/master/packages/sinuous/observable)**: for making me fall in love with Observables and providing a good implementation that this library was originally based on.
 - **[solid](https://www.solidjs.com)**: for being a great sort of reference implementation, popularizing Signal-based reactivity, and having built a great community.
