@@ -140,6 +140,18 @@ const Rows = ({ data, isSelected }: { data: FunctionMaybe<IDatum[]>, isSelected:
       return Row ( props );
     }}
   </For>
+  // <For values={data} pooled unkeyed>
+  //   {( datum: () => IDatum ) => {
+  //     const id = () => datum ().id;
+  //     const label = () => datum ().label ();
+  //     const selected = () => Model.selected () === id ();
+  //     const className = { danger: selected };
+  //     const onSelect = () => Model.select ( id () );
+  //     const onRemove = () => Model.remove ( id () );
+  //     const props = {id, label, className, onSelect, onRemove};
+  //     return Row ( props );
+  //   }}
+  // </For>
 );
 
 const App = (): JSX.Element => (
