@@ -63,7 +63,9 @@ declare namespace JSX {
 
   interface ClassProperties extends AllClassProperties {}
 
-  interface StyleProperties extends DOMCSSProperties, DOMCSSVariables {}
+  interface StyleProperties extends DOMCSSProperties, DOMCSSVariables {
+    zoom?: FunctionMaybe<Nullable<string | number>>
+  }
 
   type TargetedEvent<T extends EventTarget = EventTarget, TypedEvent extends Event = Event> = Omit<TypedEvent, 'currentTarget'> & { readonly currentTarget: T };
   type TargetedAnimationEvent<T extends EventTarget> = TargetedEvent<T, AnimationEvent>;
