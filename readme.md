@@ -1184,12 +1184,13 @@ import {usePromise} from 'voby';
 
 const App = () => {
   const request = fetch ( 'https://my.api' ).then ( res => res.json ( 0 ) );
-  const promise = usePromise ( request );
-  return resolved.on ( state => {
+  const resource = usePromise ( request );
+  return () => {
+    const state = resource ();
     if ( state.pending ) return <p>pending...</p>;
     if ( state.error ) return <p>{state.error.message}</p>;
     return <p>{JSON.stringify ( state.value )}</p>
-  });
+  };
 };
 ```
 
@@ -1431,12 +1432,13 @@ Usage:
 import {useFetch} from 'voby';
 
 const App = () => {
-  const state = useFetch ( 'https://my.api' );
-  return state.on ( state => {
+  const resource = useFetch ( 'https://my.api' );
+  return () => {
+    const state = resource ();
     if ( state.pending ) return <p>pending...</p>;
     if ( state.error ) return <p>{state.error.message}</p>;
     return <p>Status: {state.value.status}</p>
-  });
+  };
 };
 ```
 
