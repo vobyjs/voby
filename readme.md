@@ -63,11 +63,11 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`batch`](#batch)                     | [`For`](#for)                     | [`useContext`](#usecontext)          | [`useAnimationFrame`](#useanimationframe)   | [`DirectiveOptions`](#directiveoptions)     | [`JSX`](#jsx)                   |
 | [`createContext`](#createcontext)     | [`Fragment`](#fragment)           | [`useDisposed`](#usedisposed)        | [`useAnimationLoop`](#useanimationloop)     | [`EffectOptions`](#effectoptions)           | [`Tree Shaking`](#tree-shaking) |
 | [`createDirective`](#createdirective) | [`If`](#if)                       | [`useEffect`](#useeffect)            | [`useEventListener`](#useeventlistener)     | [`FunctionMaybe`](#functionmaybe)           | [`TypeScript`](#typescript)     |
-| [`createElement`](#createelement)     | [`Portal`](#portal)               | [`useMemo`](#usememo)                | [`useFetch`](#usefetch)                     | [`Observable`](#observable)                 |                                 |
-| [`h`](#h)                             | [`Suspense`](#suspense)           | [`usePromise`](#usepromise)          | [`useIdleCallback`](#useidlecallback)       | [`ObservableReadonly`](#observablereadonly) |                                 |
-| [`hmr`](#hmr)                         | [`Switch`](#switch)               | [`useReadonly`](#usereadonly)        | [`useIdleLoop`](#useidleloop)               | [`ObservableMaybe`](#observablemaybe)       |                                 |
-| [`html`](#html)                       | [`Ternary`](#ternary)             | [`useResolved`](#useresolved)        | [`useInterval`](#useinterval)               | [`ObservableOptions`](#observableoptions)   |                                 |
-| [`isBatching`](#isbatching)           |                                   | [`useResource`](#useresource)        | [`useMicrotask`](#usemicrotask)             | [`Resource`](#resource)                     |                                 |
+| [`createElement`](#createelement)     | [`KeepAlive`](#keepalive)         | [`useMemo`](#usememo)                | [`useFetch`](#usefetch)                     | [`Observable`](#observable)                 |                                 |
+| [`h`](#h)                             | [`Portal`](#portal)               | [`usePromise`](#usepromise)          | [`useIdleCallback`](#useidlecallback)       | [`ObservableReadonly`](#observablereadonly) |                                 |
+| [`hmr`](#hmr)                         | [`Suspense`](#suspense)           | [`useReadonly`](#usereadonly)        | [`useIdleLoop`](#useidleloop)               | [`ObservableMaybe`](#observablemaybe)       |                                 |
+| [`html`](#html)                       | [`Switch`](#switch)               | [`useResolved`](#useresolved)        | [`useInterval`](#useinterval)               | [`ObservableOptions`](#observableoptions)   |                                 |
+| [`isBatching`](#isbatching)           | [`Ternary`](#ternary)             | [`useResource`](#useresource)        | [`useMicrotask`](#usemicrotask)             | [`Resource`](#resource)                     |                                 |
 | [`isObservable`](#isobservable)       |                                   | [`useRoot`](#useroot)                | [`useTimeout`](#usetimeout)                 | [`StoreOptions`](#storeoptions)             |                                 |
 | [`isServer`](#isserver)               |                                   | [`useSelector`](#useselector)        |                                             |                                             |                                 |
 | [`isStore`](#isstore)                 |                                   |                                      |                                             |                                             |                                 |
@@ -886,6 +886,36 @@ const App = () => {
 };
 ```
 
+#### `KeepAlive`
+
+This component allows you to create singleton instances of other components that survive their parent components being disposed, and can therefore be reused cheaply.
+
+Components rendered inside a `KeepAlive` are detached from the rest of the reactivity graph, so they don't inherit any context provided outside of their parent `KeepAlive` wrapper.
+
+Components rendered inside a `KeepAlive` are kept in memory until the wrapper `KeepAlive` is unmounted and `ttl` milliseconds have passed without another `KeepAlive` with the same `id` being mounted. Or never, if no `ttl` prop is provided.
+
+Interface:
+
+```ts
+function KeepAlive ( props: { id: FunctionMaybe<string>, ttl?: FunctionMaybe<number>, children: JSX.Element } ): ObservableReadonly<JSX.Element>;
+```
+
+Usage:
+
+```tsx
+import {KeepAlive} from 'voby';
+
+// Render some expensive component inside a KeepAlive
+
+const App = () => {
+  return (
+    <KeepAlive id="some-unique-id" ttl={60_000}>
+      <SomeExpensiveComponent />
+    </KeepAlive>
+  );
+};
+```
+
 #### `Portal`
 
 This component mounts its children inside a provided DOM element, or inside `document.body` otherwise.
@@ -905,7 +935,7 @@ function Portal ( props: { when: boolean, mount?: JSX.Element, wrapper?: JSX.Ele
 Usage:
 
 ```tsx
-import Portal from 'voby';
+import {Portal} from 'voby';
 
 const Modal = () => {
   // Some modal component maybe...

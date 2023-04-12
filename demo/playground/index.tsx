@@ -4,7 +4,7 @@
 /* IMPORT */
 
 import * as Voby from 'voby';
-import {Dynamic, ErrorBoundary, For, If, Portal, Suspense, Switch, Ternary} from 'voby';
+import {Dynamic, ErrorBoundary, For, If, KeepAlive, Portal, Suspense, Switch, Ternary} from 'voby';
 import {useContext, useEffect, useInterval, useMemo, usePromise, useResource, useTimeout} from 'voby';
 import {$, createContext, createDirective, hmr, html, lazy, render, renderToString, store, template,  untrack} from 'voby';
 import type {Observable, ObservableReadonly} from 'voby';
@@ -3494,6 +3494,54 @@ TestIfRace.test = {
   ]
 };
 
+const TestKeepAliveStatic = (): JSX.Element => {
+  return (
+    <>
+      <h3>KeepAlive - Static</h3>
+      <KeepAlive id="static">
+        <p>123</p>
+      </KeepAlive>
+    </>
+  );
+};
+
+TestKeepAliveStatic.test = {
+  static: true,
+  snapshots: [
+    '<p>123</p>'
+  ]
+};
+
+const TestKeepAliveObservable = (): JSX.Element => {
+  const o = $(true);
+  const toggle = () => o ( prev => !prev );
+  useInterval ( toggle, TEST_INTERVAL );
+
+  return (
+    <>
+      <h3>KeepAlive - Observable</h3>
+      <If when={o}>
+        <KeepAlive id="observable-1">
+          <p>{() => Math.random ()}</p>
+        </KeepAlive>
+      </If>
+      <If when={o}>
+        <KeepAlive id="observable-2" ttl={100}>
+          <p>{() => Math.random ()}</p>
+        </KeepAlive>
+      </If>
+    </>
+  );
+};
+
+TestKeepAliveObservable.test = {
+  static: false,
+  snapshots: [
+    '<p>{random}</p><p>{random}</p>',
+    '<!----><!---->'
+  ]
+};
+
 const TestTernaryStatic = (): JSX.Element => {
   return (
     <>
@@ -6574,6 +6622,8 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestIfFallbackObservableStatic} />
       <TestSnapshots Component={TestIfFallbackFunction} />
       {/* <TestSnapshots Component={TestIfRace} /> */}
+      <TestSnapshots Component={TestKeepAliveStatic} />
+      <TestSnapshots Component={TestKeepAliveObservable} />
       <TestSnapshots Component={TestTernaryStatic} />
       <TestSnapshots Component={TestTernaryStaticInline} />
       <TestSnapshots Component={TestTernaryObservable} />
