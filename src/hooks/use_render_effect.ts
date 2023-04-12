@@ -7,7 +7,6 @@ import type {Disposer, EffectFunction, EffectOptions} from '~/types';
 /* HELPERS */
 
 const options: EffectOptions = {
-  suspense: false,
   sync: 'init'
 };
 
