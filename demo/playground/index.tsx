@@ -123,7 +123,6 @@ const TestSnapshots = ({ Component, props }: { Component: ( JSX.Component | Cons
 //TODO: Test template with all sorts of supported props
 //TODO: Automate all tests
 //TODO: Enable all tests
-//TODO: Test unkeyed For
 
 const TestNullStatic = (): JSX.Element => {
   return (
