@@ -168,6 +168,9 @@ declare namespace JSX {
   }
 
   interface Directives {
+    //FIXME: remove these internal directives https://github.com/microsoft/TypeScript/issues/49536
+    __voby_internal1__: [],
+    __voby_internal2__: [],
     // name: [arg1: unknown, arg2: unknown, ...argN: unknown]
   }
 
