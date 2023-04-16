@@ -2774,6 +2774,28 @@ const TestEventEnterAndEnterCaptureStatic = (): JSX.Element => {
   );
 };
 
+const TestEventMiddleClickStatic = (): JSX.Element => {
+  const o = $( 0 );
+  const increment = () => o ( prev => prev + 1 );
+  return (
+    <>
+      <h3>Event - Middle Click Static</h3>
+      <p><button onMiddleClick={increment}>{o}</button></p>
+    </>
+  );
+};
+
+const TestEventMiddleClickCaptureStatic = (): JSX.Element => {
+  const o = $( 0 );
+  const increment = () => o ( prev => prev + 1 );
+  return (
+    <>
+      <h3>Event - Middle Click Capture Static</h3>
+      <p><button onMiddleClickCapture={increment}>{o}</button></p>
+    </>
+  );
+};
+
 const TestEventTargetCurrentTarget = (): JSX.Element => {
   return (
     <>
@@ -6592,6 +6614,8 @@ const Test = (): JSX.Element => {
       <TestEventEnterStopPropagation />
       <TestEventEnterStopImmediatePropagation />
       <TestEventEnterAndEnterCaptureStatic />
+      <TestEventMiddleClickStatic />
+      <TestEventMiddleClickCaptureStatic />
       <TestEventTargetCurrentTarget />
       <TestSnapshots Component={TestABCD} />
       <TestSnapshots Component={TestChildrenBoolean} />

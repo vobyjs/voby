@@ -632,6 +632,15 @@ const setEventStatic = (() => {
 
   return ( element: HTMLElement, event: string, value: null | undefined | EventListener ): void => {
 
+    if ( event.startsWith ( 'onmiddleclick' ) ) { // Special-cased synthetic event, somewhat ugly but very convenient
+
+      const _value = value;
+
+      event = `onauxclick${event.slice ( 13 )}`;
+      value = _value && (( event: Event ) => event['button'] === 1 && _value ( event ));
+
+    }
+
     const delegated = delegatedEvents[event];
 
     if ( delegated ) {

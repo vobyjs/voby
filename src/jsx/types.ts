@@ -303,6 +303,8 @@ declare namespace JSX {
     onDragStartCapture?: ObservableMaybe<Nullable<DragEventHandler<T>>>,
     onDrop?: ObservableMaybe<Nullable<DragEventHandler<T>>>,
     onDropCapture?: ObservableMaybe<Nullable<DragEventHandler<T>>>,
+    onMiddleClick?: ObservableMaybe<Nullable<MouseEventHandler<T>>>,
+    onMiddleClickCapture?: ObservableMaybe<Nullable<MouseEventHandler<T>>>,
     onMouseDown?: ObservableMaybe<Nullable<MouseEventHandler<T>>>,
     onMouseDownCapture?: ObservableMaybe<Nullable<MouseEventHandler<T>>>,
     onMouseEnter?: ObservableMaybe<Nullable<MouseEventHandler<T>>>,
