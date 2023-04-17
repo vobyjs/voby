@@ -39,7 +39,7 @@ const random = (): number => { // It's important for testing that 0, 1 or reused
 
 const randomBigInt = (): bigint => {
 
-  return BigInt ( Math.floor ( random () * 100 ) );
+  return BigInt ( Math.floor ( random () * 10000 ) );
 
 };
 
@@ -63,7 +63,7 @@ const TestSnapshots = ({ Component, props }: { Component: ( JSX.Component | Cons
   const getSnapshot = ( html: string ): string => {
     const htmlWithoutTitle = html.replace ( /<h3>[a-zA-Z0-9 -]*<\/h3>/, '' );
     const htmlWithRandom = htmlWithoutTitle.replace ( /0\.\d+/g, '{random}' );
-    const htmlWitRandomBigint = htmlWithRandom.replace ( /(?<!\d)(0|[1-9][0-9]?|100)n/g, '{random-bigint}n' );
+    const htmlWitRandomBigint = htmlWithRandom.replace ( /(?<!\d)(0|[1-9][0-9]?[0-9]?[0-9]?|10000)n/g, '{random-bigint}n' );
     const htmlWithRandomHex = htmlWitRandomBigint.replace ( /#[a-fA-F0-9]{6,8}/g, '{random-color}' );
     return htmlWithRandomHex;
   };
@@ -500,7 +500,7 @@ const TestBigIntStatic = (): JSX.Element => {
   return (
     <>
       <h3>BigInt - Static</h3>
-      <p>{123n}n</p>
+      <p>{123123n}n</p>
     </>
   );
 };
@@ -508,7 +508,7 @@ const TestBigIntStatic = (): JSX.Element => {
 TestBigIntStatic.test = {
   static: true,
   snapshots: [
-    '<p>123n</p>'
+    '<p>123123n</p>'
   ]
 };
 
