@@ -3,6 +3,7 @@
 
 import useMemo from '~/hooks/use_memo';
 import $ from '~/methods/S';
+import resolve from '~/methods/resolve';
 import untrack from '~/methods/untrack';
 import {isFunction} from '~/utils/lang';
 import type {Observable, ObservableReadonly} from '~/types';
@@ -38,7 +39,7 @@ const hmr = <T extends Function> ( accept: Function | undefined, component: T ):
         return useMemo ( () => {
 
           const component = path.reduce ( ( component, key ) => component[key], SOURCES.get ( id () )?.() || source () );
-          const result = untrack ( () => component ( ...args ) );
+          const result = resolve ( untrack ( () => component ( ...args ) ) );
 
           return result;
 
