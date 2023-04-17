@@ -99,7 +99,7 @@ const setChildReplacementFunction = ( parent: HTMLElement, fragment: Fragment, c
 
     }
 
-    setChildStatic ( parent, fragment, valueNext, true );
+    setChildStatic ( parent, fragment, false, valueNext, true );
 
   });
 
@@ -159,7 +159,7 @@ const setChildReplacement = ( child: Child, childPrev: Node ): void => {
 
 };
 
-const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, dynamic: boolean ): void => {
+const setChildStatic = ( parent: HTMLElement, fragment: Fragment, fragmentOnly: boolean, child: Child, dynamic: boolean ): void => {
 
   if ( !dynamic && child === undefined ) return; // Ignoring static undefined children, avoiding inserting some useless placeholder nodes
 
@@ -178,7 +178,11 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, 
 
       const textNode = createText ( child );
 
-      parent.appendChild ( textNode );
+      if ( !fragmentOnly ) {
+
+        parent.appendChild ( textNode );
+
+      }
 
       FragmentUtils.replaceWithNode ( fragment, textNode );
 
@@ -188,7 +192,11 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, 
 
       const node = child as Node;
 
-      parent.insertBefore ( node, null );
+      if ( !fragmentOnly ) {
+
+        parent.insertBefore ( node, null );
+
+      }
 
       FragmentUtils.replaceWithNode ( fragment, node );
 
@@ -204,7 +212,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, 
 
     if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
-      const node = setChildReplacementText ( String ( child ), prevFirst );
+      const node = setChildReplacementText ( String ( child ), prevFirst ); //TODO: maybe "fragmentOnly" should be passed on here, but it seems unnecessary
 
       FragmentUtils.replaceWithNode ( fragment, node );
 
@@ -218,8 +226,6 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, 
 
   const children = ( Array.isArray ( child ) ? child : [child] ) as Node[]; //TSC
 
-  let nextHasStaticChildren = false;
-
   for ( let i = 0, l = children.length; i < l; i++ ) {
 
     const child = children[i];
@@ -227,13 +233,9 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, 
 
     if ( type === 'string' || type === 'number' || type === 'bigint' ) {
 
-      nextHasStaticChildren = true;
-
       FragmentUtils.pushNode ( fragmentNext, createText ( child ) );
 
     } else if ( type === 'object' && child !== null && typeof child.nodeType === 'number' ) {
-
-      nextHasStaticChildren = true;
 
       FragmentUtils.pushNode ( fragmentNext, child );
 
@@ -241,9 +243,19 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, 
 
       const fragment = FragmentUtils.make ();
 
+      let childFragmentOnly = !fragmentOnly; // Avoiding mutating the DOM immediately, letting the parent handle it
+
       FragmentUtils.pushFragment ( fragmentNext, fragment );
 
-      resolveChild ( child, setChildStatic.bind ( undefined, parent, fragment ) );
+      resolveChild ( child, ( child, dynamic ) => {
+
+        const fragmentOnly = childFragmentOnly;
+
+        childFragmentOnly = false;
+
+        setChildStatic ( parent, fragment, fragmentOnly, child, dynamic );
+
+      });
 
     }
 
@@ -251,7 +263,6 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, 
 
   let next = FragmentUtils.getChildren ( fragmentNext );
   let nextLength = fragmentNext.length;
-  let nextHasDynamicChildren = !nextHasStaticChildren && nextLength > 0; // Just a heuristic, not exact, good enough
 
   if ( nextLength === 0 && prevLength === 1 && prevFirst.nodeType === 8 ) { // It's a placeholder already, no need to replace it
 
@@ -259,7 +270,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, 
 
   }
 
-  if ( nextLength === 0 || ( prevLength === 1 && prevFirst.nodeType === 8 ) || children[SYMBOL_UNCACHED] ) { // Fast path for removing all children and/or replacing the placeholder
+  if ( !fragmentOnly && ( nextLength === 0 || ( prevLength === 1 && prevFirst.nodeType === 8 ) || children[SYMBOL_UNCACHED] ) ) { // Fast path for removing all children and/or replacing the placeholder
 
     const {childNodes} = parent;
 
@@ -331,7 +342,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, 
 
   }
 
-  if ( prevLength > 0 || nextHasStaticChildren || !nextHasDynamicChildren ) { // Some diffs can be safely skipped, if we only added some dynamic children already //FIXME: Children added dynamically must be taken into account perfectly though, this most probably isn't perfect, "prev" may not be representative of the current state, when dynamic children are added
+  if ( !fragmentOnly ) {
 
     diff ( parent, prev, next, prevSibling );
 
@@ -343,7 +354,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, child: Child, 
 
 const setChild = ( parent: HTMLElement, child: Child, fragment: Fragment = FragmentUtils.make () ): void => {
 
-  resolveChild ( child, setChildStatic.bind ( undefined, parent, fragment ) );
+  resolveChild ( child, setChildStatic.bind ( undefined, parent, fragment, false ) );
 
 };
 

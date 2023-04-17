@@ -69,7 +69,11 @@ const diff = ( parent: Node, before: Node | Node[], after: Node | Node[], nextSi
         // remove the node only if it's unknown or not live
         if (!map || !map.has(before[aStart])) {
           removable = before[aStart];
-          parent.removeChild(removable);
+          try {
+            parent.removeChild(removable);
+          } catch {
+            //FIXME: This try..catch block shouldn't exist, though sometimes setChildStatic wants to update the DOM immediately -- tricky
+          }
         }
         aStart++;
       }
@@ -176,7 +180,11 @@ const diff = ( parent: Node, before: Node | Node[], after: Node | Node[], nextSi
       // that only the live list index should be forwarded
       else {
         removable = before[aStart++];
-        parent.removeChild(removable);
+        try {
+          parent.removeChild(removable);
+        } catch {
+          //FIXME: This try..catch block shouldn't exist, though sometimes setChildStatic wants to update the DOM immediately -- tricky
+        }
       }
     }
   }
