@@ -1924,6 +1924,7 @@ JSX is supported out of the box, as a rule of thumb it's very similar to how Rea
 - There's no "key" attribute because it's unnecessary.
 - Only refs in the function form are supported, so you are incentivized to simply use observables for them too.
 - The "ref" attribute can also accept an array of functions to call, for convenience.
+- Refs are called on the next microtask, making it so the node you'll get will probably be attached to the DOM already. For getting a more immediate reference you can use an "immediate" [directive](#createdirective).
 - You can simply just use "class" instead of "className".
 - The "class" attribute can also accept an object of classes or an array of classes, for convenience.
 - SVGs are supported out of the box and will also be updated in a fine-grained manner.
