@@ -41,7 +41,8 @@ This works similarly to [Solid](https://www.solidjs.com), but without a custom B
 
 You can find some demos and benchmarks below, more demos are contained inside the repository.
 
-- Playground: https://codesandbox.io/s/voby-playground-7w2pxg
+- Playground (CodeSandbox): https://codesandbox.io/s/voby-playground-7w2pxg
+- Playground (StackBlitz): https://stackblitz.com/edit/vitejs-vite-azlrzl?file=src%2Fcounter.tsx
 - Benchmark: https://krausest.github.io/js-framework-benchmark/current.html
 - Counter: https://codesandbox.io/s/voby-demo-counter-23fv5
 - Clock: https://codesandbox.io/s/voby-demo-clock-w1e7yb
