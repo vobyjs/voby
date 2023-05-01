@@ -11,6 +11,7 @@ const useTimeout = ( callback: ObservableMaybe<Callback>, ms?: FunctionMaybe<num
 
   return useScheduler ({
     callback,
+    once: true,
     cancel: clearTimeout,
     schedule: callback => setTimeout ( callback, $$(ms) )
   });

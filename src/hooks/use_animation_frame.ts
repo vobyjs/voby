@@ -10,6 +10,7 @@ const useAnimationFrame = ( callback: ObservableMaybe<FrameRequestCallback> ): D
 
   return useScheduler ({
     callback,
+    once: true,
     cancel: cancelAnimationFrame,
     schedule: requestAnimationFrame
   });

@@ -11,6 +11,7 @@ const useIdleCallback = ( callback: ObservableMaybe<IdleRequestCallback>, option
 
   return useScheduler ({
     callback,
+    once: true,
     cancel: cancelIdleCallback,
     schedule: callback => requestIdleCallback ( callback, $$(options) )
   });
