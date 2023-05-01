@@ -71,7 +71,7 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`isBatching`](#isbatching)           | [`Ternary`](#ternary)             | [`useResource`](#useresource)        | [`useMicrotask`](#usemicrotask)             | [`Resource`](#resource)                     |                                 |
 | [`isObservable`](#isobservable)       |                                   | [`useRoot`](#useroot)                | [`useTimeout`](#usetimeout)                 | [`StoreOptions`](#storeoptions)             |                                 |
 | [`isServer`](#isserver)               |                                   | [`useSelector`](#useselector)        |                                             |                                             |                                 |
-| [`isStore`](#isstore)                 |                                   |                                      |                                             |                                             |                                 |
+| [`isStore`](#isstore)                 |                                   | [`useSuspended`](#usesuspended)      |                                             |                                             |                                 |
 | [`lazy`](#lazy)                       |                                   |                                      |                                             |                                             |                                 |
 | [`render`](#render)                   |                                   |                                      |                                             |                                             |                                 |
 | [`renderToString`](#rendertostring)   |                                   |                                      |                                             |                                             |                                 |
@@ -1347,6 +1347,26 @@ Usage:
 import {useSelector} from 'voby';
 
 useSelector // => Same as require ( 'oby' ).selector
+```
+
+#### `useSuspended`
+
+This hook returns a read-only observable that tells you if the closest suspense boundary is currently suspended or not.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#suspended).
+
+Interface:
+
+```ts
+function useSuspended (): ObservableReadonly<boolean>;
+```
+
+Usage:
+
+```tsx
+import {useSuspended} from 'voby';
+
+useSuspended // => Same as require ( 'oby' ).suspended
 ```
 
 ### Hooks <sub>web</sub>

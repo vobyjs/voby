@@ -23,8 +23,9 @@ import useResolved from '~/hooks/use_resolved';
 import useResource from '~/hooks/use_resource';
 import useRoot from '~/hooks/use_root';
 import useSelector from '~/hooks/use_selector';
+import useSuspended from '~/hooks/use_suspended';
 import useTimeout from '~/hooks/use_timeout';
 
 /* EXPORT */
 
-export {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useBoolean, useCleanup, useContext, useDisposed, useEventListener, useEffect, useFetch, useIdleCallback, useIdleLoop, useInterval, useMemo, useMicrotask, usePromise, useReadonly, useResolved, useResource, useRoot, useSelector, useTimeout};
+export {useAbortController, useAbortSignal, useAnimationFrame, useAnimationLoop, useBoolean, useCleanup, useContext, useDisposed, useEventListener, useEffect, useFetch, useIdleCallback, useIdleLoop, useInterval, useMemo, useMicrotask, usePromise, useReadonly, useResolved, useResource, useRoot, useSelector, useSuspended, useTimeout};
