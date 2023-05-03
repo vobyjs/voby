@@ -22,7 +22,7 @@
     "noren": "^0.4.3",
     "tiny-livereload": "^1.3.0",
     "voby": "*",
-    "voby-simple-router": "^1.4.2"
+    "voby-simple-router": "^1.4.3"
   },
   "devDependencies": {
     "esbuild": "0.17.18",
