@@ -1883,7 +1883,7 @@ const TestStyleStaticVariable = (): JSX.Element => {
 TestStyleStaticVariable.test = {
   static: true,
   snapshots: [
-    '<p style="color: var(--color); --color:green;">content</p>'
+    '<p style="color: var(--color); --color: green;">content</p>'
   ]
 };
 
@@ -1962,8 +1962,8 @@ const TestStyleObservableVariable = (): JSX.Element => {
 TestStyleObservableVariable.test = {
   static: false,
   snapshots: [
-    '<p style="color: var(--color); --color:green;">content</p>',
-    '<p style="color: var(--color); --color:orange;">content</p>'
+    '<p style="color: var(--color); --color: green;">content</p>',
+    '<p style="color: var(--color); --color: orange;">content</p>'
   ]
 };
 
@@ -2042,8 +2042,8 @@ const TestStyleFunctionVariable = (): JSX.Element => {
 TestStyleFunctionVariable.test = {
   static: false,
   snapshots: [
-    '<p style="color: var(--color); --color:green;">content</p>',
-    '<p style="color: var(--color); --color:orange;">content</p>'
+    '<p style="color: var(--color); --color: green;">content</p>',
+    '<p style="color: var(--color); --color: orange;">content</p>'
   ]
 };
 
