@@ -20,19 +20,23 @@ const renderToString = ( child: Child ): Promise<string> => {
 
     useRoot ( dispose => {
 
-      context ( SYMBOL_SUSPENSE, undefined ); // Ensuring the parent Suspense boundary, if any, is not triggered
+      context ( { [SYMBOL_SUSPENSE]: undefined }, () => { // Ensuring the parent Suspense boundary, if any, is not triggered
 
-      const suspense = SuspenseContext.new ();
+        SuspenseContext.wrap ( suspense => {
 
-      const {portal} = Portal ({ children: Suspense ({ children: child }) }).metadata;
+          const {portal} = Portal ({ children: Suspense ({ children: child }) }).metadata;
 
-      useEffect ( () => {
+          useEffect ( () => {
 
-        if ( suspense.active () ) return;
+            if ( suspense.active () ) return;
 
-        resolve ( portal.innerHTML );
+            resolve ( portal.innerHTML );
 
-        dispose ();
+            dispose ();
+
+          });
+
+        });
 
       });
 

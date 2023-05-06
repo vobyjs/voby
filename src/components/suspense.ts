@@ -13,9 +13,7 @@ import type {Child, FunctionMaybe, ObservableReadonly} from '~/types';
 
 const Suspense = ({ when, fallback, children }: { when?: FunctionMaybe<unknown>, fallback?: Child, children: Child }): ObservableReadonly<Child> => {
 
-  return useMemo ( () => {
-
-    const suspense = SuspenseContext.new ();
+  return SuspenseContext.wrap ( suspense => {
 
     const condition = useMemo ( () => !!$$(when) || suspense.active () );
 

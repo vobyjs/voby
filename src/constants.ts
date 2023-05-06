@@ -2,13 +2,13 @@
 /* IMPORT */
 
 import {SYMBOL_OBSERVABLE, SYMBOL_OBSERVABLE_FROZEN, SYMBOL_OBSERVABLE_READABLE, SYMBOL_UNCACHED, SYMBOL_UNTRACKED_UNWRAPPED} from '~/oby';
-import type {ContextData, Context} from '~/types';
+import type {ContextData, Context, DirectiveData} from '~/types';
 
 /* MAIN */
 
 const CONTEXTS_DATA = new WeakMap<Context<any>, ContextData<any>> ();
 
-const DIRECTIVE_OUTSIDE_SUPER_ROOT = { current: false };
+const DIRECTIVES: Record<symbol, DirectiveData<any>> = {};
 
 const SYMBOL_SUSPENSE = Symbol ( 'Suspense' );
 
@@ -19,4 +19,4 @@ const SYMBOLS_DIRECTIVES: Record<string, symbol> = {};
 /* EXPORT */
 
 export {SYMBOL_OBSERVABLE, SYMBOL_OBSERVABLE_FROZEN, SYMBOL_OBSERVABLE_READABLE, SYMBOL_UNCACHED, SYMBOL_UNTRACKED_UNWRAPPED};
-export {CONTEXTS_DATA, DIRECTIVE_OUTSIDE_SUPER_ROOT, SYMBOL_SUSPENSE, SYMBOL_TEMPLATE_ACCESSOR, SYMBOLS_DIRECTIVES};
+export {CONTEXTS_DATA, DIRECTIVES, SYMBOL_SUSPENSE, SYMBOL_TEMPLATE_ACCESSOR, SYMBOLS_DIRECTIVES};

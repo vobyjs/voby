@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {DIRECTIVE_OUTSIDE_SUPER_ROOT, SYMBOLS_DIRECTIVES, SYMBOL_UNCACHED} from '~/constants';
+import {DIRECTIVES, SYMBOLS_DIRECTIVES, SYMBOL_UNCACHED} from '~/constants';
 import useMicrotask from '~/hooks/use_microtask';
 import useRenderEffect from '~/hooks/use_render_effect';
 import isStore from '~/methods/is_store';
@@ -558,32 +558,26 @@ const setClasses = ( element: HTMLElement, object: Classes ): void => {
 
 };
 
-const setDirective = (() => {
+const setDirective = <T extends unknown[]> ( element: HTMLElement, directive: string, args: T ): void => {
 
-  const runWithSuperRoot = _with ();
+  const symbol = SYMBOLS_DIRECTIVES[directive] || Symbol ();
+  const data = context<DirectiveData<T>> ( symbol ) || DIRECTIVES[symbol];
 
-  return <T extends unknown[]> ( element: HTMLElement, directive: string, args: T ): void => {
+  if ( !data ) throw new Error ( `Directive "${directive}" not found` );
 
-    const symbol = SYMBOLS_DIRECTIVES[directive] || Symbol ();
-    const data = DIRECTIVE_OUTSIDE_SUPER_ROOT.current ? context<DirectiveData<T>> ( symbol ) : runWithSuperRoot ( () => context<DirectiveData<T>> ( symbol ) );
+  const call = () => data.fn ( element, ...castArray ( args ) as any ); //TSC
 
-    if ( !data ) throw new Error ( `Directive "${directive}" not found` );
+  if ( data.immediate ) {
 
-    const call = () => data.fn ( element, ...castArray ( args ) as any ); //TSC
+    call ();
 
-    if ( data.immediate ) {
+  } else {
 
-      call ();
+    useMicrotask ( call );
 
-    } else {
+  }
 
-      useMicrotask ( call );
-
-    }
-
-  };
-
-})();
+};
 
 const setEventStatic = (() => {
 

@@ -4,22 +4,12 @@
 import {SYMBOL_SUSPENSE} from '~/constants';
 import useMemo from '~/hooks/use_memo';
 import $ from '~/methods/S';
-import {context} from '~/oby';
+import {context, resolve} from '~/oby';
 import type {SuspenseData} from '~/types';
 
 /* MAIN */
 
 const SuspenseContext = {
-
-  new: (): SuspenseData => {
-
-    const data = SuspenseContext.create ();
-
-    SuspenseContext.set ( data );
-
-    return data;
-
-  },
 
   create: (): SuspenseData => {
 
@@ -40,9 +30,15 @@ const SuspenseContext = {
 
   },
 
-  set: ( data: SuspenseData ): void => {
+  wrap: <T> ( fn: ( data: SuspenseData ) => T ) => {
 
-    return context<SuspenseData> ( SYMBOL_SUSPENSE, data );
+    const data = SuspenseContext.create ();
+
+    return context ( { [SYMBOL_SUSPENSE]: data }, () => {
+
+      return resolve ( () => fn ( data ) );
+
+    });
 
   }
 
