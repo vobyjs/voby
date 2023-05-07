@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import useDisposed from '~/hooks/use_disposed';
+import useCheapDisposed from '~/hooks/use_cheap_disposed';
 import {with as _with} from '~/oby';
 import type {Callback} from '~/types';
 
@@ -11,7 +11,7 @@ import type {Callback} from '~/types';
 
 const useMicrotask = ( fn: Callback ): void => {
 
-  const disposed = useDisposed ();
+  const disposed = useCheapDisposed ();
   const runWithOwner = _with ();
 
   queueMicrotask ( () => {

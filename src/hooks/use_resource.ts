@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import SuspenseManager from '~/components/suspense.manager';
-import useDisposed from '~/hooks/use_disposed';
+import useCheapDisposed from '~/hooks/use_cheap_disposed';
 import useReadonly from '~/hooks/use_readonly';
 import useRenderEffect from '~/hooks/use_render_effect';
 import $ from '~/methods/S';
@@ -32,7 +32,7 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): R
 
   useRenderEffect ( () => {
 
-    const disposed = useDisposed ();
+    const disposed = useCheapDisposed ();
 
     const onPending = (): void => {
 
