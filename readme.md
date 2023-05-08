@@ -72,7 +72,7 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`isObservable`](#isobservable)       |                                   | [`useRoot`](#useroot)                | [`useTimeout`](#usetimeout)                 | [`StoreOptions`](#storeoptions)             |                                 |
 | [`isServer`](#isserver)               |                                   | [`useSelector`](#useselector)        |                                             |                                             |                                 |
 | [`isStore`](#isstore)                 |                                   | [`useSuspended`](#usesuspended)      |                                             |                                             |                                 |
-| [`lazy`](#lazy)                       |                                   |                                      |                                             |                                             |                                 |
+| [`lazy`](#lazy)                       |                                   | [`useUntracked`](#useuntracked)      |                                             |                                             |                                 |
 | [`render`](#render)                   |                                   |                                      |                                             |                                             |                                 |
 | [`renderToString`](#rendertostring)   |                                   |                                      |                                             |                                             |                                 |
 | [`resolve`](#resolve)                 |                                   |                                      |                                             |                                             |                                 |
@@ -1364,6 +1364,27 @@ Usage:
 import {useSuspended} from 'voby';
 
 useSuspended // => Same as require ( 'oby' ).suspended
+```
+
+#### `useUntracked`
+
+This hook returns an untracked version of a value.
+
+[Read upstream documentation](https://github.com/fabiospampinato/oby#untracked).
+
+Interface:
+
+```ts
+function useUntracked <T> ( fn: () => T ): () => T;
+function useUntracked <T> ( value: T ): () => T;
+```
+
+Usage:
+
+```tsx
+import {useUntracked} from 'voby';
+
+useUntracked // => Same as require ( 'oby' ).untracked
 ```
 
 ### Hooks <sub>web</sub>
