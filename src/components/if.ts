@@ -21,7 +21,7 @@ const If = <T> ({ when, fallback, children }: { when: FunctionMaybe<T>, fallback
 
   } else { // Just passing the children along
 
-    return ternary ( when, useUntracked ( () => children as Child ), fallback ); //TSC
+    return ternary ( when, useUntracked ( children as Child ), fallback ); //TSC
 
   }
 
