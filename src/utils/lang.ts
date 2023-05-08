@@ -1,7 +1,7 @@
 
 /* IMPORT */
 
-import {SYMBOL_TEMPLATE_ACCESSOR} from '~/constants';
+import {SYMBOL_OBSERVABLE_FROZEN, SYMBOL_OBSERVABLE_READABLE, SYMBOL_TEMPLATE_ACCESSOR, SYMBOL_UNTRACKED, SYMBOL_UNTRACKED_UNWRAPPED} from '~/constants';
 import type {Falsy, TemplateActionProxy, Truthy} from '~/types';
 
 /* MAIN */
@@ -73,6 +73,12 @@ const isFalsy = <T> ( value: T ): value is Falsy<T> => {
 const isFunction = ( value: unknown ): value is (( ...args: any[] ) => any) => {
 
   return typeof value === 'function';
+
+};
+
+const isFunctionReactive = ( value: Function ): boolean => {
+
+  return !( SYMBOL_UNTRACKED in value || SYMBOL_UNTRACKED_UNWRAPPED in value || SYMBOL_OBSERVABLE_FROZEN in value || value[SYMBOL_OBSERVABLE_READABLE]?.parent?.disposed );
 
 };
 
@@ -173,4 +179,4 @@ const once = <T> ( fn: () => T ): (() => T) => {
 
 /* EXPORT */
 
-export {assign, castArray, castError, flatten, indexOf, isArray, isBoolean, isError, isFalsy, isFunction, isNil, isNode, isObject, isPromise, isString, isSVG, isSVGElement, isTemplateAccessor, isTruthy, isVoidChild, noop, once};
+export {assign, castArray, castError, flatten, indexOf, isArray, isBoolean, isError, isFalsy, isFunction, isFunctionReactive, isNil, isNode, isObject, isPromise, isString, isSVG, isSVGElement, isTemplateAccessor, isTruthy, isVoidChild, noop, once};

@@ -14,7 +14,7 @@ import {classesToggle} from '~/utils/classlist';
 import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import FragmentUtils from '~/utils/fragment';
-import {castArray, flatten, isArray, isBoolean, isFunction, isNil, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
+import {castArray, flatten, isArray, isBoolean, isFunction, isFunctionReactive, isNil, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
 import {resolveChild, resolveClass} from '~/utils/resolvers';
 import type {Child, Classes, DirectiveData, EventListener, Fragment, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 
@@ -71,7 +71,7 @@ const setAttributeStatic = (() => {
 
 const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean | number | string> ): void => {
 
-  if ( isFunction ( value ) ) {
+  if ( isFunction ( value ) && isFunctionReactive ( value ) ) {
 
     useRenderEffect ( () => {
 
@@ -81,7 +81,7 @@ const setAttribute = ( element: HTMLElement, key: string, value: FunctionMaybe<n
 
   } else {
 
-    setAttributeStatic ( element, key, value );
+    setAttributeStatic ( element, key, $$(value) );
 
   }
 
@@ -362,7 +362,7 @@ const setClassStatic = classesToggle;
 
 const setClass = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean> ): void => {
 
-  if ( isFunction ( value ) ) {
+  if ( isFunction ( value ) && isFunctionReactive ( value ) ) {
 
     useRenderEffect ( () => {
 
@@ -372,7 +372,7 @@ const setClass = ( element: HTMLElement, key: string, value: FunctionMaybe<null 
 
   } else {
 
-    setClassStatic ( element, key, value );
+    setClassStatic ( element, key, $$(value) );
 
   }
 
@@ -396,7 +396,7 @@ const setClassBooleanStatic = ( element: HTMLElement, value: boolean, key: null 
 
 const setClassBoolean = ( element: HTMLElement, value: boolean, key: FunctionMaybe<null | undefined | boolean | string> ): void => {
 
-  if ( isFunction ( key ) ) {
+  if ( isFunction ( key ) && isFunctionReactive ( key ) ) {
 
     let keyPrev: null | undefined | boolean | string;
 
@@ -412,7 +412,7 @@ const setClassBoolean = ( element: HTMLElement, value: boolean, key: FunctionMay
 
   } else {
 
-    setClassBooleanStatic ( element, value, key );
+    setClassBooleanStatic ( element, value, $$(key) );
 
   }
 
@@ -533,8 +533,6 @@ const setClassesStatic = ( element: HTMLElement, object: null | undefined | stri
 };
 
 const setClasses = ( element: HTMLElement, object: Classes ): void => {
-
-  /* RECURSIVE IMPLEMENTATION */
 
   if ( isFunction ( object ) || isArray ( object ) ) {
 
@@ -747,7 +745,7 @@ const setPropertyStatic = ( element: HTMLElement, key: string, value: null | und
 
 const setProperty = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | boolean | number | string> ): void => {
 
-  if ( isFunction ( value ) ) {
+  if ( isFunction ( value ) && isFunctionReactive ( value ) ) {
 
     useRenderEffect ( () => {
 
@@ -757,7 +755,7 @@ const setProperty = ( element: HTMLElement, key: string, value: FunctionMaybe<nu
 
   } else {
 
-    setPropertyStatic ( element, key, value );
+    setPropertyStatic ( element, key, $$(value) );
 
   }
 
@@ -811,7 +809,7 @@ const setStyleStatic = (() => {
 
 const setStyle = ( element: HTMLElement, key: string, value: FunctionMaybe<null | undefined | number | string> ): void => {
 
-  if ( isFunction ( value ) ) {
+  if ( isFunction ( value ) && isFunctionReactive ( value ) ) {
 
     useRenderEffect ( () => {
 
@@ -821,7 +819,7 @@ const setStyle = ( element: HTMLElement, key: string, value: FunctionMaybe<null 
 
   } else {
 
-    setStyleStatic ( element, key, value );
+    setStyleStatic ( element, key, $$(value) );
 
   }
 
@@ -887,7 +885,7 @@ const setStylesStatic = ( element: HTMLElement, object: null | undefined | strin
 
 const setStyles = ( element: HTMLElement, object: FunctionMaybe<null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>> ): void => {
 
-  if ( isFunction ( object ) ) {
+  if ( isFunction ( object ) && isFunctionReactive ( object ) ) {
 
     let objectPrev: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>;
 
@@ -903,7 +901,7 @@ const setStyles = ( element: HTMLElement, object: FunctionMaybe<null | undefined
 
   } else {
 
-    setStylesStatic ( element, object );
+    setStylesStatic ( element, $$(object) );
 
   }
 

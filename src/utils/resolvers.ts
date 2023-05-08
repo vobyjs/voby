@@ -1,12 +1,12 @@
 
 /* IMPORT */
 
-import {SYMBOL_OBSERVABLE_FROZEN, SYMBOL_OBSERVABLE_READABLE, SYMBOL_UNCACHED, SYMBOL_UNTRACKED, SYMBOL_UNTRACKED_UNWRAPPED} from '~/constants';
+import {SYMBOL_UNCACHED} from '~/constants';
 import isObservable from '~/methods/is_observable';
 import useRenderEffect from '~/hooks/use_render_effect';
 import $$ from '~/methods/SS';
 import {createText} from '~/utils/creators';
-import {isArray, isFunction, isString} from '~/utils/lang';
+import {isArray, isFunction, isFunctionReactive, isString} from '~/utils/lang';
 import type {Classes, ObservableMaybe} from '~/types';
 
 /* MAIN */
@@ -15,7 +15,7 @@ const resolveChild = <T> ( value: ObservableMaybe<T>, setter: (( value: T | T[],
 
   if ( isFunction ( value ) ) {
 
-    if ( SYMBOL_UNTRACKED in value || SYMBOL_UNTRACKED_UNWRAPPED in value || SYMBOL_OBSERVABLE_FROZEN in value || value[SYMBOL_OBSERVABLE_READABLE]?.parent?.disposed ) {
+    if ( !isFunctionReactive ( value ) ) {
 
       resolveChild ( value (), setter, _dynamic );
 
