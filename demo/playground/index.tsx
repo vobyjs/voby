@@ -3336,6 +3336,25 @@ TestIfNestedFunctionNarrowed.test = {
   ]
 };
 
+const TestIfChildrenObservable = (): JSX.Element => {
+  const o = $( String ( random () ) );
+  const randomize = () => o ( String ( random () ) );
+  useInterval ( randomize, TEST_INTERVAL );
+  return (
+    <>
+      <h3>If - Children Observable</h3>
+      <If when={true}>{o}</If>
+    </>
+  );
+};
+
+TestIfChildrenObservable.test = {
+  static: false,
+  snapshots: [
+    '{random}'
+  ]
+};
+
 const TestIfChildrenObservableStatic = (): JSX.Element => {
   const Content = () => {
     const o = $( String ( random () ) );
@@ -6638,6 +6657,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestIfFunctionUntrackedNarrowed} />
       <TestSnapshots Component={TestIfNestedFunctionUnnarrowed} />
       <TestSnapshots Component={TestIfNestedFunctionNarrowed} />
+      <TestSnapshots Component={TestIfChildrenObservable} />
       <TestSnapshots Component={TestIfChildrenObservableStatic} />
       <TestSnapshots Component={TestIfChildrenFunction} />
       <TestSnapshots Component={TestIfChildrenFunctionObservable} />
