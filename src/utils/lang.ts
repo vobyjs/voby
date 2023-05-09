@@ -2,7 +2,7 @@
 /* IMPORT */
 
 import {SYMBOL_OBSERVABLE_FROZEN, SYMBOL_OBSERVABLE_READABLE, SYMBOL_TEMPLATE_ACCESSOR, SYMBOL_UNTRACKED, SYMBOL_UNTRACKED_UNWRAPPED} from '~/constants';
-import type {Falsy, TemplateActionProxy, Truthy} from '~/types';
+import type {ComponentFunction, Falsy, TemplateActionProxy, Truthy} from '~/types';
 
 /* MAIN */
 
@@ -55,6 +55,12 @@ const {isArray} = Array;
 const isBoolean = ( value: unknown ): value is boolean => {
 
   return typeof value === 'boolean';
+
+};
+
+const isComponent = ( value: unknown ): value is ComponentFunction => {
+
+  return isFunction ( value ) && ( SYMBOL_UNTRACKED_UNWRAPPED in value );
 
 };
 
@@ -179,4 +185,4 @@ const once = <T> ( fn: () => T ): (() => T) => {
 
 /* EXPORT */
 
-export {assign, castArray, castError, flatten, indexOf, isArray, isBoolean, isError, isFalsy, isFunction, isFunctionReactive, isNil, isNode, isObject, isPromise, isString, isSVG, isSVGElement, isTemplateAccessor, isTruthy, isVoidChild, noop, once};
+export {assign, castArray, castError, flatten, indexOf, isArray, isBoolean, isComponent, isError, isFalsy, isFunction, isFunctionReactive, isNil, isNode, isObject, isPromise, isString, isSVG, isSVGElement, isTemplateAccessor, isTruthy, isVoidChild, noop, once};
