@@ -84,7 +84,7 @@
   ],
   "dependencies": {
     "htm": "^3.1.1",
-    "oby": "^14.1.1"
+    "oby": "^14.1.2"
   },
   "devDependencies": {
     "@types/node": "^18.15.11",
