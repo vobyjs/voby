@@ -9,6 +9,7 @@ import type {FunctionMaybe} from '~/types';
 /* MAIN */
 
 //TODO: Maybe port this to oby, as "when" or "is" or "guarded"
+//TODO: Optimize this, checking if the value is actually potentially reactive
 
 const useGuarded = <T, U extends T> ( value: FunctionMaybe<T>, guard: (( value: T ) => value is U) ): (() => U) => {
 
