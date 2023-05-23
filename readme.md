@@ -57,29 +57,29 @@ You can find some demos and benchmarks below, more demos are contained inside th
 
 ## APIs
 
-| [Methods](#methods)                   | [Components](#components)         | [Hooks](#hooks-core) <sub>core</sub> | [Hooks](#hooks-web) <sub>web</sub>          | [Types](#types)                             | [Extras](#extras)               |
-| ------------------------------------- | --------------------------------- | ------------------------------------ | ------------------------------------------- | ------------------------------------------- | ------------------------------- |
-| [`$`](#methods)                       | [`Dynamic`](#dynamic)             | [`useBoolean`](#useboolean)          | [`useAbortController`](#useabortcontroller) | [`Context`](#context)                       | [`Contributing`](#contributing) |
-| [`$$`](#methods)                      | [`ErrorBoundary`](#errorboundary) | [`useCleanup`](#usecleanup)          | [`useAbortSignal`](#useabortsignal)         | [`Directive`](#directive)                   | [`Globals`](#globals)           |
-| [`batch`](#batch)                     | [`For`](#for)                     | [`useContext`](#usecontext)          | [`useAnimationFrame`](#useanimationframe)   | [`DirectiveOptions`](#directiveoptions)     | [`JSX`](#jsx)                   |
-| [`createContext`](#createcontext)     | [`Fragment`](#fragment)           | [`useDisposed`](#usedisposed)        | [`useAnimationLoop`](#useanimationloop)     | [`EffectOptions`](#effectoptions)           | [`Tree Shaking`](#tree-shaking) |
-| [`createDirective`](#createdirective) | [`If`](#if)                       | [`useEffect`](#useeffect)            | [`useEventListener`](#useeventlistener)     | [`FunctionMaybe`](#functionmaybe)           | [`TypeScript`](#typescript)     |
-| [`createElement`](#createelement)     | [`KeepAlive`](#keepalive)         | [`useMemo`](#usememo)                | [`useFetch`](#usefetch)                     | [`Observable`](#observable)                 |                                 |
-| [`h`](#h)                             | [`Portal`](#portal)               | [`usePromise`](#usepromise)          | [`useIdleCallback`](#useidlecallback)       | [`ObservableReadonly`](#observablereadonly) |                                 |
-| [`hmr`](#hmr)                         | [`Suspense`](#suspense)           | [`useReadonly`](#usereadonly)        | [`useIdleLoop`](#useidleloop)               | [`ObservableMaybe`](#observablemaybe)       |                                 |
-| [`html`](#html)                       | [`Switch`](#switch)               | [`useResolved`](#useresolved)        | [`useInterval`](#useinterval)               | [`ObservableOptions`](#observableoptions)   |                                 |
-| [`isBatching`](#isbatching)           | [`Ternary`](#ternary)             | [`useResource`](#useresource)        | [`useMicrotask`](#usemicrotask)             | [`Resource`](#resource)                     |                                 |
-| [`isObservable`](#isobservable)       |                                   | [`useRoot`](#useroot)                | [`useTimeout`](#usetimeout)                 | [`StoreOptions`](#storeoptions)             |                                 |
-| [`isServer`](#isserver)               |                                   | [`useSelector`](#useselector)        |                                             |                                             |                                 |
-| [`isStore`](#isstore)                 |                                   | [`useSuspended`](#usesuspended)      |                                             |                                             |                                 |
-| [`lazy`](#lazy)                       |                                   | [`useUntracked`](#useuntracked)      |                                             |                                             |                                 |
-| [`render`](#render)                   |                                   |                                      |                                             |                                             |                                 |
-| [`renderToString`](#rendertostring)   |                                   |                                      |                                             |                                             |                                 |
-| [`resolve`](#resolve)                 |                                   |                                      |                                             |                                             |                                 |
-| [`store`](#store)                     |                                   |                                      |                                             |                                             |                                 |
-| [`template`](#template)               |                                   |                                      |                                             |                                             |                                 |
-| [`tick`](#tick)                       |                                   |                                      |                                             |                                             |                                 |
-| [`untrack`](#untrack)                 |                                   |                                      |                                             |                                             |                                 |
+| [Methods](#methods)                   | [Components](#components)         | [Hooks](#hooks-core) <sub>core</sub> | [Hooks](#hooks-web) <sub>web</sub>          | [Types](#types)                                     | [Extras](#extras)               |
+| ------------------------------------- | --------------------------------- | ------------------------------------ | ------------------------------------------- | --------------------------------------------------- | ------------------------------- |
+| [`$`](#methods)                       | [`Dynamic`](#dynamic)             | [`useBoolean`](#useboolean)          | [`useAbortController`](#useabortcontroller) | [`Context`](#context)                               | [`Contributing`](#contributing) |
+| [`$$`](#methods)                      | [`ErrorBoundary`](#errorboundary) | [`useCleanup`](#usecleanup)          | [`useAbortSignal`](#useabortsignal)         | [`Directive`](#directive)                           | [`Globals`](#globals)           |
+| [`batch`](#batch)                     | [`For`](#for)                     | [`useContext`](#usecontext)          | [`useAnimationFrame`](#useanimationframe)   | [`DirectiveOptions`](#directiveoptions)             | [`JSX`](#jsx)                   |
+| [`createContext`](#createcontext)     | [`Fragment`](#fragment)           | [`useDisposed`](#usedisposed)        | [`useAnimationLoop`](#useanimationloop)     | [`EffectOptions`](#effectoptions)                   | [`Tree Shaking`](#tree-shaking) |
+| [`createDirective`](#createdirective) | [`If`](#if)                       | [`useEffect`](#useeffect)            | [`useEventListener`](#useeventlistener)     | [`FunctionMaybe`](#functionmaybe)                   | [`TypeScript`](#typescript)     |
+| [`createElement`](#createelement)     | [`KeepAlive`](#keepalive)         | [`useMemo`](#usememo)                | [`useFetch`](#usefetch)                     | [`Observable`](#observable)                         |                                 |
+| [`h`](#h)                             | [`Portal`](#portal)               | [`usePromise`](#usepromise)          | [`useIdleCallback`](#useidlecallback)       | [`ObservableLike`](#observablelike)                 |                                 |
+| [`hmr`](#hmr)                         | [`Suspense`](#suspense)           | [`useReadonly`](#usereadonly)        | [`useIdleLoop`](#useidleloop)               | [`ObservableReadonly`](#observablereadonly)         |                                 |
+| [`html`](#html)                       | [`Switch`](#switch)               | [`useResolved`](#useresolved)        | [`useInterval`](#useinterval)               | [`ObservableReadonlyLike`](#observablereadonlylike) |                                 |
+| [`isBatching`](#isbatching)           | [`Ternary`](#ternary)             | [`useResource`](#useresource)        | [`useMicrotask`](#usemicrotask)             | [`ObservableMaybe`](#observablemaybe)               |                                 |
+| [`isObservable`](#isobservable)       |                                   | [`useRoot`](#useroot)                | [`useTimeout`](#usetimeout)                 | [`ObservableOptions`](#observableoptions)           |                                 |
+| [`isServer`](#isserver)               |                                   | [`useSelector`](#useselector)        |                                             | [`Resource`](#resource)                             |                                 |
+| [`isStore`](#isstore)                 |                                   | [`useSuspended`](#usesuspended)      |                                             | [`StoreOptions`](#storeoptions)                     |                                 |
+| [`lazy`](#lazy)                       |                                   | [`useUntracked`](#useuntracked)      |                                             |                                                     |                                 |
+| [`render`](#render)                   |                                   |                                      |                                             |                                                     |                                 |
+| [`renderToString`](#rendertostring)   |                                   |                                      |                                             |                                                     |                                 |
+| [`resolve`](#resolve)                 |                                   |                                      |                                             |                                                     |                                 |
+| [`store`](#store)                     |                                   |                                      |                                             |                                                     |                                 |
+| [`template`](#template)               |                                   |                                      |                                             |                                                     |                                 |
+| [`tick`](#tick)                       |                                   |                                      |                                             |                                                     |                                 |
+| [`untrack`](#untrack)                 |                                   |                                      |                                             |                                                     |                                 |
 
 ## Usage
 
@@ -1772,7 +1772,8 @@ Interface:
 type Observable<T> = {
   (): T,
   ( value: T ): T,
-  ( fn: ( value: T ) => T ): T
+  ( fn: ( value: T ) => T ): T,
+  readonly [ObservableSymbol]: true
 };
 ```
 
@@ -1787,6 +1788,31 @@ const fn = ( value: Observable<boolean> ): void => {
 };
 ```
 
+#### `ObservableLike`
+
+This type says that something has the same shape as a regular observable, but it may not actually be an observable.
+
+Interface:
+
+```ts
+type ObservableLike<T> = {
+  (): T,
+  ( value: T ): T,
+  ( fn: ( value: T ) => T ): T
+};
+```
+
+Usage:
+
+```tsx
+import type {ObservableLike} from 'voby';
+
+const fn = ( value: ObservableLike<boolean> ): void => {
+  value (); // Getting
+  value ( true ); // Setting
+};
+```
+
 #### `ObservableReadonly`
 
 This type says that something is a read-only observable, which can only be read but not updated.
@@ -1795,7 +1821,8 @@ Interface:
 
 ```ts
 type ObservableReadonly<T> = {
-  (): T
+  (): T,
+  readonly [ObservableSymbol]: true
 };
 ```
 
@@ -1807,6 +1834,29 @@ import type {ObservableReadonly} from 'voby';
 const fn = ( value: ObservableReadonly<boolean> ): void => {
   value (); // Getting
   value ( true ); // This will throw!
+};
+```
+
+#### `ObservableReadonlyLike`
+
+This type says that something hsa the same shape as a read-only observable, but it may not actually be an observable.
+
+Interface:
+
+```ts
+type ObservableReadonlyLike<T> = {
+  (): T
+};
+```
+
+Usage:
+
+```tsx
+import type {ObservableReadonlyLike} from 'voby';
+
+const fn = ( value: ObservableReadonlyLike<boolean> ): void => {
+  value (); // Getting
+  value ( true ); // This is not supported!
 };
 ```
 
