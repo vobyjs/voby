@@ -30,6 +30,10 @@ const hmr = <T extends Function> ( accept: Function | undefined, component: T ):
 
     if ( cached ) return cached; // Already hot
 
+    const isProvider = !isFunction ( component ) && ( 'Provider' in component );
+
+    if ( isProvider ) return component; // Context/Directive providers are not hot-reloadable
+
     /* HELPERS */
 
     const createHotComponent = ( path: string[] ): any => {
