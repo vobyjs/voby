@@ -84,6 +84,9 @@ const hmr = <T extends Function> ( accept: Function | undefined, component: T ):
     const onAccept = ( module: { default: T } ): void => {
 
       const hot = module.default;
+
+      if ( !hot ) return console.error ( `Failed to handle HMR update for "${component.name}" component:\n\n`, component );
+
       const cold = hot[SYMBOL_COLD_COMPONENT] || hot;
 
       hot[SYMBOL_HOT_ID]?.( id () );
