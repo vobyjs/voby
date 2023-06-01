@@ -10,6 +10,7 @@ import type {Observable, ObservableReadonly} from '~/types';
 
 /* HELPERS */
 
+const SYMBOL_AS = '__hmr_as__';
 const SYMBOL_COLD_COMPONENT = Symbol ( 'HMR.Cold' );
 const SYMBOL_HOT_COMPONENT = Symbol ( 'HMR.Hot' );
 const SYMBOL_HOT_ID = Symbol ( 'HMR.ID' );
@@ -83,7 +84,7 @@ const hmr = <T extends Function> ( accept: Function | undefined, component: T ):
 
     const onAccept = ( module: { default: T } ): void => {
 
-      const hot = module[component.name] || module.default;
+      const hot = module[component[SYMBOL_AS]] || module[component.name] || module.default;
 
       if ( !hot ) return console.error ( `[hmr] Failed to handle update for "${component.name}" component:\n\n`, component );
 
