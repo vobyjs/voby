@@ -10,6 +10,7 @@ import type {Observable, ObservableReadonly} from '~/types';
 
 /* HELPERS */
 
+const COMPONENT_RE = /^_?[A-Z][a-zA-Z0-9$_-]*$/;
 const SYMBOL_AS = '__hmr_as__';
 const SYMBOL_COLD_COMPONENT = Symbol ( 'HMR.Cold' );
 const SYMBOL_HOT_COMPONENT = Symbol ( 'HMR.Hot' );
@@ -66,7 +67,7 @@ const hmr = <T extends Function> ( accept: Function | undefined, component: T ):
 
         const value = component[key];
 
-        if ( isFunction ( value ) && ( key.length > 1 ? key !== key.toUpperCase () : key === key.toUpperCase () ) ) { // A component
+        if ( isFunction ( value ) && COMPONENT_RE.test ( key ) ) { // A component
 
           hot[key] = createHotComponentDeep ( value, [...path, key] );
 
