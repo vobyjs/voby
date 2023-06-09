@@ -64,15 +64,15 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`batch`](#batch)                     | [`For`](#for)                     | [`useContext`](#usecontext)          | [`useAnimationFrame`](#useanimationframe)   | [`DirectiveOptions`](#directiveoptions)             | [`JSX`](#jsx)                   |
 | [`createContext`](#createcontext)     | [`Fragment`](#fragment)           | [`useDisposed`](#usedisposed)        | [`useAnimationLoop`](#useanimationloop)     | [`EffectOptions`](#effectoptions)                   | [`Tree Shaking`](#tree-shaking) |
 | [`createDirective`](#createdirective) | [`If`](#if)                       | [`useEffect`](#useeffect)            | [`useEventListener`](#useeventlistener)     | [`FunctionMaybe`](#functionmaybe)                   | [`TypeScript`](#typescript)     |
-| [`createElement`](#createelement)     | [`KeepAlive`](#keepalive)         | [`useMemo`](#usememo)                | [`useFetch`](#usefetch)                     | [`Observable`](#observable)                         |                                 |
-| [`h`](#h)                             | [`Portal`](#portal)               | [`usePromise`](#usepromise)          | [`useIdleCallback`](#useidlecallback)       | [`ObservableLike`](#observablelike)                 |                                 |
-| [`hmr`](#hmr)                         | [`Suspense`](#suspense)           | [`useReadonly`](#usereadonly)        | [`useIdleLoop`](#useidleloop)               | [`ObservableReadonly`](#observablereadonly)         |                                 |
-| [`html`](#html)                       | [`Switch`](#switch)               | [`useResolved`](#useresolved)        | [`useInterval`](#useinterval)               | [`ObservableReadonlyLike`](#observablereadonlylike) |                                 |
-| [`isBatching`](#isbatching)           | [`Ternary`](#ternary)             | [`useResource`](#useresource)        | [`useMicrotask`](#usemicrotask)             | [`ObservableMaybe`](#observablemaybe)               |                                 |
-| [`isObservable`](#isobservable)       |                                   | [`useRoot`](#useroot)                | [`useTimeout`](#usetimeout)                 | [`ObservableOptions`](#observableoptions)           |                                 |
-| [`isServer`](#isserver)               |                                   | [`useSelector`](#useselector)        |                                             | [`Resource`](#resource)                             |                                 |
-| [`isStore`](#isstore)                 |                                   | [`useSuspended`](#usesuspended)      |                                             | [`StoreOptions`](#storeoptions)                     |                                 |
-| [`lazy`](#lazy)                       |                                   | [`useUntracked`](#useuntracked)      |                                             |                                                     |                                 |
+| [`createElement`](#createelement)     | [`KeepAlive`](#keepalive)         | [`useMemo`](#usememo)                | [`useFetch`](#usefetch)                     | [`MemoOptions`](#memooptions)                       |                                 |
+| [`h`](#h)                             | [`Portal`](#portal)               | [`usePromise`](#usepromise)          | [`useIdleCallback`](#useidlecallback)       | [`Observable`](#observable)                         |                                 |
+| [`hmr`](#hmr)                         | [`Suspense`](#suspense)           | [`useReadonly`](#usereadonly)        | [`useIdleLoop`](#useidleloop)               | [`ObservableLike`](#observablelike)                 |                                 |
+| [`html`](#html)                       | [`Switch`](#switch)               | [`useResolved`](#useresolved)        | [`useInterval`](#useinterval)               | [`ObservableReadonly`](#observablereadonly)         |                                 |
+| [`isBatching`](#isbatching)           | [`Ternary`](#ternary)             | [`useResource`](#useresource)        | [`useMicrotask`](#usemicrotask)             | [`ObservableReadonlyLike`](#observablereadonlylike) |                                 |
+| [`isObservable`](#isobservable)       |                                   | [`useRoot`](#useroot)                | [`useTimeout`](#usetimeout)                 | [`ObservableMaybe`](#observablemaybe)               |                                 |
+| [`isServer`](#isserver)               |                                   | [`useSelector`](#useselector)        |                                             | [`ObservableOptions`](#observableoptions)           |                                 |
+| [`isStore`](#isstore)                 |                                   | [`useSuspended`](#usesuspended)      |                                             | [`Resource`](#resource)                             |                                 |
+| [`lazy`](#lazy)                       |                                   | [`useUntracked`](#useuntracked)      |                                             | [`StoreOptions`](#storeoptions)                     |                                 |
 | [`render`](#render)                   |                                   |                                      |                                             |                                                     |                                 |
 | [`renderToString`](#rendertostring)   |                                   |                                      |                                             |                                                     |                                 |
 | [`resolve`](#resolve)                 |                                   |                                      |                                             |                                                     |                                 |
@@ -1182,7 +1182,7 @@ This hook registers a function to be called when any of its dependencies change,
 Interface:
 
 ```ts
-function useMemo <T> ( fn: () => T, options?: ObservableOptions<T | undefined> ): ObservableReadonly<T>;
+function useMemo <T> ( fn: () => T, options?: MemoOptions<T | undefined> ): ObservableReadonly<T>;
 ```
 
 Usage:
@@ -1880,6 +1880,37 @@ import type {ObservableMaybe} from 'voby';
 const Button = ({ label }: { label: ObservableMaybe<string> }): JSX.Element => {
   return <button>{label}</button>;
 };
+```
+
+#### `MemoOptions`
+
+This type describes the options object that the `useMemo` hook accepts.
+
+Interface:
+
+```ts
+type MemoOptions<T> = {
+  equals?: (( value: T, valuePrev: T ) => boolean) | false,
+  sync?: boolean
+};
+```
+
+Usage:
+
+```tsx
+import {useMemo} from 'voby';
+
+// Make a regular asynchronous memo
+
+useMemo ( () => {
+  // Do something...
+});
+
+// Make a synchronous memo, which is strongly discouraged
+
+useMemo ( () => {
+  // Do something...
+}, { sync: true } );
 ```
 
 #### `ObservableOptions`
