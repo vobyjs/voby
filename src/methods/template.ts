@@ -10,7 +10,8 @@ import type {Child, TemplateActionPath, TemplateActionWithNodes, TemplateActionW
 /* MAIN */
 
 //TODO: Avoid using "Function" and "eval", while still keeping similar performance, if possible
-//TODO: support complex children in the template function
+//TODO: Support complex children in the template function
+//TODO: Support argumentless calls on props, like props.foo.bar()
 
 const template = <P = {}> ( fn: (( props: P ) => Child) ): (( props: P ) => () => Child) => {
 
