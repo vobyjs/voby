@@ -924,6 +924,26 @@ const TestInputLabelFor = (): JSX.Element => {
   );
 };
 
+const TestCheckboxIndeterminateToggle = (): JSX.Element => {
+  const o = $<boolean>( false );
+  const toggle = () => o ( prev => !prev );
+  useInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Checkbox - Indeterminate Toggle</h3>
+      <input type="checkbox" indeterminate={o} />
+      <input type="checkbox" checked indeterminate={o} />
+    </>
+  );
+};
+
+TestCheckboxIndeterminateToggle.test = {
+  static: true,
+  snapshots: [
+    '<input type="checkbox"><input type="checkbox">'
+  ]
+};
+
 const TestProgressIndeterminateToggle = (): JSX.Element => {
   const o = $<number | null | undefined>( .25 );
   const values = [.25, null, .5, undefined];
@@ -6561,6 +6581,7 @@ const Test = (): JSX.Element => {
       <TestPropertyValueFunction />
       <TestPropertyValueRemoval />
       <TestInputLabelFor />
+      <TestSnapshots Component={TestCheckboxIndeterminateToggle} />
       <TestSnapshots Component={TestProgressIndeterminateToggle} />
       <TestSnapshots Component={TestSelectStaticOption} />
       <TestSnapshots Component={TestSelectStaticValue} />

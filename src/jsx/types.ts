@@ -993,6 +993,7 @@ declare namespace JSX {
     formNoValidate?: FunctionMaybe<Nullable<boolean>>,
     formTarget?: FunctionMaybe<Nullable<string>>,
     height?: FunctionMaybe<Nullable<number | string>>,
+    indeterminate?: FunctionMaybe<Nullable<boolean>>,
     list?: FunctionMaybe<Nullable<string>>,
     max?: FunctionMaybe<Nullable<number | string>>,
     maxLength?: FunctionMaybe<Nullable<number>>,
