@@ -924,6 +924,29 @@ const TestInputLabelFor = (): JSX.Element => {
   );
 };
 
+const TestProgressIndeterminateToggle = (): JSX.Element => {
+  const o = $<number | null | undefined>( .25 );
+  const values = [.25, null, .5, undefined];
+  const cycle = () => o ( prev => values[( values.indexOf ( prev ) + 1 ) % values.length] );
+  useInterval ( cycle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Progress - Indeterminate Toggle</h3>
+      <progress value={o} />
+    </>
+  );
+};
+
+TestProgressIndeterminateToggle.test = {
+  static: false,
+  snapshots: [
+    '<progress value="{random}"></progress>',
+    '<progress></progress>',
+    '<progress value="{random}"></progress>',
+    '<progress></progress>'
+  ]
+};
+
 const TestSelectStaticOption = (): JSX.Element => {
   const ref = $<HTMLSelectElement>();
   const assert = () => console.assert ( ref ()?.value === 'bar' );
@@ -6538,6 +6561,7 @@ const Test = (): JSX.Element => {
       <TestPropertyValueFunction />
       <TestPropertyValueRemoval />
       <TestInputLabelFor />
+      <TestSnapshots Component={TestProgressIndeterminateToggle} />
       <TestSnapshots Component={TestSelectStaticOption} />
       <TestSnapshots Component={TestSelectStaticValue} />
       <TestSnapshots Component={TestSelectObservableOption} />
