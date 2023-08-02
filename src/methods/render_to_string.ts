@@ -2,12 +2,10 @@
 /* IMPORT */
 
 import Portal from '~/components/portal';
-import Suspense from '~/components/suspense';
-import SuspenseContext from '~/components/suspense.context';
-import {SYMBOL_SUSPENSE} from '~/constants';
+import SuspenseCollector from '~/components/suspense.collector';
 import useEffect from '~/hooks/use_effect';
 import useRoot from '~/hooks/use_root';
-import {context} from '~/oby';
+import $$ from '~/methods/SS';
 import type {Child} from '~/types';
 
 /* MAIN */
@@ -20,25 +18,21 @@ const renderToString = ( child: Child ): Promise<string> => {
 
     useRoot ( dispose => {
 
-      context ( { [SYMBOL_SUSPENSE]: undefined }, () => { // Ensuring the parent Suspense boundary, if any, is not triggered
+      $$(SuspenseCollector.wrap ( suspenses => {
 
-        SuspenseContext.wrap ( suspense => {
+        const {portal} = Portal ({ children: child }).metadata;
 
-          const {portal} = Portal ({ children: Suspense ({ children: child }) }).metadata;
+        useEffect ( () => {
 
-          useEffect ( () => {
+          if ( suspenses.active () ) return;
 
-            if ( suspense.active () ) return;
+          resolve ( portal.innerHTML );
 
-            resolve ( portal.innerHTML );
+          dispose ();
 
-            dispose ();
+        }, { suspense: false } );
 
-          });
-
-        });
-
-      });
+      }));
 
     });
 

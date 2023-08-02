@@ -5734,7 +5734,7 @@ TestContextHook.test = {
   ]
 };
 
-const TestRenderToString = async (): Promise<void> => {
+const TestRenderToString = async (): Promise<string> => {
   const App = (): JSX.Element => {
     const o = $(123);
     return (
@@ -5747,9 +5747,34 @@ const TestRenderToString = async (): Promise<void> => {
   const expected = '<div><h3>renderToString</h3><p>123</p></div>';
   const actual = await renderToString ( <App /> );
   assert ( actual === expected, `[TestRenderToString]: Expected '${actual}' to be equal to '${expected}'` );
+  return actual;
 };
 
-const TestRenderToStringSuspense = async (): Promise<void> => {
+const TestRenderToStringNested = async (): Promise<string> => {
+  const App = (): JSX.Element => {
+    const o = $(123);
+    const Content = () => {
+      const resource = useResource ( async () => {
+        return await TestRenderToString ();
+      });
+      return <p>{o}{resource.value}</p>;
+    };
+    return (
+      <div>
+        <h3>renderToString - Nested</h3>
+        <Suspense>
+          <Content />
+        </Suspense>
+      </div>
+    );
+  };
+  const expected = '<div><h3>renderToString - Nested</h3><p>123&lt;div&gt;&lt;h3&gt;renderToString&lt;/h3&gt;&lt;p&gt;123&lt;/p&gt;&lt;/div&gt;</p></div>';
+  const actual = await renderToString ( <App /> );
+  assert ( actual === expected, `[TestRenderToStringNested]: Expected '${actual}' to be equal to '${expected}'` );
+  return actual;
+};
+
+const TestRenderToStringSuspense = async (): Promise<string> => {
   const App = (): JSX.Element => {
     const o = $(0);
     const Content = () => {
@@ -5765,13 +5790,47 @@ const TestRenderToStringSuspense = async (): Promise<void> => {
     return (
       <div>
         <h3>renderToString - Suspense</h3>
-        <Content />
+        <Suspense>
+          <Content />
+        </Suspense>
       </div>
     );
   };
   const expected = '<div><h3>renderToString - Suspense</h3><p>123123</p></div>';
   const actual = await renderToString ( <App /> );
   assert ( actual === expected, `[TestRenderToStringSuspense]: Expected '${actual}' to be equal to '${expected}'` );
+  return actual;
+};
+
+const TestRenderToStringSuspenseNested = async (): Promise<string> => {
+  const App = (): JSX.Element => {
+    const o = $(0);
+    const Content = ( timeout ) => {
+      const resource = useResource ( () => {
+        return new Promise<number> ( resolve => {
+          setTimeout ( () => {
+            resolve ( o ( 123 ) );
+          }, timeout );
+        });
+      });
+      return <p>{o}{resource.value}</p>;
+    };
+    return (
+      <div>
+        <h3>renderToString - Suspense Nested</h3>
+        <Suspense>
+          <Content interval={TEST_INTERVAL} />
+          <Suspense>
+            <Content interval={TEST_INTERVAL * 2} />
+          </Suspense>
+        </Suspense>
+      </div>
+    );
+  };
+  const expected = '<div><h3>renderToString - Suspense Nested</h3><p>123123</p><p>123123</p></div>';
+  const actual = await renderToString ( <App /> );
+  assert ( actual === expected, `[TestRenderToStringSuspenseNested]: Expected '${actual}' to be equal to '${expected}'` );
+  return actual;
 };
 
 const TestPortalStatic = (): JSX.Element => {
@@ -6531,8 +6590,11 @@ TestHMRFor.test = {
 };
 
 const Test = (): JSX.Element => {
+  TestRenderToStringNested ();
   TestRenderToString ();
+  TestRenderToStringNested ();
   TestRenderToStringSuspense ();
+  TestRenderToStringSuspenseNested ();
   return (
     <>
       <TestSnapshots Component={TestNullStatic} />
