@@ -924,6 +924,24 @@ const TestInputLabelFor = (): JSX.Element => {
   );
 };
 
+const TestInputForm = (): JSX.Element => {
+  return (
+    <>
+      <h3>Input - Input Form</h3>
+      <input form={undefined} />
+      <input form={null} />
+      <input form="foo" />
+    </>
+  );
+};
+
+TestInputForm.test = {
+  static: true,
+  snapshots: [
+    '<input><input><input form="foo">'
+  ]
+};
+
 const TestCheckboxIndeterminateToggle = (): JSX.Element => {
   const o = $<boolean>( false );
   const toggle = () => o ( prev => !prev );
@@ -6643,6 +6661,7 @@ const Test = (): JSX.Element => {
       <TestPropertyValueFunction />
       <TestPropertyValueRemoval />
       <TestInputLabelFor />
+      <TestSnapshots Component={TestInputForm} />
       <TestSnapshots Component={TestCheckboxIndeterminateToggle} />
       <TestSnapshots Component={TestProgressIndeterminateToggle} />
       <TestSnapshots Component={TestSelectStaticOption} />

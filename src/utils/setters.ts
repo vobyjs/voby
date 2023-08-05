@@ -741,11 +741,19 @@ const setPropertyStatic = ( element: HTMLElement, key: string, value: null | und
 
   }
 
-  element[key] = value;
+  try { // Trying setting the property
 
-  if ( isNil ( value ) ) {
+    element[key] = value;
 
-    setAttributeStatic ( element, key, null );
+    if ( isNil ( value ) ) {
+
+      setAttributeStatic ( element, key, null );
+
+    }
+
+  } catch { // If it fails, maybe because like HTMLInputElement.form there's only a getter, we try as an attribute instead //TODO: Figure out something better than this
+
+    setAttributeStatic ( element, key, value );
 
   }
 
