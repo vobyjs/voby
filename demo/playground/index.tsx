@@ -3226,6 +3226,29 @@ TestDynamicObservableChildren.test = {
   ]
 };
 
+const TestDynamicStoreProps = (): JSX.Element => {
+  let count = 1;
+  const props = store ({ class: 'red' });
+  const toggle = () => props.class = props.class === 'red' ? 'blue' : 'red';
+  setInterval ( toggle, TEST_INTERVAL );
+  return (
+    <>
+      <h3>Dynamic - Store Props</h3>
+      <Dynamic component="div" props={props}>
+        <p>{() => count++}</p>
+      </Dynamic>
+    </>
+  );
+};
+
+TestDynamicStoreProps.test = {
+  staic: false,
+  snapshots: [
+    '<div class="red"><p>1</p></div>',
+    '<div class="blue"><p>1</p></div>'
+  ]
+};
+
 const TestIfStatic = (): JSX.Element => {
   return (
     <>
@@ -6775,6 +6798,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestDynamicObservableProps} />
       <TestSnapshots Component={TestDynamicFunctionProps} />
       <TestSnapshots Component={TestDynamicObservableChildren} />
+      {/* <TestSnapshots Component={TestDynamicStoreProps} /> */}
       <TestSnapshots Component={TestIfStatic} />
       <TestSnapshots Component={TestIfObservable} />
       <TestSnapshots Component={TestIfFunction} />
