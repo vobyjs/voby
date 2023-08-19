@@ -47,6 +47,8 @@
     "prod:emoji_counter": "cd demo/emoji_counter && npm i && npm update && npm run prod",
     "dev:hmr": "cd demo/hmr && npm i && npm update && npm run dev",
     "prod:hmr": "cd demo/hmr && npm i && npm update && npm run prod",
+    "dev:hydration": "cd demo/hydration && npm i && npm update && npm run dev",
+    "prod:hydration": "cd demo/hydration && npm i && npm update && npm run prod",
     "dev:html": "cd demo/html && npm i && npm update && npm run dev",
     "prod:html": "cd demo/html && npm i && npm update && npm run prod",
     "dev:hyperscript": "cd demo/hyperscript && npm i && npm update && npm run dev",

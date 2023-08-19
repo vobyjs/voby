@@ -10,6 +10,7 @@ import createElement from '~/methods/create_element';
 import h from '~/methods/h';
 import hmr from '~/methods/hmr';
 import html from '~/methods/html';
+import hydrate from '~/methods/hydrate';
 import isBatching from '~/methods/is_batching';
 import isObservable from '~/methods/is_observable';
 import isServer from '~/methods/is_server';
@@ -25,4 +26,4 @@ import untrack from '~/methods/untrack';
 
 /* EXPORT */
 
-export {$, $$, batch, createContext, createDirective, createElement, h, hmr, html, isBatching, isObservable, isServer, isStore, lazy, render, renderToString, resolve, store, template, tick, untrack};
+export {$, $$, batch, createContext, createDirective, createElement, h, hmr, html, hydrate, isBatching, isObservable, isServer, isStore, lazy, render, renderToString, resolve, store, template, tick, untrack};

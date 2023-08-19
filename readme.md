@@ -33,7 +33,7 @@ This works similarly to [Solid](https://www.solidjs.com), but without a custom B
 - **No key prop**: you can just map over arrays, or use the `For` component with an array of unique values, no need to specify keys explicitly.
 - **No Babel**: there's no need to use Babel with this framework, it works with plain old JS (plus JSX if you are into that). As a consequence we have 0 transform function bugs, because we don't have a transform function.
 - **No magic**: what you see is what you get, your code is not transformed to actually do something different than what you write, there are no surprises.
-- **No server support**: for the time being this framework is focused on local-first rich applications, most server-related features are not implemented: no hydration, no server components, no streaming etc.
+- **No good server support**: for the time being this framework is focused on local-first rich applications, some server-related features are not implemented: no server components, no streaming etc., or not fully featured yet.
 - **Observable-based**: observables, also known as "signals", are at the core of our reactivity system. The way it works is very different from a React-like system, it may be more challenging to learn, but it's well worth the effort.
 - **Work in progress**: this is probably beta software, I'm working on it because I need something with great performance for [Notable](https://github.com/notable/notable), I'm allergic to third-party dependencies, I'd like something with an API that resonates with me, and I wanted to deeply understand how the more solid [Solid](https://www.solidjs.com), which you should also check out, works.
 
@@ -68,11 +68,12 @@ You can find some demos and benchmarks below, more demos are contained inside th
 | [`h`](#h)                             | [`Portal`](#portal)               | [`usePromise`](#usepromise)          | [`useIdleCallback`](#useidlecallback)       | [`Observable`](#observable)                         |                                 |
 | [`hmr`](#hmr)                         | [`Suspense`](#suspense)           | [`useReadonly`](#usereadonly)        | [`useIdleLoop`](#useidleloop)               | [`ObservableLike`](#observablelike)                 |                                 |
 | [`html`](#html)                       | [`Switch`](#switch)               | [`useResolved`](#useresolved)        | [`useInterval`](#useinterval)               | [`ObservableReadonly`](#observablereadonly)         |                                 |
-| [`isBatching`](#isbatching)           | [`Ternary`](#ternary)             | [`useResource`](#useresource)        | [`useMicrotask`](#usemicrotask)             | [`ObservableReadonlyLike`](#observablereadonlylike) |                                 |
-| [`isObservable`](#isobservable)       |                                   | [`useRoot`](#useroot)                | [`useTimeout`](#usetimeout)                 | [`ObservableMaybe`](#observablemaybe)               |                                 |
-| [`isServer`](#isserver)               |                                   | [`useSelector`](#useselector)        |                                             | [`ObservableOptions`](#observableoptions)           |                                 |
-| [`isStore`](#isstore)                 |                                   | [`useSuspended`](#usesuspended)      |                                             | [`Resource`](#resource)                             |                                 |
-| [`lazy`](#lazy)                       |                                   | [`useUntracked`](#useuntracked)      |                                             | [`StoreOptions`](#storeoptions)                     |                                 |
+| [`hydrate`](#hydrate)                 | [`Ternary`](#ternary)             | [`useResource`](#useresource)        | [`useMicrotask`](#usemicrotask)             | [`ObservableReadonlyLike`](#observablereadonlylike) |                                 |
+| [`isBatching`](#isbatching)           |                                   | [`useRoot`](#useroot)                | [`useTimeout`](#usetimeout)                 | [`ObservableMaybe`](#observablemaybe)               |                                 |
+| [`isObservable`](#isobservable)       |                                   | [`useSelector`](#useselector)        |                                             | [`ObservableOptions`](#observableoptions)           |                                 |
+| [`isServer`](#isserver)               |                                   | [`useSuspended`](#usesuspended)      |                                             | [`RenderOptions`](#renderoptions)                   |                                 |
+| [`isStore`](#isstore)                 |                                   | [`useUntracked`](#useuntracked)      |                                             | [`Resource`](#resource)                             |                                 |
+| [`lazy`](#lazy)                       |                                   |                                      |                                             | [`StoreOptions`](#storeoptions)                     |                                 |
 | [`render`](#render)                   |                                   |                                      |                                             |                                                     |                                 |
 | [`renderToString`](#rendertostring)   |                                   |                                      |                                             |                                                     |                                 |
 | [`resolve`](#resolve)                 |                                   |                                      |                                             |                                                     |                                 |
@@ -439,6 +440,28 @@ const NoRegistration = (): JSX.Element => {
     </If>
   `;
 };
+```
+
+#### `hydrate`
+
+> This feature is experimental for now.
+
+This function is used to hydrate a previously-generated hydratable DOM node.
+
+```tsx
+// Rendering to string, presumably on the server, with metadata needed for hydration
+
+import {renderToString} from 'voby';
+import App from './app';
+
+const html = await renderToString ( <App />, { hydration: true } );
+
+// Hydrating the DOM, presumably on the client
+
+import {hydrate} from 'voby';
+import App from './app';
+
+hydrate ( <App />, document.body );
 ```
 
 #### `isBatching`
@@ -1934,6 +1957,36 @@ import {$} from 'voby';
 const createTimestamp = ( options?: ObservableOptions ): Observable<number> => {
   return $( Date.now (), options );
 };
+```
+
+### `RenderOptions`
+
+This is the type of the options object that `renderTostring` accepts.
+
+Interface:
+
+```ts
+type RenderOptions = {
+  hydration?: boolean
+};
+```
+
+Usage:
+
+```tsx
+// Rendering to string, presumably on the server, with metadata needed for hydration
+
+import {renderToString} from 'voby';
+import App from './app';
+
+const html = await renderToString ( <App />, { hydration: true } );
+
+// Hydrating the DOM, presumably on the client
+
+import {hydrate} from 'voby';
+import App from './app';
+
+hydrate ( <App />, document.body );
 ```
 
 #### `Resource`

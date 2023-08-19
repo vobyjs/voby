@@ -7,6 +7,8 @@ import type {Child, Disposer} from '~/types';
 
 /* MAIN */
 
+//TODO: Maybe allow multi-child same-target rendering
+
 const render = ( child: Child, parent?: Element | null ): Disposer => {
 
   if ( !parent || !( parent instanceof HTMLElement ) ) throw new Error ( 'Invalid parent node' );
