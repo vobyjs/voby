@@ -15,7 +15,7 @@ import {createText, createComment} from '~/utils/creators';
 import diff from '~/utils/diff';
 import FragmentUtils from '~/utils/fragment';
 import {castArray, flatten, isArray, isBoolean, isFunction, isFunctionReactive, isNil, isString, isSVG, isTemplateAccessor} from '~/utils/lang';
-import {resolveChild, resolveClass} from '~/utils/resolvers';
+import {resolveChild, resolveClass, resolveStyle} from '~/utils/resolvers';
 import type {Child, Classes, DirectiveData, EventListener, Fragment, FunctionMaybe, ObservableMaybe, Ref, TemplateActionProxy} from '~/types';
 
 /* MAIN */
@@ -903,13 +903,13 @@ const setStylesStatic = ( element: HTMLElement, object: null | undefined | strin
 
 const setStyles = ( element: HTMLElement, object: FunctionMaybe<null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>> ): void => {
 
-  if ( isFunction ( object ) && isFunctionReactive ( object ) ) {
+  if ( isFunction ( object ) || isArray ( object ) ) {
 
-    let objectPrev: null | undefined | string | Record<string, FunctionMaybe<null | undefined | number | string>>;
+    let objectPrev: null | undefined | string | Record<string, null | undefined | number | string>;
 
     useRenderEffect ( () => {
 
-      const objectNext = object ();
+      const objectNext = resolveStyle ( object );
 
       setStylesStatic ( element, objectNext, objectPrev );
 

@@ -7,7 +7,7 @@ import useRenderEffect from '~/hooks/use_render_effect';
 import $$ from '~/methods/SS';
 import {createText} from '~/utils/creators';
 import {isArray, isFunction, isFunctionReactive, isString} from '~/utils/lang';
-import type {Classes, ObservableMaybe} from '~/types';
+import type {Classes, ObservableMaybe, Styles} from '~/types';
 
 /* MAIN */
 
@@ -86,6 +86,40 @@ const resolveClass = ( classes: Classes, resolved: Record<string, true> = {} ): 
 
 };
 
+const resolveStyle = ( styles: Styles, resolved: Record<string, null | undefined | number | string> | string = {} ): Record<string, null | undefined | number | string> | string => {
+
+  if ( isString ( styles ) ) { //TODO: split into the individual styles, to be able to merge them with other styles
+
+    return styles;
+
+  } else if ( isFunction ( styles ) ) {
+
+    return resolveStyle ( styles (), resolved );
+
+  } else if ( isArray ( styles ) ) {
+
+    styles.forEach ( style => {
+
+      resolveStyle ( style as Styles, resolved ); //TSC
+
+    });
+
+  } else if ( styles ) {
+
+    for ( const key in styles ) {
+
+      const value = styles[key];
+
+      resolved[key] = $$(value);
+
+    }
+
+  }
+
+  return resolved;
+
+};
+
 const resolveArraysAndStatics = (() => {
 
   // This function does 3 things:
@@ -144,4 +178,4 @@ const resolveArraysAndStatics = (() => {
 
 /* EXPORT */
 
-export {resolveChild, resolveClass, resolveArraysAndStatics};
+export {resolveChild, resolveClass, resolveStyle, resolveArraysAndStatics};

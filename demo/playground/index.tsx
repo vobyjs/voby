@@ -2252,6 +2252,22 @@ TestStylesCleanup.test = {
   ]
 };
 
+const TestStylesMixed = (): JSX.Element => {
+  return (
+    <>
+      <h3>Styles - Mixed</h3>
+      <div style={[{ color: 'red' }, [{ fontStyle: () => 'italic' }]]}>example</div>
+    </>
+  )
+};
+
+TestStylesMixed.test = {
+  static: true,
+  snapshots: [
+    '<div style="color: red; font-style: italic;">example</div>'
+  ]
+};
+
 const TestHTMLFunctionStatic = (): JSX.Element => {
   return (
     <>
@@ -6750,6 +6766,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestStylesStore} />
       <TestSnapshots Component={TestStylesRemoval} />
       <TestSnapshots Component={TestStylesCleanup} />
+      <TestSnapshots Component={TestStylesMixed} />
       <TestSnapshots Component={TestHTMLFunctionStatic} />
       <TestSnapshots Component={TestHTMLFunctionStaticRegistry} />
       <TestSnapshots Component={TestHTMLInnerHTMLStatic} />

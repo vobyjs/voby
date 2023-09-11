@@ -59,7 +59,7 @@ declare namespace JSX {
 
   type Refs<T = unknown> = ArrayMaybe<Nullable<Ref<T>>> | Refs<T>[];
 
-  type Style = FunctionMaybe<Nullable<string | StyleProperties>>;
+  type Style = FunctionMaybe<Nullable<string | StyleProperties | (FunctionMaybe<null | undefined | boolean | string> | Style)[]>>;
 
   type IntrinsicElement<T extends keyof IntrinsicElements> = IntrinsicElements[T];
 
