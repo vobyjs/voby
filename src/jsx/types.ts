@@ -59,7 +59,7 @@ declare namespace JSX {
 
   type Refs<T = unknown> = ArrayMaybe<Nullable<Ref<T>>> | Refs<T>[];
 
-  type Style = FunctionMaybe<Nullable<string | StyleProperties | (FunctionMaybe<null | undefined | boolean | string> | Style)[]>>;
+  type Style = FunctionMaybe<Nullable<string | StyleProperties | (FunctionMaybe<null | undefined | number | string> | Style)[]>>;
 
   type IntrinsicElement<T extends keyof IntrinsicElements> = IntrinsicElements[T];
 
@@ -520,7 +520,7 @@ declare namespace JSX {
     srcSet?: FunctionMaybe<Nullable<string>>,
     start?: FunctionMaybe<Nullable<number>>,
     step?: FunctionMaybe<Nullable<number | string>>,
-    style?: FunctionMaybe<Nullable<string | StyleProperties>>,
+    style?: Style;
     summary?: FunctionMaybe<Nullable<string>>,
     tabIndex?: FunctionMaybe<Nullable<boolean | number>>,
     target?: FunctionMaybe<Nullable<string>>,
