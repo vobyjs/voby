@@ -27,6 +27,14 @@ const afterDummyWrapper: [Node] = [dummyNode];
 const diff = ( parent: Node, before: Node | Node[], after: Node | Node[], nextSibling: Node | null ): void => {
   if ( before === after ) return;
   if ( before instanceof Node ) {
+    if ( after instanceof Node ) {
+      if ( before.parentNode === parent ) { // Safety check, since setChildStatic may trigger this
+        parent.replaceChild ( after, before );
+        return;
+      } else {
+        //TODO: Optimize this branch too
+      }
+    }
     beforeDummyWrapper[0] = before;
     before = beforeDummyWrapper;
   }
@@ -69,10 +77,8 @@ const diff = ( parent: Node, before: Node | Node[], after: Node | Node[], nextSi
         // remove the node only if it's unknown or not live
         if (!map || !map.has(before[aStart])) {
           removable = before[aStart];
-          try {
+          if ( removable.parentNode === parent ) { // Safety check, since setChildStatic may trigger this
             parent.removeChild(removable);
-          } catch {
-            //FIXME: This try..catch block shouldn't exist, though sometimes setChildStatic wants to update the DOM immediately -- tricky
           }
         }
         aStart++;
@@ -180,10 +186,8 @@ const diff = ( parent: Node, before: Node | Node[], after: Node | Node[], nextSi
       // that only the live list index should be forwarded
       else {
         removable = before[aStart++];
-        try {
+        if ( removable.parentNode === parent ) { // Safety check, since setChildStatic may trigger this
           parent.removeChild(removable);
-        } catch {
-          //FIXME: This try..catch block shouldn't exist, though sometimes setChildStatic wants to update the DOM immediately -- tricky
         }
       }
     }
