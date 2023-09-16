@@ -280,7 +280,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, fragmentOnly: 
 
       if ( nextLength === 0 ) { // Placeholder, to keep the right spot in the array of children
 
-        const placeholder = createComment ();
+        const placeholder = ( fragmentNext.placeholder ||= fragment.placeholder ||= createComment () );
 
         FragmentUtils.pushNode ( fragmentNext, placeholder );
 
@@ -329,7 +329,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, fragmentOnly: 
 
   if ( nextLength === 0 ) { // Placeholder, to keep the right spot in the array of children
 
-    const placeholder = createComment ();
+    const placeholder = ( fragmentNext.placeholder ||= fragment.placeholder ||= createComment () );
 
     FragmentUtils.pushNode ( fragmentNext, placeholder );
 

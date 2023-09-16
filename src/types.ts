@@ -69,17 +69,17 @@ type ForOptions = import ( 'oby' ).ForOptions;
 
 type FN<Arguments extends unknown[], Return extends unknown = void> = ( ...args: Arguments ) => Return;
 
-type FragmentUndefined = { values: undefined, fragmented?: false, length: 0 };
+type FragmentUndefined = { placeholder?: Node, values: undefined, fragmented?: false, length: 0 };
 
-type FragmentNode = { values: Node, fragmented?: false, length: 1 };
+type FragmentNode = { placeholder?: Node, values: Node, fragmented?: false, length: 1 };
 
-type FragmentFragment = { values: Fragment, fragmented: true, length: 1 };
+type FragmentFragment = { placeholder?: Node, values: Fragment, fragmented: true, length: 1 };
 
-type FragmentNodes = { values: Node[], fragmented?: false, length: 2 | 3 | 4 | 5 };
+type FragmentNodes = { placeholder?: Node, values: Node[], fragmented?: false, length: 2 | 3 | 4 | 5 };
 
-type FragmentFragments = { values: Fragment[], fragmented: true, length: 2 | 3 | 4 | 5 };
+type FragmentFragments = { placeholder?: Node, values: Fragment[], fragmented: true, length: 2 | 3 | 4 | 5 };
 
-type FragmentMixed = { values: (Node | Fragment)[], fragmented: true, length: 2 | 3 | 4 | 5 };
+type FragmentMixed = { placeholder?: Node, values: (Node | Fragment)[], fragmented: true, length: 2 | 3 | 4 | 5 };
 
 type Fragment = FragmentUndefined | FragmentNode | FragmentFragment | FragmentNodes | FragmentFragments | FragmentMixed;
 
