@@ -781,7 +781,7 @@ const setRef = <T> ( element: T, value: null | undefined | Ref<T> | (null | unde
 
   if ( isNil ( value ) ) return;
 
-  const values = flatten ( castArray ( value ) ).filter ( Boolean );
+  const values = flatten ( castArray ( value ) ).filter ( Boolean ); //TODO: Maybe special-case this to be faster for non-array values, or 2-values arrays
 
   if ( !values.length ) return;
 

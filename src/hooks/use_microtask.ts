@@ -8,6 +8,7 @@ import type {Callback} from '~/types';
 /* MAIN */
 
 //TODO: Maybe port this to oby
+//TODO: Maybe special-case this to use one shared mirotask per microtask
 
 const useMicrotask = ( fn: Callback ): void => {
 
