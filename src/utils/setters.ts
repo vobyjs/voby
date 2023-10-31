@@ -985,6 +985,8 @@ const setTemplateAccessor = ( element: HTMLElement, key: string, value: Template
 
 const setProp = ( element: HTMLElement, key: string, value: any ): void => {
 
+  if ( value === undefined ) return; // Ignoring undefined props, for performance
+
   if ( isTemplateAccessor ( value ) ) {
 
     setTemplateAccessor ( element, key, value );
