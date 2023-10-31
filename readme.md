@@ -805,8 +805,8 @@ It can be used to map over values either with a keyed (default) or unkeyed (opt-
 Interface:
 
 ```ts
-function For <T> ( props: { values?: FunctionMaybe<readonly T[]>, fallback?: JSX.ELement, children: (( value: T, index: ObservableReadonly<number> ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
-function For <T> ( props: { values?: FunctionMaybe<readonly T[]>, fallback?: JSX.ELement, pooled?: true, unkeyed?: true, children: (( value: ObservableReadonly<T>, index: ObservableReadonly<number> ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
+function For <T> ( props: { values?: FunctionMaybe<readonly T[]>, fallback?: JSX.ELement, children: (( value: T, index: FunctionMaybe<number> ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
+function For <T> ( props: { values?: FunctionMaybe<readonly T[]>, fallback?: JSX.ELement, pooled?: true, unkeyed?: true, children: (( value: ObservableReadonly<T>, index: FunctionMaybe<number> ) => JSX.Element) }): ObservableReadonly<JSX.Element>;
 ```
 
 Usage:
