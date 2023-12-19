@@ -67,6 +67,14 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): R
 
     };
 
+    const onFinally = (): void => {
+
+      if ( disposed () ) return;
+
+      unsuspend ();
+
+    };
+
     const fetch = (): void => {
 
       try {
@@ -77,18 +85,19 @@ const useResource = <T> ( fetcher: (() => ObservableMaybe<PromiseMaybe<T>>) ): R
 
           onPending ();
 
-          value.then ( onResolve, onReject );
-          value.then ( unsuspend, unsuspend );
+          value.then ( onResolve, onReject ).finally ( onFinally );
 
         } else {
 
           onResolve ( value );
+          onFinally ();
 
         }
 
       } catch ( error: unknown ) {
 
         onReject ( error );
+        onFinally ();
 
       }
 
