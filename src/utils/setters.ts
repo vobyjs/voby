@@ -206,7 +206,7 @@ const setChildStatic = ( parent: HTMLElement, fragment: Fragment, fragmentOnly: 
 
   }
 
-  if ( prevLength === 1 ) { // Fast path for single text child
+  if ( prevLength === 1 && prevFirst.parentNode ) { // Fast path for single text child replacing a mounted node
 
     const type = typeof child;
 

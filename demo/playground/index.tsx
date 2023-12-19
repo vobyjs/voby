@@ -6337,6 +6337,33 @@ TestSuspenseAlive.test = {
   ]
 };
 
+const TestSuspenseChildrenInline = (): JSX.Element => {
+
+  const resource = useResource ( () => {
+    return new Promise<number> ( resolve => {
+      return setTimeout ( resolve, TEST_INTERVAL, 123 );
+    });
+  });
+
+  return (
+    <>
+      <h3>Suspense - Children Inline</h3>
+      <Suspense fallback="Loading...">
+        {() => resource().value}
+      </Suspense>
+    </>
+  );
+
+};
+
+TestSuspenseChildrenInline.test = {
+  static: false,
+  snapshots: [
+    'Loading...',
+    '123'
+  ]
+};
+
 const TestSuspenseChildrenObservableStatic = (): JSX.Element => {
   const Children = (): JSX.Element => {
     const o = $( String ( random () ) );
@@ -6929,6 +6956,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestSuspenseObservable} />
       <TestSnapshots Component={TestSuspenseWhen} />
       <TestSnapshots Component={TestSuspenseAlive} />
+      <TestSnapshots Component={TestSuspenseChildrenInline} />
       <TestSnapshots Component={TestSuspenseChildrenObservableStatic} />
       <TestSnapshots Component={TestSuspenseChildrenFunction} />
       <TestSnapshots Component={TestSuspenseFallbackObservableStatic} />
