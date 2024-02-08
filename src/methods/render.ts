@@ -2,6 +2,7 @@
 /* IMPORT */
 
 import useRoot from '~/hooks/use_root';
+import useUntracked from '~/hooks/use_untracked';
 import {setChild} from '~/utils/setters';
 import type {Child, Disposer} from '~/types';
 
@@ -15,7 +16,7 @@ const render = ( child: Child, parent?: Element | null ): Disposer => {
 
   return useRoot ( dispose => {
 
-    setChild ( parent, child );
+    setChild ( parent, useUntracked ( child ) );
 
     return (): void => {
 
