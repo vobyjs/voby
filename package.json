@@ -35,6 +35,7 @@
     "clean": "tsex clean",
     "compile": "tsex compile",
     "compile:watch": "tsex compile --watch",
+    "bundle": "rollup -c",
     "dev:benchmark": "cd demo/benchmark && npm i && npm update && npm run dev",
     "prod:benchmark": "cd demo/benchmark && npm i && npm update && npm run prod",
     "dev:boxes": "cd demo/boxes && npm i && npm update && npm run dev",
@@ -87,7 +88,10 @@
     "oby": "^15.0.0"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
     "@types/node": "^18.15.11",
+    "rollup": "^4.9.6",
     "tsex": "^2.2.4",
     "typescript": "^4.9.5"
   }
