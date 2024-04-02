@@ -23,5 +23,5 @@ const Counter = ({ value, onChange }: { value: () => number, onChange: ( value: 
 
 /* EXPORT */
 
-export default hmr ( import.meta.hot?.accept, Counter );
+export default hmr ( import.meta.hot?.accept?.bind ( import.meta.hot ), Counter );
 // export default Counter;

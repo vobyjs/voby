@@ -386,7 +386,7 @@ Counter.INITIAL_VALUE = 0;
 // Lastly export it as "default", wrapped in "hmr"
 // Only components exported as "default" are supported
 
-export default hmr ( import.meta.hot?.accept, Counter );
+export default hmr ( import.meta.hot?.accept?.bind ( import.meta.hot ), Counter );
 ```
 
 #### `html`

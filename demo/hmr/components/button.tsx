@@ -32,5 +32,5 @@ Button.Repeat = ({ label, onClick }: { label: string, onClick: () => void }): JS
 
 /* EXPORT */
 
-export default hmr ( import.meta.hot?.accept, Button );
+export default hmr ( import.meta.hot?.accept?.bind ( import.meta.hot ), Button );
 // export default Button;
