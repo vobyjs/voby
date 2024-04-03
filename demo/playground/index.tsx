@@ -6,7 +6,7 @@
 import * as Voby from 'voby';
 import {Dynamic, ErrorBoundary, For, If, KeepAlive, Portal, Suspense, Switch, Ternary} from 'voby';
 import {useContext, useEffect, useInterval, useMemo, usePromise, useResource, useTimeout} from 'voby';
-import {$, createContext, createDirective, hmr, html, lazy, render, renderToString, store, template,  untrack} from 'voby';
+import {$, $$, createContext, createDirective, h, hmr, html, lazy, render, renderToString, store, template,  untrack} from 'voby';
 import type {Observable, ObservableReadonly} from 'voby';
 
 globalThis.Voby = Voby;
@@ -49,7 +49,7 @@ const randomColor = (): string => {
 
 };
 
-const TestSnapshots = ({ Component, props }: { Component: ( JSX.Component | Constructor<Component> ) & { test: { static?: boolean, wrap?: boolean, snapshots: string[] } }, props?: Record<any, any> }): JSX.Element => {
+const TestSnapshots = ({ Component, props }: { Component: ( JSX.Component | Constructor<Component> ) & { test: { error?: string, static?: boolean, wrap?: boolean, snapshots: string[] } }, props?: Record<any, any> }): JSX.Element => {
   const ref = $<HTMLDivElement>();
   let index = -1;
   let htmlPrev = '';
@@ -99,22 +99,32 @@ const TestSnapshots = ({ Component, props }: { Component: ( JSX.Component | Cons
     if ( ticks > 1 ) return;
     assert ( false, `[${Component.name}]: Expected at least one update` );
   };
-  useEffect ( () => {
-    const root = ref ();
-    if ( !root ) return;
-    tick ();
-    const timeoutId = setTimeout ( yesUpdate, 1500 );
-    const onMutation = Component.test.static ? noUpdate : tick;
-    const observer = new MutationObserver ( onMutation );
-    const options = { attributes: true, childList: true, characterData: true, subtree: true };
-    observer.observe ( root, options );
-    return () => observer.disconnect ();
-  });
-  return (
-    <div ref={ref}>
-      <Component {...props} />
-    </div>
-  );
+  if ( Component.test.error ) {
+    try {
+      $$($$($$(<Component {...props} />)));
+      assert ( false, `[${Component.name}]: Expected it to throw an error` );
+    } catch ( error ) {
+      assert ( error instanceof Error, `[${Component.name}]: Expected it to throw an error` );
+      assert ( error.message === Component.test.error, `[${Component.name}]: Expected error message "${error.message}" to be equal to "${Component.test.error}"` );
+    }
+  } else {
+    useEffect ( () => {
+      const root = ref ();
+      if ( !root ) return;
+      tick ();
+      const timeoutId = setTimeout ( yesUpdate, 1500 );
+      const onMutation = Component.test.static ? noUpdate : tick;
+      const observer = new MutationObserver ( onMutation );
+      const options = { attributes: true, childList: true, characterData: true, subtree: true };
+      observer.observe ( root, options );
+      return () => observer.disconnect ();
+    });
+    return (
+      <div ref={ref}>
+        <Component {...props} />
+      </div>
+    );
+  }
 };
 
 /* MAIN */
@@ -5016,6 +5026,16 @@ TestForUnkeyedFallbackFunction.test = {
   ]
 };
 
+const TestForbiddenKeyProp = (): JSX.Element => {
+
+  return h ( 'div', { key: 123 } );
+
+};
+
+TestForbiddenKeyProp.test = {
+  error: 'Using a prop named "key" is forbidden'
+};
+
 const TestFragmentStatic = (): JSX.Element => {
   return (
     <>
@@ -6909,6 +6929,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestForUnkeyedFallbackObservable} />
       <TestSnapshots Component={TestForUnkeyedFallbackObservableStatic} />
       <TestSnapshots Component={TestForUnkeyedFallbackFunction} />
+      <TestSnapshots Component={TestForbiddenKeyProp} />
       <TestSnapshots Component={TestFragmentStatic} />
       <TestSnapshots Component={TestFragmentStaticComponent} />
       <TestSnapshots Component={TestFragmentStaticDeep} />
