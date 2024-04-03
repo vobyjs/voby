@@ -52,7 +52,7 @@ const testTemplate = (() => {
   return () => {
     return $$(tmpl ( PROPS ));
   };
-});
+})();
 
 const test = async () => {
 
