@@ -4,33 +4,30 @@
 import untrack from '~/methods/untrack';
 import wrapElement from '~/methods/wrap_element';
 import {createHTMLNode, createSVGNode} from '~/utils/creators';
-import {isFunction, isNil, isNode, isObject, isString, isSVGElement, isVoidChild} from '~/utils/lang';
-import {setProps} from '~/utils/setters';
-import type {Child, Component, Element, Props} from '~/types';
+import {isFunction, isNode, isObject, isString, isSVGElement, isVoidChild} from '~/utils/lang';
+import {setChild, setProps} from '~/utils/setters';
+import type {Child, Component, Element} from '~/types';
 
 /* MAIN */
 
 // It's important to wrap components, so that they can be executed in the right order, from parent to child, rather than from child to parent in some cases
 
-const createElement = <P = {}> ( component: Component<P>, props?: P | null, ..._children: Child[] ): Element => {
+const createElement = <P = {}> ( component: Component<P>, _props?: P | null, ..._children: Child[] ): Element => {
 
-  if ( isObject ( props ) ) {
+  const children = _children.length > 1 ? _children : ( _children.length > 0 ? _children[0] : undefined );
+  const hasChildren = !isVoidChild ( children );
 
-    if ( _children.length && 'children' in props ) throw new Error ( 'Providing "children" both as a prop and as rest arguments is forbidden' );
+  if ( isObject ( _props ) ) {
 
-    if ( 'key' in props ) throw new Error ( 'Using a prop named "key" is forbidden' );
+    if ( hasChildren && 'children' in _props ) throw new Error ( 'Providing "children" both as a prop and as rest arguments is forbidden' );
+
+    if ( 'key' in _props ) throw new Error ( 'Using a prop named "key" is forbidden' );
 
   }
 
-  const { children: __children, key, ref, ...rest } = ( props || {} ) as Props; //TSC
-  const children = ( _children.length === 1 ) ? _children[0] : ( _children.length === 0 ) ? __children : _children;
-
   if ( isFunction ( component ) ) {
 
-    const props = rest;
-
-    if ( !isNil ( children ) ) props.children = children;
-    if ( !isNil ( ref ) ) props.ref = ref;
+    const props = hasChildren ? { ..._props, children } : _props;
 
     return wrapElement ( () => {
 
@@ -40,12 +37,8 @@ const createElement = <P = {}> ( component: Component<P>, props?: P | null, ..._
 
   } else if ( isString ( component ) ) {
 
-    const props = rest;
     const isSVG = isSVGElement ( component );
     const createNode = isSVG ? createSVGNode : createHTMLNode;
-
-    if ( !isVoidChild ( children ) ) props.children = children;
-    if ( !isNil ( ref ) ) props.ref = ref;
 
     return wrapElement ( (): Child => {
 
@@ -53,7 +46,17 @@ const createElement = <P = {}> ( component: Component<P>, props?: P | null, ..._
 
       if ( isSVG ) child['isSVG'] = true;
 
-      untrack ( () => setProps ( child, props ) );
+      untrack ( () => {
+
+        if ( _props ) {
+          setProps ( child, _props );
+        }
+
+        if ( hasChildren ) {
+          setChild ( child, children );
+        }
+
+      });
 
       return child;
 
