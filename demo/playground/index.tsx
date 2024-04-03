@@ -5036,6 +5036,16 @@ TestForbiddenKeyProp.test = {
   error: 'Using a prop named "key" is forbidden'
 };
 
+const TestForbiddenDoubleChildren = (): JSX.Element => {
+
+  return h ( 'div', { children: 123 }, 123 );
+
+};
+
+TestForbiddenDoubleChildren.test = {
+  error: 'Providing "children" both as a prop and as rest arguments is forbidden'
+};
+
 const TestFragmentStatic = (): JSX.Element => {
   return (
     <>
@@ -6930,6 +6940,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestForUnkeyedFallbackObservableStatic} />
       <TestSnapshots Component={TestForUnkeyedFallbackFunction} />
       <TestSnapshots Component={TestForbiddenKeyProp} />
+      <TestSnapshots Component={TestForbiddenDoubleChildren} />
       <TestSnapshots Component={TestFragmentStatic} />
       <TestSnapshots Component={TestFragmentStaticComponent} />
       <TestSnapshots Component={TestFragmentStaticDeep} />

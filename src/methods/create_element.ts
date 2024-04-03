@@ -16,6 +16,8 @@ const createElement = <P = {}> ( component: Component<P>, props?: P | null, ..._
 
   if ( isObject ( props ) ) {
 
+    if ( _children.length && 'children' in props ) throw new Error ( 'Providing "children" both as a prop and as rest arguments is forbidden' );
+
     if ( 'key' in props ) throw new Error ( 'Using a prop named "key" is forbidden' );
 
   }
