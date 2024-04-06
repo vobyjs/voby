@@ -6,7 +6,7 @@
 import * as Voby from 'voby';
 import {Dynamic, ErrorBoundary, For, If, KeepAlive, Portal, Suspense, Switch, Ternary} from 'voby';
 import {useContext, useEffect, useInterval, useMemo, usePromise, useResource, useTimeout} from 'voby';
-import {$, $$, createContext, createDirective, h, hmr, html, lazy, render, renderToString, store, template,  untrack} from 'voby';
+import {$, $$, createContext, createDirective, createElement, h, hmr, html, lazy, render, renderToString, store, template,  untrack} from 'voby';
 import type {Observable, ObservableReadonly} from 'voby';
 
 globalThis.Voby = Voby;
@@ -49,7 +49,7 @@ const randomColor = (): string => {
 
 };
 
-const TestSnapshots = ({ Component, props }: { Component: ( JSX.Component | Constructor<Component> ) & { test: { error?: string, static?: boolean, wrap?: boolean, snapshots: string[] } }, props?: Record<any, any> }): JSX.Element => {
+const TestSnapshots = ({ Component, props }: { Component: ( JSX.Component | Constructor<Component> ) & { test: { error?: string, static?: boolean, wrap?: boolean, snapshots?: string[] } }, props?: Record<any, any> }): JSX.Element => {
   const ref = $<HTMLDivElement>();
   let index = -1;
   let htmlPrev = '';
@@ -71,12 +71,12 @@ const TestSnapshots = ({ Component, props }: { Component: ( JSX.Component | Cons
     if ( done ) return;
     const indexPrev = index;
     ticks += 1;
-    index = ( index + 1 ) % Component.test.snapshots.length;
+    index = ( index + 1 ) % Component.test.snapshots?.length;
     if ( index < indexPrev && Component.test.wrap === false ) {
       done = true;
       return;
     }
-    const expectedSnapshot = Component.test.snapshots[index];
+    const expectedSnapshot = Component.test.snapshots?.[index];
     const actualHTML = getHTML ();
     const actualSnapshot = getSnapshot ( actualHTML );
     assert ( actualSnapshot === expectedSnapshot, `[${Component.name}]: Expected '${actualSnapshot}' to be equal to '${expectedSnapshot}'` );
@@ -5026,14 +5026,28 @@ TestForUnkeyedFallbackFunction.test = {
   ]
 };
 
-const TestForbiddenKeyProp = (): JSX.Element => {
+const TestAllowedKeyProp = (): JSX.Element => {
 
-  return h ( 'div', { key: 123 } );
+  const Component = props => {
+    return <p>{props.key}</p>;
+  };
+
+  return (
+    <>
+      <h3>Allowed - Key Prop</h3>
+      {h ( Component, { key: 1 } )}
+      {createElement ( Component, { key: 2 } )}
+      <Component key={3} />
+    </>
+  );
 
 };
 
-TestForbiddenKeyProp.test = {
-  error: 'Using a prop named "key" is forbidden'
+TestAllowedKeyProp.test = {
+  static: true,
+  snapshots: [
+    '<p>1</p><p>2</p><p>3</p>'
+  ]
 };
 
 const TestForbiddenDoubleChildren = (): JSX.Element => {
@@ -6939,7 +6953,7 @@ const Test = (): JSX.Element => {
       <TestSnapshots Component={TestForUnkeyedFallbackObservable} />
       <TestSnapshots Component={TestForUnkeyedFallbackObservableStatic} />
       <TestSnapshots Component={TestForUnkeyedFallbackFunction} />
-      <TestSnapshots Component={TestForbiddenKeyProp} />
+      <TestSnapshots Component={TestAllowedKeyProp} />
       <TestSnapshots Component={TestForbiddenDoubleChildren} />
       <TestSnapshots Component={TestFragmentStatic} />
       <TestSnapshots Component={TestFragmentStaticComponent} />

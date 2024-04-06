@@ -8,9 +8,9 @@ import type {Component, Element} from '~/types';
 
 /* MAIN */
 
-const jsx = <P = {}> ( component: Component<P>, props?: P | null, key?: unknown ): Element => {
+const jsx = <P extends {} = {}> ( component: Component<P>, props?: P | null, key?: unknown ): Element => {
 
-  if ( key !== undefined ) throw new Error ( 'Using a prop named "key" is forbidden' );
+  props = ( key !== undefined ) ? { ...props, key } as any : props; //TSC
 
   return createElement<P> ( component, props );
 
