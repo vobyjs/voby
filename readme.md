@@ -575,7 +575,7 @@ dispose (); // Unmounted and all reactivity inside it stopped
 
 This works just like `render`, but it returns a Promise to the HTML representation of the rendered component.
 
-This is currently implemented in a way that works only inside a browser-like environement, so you'll need to use [JSDOM](https://github.com/jsdom/jsdom) or similar for this to work server-side, but it can work server-side too potentially.
+This is currently implemented in a way that works only inside a browser-like environment, so you'll need to use [JSDOM](https://github.com/jsdom/jsdom) or similar for this to work server-side, but it can work server-side too potentially.
 
 This function automatically waits for all `Suspense` boundaries to resolve before returning.
 
@@ -649,7 +649,7 @@ This function enables constructing elements with [Solid](https://www.solidjs.com
 
 It basically works like [sinuous](https://github.com/luwes/sinuous/tree/master)'s template function, but with a cleaner API, since you don't have to access your props any differently inside the template here.
 
-Basically you can use this to wrap a component that doesn't directly create any observables or call any hooks to significanly improve performance when instantiating that component.
+Basically you can use this to wrap a component that doesn't directly create any observables or call any hooks to significantly improve performance when instantiating that component.
 
 Interface:
 
@@ -1839,7 +1839,7 @@ const fn = ( value: ObservableReadonly<boolean> ): void => {
 
 #### `ObservableReadonlyLike`
 
-This type says that something hsa the same shape as a read-only observable, but it may not actually be an observable.
+This type says that something has the same shape as a read-only observable, but it may not actually be an observable.
 
 Interface:
 
