@@ -301,7 +301,7 @@ const template = <P = {}> ( fn: (( props: P ) => Child) ): (( props: P ) => () =
 
       const clone = root.cloneNode ( true );
 
-      return wrapElement ( reviver.bind ( undefined, clone, props ) );
+      return wrapElement ( reviver.bind ( undefined, clone as Element, props ) ); // TSC
 
     };
 

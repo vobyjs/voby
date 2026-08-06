@@ -4,7 +4,7 @@
 import {DIRECTIVES, SYMBOLS_DIRECTIVES} from '~/constants';
 import resolve from '~/methods/resolve';
 import {context} from '~/oby';
-import type {Child, DirectiveFunction, Directive, DirectiveData, DirectiveOptions, ExtractArray} from '~/types';
+import type {Child, DirectiveFunction, Directive, DirectiveData, DirectiveOptions, ExtractArray, JSX} from '~/types';
 
 /* MAIN */
 

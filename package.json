@@ -12,6 +12,10 @@
       "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
+    "./jsx": {
+      "import": "./dist/jsx/index.js",
+      "types": "./dist/jsx/index.d.ts"
+    },
     "./jsx-runtime": {
       "import": "./dist/jsx/runtime.js",
       "types": "./dist/jsx/runtime.d.ts"
@@ -89,8 +93,8 @@
     "oby": "^15.1.1"
   },
   "devDependencies": {
-    "@types/node": "^18.19.28",
-    "tsex": "^3.2.1",
+    "@types/node": "^22.5.4",
+    "tsex": "^4.0.2",
     "typescript": "^5.4.3"
   }
 }

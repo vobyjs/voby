@@ -1,7 +1,6 @@
 
 /* IMPORT */
 
-import './types';
 import Fragment from '~/components/fragment';
 import createElement from '~/methods/create_element';
 import type {Component, Element} from '~/types';
@@ -18,4 +17,5 @@ const jsx = <P extends {} = {}> ( component: Component<P>, props?: P | null, key
 
 /* EXPORT */
 
+export * from './types';
 export {jsx, jsx as jsxs, jsx as jsxDEV, Fragment};
